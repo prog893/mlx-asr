@@ -1,0 +1,36 @@
+__pycache__/
+.DS_Store
+*.pyc
+.venv*/
+.pytest_cache/
+
+# model weights and local conversions
+models/
+
+# scratch work log, kept locally: docs/benchmarks/ carries the conclusions and
+# JOURNAL.md the published history
+PROGRESS.md
+
+# run outputs and scratch
+bench_out/
+archive/
+legacy/
+*.log
+
+# test media and generated transcripts
+*.wav
+*.srt
+*.vtt
+ref_*.txt
+transcript*.txt
+hyp_*.txt
+
+# Benchmark result files are NOT committed. They are generated from private
+# recordings, so they carry filenames and paths, and a file of bare numbers with no
+# statement of what was tested is not auditable anyway. Conclusions live in
+# docs/benchmarks/ as prose. If you have results worth sharing, put them in an issue
+# as a markdown table, which is what `mlx-asr-bench` already prints.
+scripts/benchmarks/*.json
+
+# the profile registry is real source, not a result
+!mlx_asr/*.json

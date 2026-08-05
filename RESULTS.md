@@ -1,0 +1,111 @@
+# Results
+
+Findings live in [docs/benchmarks/](docs/benchmarks/), one document per lever, each with
+its corpus, method, experiments and conclusion. This page is the index and the list of
+what is still open.
+
+## Headline
+
+20 recordings, 7.95h of Japanese and English, on an idle Apple M2 Ultra 128GB (Mac14,14),
+measured 2026-08-06:
+
+| engine | JP coverage CER | EN coverage WER | x realtime |
+|---|---|---|---|
+| voxtral (default) | 16.22% | 25.24% | **29.8x** |
+| whisper-turbo, no-condition | **14.74%** ±0.24 | **22.81%** ±0.37 | 21.3-23.3x |
+
+Whisper is about 1.5 points more accurate and the gap is statistically resolved (3 runs,
+both intervals entirely below Voxtral). Voxtral is ~1.35x faster, needs no language hint,
+has better-behaved timestamps, and reproduces byte-identically on a given machine, which is
+why it is the default. Whisper's ± is a run distribution, not a confidence interval on the
+audio: it samples, so it gets 3 runs while Voxtral gets one. Read
+[metrics.md](docs/benchmarks/metrics.md) before quoting either figure: the references are
+editorial, so plain CER on this material is meaningless.
+
+## What was measured
+
+| lever | conclusion | detail |
+|---|---|---|
+| transcription delay | `2400` is worth 9 points and free. The strongest result here. | [delay.md](docs/benchmarks/delay.md) |
+| chunking | Longer chunks win to ~60s. Overlap helps only where seams are dense. Energy cuts beat VAD. | [chunking.md](docs/benchmarks/chunking.md) |
+| engine choice | Whisper turbo + no-condition is more accurate; Voxtral is faster and reproducible. | [engines.md](docs/benchmarks/engines.md) |
+| batch size | Not monotonic. Never use 2-8. | [decode-throughput.md](docs/benchmarks/decode-throughput.md) |
+| input level | Quiet input silently costs ~3.8 points; `--gain auto` fixes it. | [input-level.md](docs/benchmarks/input-level.md) |
+| `--prompt` | Weak, except that an instruction there costs 6-14 points. | [prompt.md](docs/benchmarks/prompt.md) |
+| quantization | Costs nothing measurable. Use 4-bit, `--kv-bits 8`. | [quantization.md](docs/benchmarks/quantization.md) |
+| timestamps | Voxtral holds timing, Whisper places cues better. | [timestamps.md](docs/benchmarks/timestamps.md) |
+| cue grouping | Two sweeps run, neither adopted, deliberately. | [cue-layout.md](docs/benchmarks/cue-layout.md) |
+
+Supporting: [corpus.md](docs/benchmarks/corpus.md) (what the material is, how to build
+your own), [metrics.md](docs/benchmarks/metrics.md) (which number to trust),
+[determinism.md](docs/benchmarks/determinism.md) (what reproduces and what does not).
+
+[JOURNAL.md](JOURNAL.md) is the chronological log the findings were distilled from,
+including the runs that produced nothing and the conclusions that were later withdrawn.
+Read it for history, not for current numbers.
+
+## Ideas tested and rejected
+
+Check here before proposing performance work. Each of these was measured, not reasoned
+about.
+
+| idea | result |
+|---|---|
+| Batching the encoder | 0.84-0.91x. It is compute-bound at ~4950 FLOP/byte, so batching cannot help. |
+| `mx.compile` on the decode step | Equal or worse at every batch size. |
+| Reshaping to dodge the batch valley | `fold` is bit-exact but worth 3-7%; splitting is 1.8-4x worse. |
+| Prefix overlap at long chunks | No benefit once seams are sparse. |
+| Carrying decoder context across seams | Recovers 0.17 of the ~1.5 points seams cost, at 2x wall clock. |
+| Silero VAD cut points | 0.8-3.0 points worse than energy minima, significantly. |
+| Lower sampling rate (8kHz) | No speed change at all; the step count depends on duration. Costs 0.2 CER. |
+| Time-stretching audio 1.25x | Cuts steps proportionally but costs 1.9 CER points. |
+| fp16 weights | No accuracy gain, 1.6x the wall clock, and does not fit 16GB. |
+| Raising `--delay-ms` past 2400 | 2400 is the maximum the model supports. |
+| Chunks longer than 60s | Slower, and no better on accuracy. |
+| Extending cue ends to the next cue's start | Makes break F1 worse. |
+
+## Open
+
+**CLOSED: the headline is measured.** Both rows were re-measured on 2026-08-06 on an idle
+M2 Ultra, arms run sequentially, 3 Whisper runs for its distribution, and both result files
+record the machine and its state. Voxtral's accuracy reproduced the original session
+exactly; throughput rose (22.8x to 29.8x for Voxtral, 15.0-20.1x to 21.3-23.3x for
+Whisper), which suggests the earlier figures were taken on a loaded host. See
+[engines.md](docs/benchmarks/engines.md).
+
+**No x-realtime figure should be taken from a busy machine.** An earlier attempt on
+2026-08-06 was discarded for this reason: the host was doing unrelated GPU work throughout.
+Before any speed measurement, check GPU and memory use, and never run two benchmarks
+concurrently. The two corpus runners now check this themselves: they read load average and
+GPU memory in use before loading a model, warn when the host is not idle, and record the
+machine and its state in the result JSON, which is what the voided run's output lacked.
+
+**Timing quality is n=7** and needs more authored subtitle tracks. None of the 13
+recordings added in the final corpus growth had them.
+
+**Cue defaults have never been tested against a reference this project did not author.**
+Until there is a second, independent set, "good cue segmentation" is not something this
+corpus can measure, only agreement with one editor's conventions.
+
+**The English side is n=3.** Every English conclusion, including the prompt-instruction
+result and Whisper's English win, rests on three recordings. The direction is consistent;
+the magnitudes should not be quoted as general.
+
+**Competing-runner numbers are n=1.** That is why they support "no fastest claim survives"
+and nothing stronger.
+
+**Two quantization repos could not be evaluated** (`...-6bit`, `ellamind/...-8bit-mlx`):
+both ship configs mlx-audio misroutes. Low value, since fp16 and 4-bit differ by 0.07
+points.
+
+**`--compact-silence` splits by quantization** and the mechanism is a hypothesis. Off by
+default.
+
+**Cross-machine reproducibility is a floor on any two-machine comparison.** Identical
+audio, config and weights give different output on different chips, so the cross-machine
+agreement check cannot separate quantization from hardware. See
+[determinism.md](docs/benchmarks/determinism.md).
+
+Deliberately not open: repeat runs of Voxtral on one machine (byte-identical, verified),
+and a quantization sweep across the corpus (the effects are 0.07-0.26 points against a
+3.2-point resolution at n=7, so it would produce noise).

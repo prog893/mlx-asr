@@ -1,0 +1,70 @@
+[project]
+name = "mlx-asr"
+version = "0.1.0"
+description = "Fast multi-model batch ASR on Apple Silicon (Voxtral, Whisper, kotoba-whisper)"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+keywords = ["asr", "speech-to-text", "mlx", "apple-silicon", "voxtral", "whisper"]
+classifiers = [
+    "Environment :: GPU",
+    "Intended Audience :: Developers",
+    "Operating System :: MacOS :: MacOS X",
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+dependencies = [
+    # FFmpeg's libav* as an in-process extension, so decoding needs no subprocess
+    # and no ffmpeg binary on PATH. Zero further dependencies, ~18MB abi3 wheel.
+    "av>=15.0.0",
+    "mistral-common>=1.11.7",
+    "mlx-audio>=0.4.5",
+    "mlx-lm>=0.31.3",
+]
+
+[project.scripts]
+mlx-asr = "mlx_asr.cli:cli"
+mlx-asr-bench = "mlx_asr.bench:main"
+
+[project.optional-dependencies]
+# Silero VAD boundaries (--vad). ONNX rather than torch to keep this light.
+vad = [
+    "onnxruntime>=1.16.1",
+]
+# Scoring/benchmark scripts only; the CLI itself does not need these.
+eval = [
+    "pykakasi>=2.3.0",
+    "rapidfuzz>=3.14.5",
+]
+# The whisper-* aliases and the mlx-chunked driver used by --model kotoba, plus
+# scripts/benchmarks/run_whisper.py.
+#
+# The numpy cap is load-bearing, not tidying. mlx-whisper needs numba (a hard
+# import in its word-timestamp path), and numba caps numpy: 0.66.0 wants
+# numpy<2.5. Without the cap a resolver takes the newest numpy and then
+# backtracks numba to 0.53.1, a 2021 release whose setup.py hard-refuses any
+# Python above 3.9, so `--extra whisper` fails to build on 3.13+ with an error
+# that names llvmlite rather than numpy. Capping numpy keeps numba on 0.66.0,
+# which ships a cp314 wheel and needs no build at all.
+#
+# mlx-whisper also declares torch, which it does not need for anything this CLI
+# calls (only its unused torch_whisper.py imports it). Verified: every whisper-*
+# alias transcribes in an environment with no torch installed. That is what lets
+# the Homebrew formula exist, so if a future version really needs torch, the
+# formula is what breaks first.
+whisper = [
+    "mlx-whisper>=0.4.3",
+    "numpy<2.5",
+    "rapidfuzz>=3.14.5",
+]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["mlx_asr"]
