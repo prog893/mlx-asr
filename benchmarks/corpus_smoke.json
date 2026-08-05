@@ -1,0 +1,56 @@
+{
+  "config": {
+    "corpus": "<PATH>/examples for transcription",
+    "model": "models/voxtral-nvfp4",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "limit": 2,
+    "label": "",
+    "keep_hyp": "<PATH>/corpus",
+    "json": "<PATH>/corpus_smoke.json"
+  },
+  "label": "c60b16_kv8",
+  "aggregate_coverage_cer": 0.27434,
+  "total_ref_chars": 9831,
+  "x_realtime": 6.03,
+  "results": [
+    {
+      "file": "rec-01",
+      "duration_s": 798.0,
+      "x_realtime": 6.3,
+      "chunks": 13,
+      "ref_chars": 2535,
+      "hyp_chars": 3535,
+      "extra_ratio": 1.3944773175542406,
+      "coverage": 0.908086785009862,
+      "cer": 0.5214990138067062,
+      "coverage_cer": 0.10690335305719921,
+      "subs": 144,
+      "dels": 89,
+      "insertions_counted": 38,
+      "insertions_excused": 1051,
+      "excused_run_count": 3
+    },
+    {
+      "file": "rec-02",
+      "duration_s": 1300.0,
+      "x_realtime": 5.9,
+      "chunks": 21,
+      "ref_chars": 7296,
+      "hyp_chars": 7818,
+      "extra_ratio": 1.071546052631579,
+      "coverage": 0.8156524122807017,
+      "cer": 0.3521107456140351,
+      "coverage_cer": 0.3325109649122807,
+      "subs": 643,
+      "dels": 702,
+      "insertions_counted": 1081,
+      "insertions_excused": 143,
+      "excused_run_count": 2
+    }
+  ]
+}

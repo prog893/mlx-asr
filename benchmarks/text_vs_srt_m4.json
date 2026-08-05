@@ -1,0 +1,41 @@
+{
+  "reference": "<PATH>/0816_online_narration_jpn.srt",
+  "results": [
+    {
+      "run": "c60b16_kv8",
+      "token_text": {
+        "chars": 4161,
+        "cer": 0.07728894173602854,
+        "kana_cer": 0.058466051969823976,
+        "lenient_cer": 0.0751486325802616,
+        "fffd": 0
+      },
+      "srt_joined": {
+        "chars": 4161,
+        "cer": 0.07728894173602854,
+        "kana_cer": 0.058466051969823976,
+        "lenient_cer": 0.0751486325802616,
+        "fffd": 0
+      },
+      "cer_gap_points": 0.0
+    },
+    {
+      "run": "c30b32_kv8_ov8",
+      "token_text": {
+        "chars": 4175,
+        "cer": 0.07253269916765755,
+        "kana_cer": 0.052598491198658844,
+        "lenient_cer": 0.06944114149821641,
+        "fffd": 0
+      },
+      "srt_joined": {
+        "chars": 4175,
+        "cer": 0.07253269916765755,
+        "kana_cer": 0.052598491198658844,
+        "lenient_cer": 0.06944114149821641,
+        "fffd": 0
+      },
+      "cer_gap_points": 0.0
+    }
+  ]
+}

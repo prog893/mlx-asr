@@ -1,0 +1,17 @@
+{
+  "a": "ultra c30 ov0",
+  "b": "ultra c30 ov8",
+  "metric": "cer",
+  "regions": 40,
+  "cer_a": 0.0863,
+  "cer_b": 0.0713,
+  "paired_diff": 0.01493,
+  "ci95": [
+    0.00357,
+    0.02957
+  ],
+  "significant": true,
+  "sign_test_p": 0.21,
+  "regions_won_a": 8,
+  "regions_won_b": 15
+}

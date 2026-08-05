@@ -1,0 +1,60 @@
+{
+  "engine": "mlx-whisper",
+  "config": {
+    "corpus": null,
+    "pair": [
+      [
+        "0816_16k.wav",
+        "0816_online_narration_jpn.srt"
+      ]
+    ],
+    "model": "mlx-community/whisper-tiny-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "tiny",
+    "keep_hyp": "<PATH>/whisper_hyp",
+    "json": "<PATH>/whisper_narration_tiny.json"
+  },
+  "label": "tiny",
+  "languages": [
+    "ja"
+  ],
+  "skipped_files": [],
+  "aggregate": {
+    "char": 0.34507
+  },
+  "ref_units": {
+    "char": 4205,
+    "word": 0
+  },
+  "x_realtime": 101.75,
+  "model_load_s": 0.8,
+  "results": [
+    {
+      "file": "0816_16k",
+      "duration_s": 935.1,
+      "unit": "char",
+      "x_realtime": 101.7,
+      "requested_language": "ja",
+      "detected_language": "ja",
+      "segments": 406,
+      "ref_chars": 4205,
+      "hyp_chars": 4216,
+      "extra_ratio": 1.0026159334126041,
+      "coverage": 0.7089179548156956,
+      "cer": 0.3626634958382878,
+      "coverage_cer": 0.3450653983353151,
+      "subs": 934,
+      "dels": 290,
+      "insertions_counted": 227,
+      "insertions_excused": 74,
+      "excused_run_count": 1
+    }
+  ]
+}

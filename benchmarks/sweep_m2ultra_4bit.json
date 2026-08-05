@@ -1,0 +1,183 @@
+{
+  "machine": {
+    "chip": "Apple M2 Ultra",
+    "ram_gb": 137,
+    "gpu_cores": "60",
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "mlx": "0.32.0"
+  },
+  "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+  "kv_bits": null,
+  "steps": 400,
+  "results": [
+    {
+      "batch": 1,
+      "steps_per_s": 92.6,
+      "ms_per_step": 10.8,
+      "tok_per_s": 93,
+      "x_realtime": 7.4,
+      "peak_gb": 5.15,
+      "blocks": [
+        94.24,
+        93.06,
+        92.17,
+        91.0
+      ]
+    },
+    {
+      "batch": 2,
+      "steps_per_s": 78.35,
+      "ms_per_step": 12.8,
+      "tok_per_s": 157,
+      "x_realtime": 12.5,
+      "peak_gb": 5.32,
+      "blocks": [
+        79.81,
+        78.7,
+        77.86,
+        77.09
+      ]
+    },
+    {
+      "batch": 4,
+      "steps_per_s": 61.45,
+      "ms_per_step": 16.3,
+      "tok_per_s": 246,
+      "x_realtime": 19.7,
+      "peak_gb": 5.65,
+      "blocks": [
+        62.66,
+        61.94,
+        60.87,
+        60.38
+      ]
+    },
+    {
+      "batch": 8,
+      "steps_per_s": 40.55,
+      "ms_per_step": 24.7,
+      "tok_per_s": 324,
+      "x_realtime": 26.0,
+      "peak_gb": 6.28,
+      "blocks": [
+        41.62,
+        40.99,
+        39.81,
+        39.84
+      ]
+    },
+    {
+      "batch": 12,
+      "steps_per_s": 32.09,
+      "ms_per_step": 31.2,
+      "tok_per_s": 385,
+      "x_realtime": 30.8,
+      "peak_gb": 6.75,
+      "blocks": [
+        33.35,
+        32.64,
+        31.27,
+        31.2
+      ]
+    },
+    {
+      "batch": 16,
+      "steps_per_s": 29.74,
+      "ms_per_step": 33.6,
+      "tok_per_s": 476,
+      "x_realtime": 38.1,
+      "peak_gb": 7.43,
+      "blocks": [
+        30.97,
+        30.33,
+        29.13,
+        28.65
+      ]
+    },
+    {
+      "batch": 24,
+      "steps_per_s": 29.1,
+      "ms_per_step": 34.4,
+      "tok_per_s": 698,
+      "x_realtime": 55.9,
+      "peak_gb": 8.38,
+      "blocks": [
+        30.62,
+        29.67,
+        28.32,
+        27.95
+      ]
+    },
+    {
+      "batch": 32,
+      "steps_per_s": 29.54,
+      "ms_per_step": 33.9,
+      "tok_per_s": 945,
+      "x_realtime": 75.6,
+      "peak_gb": 9.06,
+      "blocks": [
+        31.67,
+        30.37,
+        28.43,
+        27.98
+      ]
+    },
+    {
+      "batch": 48,
+      "steps_per_s": 18.81,
+      "ms_per_step": 53.2,
+      "tok_per_s": 903,
+      "x_realtime": 72.2,
+      "peak_gb": 10.73,
+      "blocks": [
+        20.07,
+        19.31,
+        18.14,
+        17.89
+      ]
+    },
+    {
+      "batch": 64,
+      "steps_per_s": 18.85,
+      "ms_per_step": 53.0,
+      "tok_per_s": 1207,
+      "x_realtime": 96.5,
+      "peak_gb": 12.41,
+      "blocks": [
+        20.52,
+        19.54,
+        17.96,
+        17.68
+      ]
+    },
+    {
+      "batch": 96,
+      "steps_per_s": 12.08,
+      "ms_per_step": 82.8,
+      "tok_per_s": 1160,
+      "x_realtime": 92.8,
+      "peak_gb": 16.16,
+      "blocks": [
+        14.19,
+        10.8,
+        11.93,
+        11.87
+      ]
+    },
+    {
+      "batch": 128,
+      "steps_per_s": 10.11,
+      "ms_per_step": 99.0,
+      "tok_per_s": 1294,
+      "x_realtime": 103.5,
+      "peak_gb": 19.61,
+      "blocks": [
+        11.0,
+        10.49,
+        9.64,
+        9.45
+      ]
+    }
+  ]
+}

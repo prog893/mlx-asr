@@ -1,0 +1,111 @@
+{
+  "runner": "whisper.cpp",
+  "runner_version": "whisper.cpp version: 1.9.1",
+  "install": "brew install whisper-cpp (whisper-cpp 1.9.1, ggml 0.18.0)",
+  "backend_note": "whisper.cpp uses the Metal backend on Apple Silicon: the log line 'whisper_backend_init_gpu: using MTL0 backend' confirms the M2 Ultra GPU is doing the matmuls. Flash attention is on by default in 1.9.1. No CoreML encoder was built, so the encoder also runs on Metal.",
+  "gpu_used": true,
+  "audio": "<PATH>/0816_16k.wav",
+  "audio_duration_s": 935.1,
+  "reference": "<PATH>/0816_online_narration_jpn.srt",
+  "metric": "plain CER via eval_cer.py (narration reference is complete)",
+  "timing_method": "warm run on /tmp/warm1s.wav first; x_realtime = duration / (whisper.cpp total time - load time)",
+  "decode_settings": "whisper-cli defaults (beam 5, best-of 5, temp 0.0 + 0.2 ladder)",
+  "results": [
+    {
+      "label": "lv3turbo-fp16",
+      "model": "large-v3-turbo",
+      "ggml_file": "ggml-large-v3-turbo.bin",
+      "quantization": "fp16 (f16, unquantized)",
+      "model_bytes": 1624555275,
+      "backend": "Metal (ggml MTL0, Apple M2 Ultra GPU)",
+      "gpu_used": true,
+      "flash_attn": true,
+      "cpu_threads": 4,
+      "language": "ja",
+      "audio_duration_s": 935.1,
+      "model_load_s": 0.49,
+      "infer_s_load_excluded": 22.8,
+      "wall_s_including_load": 23.3,
+      "encode_s": 7.9,
+      "x_realtime": 40.96,
+      "temperature_fallbacks": [
+        "0",
+        "1"
+      ],
+      "cer_plain": 0.0832,
+      "srt": "bench_out/compete_wcpp/lv3turbo-fp16.srt"
+    },
+    {
+      "label": "lv3turbo-q5_0",
+      "model": "large-v3-turbo",
+      "ggml_file": "ggml-large-v3-turbo-q5_0.bin",
+      "quantization": "q5_0",
+      "model_bytes": 574041195,
+      "backend": "Metal (ggml MTL0, Apple M2 Ultra GPU)",
+      "gpu_used": true,
+      "flash_attn": true,
+      "cpu_threads": 4,
+      "language": "ja",
+      "audio_duration_s": 935.1,
+      "model_load_s": 0.19,
+      "infer_s_load_excluded": 31.1,
+      "wall_s_including_load": 31.3,
+      "encode_s": 11.9,
+      "x_realtime": 30.03,
+      "temperature_fallbacks": [
+        "5",
+        "18"
+      ],
+      "cer_plain": 0.083,
+      "srt": "bench_out/compete_wcpp/lv3turbo-q5_0.srt"
+    },
+    {
+      "label": "lv3-q5_0",
+      "model": "large-v3",
+      "ggml_file": "ggml-large-v3-q5_0.bin",
+      "quantization": "q5_0",
+      "model_bytes": 1081140203,
+      "backend": "Metal (ggml MTL0, Apple M2 Ultra GPU)",
+      "gpu_used": true,
+      "flash_attn": true,
+      "cpu_threads": 4,
+      "language": "ja",
+      "audio_duration_s": 935.1,
+      "model_load_s": 0.33,
+      "infer_s_load_excluded": 80.3,
+      "wall_s_including_load": 80.6,
+      "encode_s": 8.1,
+      "x_realtime": 11.65,
+      "temperature_fallbacks": [
+        "0",
+        "5"
+      ],
+      "cer_plain": 0.1641,
+      "srt": "bench_out/compete_wcpp/lv3-q5_0.srt"
+    },
+    {
+      "label": "lv3turbo-fp16-t8",
+      "model": "large-v3-turbo",
+      "ggml_file": "ggml-large-v3-turbo.bin",
+      "quantization": "fp16 (f16, unquantized), -t 8",
+      "model_bytes": 1624555275,
+      "backend": "Metal (ggml MTL0, Apple M2 Ultra GPU)",
+      "gpu_used": true,
+      "flash_attn": true,
+      "cpu_threads": 8,
+      "language": "ja",
+      "audio_duration_s": 935.1,
+      "model_load_s": 0.57,
+      "infer_s_load_excluded": 22.4,
+      "wall_s_including_load": 23.0,
+      "encode_s": 8.0,
+      "x_realtime": 41.73,
+      "temperature_fallbacks": [
+        "0",
+        "1"
+      ],
+      "cer_plain": 0.0832,
+      "srt": "bench_out/compete_wcpp/lv3turbo-fp16-t8.srt"
+    }
+  ]
+}

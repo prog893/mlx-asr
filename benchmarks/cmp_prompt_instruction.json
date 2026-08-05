@@ -1,0 +1,17 @@
+{
+  "a": "generic instruction",
+  "b": "no prompt",
+  "metric": "cer",
+  "regions": 40,
+  "cer_a": 0.1317,
+  "cer_b": 0.0728,
+  "paired_diff": 0.05905,
+  "ci95": [
+    0.01405,
+    0.11644
+  ],
+  "significant": true,
+  "sign_test_p": 0.0923,
+  "regions_won_a": 3,
+  "regions_won_b": 10
+}

@@ -1,0 +1,123 @@
+{
+  "audio": "<PATH>/0816_180s.wav",
+  "duration_s": 180.0,
+  "rows": [
+    {
+      "alias": "voxtral",
+      "backend": "voxtral",
+      "repo": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "cmd": "mlx_asr.cli 0816_180s.wav --model voxtral -o bench_out/matrix/voxtral.srt",
+      "returncode": 0,
+      "wall_s": 106.5,
+      "ok": true,
+      "cues": 40,
+      "out": "bench_out/matrix/voxtral.srt",
+      "cer": 11.76,
+      "x_realtime": 1.7
+    },
+    {
+      "alias": "whisper-turbo",
+      "backend": "mlx-whisper",
+      "repo": "mlx-community/whisper-large-v3-turbo",
+      "cmd": "mlx_asr.cli 0816_180s.wav --model whisper-turbo -o bench_out/matrix/whisper-turbo.srt --language ja",
+      "returncode": 0,
+      "wall_s": 11.9,
+      "ok": true,
+      "cues": 56,
+      "out": "bench_out/matrix/whisper-turbo.srt",
+      "cer": 13.67,
+      "x_realtime": 15.1
+    },
+    {
+      "alias": "whisper-large-v3",
+      "backend": "mlx-whisper",
+      "repo": "mlx-community/whisper-large-v3-mlx",
+      "cmd": "mlx_asr.cli 0816_180s.wav --model whisper-large-v3 -o bench_out/matrix/whisper-large-v3.srt --language ja",
+      "returncode": 0,
+      "wall_s": 29.6,
+      "ok": true,
+      "cues": 47,
+      "out": "bench_out/matrix/whisper-large-v3.srt",
+      "cer": 14.41,
+      "x_realtime": 6.1
+    },
+    {
+      "alias": "whisper-large-v2",
+      "backend": "mlx-whisper",
+      "repo": "mlx-community/whisper-large-v2-mlx",
+      "cmd": "mlx_asr.cli 0816_180s.wav --model whisper-large-v2 -o bench_out/matrix/whisper-large-v2.srt --language ja",
+      "returncode": 0,
+      "wall_s": 45.4,
+      "ok": true,
+      "cues": 46,
+      "out": "bench_out/matrix/whisper-large-v2.srt",
+      "cer": 13.45,
+      "x_realtime": 4.0
+    },
+    {
+      "alias": "whisper-medium",
+      "backend": "mlx-whisper",
+      "repo": "mlx-community/whisper-medium-mlx",
+      "cmd": "mlx_asr.cli 0816_180s.wav --model whisper-medium -o bench_out/matrix/whisper-medium.srt --language ja",
+      "returncode": 0,
+      "wall_s": 16.6,
+      "ok": true,
+      "cues": 38,
+      "out": "bench_out/matrix/whisper-medium.srt",
+      "cer": 16.42,
+      "x_realtime": 10.8
+    },
+    {
+      "alias": "whisper-small",
+      "backend": "mlx-whisper",
+      "repo": "mlx-community/whisper-small-mlx",
+      "cmd": "mlx_asr.cli 0816_180s.wav --model whisper-small -o bench_out/matrix/whisper-small.srt --language ja",
+      "returncode": 0,
+      "wall_s": 8.3,
+      "ok": true,
+      "cues": 35,
+      "out": "bench_out/matrix/whisper-small.srt",
+      "cer": 24.47,
+      "x_realtime": 21.7
+    },
+    {
+      "alias": "whisper-base",
+      "backend": "mlx-whisper",
+      "repo": "mlx-community/whisper-base-mlx",
+      "cmd": "mlx_asr.cli 0816_180s.wav --model whisper-base -o bench_out/matrix/whisper-base.srt --language ja",
+      "returncode": 0,
+      "wall_s": 8.6,
+      "ok": true,
+      "cues": 49,
+      "out": "bench_out/matrix/whisper-base.srt",
+      "cer": 35.59,
+      "x_realtime": 20.9
+    },
+    {
+      "alias": "whisper-tiny",
+      "backend": "mlx-whisper",
+      "repo": "mlx-community/whisper-tiny-mlx",
+      "cmd": "mlx_asr.cli 0816_180s.wav --model whisper-tiny -o bench_out/matrix/whisper-tiny.srt --language ja",
+      "returncode": 0,
+      "wall_s": 3.5,
+      "ok": true,
+      "cues": 31,
+      "out": "bench_out/matrix/whisper-tiny.srt",
+      "cer": 32.1,
+      "x_realtime": 51.4
+    },
+    {
+      "alias": "kotoba",
+      "backend": "mlx-chunked",
+      "repo": "kaiinui/kotoba-whisper-v2.0-mlx",
+      "cmd": "mlx_asr.cli 0816_180s.wav --model kotoba -o bench_out/matrix/kotoba.srt --language ja",
+      "returncode": 0,
+      "wall_s": 18.4,
+      "ok": true,
+      "cues": 51,
+      "out": "bench_out/matrix/kotoba.srt",
+      "cer": 22.67,
+      "x_realtime": 9.8
+    }
+  ]
+}

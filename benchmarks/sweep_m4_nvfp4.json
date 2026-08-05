@@ -1,0 +1,141 @@
+{
+  "machine": {
+    "chip": "Apple M4",
+    "ram_gb": 17,
+    "gpu_cores": "10",
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.5.2",
+    "mlx": "0.32.0"
+  },
+  "model": "models/voxtral-nvfp4",
+  "kv_bits": null,
+  "steps": 400,
+  "results": [
+    {
+      "batch": 1,
+      "steps_per_s": 44.63,
+      "ms_per_step": 22.4,
+      "tok_per_s": 45,
+      "x_realtime": 3.6,
+      "peak_gb": 2.79,
+      "blocks": [
+        46.39,
+        43.8,
+        44.9,
+        43.54
+      ]
+    },
+    {
+      "batch": 2,
+      "steps_per_s": 38.19,
+      "ms_per_step": 26.2,
+      "tok_per_s": 76,
+      "x_realtime": 6.1,
+      "peak_gb": 2.91,
+      "blocks": [
+        39.05,
+        38.54,
+        37.83,
+        37.39
+      ]
+    },
+    {
+      "batch": 4,
+      "steps_per_s": 19.26,
+      "ms_per_step": 51.9,
+      "tok_per_s": 77,
+      "x_realtime": 6.2,
+      "peak_gb": 3.25,
+      "blocks": [
+        19.72,
+        19.44,
+        19.1,
+        18.8
+      ]
+    },
+    {
+      "batch": 8,
+      "steps_per_s": 9.03,
+      "ms_per_step": 110.8,
+      "tok_per_s": 72,
+      "x_realtime": 5.8,
+      "peak_gb": 3.78,
+      "blocks": [
+        9.26,
+        9.15,
+        8.96,
+        8.76
+      ]
+    },
+    {
+      "batch": 12,
+      "steps_per_s": 11.28,
+      "ms_per_step": 88.7,
+      "tok_per_s": 135,
+      "x_realtime": 10.8,
+      "peak_gb": 4.45,
+      "blocks": [
+        11.85,
+        11.48,
+        10.88,
+        10.96
+      ]
+    },
+    {
+      "batch": 16,
+      "steps_per_s": 11.07,
+      "ms_per_step": 90.3,
+      "tok_per_s": 177,
+      "x_realtime": 14.2,
+      "peak_gb": 4.94,
+      "blocks": [
+        11.76,
+        11.38,
+        10.72,
+        10.51
+      ]
+    },
+    {
+      "batch": 24,
+      "steps_per_s": 10.28,
+      "ms_per_step": 97.3,
+      "tok_per_s": 247,
+      "x_realtime": 19.7,
+      "peak_gb": 5.92,
+      "blocks": [
+        11.22,
+        10.72,
+        9.7,
+        9.67
+      ]
+    },
+    {
+      "batch": 32,
+      "steps_per_s": 9.66,
+      "ms_per_step": 103.6,
+      "tok_per_s": 309,
+      "x_realtime": 24.7,
+      "peak_gb": 6.84,
+      "blocks": [
+        10.82,
+        10.15,
+        9.03,
+        8.88
+      ]
+    },
+    {
+      "batch": 48,
+      "steps_per_s": 5.23,
+      "ms_per_step": 191.4,
+      "tok_per_s": 251,
+      "x_realtime": 20.1,
+      "peak_gb": 8.42,
+      "blocks": [
+        5.78,
+        5.5,
+        4.81,
+        4.93
+      ]
+    }
+  ]
+}

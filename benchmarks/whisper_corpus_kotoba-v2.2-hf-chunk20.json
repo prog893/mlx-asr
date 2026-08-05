@@ -1,0 +1,127 @@
+{
+  "engine": "transformers-chunked",
+  "config": {
+    "corpus": "<PATH>/corpus",
+    "pair": null,
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 20.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kotoba-v2.2-hf-chunk20",
+    "keep_hyp": "<PATH>/whisper_hyp",
+    "json": "<PATH>/whisper_corpus_kotoba-v2.2-hf-chunk20.json"
+  },
+  "label": "kotoba-v2.2-hf-chunk20",
+  "languages": [
+    "ja"
+  ],
+  "skipped_files": [
+    "rec-06",
+    "rec-07"
+  ],
+  "aggregate": {
+    "char": 0.27817
+  },
+  "ref_units": {
+    "char": 28511,
+    "word": 0
+  },
+  "x_realtime": 37.57,
+  "model_load_s": 3.5,
+  "throughput_comparable_to_mlx": false,
+  "results": [
+    {
+      "file": "rec-03",
+      "duration_s": 798.0,
+      "unit": "char",
+      "x_realtime": 37.2,
+      "requested_language": "ja",
+      "ref_chars": 2535,
+      "hyp_chars": 2724,
+      "extra_ratio": 1.0745562130177515,
+      "coverage": 0.7917159763313609,
+      "cer": 0.41499013806706114,
+      "coverage_cer": 0.31479289940828403,
+      "subs": 193,
+      "dels": 335,
+      "insertions_counted": 270,
+      "insertions_excused": 254,
+      "excused_run_count": 3
+    },
+    {
+      "file": "rec-05",
+      "duration_s": 1553.0,
+      "unit": "char",
+      "x_realtime": 43.2,
+      "requested_language": "ja",
+      "ref_chars": 2313,
+      "hyp_chars": 3277,
+      "extra_ratio": 1.4167747514051017,
+      "coverage": 0.8201469952442715,
+      "cer": 0.7008214440121054,
+      "coverage_cer": 0.2438391699092088,
+      "subs": 175,
+      "dels": 241,
+      "insertions_counted": 148,
+      "insertions_excused": 1057,
+      "excused_run_count": 9
+    },
+    {
+      "file": "rec-01",
+      "duration_s": 3121.0,
+      "unit": "char",
+      "x_realtime": 38.3,
+      "requested_language": "ja",
+      "ref_chars": 6340,
+      "hyp_chars": 8692,
+      "extra_ratio": 1.3709779179810726,
+      "coverage": 0.8197160883280757,
+      "cer": 0.62602523659306,
+      "coverage_cer": 0.2883280757097792,
+      "subs": 669,
+      "dels": 474,
+      "insertions_counted": 685,
+      "insertions_excused": 2141,
+      "excused_run_count": 13
+    },
+    {
+      "file": "rec-04",
+      "duration_s": 4175.0,
+      "unit": "char",
+      "x_realtime": 35.4,
+      "requested_language": "ja",
+      "ref_chars": 7493,
+      "hyp_chars": 10311,
+      "extra_ratio": 1.3760843453890297,
+      "coverage": 0.817162685172828,
+      "cer": 0.6522087281462698,
+      "coverage_cer": 0.3042839983985053,
+      "subs": 671,
+      "dels": 699,
+      "insertions_counted": 910,
+      "insertions_excused": 2607,
+      "excused_run_count": 30
+    },
+    {
+      "file": "rec-02",
+      "duration_s": 5592.0,
+      "unit": "char",
+      "x_realtime": 37.6,
+      "requested_language": "ja",
+      "ref_chars": 9830,
+      "hyp_chars": 14731,
+      "extra_ratio": 1.4985757884028483,
+      "coverage": 0.8134282807731434,
+      "cer": 0.7670396744659207,
+      "coverage_cer": 0.2503560528992879,
+      "subs": 1029,
+      "dels": 805,
+      "insertions_counted": 627,
+      "insertions_excused": 5079,
+      "excused_run_count": 38
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "corpus": "<PATH>/corpus_timed",
+  "break_tol": 0.5,
+  "files": [
+    "0816_16k",
+    "2yQ7uxd7MVo",
+    "EBDwjj8czIw",
+    "UUVawCOfMGw",
+    "fn_vD4wB6lM_drive",
+    "moYDTCX0GO8",
+    "vajAUtAbY3M"
+  ],
+  "results": [
+    {
+      "gap_s": 0.7,
+      "max_chars": 32,
+      "max_dur_s": 7.0,
+      "break_f1": 0.4233973445585386,
+      "mid_phrase_rate": 0.5598241033103099,
+      "cue_ratio": 1.2500164264623037,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 32,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4233973445585386,
+      "mid_phrase_rate": 0.5598241033103099,
+      "cue_ratio": 1.2500164264623037,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 72,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4209083147215716,
+      "mid_phrase_rate": 0.5308274054380124,
+      "cue_ratio": 1.0018385302251398,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 72,
+      "max_dur_s": 7.0,
+      "break_f1": 0.41807116529041516,
+      "mid_phrase_rate": 0.5401034678380465,
+      "cue_ratio": 1.025702299260076,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 32,
+      "max_dur_s": 7.0,
+      "break_f1": 0.36210166922837167,
+      "mid_phrase_rate": 0.5907855969785247,
+      "cue_ratio": 0.9915224790301777,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 32,
+      "max_dur_s": 9.0,
+      "break_f1": 0.36210166922837167,
+      "mid_phrase_rate": 0.5907855969785247,
+      "cue_ratio": 0.9915224790301777,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 72,
+      "max_dur_s": 7.0,
+      "break_f1": 0.35089878473290426,
+      "mid_phrase_rate": 0.544649350265151,
+      "cue_ratio": 0.745035265794117,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 72,
+      "max_dur_s": 9.0,
+      "break_f1": 0.34379697749209914,
+      "mid_phrase_rate": 0.5330469923499909,
+      "cue_ratio": 0.6919282973935539,
+      "n_files": 7
+    }
+  ]
+}

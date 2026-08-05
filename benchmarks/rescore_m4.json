@@ -1,0 +1,71 @@
+{
+  "reference": "<PATH>/0816_online_narration_jpn.srt",
+  "results": [
+    {
+      "file": "c60b16.srt",
+      "cer": 0.0749,
+      "kana_cer": 0.0599,
+      "lenient_cer": 0.0728,
+      "forgiven": 9,
+      "cer_ci95": [
+        0.0597,
+        0.0907
+      ]
+    },
+    {
+      "file": "c60b16_kv8.srt",
+      "cer": 0.0744,
+      "kana_cer": 0.0593,
+      "lenient_cer": 0.0723,
+      "forgiven": 9,
+      "cer_ci95": [
+        0.0597,
+        0.0905
+      ]
+    },
+    {
+      "file": "c30b32.srt",
+      "cer": 0.0906,
+      "kana_cer": 0.0696,
+      "lenient_cer": 0.0875,
+      "forgiven": 13,
+      "cer_ci95": [
+        0.0733,
+        0.1119
+      ]
+    },
+    {
+      "file": "overlap_0s.srt",
+      "cer": 0.0923,
+      "kana_cer": 0.071,
+      "lenient_cer": 0.0892,
+      "forgiven": 13,
+      "cer_ci95": [
+        0.075,
+        0.1115
+      ]
+    },
+    {
+      "file": "overlap_4s.srt",
+      "cer": 0.0797,
+      "kana_cer": 0.0606,
+      "lenient_cer": 0.0766,
+      "forgiven": 13,
+      "cer_ci95": [
+        0.0626,
+        0.0988
+      ]
+    },
+    {
+      "file": "overlap_8s.srt",
+      "cer": 0.0742,
+      "kana_cer": 0.0572,
+      "lenient_cer": 0.0711,
+      "forgiven": 13,
+      "cer_ci95": [
+        0.0614,
+        0.0874
+      ]
+    }
+  ]
+}

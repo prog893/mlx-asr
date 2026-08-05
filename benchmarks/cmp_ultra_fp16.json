@@ -1,0 +1,17 @@
+{
+  "a": "precision_fp16",
+  "b": "precision_4bit",
+  "metric": "cer",
+  "regions": 40,
+  "cer_a": 0.0732,
+  "cer_b": 0.0725,
+  "paired_diff": 0.00073,
+  "ci95": [
+    -0.00331,
+    0.00478
+  ],
+  "significant": false,
+  "sign_test_p": 1.0,
+  "regions_won_a": 9,
+  "regions_won_b": 9
+}

@@ -1,0 +1,165 @@
+{
+  "baseline": "c30b32_kv8",
+  "n_runs": 6,
+  "runs": [
+    "large-v3-turbo-nocond",
+    "large-v3-turbo-nocond-rerun",
+    "turbo-nocond-r3",
+    "turbo-nocond-r4",
+    "turbo-nocond-r5",
+    "turbo-nocond-r6"
+  ],
+  "units": [
+    {
+      "unit": "char",
+      "metric": "coverageCER",
+      "baseline": 0.16443,
+      "runs": [
+        0.14931,
+        0.16348,
+        0.16218,
+        0.14766,
+        0.15896,
+        0.17288
+      ],
+      "mean": 0.15908,
+      "sd": 0.00944,
+      "ci95_mean": [
+        0.14917,
+        0.16898
+      ],
+      "runs_beating_baseline": 5,
+      "n_runs": 6,
+      "verdict": "NOT resolved: the run distribution straddles the baseline"
+    },
+    {
+      "unit": "word",
+      "metric": "coverageWER",
+      "baseline": 0.26546,
+      "runs": [
+        0.21984,
+        0.22018,
+        0.23944,
+        0.21173,
+        0.22609,
+        0.21713
+      ],
+      "mean": 0.2224,
+      "sd": 0.00956,
+      "ci95_mean": [
+        0.21237,
+        0.23244
+      ],
+      "runs_beating_baseline": 6,
+      "n_runs": 6,
+      "verdict": "whisper is better: interval entirely below baseline"
+    }
+  ],
+  "per_file": [
+    {
+      "file": "rec-03",
+      "unit": "char",
+      "baseline": 0.11677,
+      "runs": [
+        0.11913,
+        0.11913,
+        0.11913,
+        0.11913,
+        0.11913,
+        0.11913
+      ],
+      "wins": 0,
+      "n": 6
+    },
+    {
+      "file": "rec-07",
+      "unit": "word",
+      "baseline": 0.27993,
+      "runs": [
+        0.29736,
+        0.31872,
+        0.31703,
+        0.29792,
+        0.29792,
+        0.29904
+      ],
+      "wins": 0,
+      "n": 6
+    },
+    {
+      "file": "rec-05",
+      "unit": "char",
+      "baseline": 0.19758,
+      "runs": [
+        0.14051,
+        0.16126,
+        0.16818,
+        0.12322,
+        0.15348,
+        0.18158
+      ],
+      "wins": 6,
+      "n": 6
+    },
+    {
+      "file": "rec-06",
+      "unit": "word",
+      "baseline": 0.25924,
+      "runs": [
+        0.18652,
+        0.17782,
+        0.20609,
+        0.17468,
+        0.19522,
+        0.18193
+      ],
+      "wins": 6,
+      "n": 6
+    },
+    {
+      "file": "rec-01",
+      "unit": "char",
+      "baseline": 0.17366,
+      "runs": [
+        0.18849,
+        0.1795,
+        0.18943,
+        0.20284,
+        0.19621,
+        0.19117
+      ],
+      "wins": 0,
+      "n": 6
+    },
+    {
+      "file": "rec-04",
+      "unit": "char",
+      "baseline": 0.16495,
+      "runs": [
+        0.11384,
+        0.12318,
+        0.13239,
+        0.09782,
+        0.13826,
+        0.13639
+      ],
+      "wins": 6,
+      "n": 6
+    },
+    {
+      "file": "rec-02",
+      "unit": "char",
+      "baseline": 0.16256,
+      "runs": [
+        0.16094,
+        0.19583,
+        0.17701,
+        0.16317,
+        0.16226,
+        0.20071
+      ],
+      "wins": 2,
+      "n": 6
+    }
+  ]
+}

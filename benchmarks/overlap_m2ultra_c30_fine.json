@@ -1,0 +1,96 @@
+{
+  "config": {
+    "audio": "<PATH>/0816_16k.wav",
+    "reference": "<PATH>/0816_online_narration_jpn.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0,4,6,7,8,10,12,15",
+    "json": "<PATH>/overlap_m2ultra_c30_fine.json"
+  },
+  "duration_s": 935.1008125,
+  "results": [
+    {
+      "overlap_s": 0.0,
+      "cer": 0.0873,
+      "delta": 0.0,
+      "wall_s": 28.6,
+      "x_realtime": 32.7,
+      "steps": 446,
+      "extra_audio_s": 0.0,
+      "cues": 212
+    },
+    {
+      "overlap_s": 4.0,
+      "cer": 0.073,
+      "delta": -0.0143,
+      "wall_s": 32.0,
+      "x_realtime": 29.2,
+      "steps": 496,
+      "extra_audio_s": 124.0,
+      "cues": 215
+    },
+    {
+      "overlap_s": 6.0,
+      "cer": 0.0761,
+      "delta": -0.0112,
+      "wall_s": 33.8,
+      "x_realtime": 27.7,
+      "steps": 521,
+      "extra_audio_s": 186.0,
+      "cues": 212
+    },
+    {
+      "overlap_s": 7.0,
+      "cer": 0.0763,
+      "delta": -0.0109,
+      "wall_s": 34.6,
+      "x_realtime": 27.0,
+      "steps": 534,
+      "extra_audio_s": 218.2,
+      "cues": 212
+    },
+    {
+      "overlap_s": 8.0,
+      "cer": 0.0725,
+      "delta": -0.0147,
+      "wall_s": 35.5,
+      "x_realtime": 26.3,
+      "steps": 546,
+      "extra_audio_s": 248.0,
+      "cues": 211
+    },
+    {
+      "overlap_s": 10.0,
+      "cer": 0.0756,
+      "delta": -0.0117,
+      "wall_s": 36.5,
+      "x_realtime": 25.6,
+      "steps": 571,
+      "extra_audio_s": 310.0,
+      "cues": 212
+    },
+    {
+      "overlap_s": 12.0,
+      "cer": 0.078,
+      "delta": -0.0093,
+      "wall_s": 40.5,
+      "x_realtime": 23.1,
+      "steps": 596,
+      "extra_audio_s": 372.0,
+      "cues": 208
+    },
+    {
+      "overlap_s": 15.0,
+      "cer": 0.112,
+      "delta": 0.0247,
+      "wall_s": 42.1,
+      "x_realtime": 22.2,
+      "steps": 634,
+      "extra_audio_s": 466.2,
+      "cues": 214
+    }
+  ]
+}

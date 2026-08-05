@@ -1,0 +1,17 @@
+{
+  "a": "c30b32_kv8",
+  "b": "c60b16_kv8",
+  "metric": "cer",
+  "regions": 40,
+  "cer_a": 0.0911,
+  "cer_b": 0.0725,
+  "paired_diff": 0.01849,
+  "ci95": [
+    0.00714,
+    0.03243
+  ],
+  "significant": true,
+  "sign_test_p": 0.0931,
+  "regions_won_a": 7,
+  "regions_won_b": 16
+}

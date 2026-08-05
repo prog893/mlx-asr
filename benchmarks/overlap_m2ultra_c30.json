@@ -1,0 +1,66 @@
+{
+  "config": {
+    "audio": "<PATH>/0816_16k.wav",
+    "reference": "<PATH>/0816_online_narration_jpn.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0,1.6,3,5,8",
+    "json": "<PATH>/overlap_m2ultra_c30.json"
+  },
+  "duration_s": 935.1008125,
+  "results": [
+    {
+      "overlap_s": 0.0,
+      "cer": 0.0873,
+      "delta": 0.0,
+      "wall_s": 29.3,
+      "x_realtime": 32.0,
+      "steps": 446,
+      "extra_audio_s": 0.0,
+      "cues": 212
+    },
+    {
+      "overlap_s": 1.6,
+      "cer": 0.0809,
+      "delta": -0.0064,
+      "wall_s": 30.6,
+      "x_realtime": 30.6,
+      "steps": 466,
+      "extra_audio_s": 49.6,
+      "cues": 212
+    },
+    {
+      "overlap_s": 3.0,
+      "cer": 0.0811,
+      "delta": -0.0062,
+      "wall_s": 31.0,
+      "x_realtime": 30.2,
+      "steps": 484,
+      "extra_audio_s": 94.2,
+      "cues": 211
+    },
+    {
+      "overlap_s": 5.0,
+      "cer": 0.0851,
+      "delta": -0.0021,
+      "wall_s": 32.9,
+      "x_realtime": 28.4,
+      "steps": 508,
+      "extra_audio_s": 153.8,
+      "cues": 212
+    },
+    {
+      "overlap_s": 8.0,
+      "cer": 0.0725,
+      "delta": -0.0147,
+      "wall_s": 35.6,
+      "x_realtime": 26.3,
+      "steps": 546,
+      "extra_audio_s": 248.0,
+      "cues": 211
+    }
+  ]
+}

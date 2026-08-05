@@ -1,0 +1,29 @@
+__pycache__/
+.DS_Store
+*.pyc
+.venv/
+
+# model weights and local conversions
+models/
+
+# chronological work log: kept locally, not published (RESULTS.md and
+# docs/PERFORMANCE.md carry the conclusions)
+PROGRESS.md
+
+# run outputs and scratch
+bench_out/
+archive/
+legacy/
+*.log
+
+# test media and generated transcripts
+*.wav
+*.srt
+*.vtt
+ref_*.txt
+transcript*.txt
+hyp_*.txt
+
+# keep benchmark results and the profile registry
+!benchmarks/*.json
+!mlx_asr/*.json

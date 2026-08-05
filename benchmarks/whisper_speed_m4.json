@@ -1,0 +1,79 @@
+{
+  "probe_audio": "/tmp/probe120.wav",
+  "probe_seconds": 120.0,
+  "corpus_hours": 5.2,
+  "results": [
+    {
+      "model": "mlx-community/whisper-tiny-mlx",
+      "load_s": 32.7,
+      "wall_s": 2.0,
+      "x_realtime": 58.62,
+      "projected_corpus_h": 0.09,
+      "chars": 639,
+      "segments": 18
+    },
+    {
+      "model": "mlx-community/whisper-base-mlx",
+      "load_s": 13.5,
+      "wall_s": 2.2,
+      "x_realtime": 53.4,
+      "projected_corpus_h": 0.1,
+      "chars": 640,
+      "segments": 25
+    },
+    {
+      "model": "mlx-community/whisper-small-mlx",
+      "load_s": 1.0,
+      "wall_s": 5.2,
+      "x_realtime": 23.09,
+      "projected_corpus_h": 0.23,
+      "chars": 608,
+      "segments": 15
+    },
+    {
+      "model": "mlx-community/whisper-medium-mlx",
+      "load_s": 182.9,
+      "wall_s": 11.3,
+      "x_realtime": 10.63,
+      "projected_corpus_h": 0.49,
+      "chars": 607,
+      "segments": 36
+    },
+    {
+      "model": "mlx-community/whisper-large-v3-turbo",
+      "load_s": 104.3,
+      "wall_s": 8.5,
+      "x_realtime": 14.07,
+      "projected_corpus_h": 0.37,
+      "chars": 626,
+      "segments": 43
+    },
+    {
+      "model": "mlx-community/whisper-large-v2-mlx",
+      "load_s": 158.5,
+      "wall_s": 71.9,
+      "x_realtime": 1.67,
+      "projected_corpus_h": 3.12,
+      "chars": 745,
+      "segments": 45
+    },
+    {
+      "model": "mlx-community/whisper-large-v3-mlx",
+      "load_s": 3.4,
+      "wall_s": 68.5,
+      "x_realtime": 1.75,
+      "projected_corpus_h": 2.97,
+      "chars": 628,
+      "segments": 113
+    },
+    {
+      "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+      "load_s": 2.2,
+      "wall_s": 25.9,
+      "x_realtime": 4.63,
+      "projected_corpus_h": 1.12,
+      "chars": 250,
+      "segments": 103
+    }
+  ]
+}

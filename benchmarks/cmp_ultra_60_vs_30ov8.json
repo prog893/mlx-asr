@@ -1,0 +1,17 @@
+{
+  "a": "ultra 60s ov0",
+  "b": "ultra 30s ov8",
+  "metric": "cer",
+  "regions": 40,
+  "cer_a": 0.0728,
+  "cer_b": 0.0713,
+  "paired_diff": 0.00143,
+  "ci95": [
+    -0.00574,
+    0.00833
+  ],
+  "significant": false,
+  "sign_test_p": 0.5716,
+  "regions_won_a": 12,
+  "regions_won_b": 16
+}

@@ -1,0 +1,206 @@
+{
+  "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+  "audio": "<PATH>/0816_16k.wav",
+  "prompt_capacity": 31,
+  "reference_counts": {
+    "term-01": 1,
+    "term-02": 2,
+    "term-03": 6,
+    "term-04": 11,
+    "term-05": 1
+  },
+  "results": [
+    {
+      "variant": "none",
+      "prompt": "",
+      "tokens": 0,
+      "kept": 0,
+      "cer": 0.0728,
+      "delta_vs_none": 0.0,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 1,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 41.0
+    },
+    {
+      "variant": "terms_cjk_sep",
+      "prompt": "<TEXT>",
+      "tokens": 33,
+      "kept": 31,
+      "cer": 0.0721,
+      "delta_vs_none": -0.0007,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 4,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 40.8
+    },
+    {
+      "variant": "terms_ascii_sep",
+      "prompt": "<TEXT>, <TEXT>, <TEXT>, <TEXT>, <TEXT>, <TEXT>, <TEXT>",
+      "tokens": 38,
+      "kept": 31,
+      "cer": 0.0709,
+      "delta_vs_none": -0.0019,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 4,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 40.9
+    },
+    {
+      "variant": "terms_space_sep",
+      "prompt": "<TEXT> <TEXT> <TEXT> <TEXT> <TEXT> <TEXT> <TEXT>",
+      "tokens": 32,
+      "kept": 31,
+      "cer": 0.0716,
+      "delta_vs_none": -0.0012,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 4,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 42.6
+    },
+    {
+      "variant": "terms_newline_sep",
+      "prompt": "<TEXT>",
+      "tokens": 4,
+      "kept": 4,
+      "cer": 0.0759,
+      "delta_vs_none": 0.0031,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 1,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 41.2
+    },
+    {
+      "variant": "terms_reversed",
+      "prompt": "<TEXT>",
+      "tokens": 33,
+      "kept": 31,
+      "cer": 0.0709,
+      "delta_vs_none": -0.0019,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 4,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 40.9
+    },
+    {
+      "variant": "terms_short",
+      "prompt": "<TEXT>",
+      "tokens": 16,
+      "kept": 16,
+      "cer": 0.0721,
+      "delta_vs_none": -0.0007,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 4,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 42.6
+    },
+    {
+      "variant": "topic_only",
+      "prompt": "<TEXT>",
+      "tokens": 17,
+      "kept": 17,
+      "cer": 0.0709,
+      "delta_vs_none": -0.0019,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 1,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 41.8
+    },
+    {
+      "variant": "topic_plus_terms",
+      "prompt": "<TEXT>",
+      "tokens": 33,
+      "kept": 31,
+      "cer": 0.0711,
+      "delta_vs_none": -0.0017,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 4,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 42.4
+    },
+    {
+      "variant": "sentence_natural",
+      "prompt": "<TEXT>",
+      "tokens": 23,
+      "kept": 23,
+      "cer": 0.0711,
+      "delta_vs_none": -0.0017,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 4,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 42.6
+    },
+    {
+      "variant": "lang_hint",
+      "prompt": "<TEXT>",
+      "tokens": 23,
+      "kept": 23,
+      "cer": 0.0749,
+      "delta_vs_none": 0.0021,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 4,
+        "term-03": 0,
+        "term-04": 11,
+        "term-05": 1
+      },
+      "wall_s": 40.9
+    },
+    {
+      "variant": "generic_asr",
+      "prompt": "Transcribe the Japanese audio accurately.",
+      "tokens": 7,
+      "kept": 7,
+      "cer": 0.1317,
+      "delta_vs_none": 0.059,
+      "term_hits": {
+        "term-01": 0,
+        "term-02": 1,
+        "term-03": 0,
+        "term-04": 10,
+        "term-05": 1
+      },
+      "wall_s": 41.9
+    }
+  ]
+}

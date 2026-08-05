@@ -1,0 +1,84 @@
+{
+  "a": "large-v3-turbo-autodetect",
+  "b": "voxtral",
+  "a_json": "bench_out/whisper_ultra/whisper_corpus_large-v3-turbo-autodetect.json",
+  "b_json": "benchmarks/corpus_c30b32_kv8.json",
+  "a_x_realtime": 24.29,
+  "b_x_realtime": 31.31,
+  "boot": 20000,
+  "units": [
+    {
+      "unit": "char",
+      "metric": "coverageCER",
+      "n_files": 5,
+      "ref_units": 28511,
+      "aggregate_a": 0.50139,
+      "aggregate_b": 0.16443,
+      "paired_diff": 0.33696,
+      "ci95": [
+        0.19647,
+        0.42359
+      ],
+      "significant": true,
+      "sign_test_p": 0.0625,
+      "files_won_a": 0,
+      "files_won_b": 5,
+      "per_file": [
+        {
+          "file": "rec-03",
+          "a": 0.1211,
+          "b": 0.11677
+        },
+        {
+          "file": "rec-05",
+          "a": 0.61349,
+          "b": 0.19758
+        },
+        {
+          "file": "rec-01",
+          "a": 0.51104,
+          "b": 0.17366
+        },
+        {
+          "file": "rec-04",
+          "a": 0.43721,
+          "b": 0.16495
+        },
+        {
+          "file": "rec-02",
+          "a": 0.61577,
+          "b": 0.16256
+        }
+      ]
+    },
+    {
+      "unit": "word",
+      "metric": "coverageWER",
+      "n_files": 2,
+      "ref_units": 5918,
+      "aggregate_a": 0.22727,
+      "aggregate_b": 0.26546,
+      "paired_diff": -0.03819,
+      "ci95": [
+        -0.05847,
+        0.00899
+      ],
+      "significant": false,
+      "sign_test_p": 1.0,
+      "files_won_a": 1,
+      "files_won_b": 1,
+      "per_file": [
+        {
+          "file": "rec-07",
+          "a": 0.28893,
+          "b": 0.27993
+        },
+        {
+          "file": "rec-06",
+          "a": 0.20077,
+          "b": 0.25924
+        }
+      ]
+    }
+  ]
+}

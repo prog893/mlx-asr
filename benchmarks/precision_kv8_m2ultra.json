@@ -1,0 +1,45 @@
+{
+  "config": {
+    "audio": "<PATH>/0816_16k.wav",
+    "reference": "<PATH>/0816_online_narration_jpn.srt",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "no_prompt": false,
+    "models": "fp16,4bit",
+    "json": "<PATH>/precision_kv8_m2ultra.json"
+  },
+  "duration_s": 935.1008125,
+  "chunks": 16,
+  "results": [
+    {
+      "weights": "fp16",
+      "repo": "mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16",
+      "cer": 0.0761,
+      "kana_cer": 0.0608,
+      "wall_s": 65.3,
+      "x_realtime": 14.3,
+      "encode_s": 11.1,
+      "decode_s": 53.6,
+      "steps_per_s": 15.21,
+      "peak_gb": 12.87,
+      "model_load_s": 1.4,
+      "cues": 207
+    },
+    {
+      "weights": "4bit",
+      "repo": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "cer": 0.0725,
+      "kana_cer": 0.0562,
+      "wall_s": 42.8,
+      "x_realtime": 21.8,
+      "encode_s": 10.6,
+      "decode_s": 31.8,
+      "steps_per_s": 25.67,
+      "peak_gb": 6.75,
+      "model_load_s": 0.7,
+      "cues": 210
+    }
+  ]
+}

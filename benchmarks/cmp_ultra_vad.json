@@ -1,0 +1,17 @@
+{
+  "a": "vad_c60_vad",
+  "b": "c60b16_kv8",
+  "metric": "cer",
+  "regions": 40,
+  "cer_a": 0.1025,
+  "cer_b": 0.0725,
+  "paired_diff": 0.02999,
+  "ci95": [
+    0.00739,
+    0.05928
+  ],
+  "significant": true,
+  "sign_test_p": 0.0125,
+  "regions_won_a": 7,
+  "regions_won_b": 21
+}

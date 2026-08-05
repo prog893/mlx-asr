@@ -1,0 +1,60 @@
+{
+  "engine": "mlx-whisper",
+  "config": {
+    "corpus": null,
+    "pair": [
+      [
+        "0816_16k.wav",
+        "0816_online_narration_jpn.srt"
+      ]
+    ],
+    "model": "mlx-community/whisper-large-v3-turbo",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "large-v3-turbo",
+    "keep_hyp": "<PATH>/whisper_hyp",
+    "json": "<PATH>/whisper_narration_large-v3-turbo.json"
+  },
+  "label": "large-v3-turbo",
+  "languages": [
+    "ja"
+  ],
+  "skipped_files": [],
+  "aggregate": {
+    "char": 0.08276
+  },
+  "ref_units": {
+    "char": 4205,
+    "word": 0
+  },
+  "x_realtime": 44.26,
+  "model_load_s": 0.7,
+  "results": [
+    {
+      "file": "0816_16k",
+      "duration_s": 935.1,
+      "unit": "char",
+      "x_realtime": 44.3,
+      "requested_language": "ja",
+      "detected_language": "ja",
+      "segments": 365,
+      "ref_chars": 4205,
+      "hyp_chars": 4242,
+      "extra_ratio": 1.0087990487514864,
+      "coverage": 0.9395957193816885,
+      "cer": 0.09084423305588585,
+      "coverage_cer": 0.08275862068965517,
+      "subs": 163,
+      "dels": 91,
+      "insertions_counted": 94,
+      "insertions_excused": 34,
+      "excused_run_count": 1
+    }
+  ]
+}

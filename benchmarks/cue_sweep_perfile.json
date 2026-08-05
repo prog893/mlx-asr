@@ -1,0 +1,199 @@
+{
+  "corpus": "<PATH>/corpus_timed",
+  "break_tol": 0.5,
+  "files": [
+    "0816_16k",
+    "2yQ7uxd7MVo",
+    "EBDwjj8czIw",
+    "UUVawCOfMGw",
+    "fn_vD4wB6lM_drive",
+    "moYDTCX0GO8",
+    "vajAUtAbY3M"
+  ],
+  "results": [
+    {
+      "gap_s": 0.7,
+      "max_chars": 32,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4233973445585386,
+      "mid_phrase_rate": 0.5598241033103099,
+      "cue_ratio": 1.2500164264623037,
+      "n_files": 7,
+      "per_file": {
+        "0816_16k": {
+          "break_f1": 0.3594,
+          "mid_phrase_rate": 0.6494,
+          "cue_ratio": 1.342
+        },
+        "2yQ7uxd7MVo": {
+          "break_f1": 0.4919,
+          "mid_phrase_rate": 0.4497,
+          "cue_ratio": 0.931
+        },
+        "EBDwjj8czIw": {
+          "break_f1": 0.3654,
+          "mid_phrase_rate": 0.6552,
+          "cue_ratio": 1.261
+        },
+        "UUVawCOfMGw": {
+          "break_f1": 0.4123,
+          "mid_phrase_rate": 0.5544,
+          "cue_ratio": 1.163
+        },
+        "fn_vD4wB6lM_drive": {
+          "break_f1": 0.4117,
+          "mid_phrase_rate": 0.5215,
+          "cue_ratio": 0.927
+        },
+        "moYDTCX0GO8": {
+          "break_f1": 0.4875,
+          "mid_phrase_rate": 0.4891,
+          "cue_ratio": 1.127
+        },
+        "vajAUtAbY3M": {
+          "break_f1": 0.4356,
+          "mid_phrase_rate": 0.5994,
+          "cue_ratio": 2.0
+        }
+      }
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 72,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4209083147215716,
+      "mid_phrase_rate": 0.5308274054380124,
+      "cue_ratio": 1.0018385302251398,
+      "n_files": 7,
+      "per_file": {
+        "0816_16k": {
+          "break_f1": 0.3472,
+          "mid_phrase_rate": 0.6435,
+          "cue_ratio": 1.139
+        },
+        "2yQ7uxd7MVo": {
+          "break_f1": 0.4725,
+          "mid_phrase_rate": 0.3982,
+          "cue_ratio": 0.706
+        },
+        "EBDwjj8czIw": {
+          "break_f1": 0.3814,
+          "mid_phrase_rate": 0.6373,
+          "cue_ratio": 1.109
+        },
+        "UUVawCOfMGw": {
+          "break_f1": 0.4106,
+          "mid_phrase_rate": 0.5543,
+          "cue_ratio": 1.054
+        },
+        "fn_vD4wB6lM_drive": {
+          "break_f1": 0.4206,
+          "mid_phrase_rate": 0.4534,
+          "cue_ratio": 0.73
+        },
+        "moYDTCX0GO8": {
+          "break_f1": 0.5031,
+          "mid_phrase_rate": 0.4458,
+          "cue_ratio": 0.98
+        },
+        "vajAUtAbY3M": {
+          "break_f1": 0.4109,
+          "mid_phrase_rate": 0.5833,
+          "cue_ratio": 1.295
+        }
+      }
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 32,
+      "max_dur_s": 9.0,
+      "break_f1": 0.36210166922837167,
+      "mid_phrase_rate": 0.5907855969785247,
+      "cue_ratio": 0.9915224790301777,
+      "n_files": 7,
+      "per_file": {
+        "0816_16k": {
+          "break_f1": 0.314,
+          "mid_phrase_rate": 0.6509,
+          "cue_ratio": 1.05
+        },
+        "2yQ7uxd7MVo": {
+          "break_f1": 0.3893,
+          "mid_phrase_rate": 0.525,
+          "cue_ratio": 0.75
+        },
+        "EBDwjj8czIw": {
+          "break_f1": 0.2743,
+          "mid_phrase_rate": 0.6867,
+          "cue_ratio": 0.902
+        },
+        "UUVawCOfMGw": {
+          "break_f1": 0.3446,
+          "mid_phrase_rate": 0.6101,
+          "cue_ratio": 0.958
+        },
+        "fn_vD4wB6lM_drive": {
+          "break_f1": 0.3437,
+          "mid_phrase_rate": 0.5623,
+          "cue_ratio": 0.735
+        },
+        "moYDTCX0GO8": {
+          "break_f1": 0.4338,
+          "mid_phrase_rate": 0.4861,
+          "cue_ratio": 0.882
+        },
+        "vajAUtAbY3M": {
+          "break_f1": 0.435,
+          "mid_phrase_rate": 0.6143,
+          "cue_ratio": 1.665
+        }
+      }
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 72,
+      "max_dur_s": 9.0,
+      "break_f1": 0.34379697749209914,
+      "mid_phrase_rate": 0.5330469923499909,
+      "cue_ratio": 0.6919282973935539,
+      "n_files": 7,
+      "per_file": {
+        "0816_16k": {
+          "break_f1": 0.3407,
+          "mid_phrase_rate": 0.5864,
+          "cue_ratio": 0.802
+        },
+        "2yQ7uxd7MVo": {
+          "break_f1": 0.3361,
+          "mid_phrase_rate": 0.4691,
+          "cue_ratio": 0.506
+        },
+        "EBDwjj8czIw": {
+          "break_f1": 0.2745,
+          "mid_phrase_rate": 0.6557,
+          "cue_ratio": 0.663
+        },
+        "UUVawCOfMGw": {
+          "break_f1": 0.33,
+          "mid_phrase_rate": 0.5725,
+          "cue_ratio": 0.789
+        },
+        "fn_vD4wB6lM_drive": {
+          "break_f1": 0.3235,
+          "mid_phrase_rate": 0.4885,
+          "cue_ratio": 0.509
+        },
+        "moYDTCX0GO8": {
+          "break_f1": 0.4175,
+          "mid_phrase_rate": 0.4431,
+          "cue_ratio": 0.682
+        },
+        "vajAUtAbY3M": {
+          "break_f1": 0.3844,
+          "mid_phrase_rate": 0.5159,
+          "cue_ratio": 0.892
+        }
+      }
+    }
+  ]
+}

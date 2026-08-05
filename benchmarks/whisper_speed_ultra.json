@@ -1,0 +1,81 @@
+{
+  "probe_audio": "/tmp/probe120.wav",
+  "probe_seconds": 120.0,
+  "corpus_hours": 5.2,
+  "opts": {},
+  "isolated_subprocess": true,
+  "results": [
+    {
+      "model": "mlx-community/whisper-tiny-mlx",
+      "load_s": 0.8,
+      "wall_s": 0.7,
+      "x_realtime": 173.71,
+      "projected_corpus_h": 0.03,
+      "chars": 649,
+      "segments": 18
+    },
+    {
+      "model": "mlx-community/whisper-base-mlx",
+      "load_s": 0.5,
+      "wall_s": 1.0,
+      "x_realtime": 123.96,
+      "projected_corpus_h": 0.04,
+      "chars": 640,
+      "segments": 25
+    },
+    {
+      "model": "mlx-community/whisper-small-mlx",
+      "load_s": 0.7,
+      "wall_s": 2.2,
+      "x_realtime": 54.45,
+      "projected_corpus_h": 0.1,
+      "chars": 607,
+      "segments": 15
+    },
+    {
+      "model": "mlx-community/whisper-medium-mlx",
+      "load_s": 1.1,
+      "wall_s": 3.6,
+      "x_realtime": 33.63,
+      "projected_corpus_h": 0.15,
+      "chars": 608,
+      "segments": 35
+    },
+    {
+      "model": "mlx-community/whisper-large-v3-turbo",
+      "load_s": 0.7,
+      "wall_s": 2.0,
+      "x_realtime": 61.1,
+      "projected_corpus_h": 0.09,
+      "chars": 626,
+      "segments": 43
+    },
+    {
+      "model": "mlx-community/whisper-large-v2-mlx",
+      "load_s": 1.2,
+      "wall_s": 11.7,
+      "x_realtime": 10.24,
+      "projected_corpus_h": 0.51,
+      "chars": 642,
+      "segments": 28
+    },
+    {
+      "model": "mlx-community/whisper-large-v3-mlx",
+      "load_s": 1.2,
+      "wall_s": 11.2,
+      "x_realtime": 10.73,
+      "projected_corpus_h": 0.48,
+      "chars": 626,
+      "segments": 40
+    },
+    {
+      "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+      "load_s": 0.9,
+      "wall_s": 4.3,
+      "x_realtime": 27.94,
+      "projected_corpus_h": 0.19,
+      "chars": 282,
+      "segments": 80
+    }
+  ]
+}

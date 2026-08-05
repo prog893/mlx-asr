@@ -1,0 +1,57 @@
+{
+  "engine": "transformers-chunked",
+  "config": {
+    "corpus": null,
+    "pair": [
+      [
+        "0816_16k.wav",
+        "0816_online_narration_jpn.srt"
+      ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 15.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kotoba-v2.2-hf-chunk15",
+    "keep_hyp": "<PATH>/whisper_hyp",
+    "json": "<PATH>/whisper_narration_kotoba-v2.2-hf-chunk15.json"
+  },
+  "label": "kotoba-v2.2-hf-chunk15",
+  "languages": [
+    "ja"
+  ],
+  "skipped_files": [],
+  "aggregate": {
+    "char": 0.2088
+  },
+  "ref_units": {
+    "char": 4205,
+    "word": 0
+  },
+  "x_realtime": 27.56,
+  "model_load_s": 3.7,
+  "throughput_comparable_to_mlx": false,
+  "results": [
+    {
+      "file": "0816_16k",
+      "duration_s": 935.1,
+      "unit": "char",
+      "x_realtime": 27.6,
+      "requested_language": "ja",
+      "ref_chars": 4205,
+      "hyp_chars": 3769,
+      "extra_ratio": 0.8963139120095125,
+      "coverage": 0.8195005945303211,
+      "cer": 0.20879904875148633,
+      "coverage_cer": 0.20879904875148633,
+      "subs": 204,
+      "dels": 555,
+      "insertions_counted": 119,
+      "insertions_excused": 0,
+      "excused_run_count": 0
+    }
+  ]
+}

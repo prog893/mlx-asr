@@ -1,0 +1,17 @@
+{
+  "a": "m4 c30 ov0",
+  "b": "m4 c30 ov8",
+  "metric": "cer",
+  "regions": 40,
+  "cer_a": 0.0913,
+  "cer_b": 0.0725,
+  "paired_diff": 0.01873,
+  "ci95": [
+    0.00734,
+    0.03225
+  ],
+  "significant": true,
+  "sign_test_p": 0.0357,
+  "regions_won_a": 8,
+  "regions_won_b": 20
+}

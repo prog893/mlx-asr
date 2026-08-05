@@ -1,0 +1,40 @@
+{
+  "config": {
+    "audio": "<PATH>/0816_16k.wav",
+    "reference": "<PATH>/0816_online_narration_jpn.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "variants": "none,carry_pair,carry",
+    "json": "<PATH>/seam_m2ultra.json"
+  },
+  "chunks": 32,
+  "results": [
+    {
+      "variant": "none",
+      "cer": 0.0873,
+      "delta": 0.0,
+      "wall_s": 27.6,
+      "x_realtime": 33.9,
+      "note": ""
+    },
+    {
+      "variant": "carry_pair",
+      "cer": 0.0856,
+      "delta": -0.0017,
+      "wall_s": 55.8,
+      "x_realtime": 16.8,
+      "note": "2 passes"
+    },
+    {
+      "variant": "carry",
+      "cer": 0.0856,
+      "delta": -0.0017,
+      "wall_s": 177.6,
+      "x_realtime": 5.3,
+      "note": "sequential, batch=1"
+    }
+  ]
+}

@@ -1,0 +1,663 @@
+{
+  "corpus": "<PATH>/corpus_timed",
+  "break_tol": 0.5,
+  "files": [
+    "0816_16k",
+    "2yQ7uxd7MVo",
+    "EBDwjj8czIw",
+    "UUVawCOfMGw",
+    "fn_vD4wB6lM_drive",
+    "moYDTCX0GO8",
+    "vajAUtAbY3M"
+  ],
+  "results": [
+    {
+      "gap_s": 0.4,
+      "max_chars": 56,
+      "max_dur_s": 5.0,
+      "break_f1": 0.45240317407683717,
+      "mid_phrase_rate": 0.5854408182342989,
+      "cue_ratio": 1.9075579857761114,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 72,
+      "max_dur_s": 5.0,
+      "break_f1": 0.4523273138281568,
+      "mid_phrase_rate": 0.5853529311084108,
+      "cue_ratio": 1.9043112325293579,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 42,
+      "max_dur_s": 5.0,
+      "break_f1": 0.4515013468025956,
+      "mid_phrase_rate": 0.585642322942774,
+      "cue_ratio": 1.9270642252141283,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 56,
+      "max_dur_s": 7.0,
+      "break_f1": 0.4507783451863506,
+      "mid_phrase_rate": 0.5857762699370951,
+      "cue_ratio": 1.8962537409124387,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 56,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4507783451863506,
+      "mid_phrase_rate": 0.5857762699370951,
+      "cue_ratio": 1.8962537409124387,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 72,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4505836598141436,
+      "mid_phrase_rate": 0.5856373711071406,
+      "cue_ratio": 1.8901787143957025,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 72,
+      "max_dur_s": 7.0,
+      "break_f1": 0.45023589445049045,
+      "mid_phrase_rate": 0.5864349393872886,
+      "cue_ratio": 1.890960488372899,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 42,
+      "max_dur_s": 7.0,
+      "break_f1": 0.449918510058927,
+      "mid_phrase_rate": 0.586906643752717,
+      "cue_ratio": 1.9247934636812347,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 42,
+      "max_dur_s": 9.0,
+      "break_f1": 0.449918510058927,
+      "mid_phrase_rate": 0.586906643752717,
+      "cue_ratio": 1.9247934636812347,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 32,
+      "max_dur_s": 5.0,
+      "break_f1": 0.44887409421603913,
+      "mid_phrase_rate": 0.5876656488601608,
+      "cue_ratio": 1.9811382165062563,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 32,
+      "max_dur_s": 7.0,
+      "break_f1": 0.44887409421603913,
+      "mid_phrase_rate": 0.5873723077043966,
+      "cue_ratio": 1.9811382165062563,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 32,
+      "max_dur_s": 9.0,
+      "break_f1": 0.44887409421603913,
+      "mid_phrase_rate": 0.5873723077043966,
+      "cue_ratio": 1.9811382165062563,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 28,
+      "max_dur_s": 5.0,
+      "break_f1": 0.4483391486129097,
+      "mid_phrase_rate": 0.5900391738217915,
+      "cue_ratio": 2.027173556900743,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 28,
+      "max_dur_s": 7.0,
+      "break_f1": 0.4483391486129097,
+      "mid_phrase_rate": 0.5900391738217915,
+      "cue_ratio": 2.027173556900743,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 28,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4483391486129097,
+      "mid_phrase_rate": 0.5900391738217915,
+      "cue_ratio": 2.027173556900743,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 20,
+      "max_dur_s": 5.0,
+      "break_f1": 0.4392344883550883,
+      "mid_phrase_rate": 0.6001245631651928,
+      "cue_ratio": 2.216735228658253,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 20,
+      "max_dur_s": 7.0,
+      "break_f1": 0.4392344883550883,
+      "mid_phrase_rate": 0.6001245631651928,
+      "cue_ratio": 2.216735228658253,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.4,
+      "max_chars": 20,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4392344883550883,
+      "mid_phrase_rate": 0.6001245631651928,
+      "cue_ratio": 2.216735228658253,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 56,
+      "max_dur_s": 5.0,
+      "break_f1": 0.43690303268714775,
+      "mid_phrase_rate": 0.5400917068735682,
+      "cue_ratio": 1.1115487464864136,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 72,
+      "max_dur_s": 5.0,
+      "break_f1": 0.4322576730300113,
+      "mid_phrase_rate": 0.5376247121705487,
+      "cue_ratio": 1.0913610134273934,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 28,
+      "max_dur_s": 5.0,
+      "break_f1": 0.43204395078919017,
+      "mid_phrase_rate": 0.564188431702687,
+      "cue_ratio": 1.327351252336935,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 28,
+      "max_dur_s": 7.0,
+      "break_f1": 0.43125879774250553,
+      "mid_phrase_rate": 0.5649769961312819,
+      "cue_ratio": 1.327351252336935,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 28,
+      "max_dur_s": 9.0,
+      "break_f1": 0.43125879774250553,
+      "mid_phrase_rate": 0.5649769961312819,
+      "cue_ratio": 1.327351252336935,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 42,
+      "max_dur_s": 5.0,
+      "break_f1": 0.42836892740267657,
+      "mid_phrase_rate": 0.5484330561568129,
+      "cue_ratio": 1.1551000397149973,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 56,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4236654631042432,
+      "mid_phrase_rate": 0.5390609889046237,
+      "cue_ratio": 1.0402767018490982,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 32,
+      "max_dur_s": 7.0,
+      "break_f1": 0.4233973445585386,
+      "mid_phrase_rate": 0.5598241033103099,
+      "cue_ratio": 1.2500164264623037,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 32,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4233973445585386,
+      "mid_phrase_rate": 0.5598241033103099,
+      "cue_ratio": 1.2500164264623037,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 42,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4229469403307267,
+      "mid_phrase_rate": 0.547948092819153,
+      "cue_ratio": 1.1263172917815294,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 56,
+      "max_dur_s": 7.0,
+      "break_f1": 0.4223809745350545,
+      "mid_phrase_rate": 0.5422072539926902,
+      "cue_ratio": 1.0513156233159517,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 42,
+      "max_dur_s": 7.0,
+      "break_f1": 0.42209213127777245,
+      "mid_phrase_rate": 0.5488909939030315,
+      "cue_ratio": 1.1263172917815294,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 32,
+      "max_dur_s": 5.0,
+      "break_f1": 0.4218376200814954,
+      "mid_phrase_rate": 0.563806671772866,
+      "cue_ratio": 1.252697093799661,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 72,
+      "max_dur_s": 9.0,
+      "break_f1": 0.4209083147215716,
+      "mid_phrase_rate": 0.5308274054380124,
+      "cue_ratio": 1.0018385302251398,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 20,
+      "max_dur_s": 5.0,
+      "break_f1": 0.42066611450419256,
+      "mid_phrase_rate": 0.5954846539847906,
+      "cue_ratio": 1.599473763706328,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 20,
+      "max_dur_s": 7.0,
+      "break_f1": 0.42066611450419256,
+      "mid_phrase_rate": 0.5954846539847906,
+      "cue_ratio": 1.599473763706328,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 20,
+      "max_dur_s": 9.0,
+      "break_f1": 0.42066611450419256,
+      "mid_phrase_rate": 0.5954846539847906,
+      "cue_ratio": 1.599473763706328,
+      "n_files": 7
+    },
+    {
+      "gap_s": 0.7,
+      "max_chars": 72,
+      "max_dur_s": 7.0,
+      "break_f1": 0.41807116529041516,
+      "mid_phrase_rate": 0.5401034678380465,
+      "cue_ratio": 1.025702299260076,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 28,
+      "max_dur_s": 5.0,
+      "break_f1": 0.3817309029932524,
+      "mid_phrase_rate": 0.5799325435673602,
+      "cue_ratio": 1.0879666178164817,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 28,
+      "max_dur_s": 7.0,
+      "break_f1": 0.3816214850872906,
+      "mid_phrase_rate": 0.5811443864446906,
+      "cue_ratio": 1.0821438376500476,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 28,
+      "max_dur_s": 9.0,
+      "break_f1": 0.3816214850872906,
+      "mid_phrase_rate": 0.5811443864446906,
+      "cue_ratio": 1.0821438376500476,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 20,
+      "max_dur_s": 5.0,
+      "break_f1": 0.3807823167087581,
+      "mid_phrase_rate": 0.6184255797727547,
+      "cue_ratio": 1.3835747773203586,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 20,
+      "max_dur_s": 7.0,
+      "break_f1": 0.38073864491905457,
+      "mid_phrase_rate": 0.6172377562555,
+      "cue_ratio": 1.3835747773203586,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 20,
+      "max_dur_s": 9.0,
+      "break_f1": 0.38073864491905457,
+      "mid_phrase_rate": 0.6172377562555,
+      "cue_ratio": 1.3835747773203586,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 56,
+      "max_dur_s": 5.0,
+      "break_f1": 0.3706039051282396,
+      "mid_phrase_rate": 0.5608301719736766,
+      "cue_ratio": 0.8747239328928916,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 72,
+      "max_dur_s": 5.0,
+      "break_f1": 0.3656012184732073,
+      "mid_phrase_rate": 0.559164695356773,
+      "cue_ratio": 0.8545361998338715,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 32,
+      "max_dur_s": 5.0,
+      "break_f1": 0.36418770603166006,
+      "mid_phrase_rate": 0.5951781121790952,
+      "cue_ratio": 1.0080146792195035,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 42,
+      "max_dur_s": 5.0,
+      "break_f1": 0.3626340060420869,
+      "mid_phrase_rate": 0.574110789238451,
+      "cue_ratio": 0.9206226906240131,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 32,
+      "max_dur_s": 7.0,
+      "break_f1": 0.36210166922837167,
+      "mid_phrase_rate": 0.5907855969785247,
+      "cue_ratio": 0.9915224790301777,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 32,
+      "max_dur_s": 9.0,
+      "break_f1": 0.36210166922837167,
+      "mid_phrase_rate": 0.5907855969785247,
+      "cue_ratio": 0.9915224790301777,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 56,
+      "max_dur_s": 9.0,
+      "break_f1": 0.35873959949210865,
+      "mid_phrase_rate": 0.5347889113562528,
+      "cue_ratio": 0.7343717047100367,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 42,
+      "max_dur_s": 9.0,
+      "break_f1": 0.35491114308152094,
+      "mid_phrase_rate": 0.5624709781896847,
+      "cue_ratio": 0.8478546978808208,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 56,
+      "max_dur_s": 7.0,
+      "break_f1": 0.3538664312534074,
+      "mid_phrase_rate": 0.5533165696416135,
+      "cue_ratio": 0.7703598562482623,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 20,
+      "max_dur_s": 5.0,
+      "break_f1": 0.35297031636017623,
+      "mid_phrase_rate": 0.6322734558593577,
+      "cue_ratio": 1.272967632855989,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 20,
+      "max_dur_s": 7.0,
+      "break_f1": 0.35279820334587075,
+      "mid_phrase_rate": 0.6320617088154197,
+      "cue_ratio": 1.2697163341294342,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 20,
+      "max_dur_s": 9.0,
+      "break_f1": 0.35279820334587075,
+      "mid_phrase_rate": 0.6320617088154197,
+      "cue_ratio": 1.2697163341294342,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 42,
+      "max_dur_s": 7.0,
+      "break_f1": 0.35102048832744703,
+      "mid_phrase_rate": 0.5711529983157974,
+      "cue_ratio": 0.8528957040700584,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 72,
+      "max_dur_s": 7.0,
+      "break_f1": 0.35089878473290426,
+      "mid_phrase_rate": 0.544649350265151,
+      "cue_ratio": 0.745035265794117,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.0,
+      "max_chars": 72,
+      "max_dur_s": 9.0,
+      "break_f1": 0.34379697749209914,
+      "mid_phrase_rate": 0.5330469923499909,
+      "cue_ratio": 0.6919282973935539,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 28,
+      "max_dur_s": 7.0,
+      "break_f1": 0.3401353987404538,
+      "mid_phrase_rate": 0.5992292189514445,
+      "cue_ratio": 0.958193832505091,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 28,
+      "max_dur_s": 9.0,
+      "break_f1": 0.33961039136299054,
+      "mid_phrase_rate": 0.5970411404615511,
+      "cue_ratio": 0.9568289681488856,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 56,
+      "max_dur_s": 5.0,
+      "break_f1": 0.33820034814204986,
+      "mid_phrase_rate": 0.5718974290912496,
+      "cue_ratio": 0.7698169634841981,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 32,
+      "max_dur_s": 5.0,
+      "break_f1": 0.3332987215151743,
+      "mid_phrase_rate": 0.6052510712190365,
+      "cue_ratio": 0.8999689550522858,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 28,
+      "max_dur_s": 5.0,
+      "break_f1": 0.33175822506312763,
+      "mid_phrase_rate": 0.6126479081913161,
+      "cue_ratio": 0.9776723752101341,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 72,
+      "max_dur_s": 5.0,
+      "break_f1": 0.3299038628809489,
+      "mid_phrase_rate": 0.57450028526262,
+      "cue_ratio": 0.751148132315367,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 32,
+      "max_dur_s": 7.0,
+      "break_f1": 0.3285317293526656,
+      "mid_phrase_rate": 0.5964475230858014,
+      "cue_ratio": 0.8679825512685463,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 42,
+      "max_dur_s": 5.0,
+      "break_f1": 0.3271166888028584,
+      "mid_phrase_rate": 0.5923407506680733,
+      "cue_ratio": 0.8133981710472736,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 32,
+      "max_dur_s": 9.0,
+      "break_f1": 0.32631420020241314,
+      "mid_phrase_rate": 0.6030398513975668,
+      "cue_ratio": 0.8648171469080443,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 56,
+      "max_dur_s": 7.0,
+      "break_f1": 0.3157371275566173,
+      "mid_phrase_rate": 0.5495510760736881,
+      "cue_ratio": 0.6444799621732338,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 56,
+      "max_dur_s": 9.0,
+      "break_f1": 0.3107594326557996,
+      "mid_phrase_rate": 0.5374240439629432,
+      "cue_ratio": 0.6004900310905537,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 42,
+      "max_dur_s": 7.0,
+      "break_f1": 0.3085524715571018,
+      "mid_phrase_rate": 0.5800209957937585,
+      "cue_ratio": 0.7248238350124966,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 72,
+      "max_dur_s": 7.0,
+      "break_f1": 0.30573790696025455,
+      "mid_phrase_rate": 0.5561997399537121,
+      "cue_ratio": 0.6164555429705763,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 72,
+      "max_dur_s": 9.0,
+      "break_f1": 0.2985888428164154,
+      "mid_phrase_rate": 0.5361785061801851,
+      "cue_ratio": 0.5495946601770322,
+      "n_files": 7
+    },
+    {
+      "gap_s": 1.5,
+      "max_chars": 42,
+      "max_dur_s": 9.0,
+      "break_f1": 0.2954464003401495,
+      "mid_phrase_rate": 0.5889065528300589,
+      "cue_ratio": 0.7138507831410701,
+      "n_files": 7
+    }
+  ]
+}

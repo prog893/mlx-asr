@@ -1,0 +1,55 @@
+{
+  "config": {
+    "audio": "<PATH>/0816_16k.wav",
+    "reference": "<PATH>/0816_online_narration_jpn.srt",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "no_prompt": false,
+    "models": null,
+    "json": "<PATH>/precision_m2ultra.json"
+  },
+  "duration_s": 935.1008125,
+  "chunks": 16,
+  "results": [
+    {
+      "weights": "fp16",
+      "repo": "mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16",
+      "cer": 0.0761,
+      "kana_cer": 0.0608,
+      "wall_s": 68.7,
+      "x_realtime": 13.6,
+      "encode_s": 11.8,
+      "decode_s": 56.4,
+      "steps_per_s": 14.47,
+      "peak_gb": 15.28,
+      "model_load_s": 1.2,
+      "cues": 207
+    },
+    {
+      "weights": "8bit",
+      "repo": "ellamind/Voxtral-Mini-4B-Realtime-8bit-mlx",
+      "error": "TokenizersBackend has no attribute tokenizer"
+    },
+    {
+      "weights": "6bit",
+      "repo": "mlx-community/Voxtral-Mini-4B-Realtime-6bit",
+      "error": "TokenizersBackend has no attribute tokenizer"
+    },
+    {
+      "weights": "4bit",
+      "repo": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "cer": 0.0723,
+      "kana_cer": 0.056,
+      "wall_s": 42.0,
+      "x_realtime": 22.2,
+      "encode_s": 10.7,
+      "decode_s": 31.0,
+      "steps_per_s": 26.34,
+      "peak_gb": 9.36,
+      "model_load_s": 0.9,
+      "cues": 211
+    }
+  ]
+}

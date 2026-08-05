@@ -1,0 +1,17 @@
+{
+  "a": "overlap_0s",
+  "b": "overlap_8s",
+  "metric": "cer",
+  "regions": 40,
+  "cer_a": 0.0923,
+  "cer_b": 0.0742,
+  "paired_diff": 0.01801,
+  "ci95": [
+    0.00618,
+    0.03196
+  ],
+  "significant": true,
+  "sign_test_p": 0.0522,
+  "regions_won_a": 8,
+  "regions_won_b": 19
+}

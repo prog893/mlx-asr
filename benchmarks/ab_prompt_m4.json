@@ -1,0 +1,142 @@
+{
+  "model": "models/voxtral-nvfp4",
+  "audio": "<PATH>/0816_180s.wav",
+  "prompt_capacity": 31,
+  "reference_counts": {
+    "term-01": 1,
+    "term-02": 2,
+    "term-03": 1,
+    "term-04": 4,
+    "term-05": 0
+  },
+  "results": [
+    {
+      "variant": "none",
+      "prompt": "",
+      "tokens": 0,
+      "kept": 0,
+      "cer": 0.1005,
+      "delta_vs_none": 0.0,
+      "keyword_hits": {
+        "term-01": 0,
+        "term-02": 0,
+        "term-03": 0,
+        "term-04": 4,
+        "term-05": 0
+      },
+      "wall_s": 46.9
+    },
+    {
+      "variant": "jp_orig",
+      "prompt": "<TEXT>IPA<TEXT>",
+      "tokens": 45,
+      "kept": 31,
+      "cer": 0.0959,
+      "delta_vs_none": -0.0045,
+      "keyword_hits": {
+        "term-01": 0,
+        "term-02": 0,
+        "term-03": 0,
+        "term-04": 4,
+        "term-05": 0
+      },
+      "wall_s": 48.7
+    },
+    {
+      "variant": "jp_reordered",
+      "prompt": "<TEXT>IPA<TEXT>",
+      "tokens": 40,
+      "kept": 31,
+      "cer": 0.0971,
+      "delta_vs_none": -0.0034,
+      "keyword_hits": {
+        "term-01": 0,
+        "term-02": 0,
+        "term-03": 0,
+        "term-04": 4,
+        "term-05": 0
+      },
+      "wall_s": 49.3
+    },
+    {
+      "variant": "latin_comma",
+      "prompt": "<TEXT>, <TEXT>, <TEXT>, <TEXT>, IPA, <TEXT>, <TEXT>, <TEXT>, <TEXT>",
+      "tokens": 44,
+      "kept": 31,
+      "cer": 0.1005,
+      "delta_vs_none": 0.0,
+      "keyword_hits": {
+        "term-01": 0,
+        "term-02": 0,
+        "term-03": 0,
+        "term-04": 4,
+        "term-05": 0
+      },
+      "wall_s": 48.6
+    },
+    {
+      "variant": "latin_nospace",
+      "prompt": "<TEXT>,<TEXT>,<TEXT>,<TEXT>,IPA,<TEXT>,<TEXT>,<TEXT>,<TEXT>",
+      "tokens": 40,
+      "kept": 31,
+      "cer": 0.1016,
+      "delta_vs_none": 0.0011,
+      "keyword_hits": {
+        "term-01": 0,
+        "term-02": 0,
+        "term-03": 0,
+        "term-04": 4,
+        "term-05": 0
+      },
+      "wall_s": 49.0
+    },
+    {
+      "variant": "space",
+      "prompt": "<TEXT> <TEXT> <TEXT> <TEXT> IPA <TEXT> <TEXT> <TEXT> <TEXT>",
+      "tokens": 36,
+      "kept": 31,
+      "cer": 0.1005,
+      "delta_vs_none": 0.0,
+      "keyword_hits": {
+        "term-01": 0,
+        "term-02": 0,
+        "term-03": 0,
+        "term-04": 4,
+        "term-05": 0
+      },
+      "wall_s": 48.4
+    },
+    {
+      "variant": "minimal",
+      "prompt": "<TEXT> <TEXT> <TEXT> <TEXT> <TEXT> <TEXT>",
+      "tokens": 27,
+      "kept": 27,
+      "cer": 0.1005,
+      "delta_vs_none": 0.0,
+      "keyword_hits": {
+        "term-01": 0,
+        "term-02": 0,
+        "term-03": 0,
+        "term-04": 4,
+        "term-05": 0
+      },
+      "wall_s": 48.0
+    },
+    {
+      "variant": "sentence",
+      "prompt": "<TEXT>",
+      "tokens": 26,
+      "kept": 26,
+      "cer": 0.0971,
+      "delta_vs_none": -0.0034,
+      "keyword_hits": {
+        "term-01": 0,
+        "term-02": 0,
+        "term-03": 0,
+        "term-04": 4,
+        "term-05": 0
+      },
+      "wall_s": 48.2
+    }
+  ]
+}
