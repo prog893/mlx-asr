@@ -27,6 +27,13 @@ that comparison cannot fully separate quantization from hardware, because the tw
 machines do not produce byte-identical output even at identical weights (see
 [determinism.md](determinism.md)).
 
+That confound is now better bounded, and it favours this reading. Running one identical
+4-bit config on both machines over 18 files put 11 of them at *identical* coverage CER and
+16 within 0.16 points, so the hardware term in that check is much smaller than the ~1 point
+it was assumed to be. Whatever separated the nvfp4 and 4-bit rows was therefore mostly not
+hardware, and it was still under a point, which strengthens rather than weakens the
+conclusion that precision is a non-factor here.
+
 ## Method
 
 `scripts/benchmarks/sweep_precision.py`. Everything fixed except the weights: 60s chunks, batch

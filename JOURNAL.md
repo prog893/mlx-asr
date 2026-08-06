@@ -301,6 +301,17 @@ comparison must come from a single machine, and a hypothesis file cannot be chec
 by re-decoding it elsewhere. It also puts a floor under cross-machine agreement that
 is not measurement noise: expect ~1 point per file even with everything else fixed.
 
+**Corrected 2026-08-07, by running the identical config on all 18 files on both hosts
+rather than one.** There is no ~1 point floor. 11 of 18 files score *identically* to two
+decimals across the M4 and the Ultra, 16 of 18 agree within 0.16 points, and the 112s file
+quoted above is the worst case rather than the typical one. The magnitude scales inversely
+with reference length, which is the obvious explanation in hindsight: this file has 422
+reference characters, so one flipped token is worth several points, while the same flip in a
+9830-character file is worth hundredths. The qualitative claims stand (divergence is real,
+unpredictable per file, and a comparison must stay on one machine); only the magnitude was
+wrong, and it was wrong because it was extrapolated from n=1. See
+[docs/benchmarks/determinism.md](docs/benchmarks/determinism.md).
+
 ### Why the quantization sweep was skipped
 
 Given the 3.2-point resolution at n=7, detecting the measured quantization

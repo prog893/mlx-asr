@@ -65,8 +65,37 @@ where the reduction order is fixed and fails where it is not.
   as a quantization comparison and is not one. Both candidate causes are small, so the
   conclusion survives, but the clean quantization evidence is the single-machine precision
   sweep in [quantization.md](quantization.md).
-- Expect a floor of roughly 1 point per file on any two-machine comparison, which is not
-  measurement noise and will not average away.
+## How large is the cross-machine effect, really? Usually zero
+
+The 112s file above was the only file compared when this was first measured, and the
+"roughly 1 point per file" floor stated here was an extrapolation from it. Running the
+identical config on all 18 files of the corpus on both machines shows that extrapolation was
+wrong, and the truth is more useful:
+
+| agreement between M4 16GB and M2 Ultra 128GB, same config | files |
+|---|---|
+| coverage CER identical to 2 decimal places | 11 of 18 |
+| within 0.16 points | 16 of 18 |
+| the 112s file | 5.45 points apart (12.56% against 18.01%) |
+
+So divergence is **not** a per-file floor that applies everywhere. Most files decode to the
+same score on both chips, several byte-identically, and the aggregate difference is small.
+What the 112s file shows is the *worst case*, not the typical one, and it is the shortest
+file in the corpus: 422 reference characters, so a single flipped token moves the percentage
+several points, where the same flip in a 9830-character file moves it by hundredths.
+
+That reframes the practical rule. Cross-machine divergence is real, it is caused by
+reduction order, and it cannot be predicted or averaged away on any individual file. But its
+*magnitude* scales inversely with how much text the file contains, which means:
+
+- **Still true:** a config comparison must stay on one machine, and a hypothesis file cannot
+  be validated by re-decoding it elsewhere. One flipped token is unbounded in principle.
+- **Corrected:** there is no ~1 point floor. Expect near-exact agreement on files of
+  substantial length and volatility on short ones, so a short-clip comparison across machines
+  is the dangerous case rather than the representative one.
+- **Consequence for method:** this is another reason single-clip results in this project
+  reversed on a corpus. A 112s clip cannot distinguish a config effect from a reduction-order
+  coin flip.
 
 ## Whisper: samples, so it needs a run distribution
 

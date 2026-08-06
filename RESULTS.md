@@ -101,9 +101,12 @@ points.
 **`--compact-silence` splits by quantization** and the mechanism is a hypothesis. Off by
 default.
 
-**Cross-machine reproducibility is a floor on any two-machine comparison.** Identical
-audio, config and weights give different output on different chips, so the cross-machine
-agreement check cannot separate quantization from hardware. See
+**Cross-machine output differs, but by far less than first reported.** Identical audio,
+config and weights give different output on different chips, so a config comparison must
+stay on one machine. Measured over 18 files rather than one, though, 11 score identically
+and 16 agree within 0.16 points; the 5.45-point case that established this is the shortest
+file in the corpus, and the effect scales inversely with reference length. The earlier
+"~1 point per file floor" was an extrapolation from n=1 and is withdrawn. See
 [determinism.md](docs/benchmarks/determinism.md).
 
 Deliberately not open: repeat runs of Voxtral on one machine (byte-identical, verified),
