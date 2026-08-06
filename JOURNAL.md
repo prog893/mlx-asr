@@ -1992,3 +1992,34 @@ out orthography (kanji vs katakana, 7 vs 七) that pronounces identically.
 **Superseded:** kana CER over-forgives, because collapsing to readings also
 excuses genuine homophone errors. `scripts/metrics/eval_cer_lenient.py` puts real orthographic
 variance at ~0.3 points; see the metric note near the top of this file.
+
+## 2026-08-07: chunk length 30s vs 60s, re-run at n=20, and it dissolves
+
+The 7-file corpus put 60s ahead of 30s by +1.67 points, CI [-1.22, +4.73], which was
+"not resolvable" but close enough to the n=7 floor of ~3.2 points to look like the one
+finding here that more audio might convert into a decision. Both arms re-run on one
+machine (M4 16GB) over all 20 files, sequentially, `--delay-ms 2400`, kv8, each chunk
+length at its own profile batch (60s/b16, 30s/b32):
+
+| | 60s / b16 | 30s / b32 | paired diff | 95% CI |
+|---|---|---|---|---|
+| JP coverageCER, 17 files | 16.29% | 16.19% | +0.10 | [-1.89, +2.03] |
+| EN coverageWER, 3 files | 26.14% | 25.24% | +0.90 | [-0.27, +1.69] |
+
+The point estimate fell from +1.67 to +0.10 and neither unit resolves. 30s won 6 of 17
+Japanese files, 60s won 10, sign test p=0.454. Per file the differences are large and
+two-sided: one file 18.25 points better at 30s, another 10.02 points better at 60s.
+
+This is a better outcome than a resolved effect would have been, because it converts an
+ambiguity into a settled negative: chunk length in 30-60s is a throughput knob, not an
+accuracy knob, on spontaneous conversational audio. The seam mechanism is real and
+measurable on dense narration, and it does not survive contact with this material, which
+is the same pattern as overlap.
+
+Speed is not comparable between those two rows: the second arm ran while the host had
+unrelated background load and the harness flagged it. Accuracy is unaffected because
+decoding is greedy.
+
+A cross-machine comparison came free with this, since the Ultra had already produced the
+identical 30s config for the headline. That is what withdrew the ~1 point per-file floor
+(see the determinism section above): 11 of 18 files identical, 16 within 0.16 points.

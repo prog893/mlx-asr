@@ -13,7 +13,7 @@ that make plain CER meaningless.
 | document | lever | conclusion in one line |
 |---|---|---|
 | [delay.md](delay.md) | transcription delay | `2400` is worth 9 points and is free. The strongest result here. |
-| [chunking.md](chunking.md) | chunk length, overlap, cut points | Longer chunks win up to ~60s. Overlap helps at short chunks on one clip but reversed on a corpus. Energy cuts beat VAD. |
+| [chunking.md](chunking.md) | chunk length, overlap, cut points | 30s vs 60s is indistinguishable at n=20, so it is a throughput choice. Overlap helps at short chunks on one clip but reversed on a corpus. Energy cuts beat VAD. |
 | [engines.md](engines.md) | which model | Whisper turbo + no-condition is ~1.5 points more accurate; Voxtral is ~1.35x faster and reproducible, so it is the default. |
 | [decode-throughput.md](decode-throughput.md) | batch size | Not monotonic. Never use batch 2-8. The only lever anyone can reproduce without audio. |
 | [input-level.md](input-level.md) | `--gain` | Quiet input silently costs ~3.8 points. `auto` fixes it and is a no-op otherwise. |
@@ -38,12 +38,13 @@ difference between two configs is a tie unless a paired test says otherwise. Wit
 per-file paired SD of 3.50 points, the resolution floor depends on how much audio a given
 experiment used: roughly **3.2 points at n=7** and **1.6 at n=20**.
 
-**The samples are small and uneven, and they differ between findings.** Only the engine
-comparison in [engines.md](engines.md) uses all 20 files; **every other lever doc here is
-n=7 or a single clip**, because those sweeps predate the corpus growth and re-running one
-costs a full corpus pass per arm. So a finding marked "not resolvable" may mean "smaller
-than 3.2 points" rather than "smaller than 1.6", and a few sit between the two. Where that
-matters the doc says so. Of 20 files only 3 are English, and timing results are n=7 because
+**The samples are small and uneven, and they differ between findings.** Three findings use
+all 20 files: the engine comparison in [engines.md](engines.md), the prompt language crossing
+in [prompt.md](prompt.md), and the 30s-versus-60s chunk comparison in
+[chunking.md](chunking.md). **Every other lever doc here is n=7 or a single clip**, because
+those sweeps predate the corpus growth and re-running one costs a full corpus pass per arm.
+So a finding marked "not resolvable" may mean "smaller than 3.2 points" rather than "smaller
+than 1.6". Where that matters the doc says so. Of 20 files only 3 are English, and timing results are n=7 because
 only those files have authored subtitle tracks. Several single-clip findings in this project
 reversed sign when a real corpus arrived, which is why single-clip and corpus results are
 always labelled as such.

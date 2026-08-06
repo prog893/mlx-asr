@@ -5,14 +5,20 @@
 The `whisper-*` driver's 30s window is fixed by the model's positional encoding. Passing a
 flag to an engine that cannot honour it is an error, not a warning.
 
-**Conclusion first.** Chunk length is the second-largest accuracy lever after
-[delay](delay.md), and its mechanism is chunk seams: a chunk's first tokens are emitted
-with no left context, so errors concentrate at chunk *starts*. Longer chunks mean fewer
-seams and better accuracy, up to about 60s where the encoder's sliding window ends the
-gains. Prefix overlap fixes the seam cost directly and won 1.4-1.8 points at 30s chunks
-on a single clip, **but reversed sign on a real corpus and is therefore not on by
-default**. Cutting at energy minima beats cutting with a VAD, which is the opposite of
-what the VAD literature predicts.
+**Conclusion first.** Chunk length has a clear mechanism and, on real material, no
+measurable accuracy effect between 30s and 60s. The mechanism is chunk seams: a chunk's
+first tokens are emitted with no left context, so errors concentrate at chunk *starts*, and
+on a single clip longer chunks measurably win up to about 60s where the encoder's sliding
+window ends the gains. **On the 20-file corpus, 60s versus 30s is +0.10 points with a CI of
+[-1.89, +2.03], i.e. indistinguishable**, so pick between them on throughput and let
+`profiles.json` decide per machine. Prefix overlap fixes the seam cost directly and won
+1.4-1.8 points at 30s chunks on a single clip, **but reversed sign on a real corpus and is
+therefore not on by default**. Cutting at energy minima beats cutting with a VAD, which is
+the opposite of what the VAD literature predicts.
+
+Chunk length is still worth understanding, because it is the largest lever on *throughput*
+and because it does drive accuracy on dense single-speaker narration. It is just not a lever
+to tune for accuracy on spontaneous conversational audio.
 
 ## Corpus
 
@@ -82,12 +88,35 @@ On the **7-file** corpus the 60s-versus-30s difference does not resolve either
 including speed. Between-file variance dwarfs the effect. The shipped default is per
 machine, from `profiles.json`.
 
-The corpus has since grown to 20 files, which lowers the resolution floor from about 3.2
-points to about 1.6 (same per-file SD of 3.50, more files). A +1.67-point effect sits
-almost exactly on that new floor, so this comparison is the one small-corpus result that a
-re-run at n=20 could plausibly turn from "not resolvable" into a decision, and it is the
-top entry on the open list for that reason. The 20-file re-run has not been done: it costs
-two full corpus passes and, unlike the headline, no published number depends on it.
+### Re-run at n=20: still not resolvable, and the point estimate collapsed
+
+The corpus later grew to 20 files, lowering the resolution floor from about 3.2 points to
+about 1.6. A +1.67-point effect sat almost exactly on that floor, making this the one
+small-corpus result that more audio might plausibly turn into a decision. It did not.
+
+Both arms re-run on one machine (M4 16GB, 20 files, sequential, `--delay-ms 2400`, kv8;
+60s at batch 16 and 30s at batch 32, each machine's profile for that chunk length):
+
+| | 60s / b16 | 30s / b32 | paired difference | 95% CI |
+|---|---|---|---|---|
+| JP coverage CER, 17 files | 16.29% | **16.19%** | +0.10 | [-1.89, +2.03] |
+| EN coverage WER, 3 files | 26.14% | **25.24%** | +0.90 | [-0.27, +1.69] |
+
+Not resolvable on either unit, and the Japanese point estimate fell from +1.67 at n=7 to
++0.10 at n=17: the two chunk lengths are indistinguishable on this material. 30s won 6 of 17
+Japanese files and 60s won 10, with a sign test at p=0.454. Per file the spread is enormous
+and two-sided (one file 18.25 points better at 30s, another 10.02 points better at 60s),
+which is the between-file variance that dominates every config effect in this project.
+
+So this is now a *settled* negative rather than an open question, which is worth more than
+the ambiguity it replaces: chunk length between 30s and 60s can be chosen purely on
+throughput. That makes it a hardware decision, which is exactly what `profiles.json`
+encodes. No accuracy claim should be attached to either value.
+
+Speed is not comparable across those two rows here, since the machine was under unrelated
+background load for part of the second arm and the harness flagged it; accuracy is unaffected
+by load because decoding is greedy. The clean throughput comparison for these two configs is
+in [decode-throughput.md](decode-throughput.md).
 
 ## Experiment: prefix overlap
 

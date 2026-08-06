@@ -27,7 +27,7 @@ editorial, so plain CER on this material is meaningless.
 | lever | conclusion | detail |
 |---|---|---|
 | transcription delay | `2400` is worth 9 points and free. The strongest result here. | [delay.md](docs/benchmarks/delay.md) |
-| chunking | Longer chunks win to ~60s. Overlap helps only where seams are dense. Energy cuts beat VAD. | [chunking.md](docs/benchmarks/chunking.md) |
+| chunking | 30s vs 60s is not resolvable on the corpus (+0.10, CI [-1.89, +2.03]), so choose on speed. Overlap helps only where seams are dense. Energy cuts beat VAD. | [chunking.md](docs/benchmarks/chunking.md) |
 | engine choice | Whisper turbo + no-condition is more accurate; Voxtral is faster and reproducible. | [engines.md](docs/benchmarks/engines.md) |
 | batch size | Not monotonic. Never use 2-8. | [decode-throughput.md](docs/benchmarks/decode-throughput.md) |
 | input level | Quiet input silently costs ~3.8 points; `--gain auto` fixes it. | [input-level.md](docs/benchmarks/input-level.md) |
@@ -108,6 +108,12 @@ and 16 agree within 0.16 points; the 5.45-point case that established this is th
 file in the corpus, and the effect scales inversely with reference length. The earlier
 "~1 point per file floor" was an extrapolation from n=1 and is withdrawn. See
 [determinism.md](docs/benchmarks/determinism.md).
+
+**CLOSED: chunk length 30s versus 60s is settled as a non-effect.** Re-run on one machine
+over all 20 files: +0.10 points, CI [-1.89, +2.03], against +1.67 at n=7. Both chunk lengths
+are indistinguishable on this material, so the choice is purely throughput and belongs to
+`profiles.json`. This was the strongest candidate for an effect that more audio might
+resolve, and more audio dissolved it instead.
 
 Deliberately not open: repeat runs of Voxtral on one machine (byte-identical, verified),
 and a quantization sweep across the corpus (the effects are 0.07-0.26 points against a
