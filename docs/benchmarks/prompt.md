@@ -14,13 +14,21 @@ points on Japanese on a single clip, and 14 WER points on English at n=20.
 
 **On English audio, do not use it at all.** Measured across eight prompt variants on 20
 files, *every* variant cost English 14 to 72 WER points, whatever it contained and whatever
-language it was written in. Japanese audio is far more tolerant: the worst variant cost 3.3
-points and the best two were slight improvements. The deciding factor is the language of the
-audio, not whether the prompt language matches it, which is the opposite of what this
+language it was written in. The mechanism is specific and worth knowing: **the prompt
+suppresses word spacing**, so the transcript comes back in the shape of
+`Thisisroughlywhatitlookslike.` with the content largely intact but unreadable and
+unscoreable at word level. Japanese is untouched by this because it has no word spaces,
+which is most of why its numbers barely move. So the deciding factor is the language of the
+*audio*, not whether the prompt language matches it, which is the opposite of what this
 project concluded from the 7-file corpus.
 
 If you use it on Japanese audio, write it in Japanese. All four Japanese-language variants
 landed within 0.26 points of no-prompt; all four English-language ones cost 1.4 to 3.3.
+
+**Do not expect it to recall vocabulary.** Counting the prompted terms in the transcripts,
+a term prompt moved their emission count by under 7% while the model was already producing
+them at 3.8x the reference rate without any prompt. The field conditions register, not word
+choice.
 
 It also conflicts badly with `--overlap-seconds`, and the CLI refuses to use both.
 
@@ -95,7 +103,9 @@ happen. Whatever the prompt does here, it is not vocabulary recall.
 Confirming that from the other direction: none of the variants recovered the rare proper
 nouns they targeted. The rarest term appears once in the reference and was hit 0 times in
 every variant. One mid-frequency term went from 1 hit to 4 against 2 in the reference,
-i.e. the prompt caused *over*-production rather than recall.
+i.e. the prompt caused *over*-production rather than recall. The 20-file experiment below
+reproduces this by counting term emissions directly, and finds the same over-production at
+corpus scale.
 
 ## Experiment: separators across two machines
 
@@ -168,13 +178,44 @@ chosen to flatter the result.
 
 **Three results, in order of how much they change the guidance.**
 
-**1. English audio is catastrophically prompt-sensitive and Japanese audio is not.** Every
-one of the eight prompts cost English between 14 and 72 WER points, while the worst
-Japanese cost was 3.31 and the best two were improvements. The language of the prompt
-barely matters for this: a Japanese prompt on English audio (+46 to +57) is as ruinous as
-an English one (+14 to +72). The prompt-language-match hypothesis predicted the opposite
-and is discarded. Note that n=3 for English, so treat the magnitudes as directional; the
-sign is unambiguous, since all eight arms agree.
+**1. The English collapse is a spacing artifact, not lost transcription.** Every one of the
+eight prompts cost English between 14 and 72 WER points, which reads as near-total failure.
+Inspecting the transcripts shows it is not. **A prompt suppresses space emission on English
+audio**, and word error rate charges every word of a space-free transcript as wrong.
+
+| arm | spaces per character | word count | character count |
+|---|---|---|---|
+| none | 0.19 | 4016 | 20923 |
+| description ja | 0.07 | 1167 | 16633 |
+| terms ja | 0.05 | 826 | 15909 |
+| description en | 0.01 | 186 | 15495 |
+| terms en | 0.0001 | 3 | 15517 |
+
+One 4112-word recording: without a prompt the model emits 4016 spaces, with the English
+term list it emits **two**, producing a 15517-character string in the shape of
+`Thisisroughlywhatitlookslike.` The character count barely moves, so the words are all
+there.
+The ratio holds on all three English files (0.19 unprompted, 0.00 to 0.11 prompted).
+
+Rescoring the English files at character level with whitespace stripped from both sides
+collapses the difference:
+
+| file | covWER span across arms | covCER span, no whitespace |
+|---|---|---|
+| A | 25.92% to 97.58% | 71.17% to 74.12% |
+| B | 27.99% to 97.02% | 84.05% to 88.04% |
+| C | 20.09% to 98.34% | 102.01% to 104.02% |
+
+So the honest statement is narrower than the aggregate suggested: **a prompt degrades
+English word segmentation badly, and leaves the transcribed content roughly intact.** That
+still makes the field unusable on English if you want readable output or a word-level
+score, which is why the guidance stands, but the earlier reading of these numbers as
+"catastrophic transcription failure" was wrong and is corrected here.
+
+Japanese is unaffected by this mechanism because Japanese is not space-delimited, which is
+also why its scores move so little. That is the real asymmetry: not that Japanese audio
+resists prompting, but that the damage a prompt does is invisible to a character metric on
+a language without word spaces. Note n=3 for English, so treat magnitudes as directional.
 
 **2. On Japanese, a prompt in Japanese is at worst free and possibly a small gain.** All
 four Japanese-language arms land within 0.26 points of baseline, two of them below it,
@@ -184,15 +225,25 @@ user can act on, and it is consistent with the mechanism: the model treats the p
 its own prior output, so text in the wrong script is a register the model then has to
 escape.
 
-**3. The best Japanese arm is a term list, which contradicts the n=1 finding.** `terms ja`
-at -0.25 is the best cell in the table, and it beat the topic sentence. The single-clip
-experiment concluded the opposite (a 17-token topic sentence matched a 38-token term list,
-and reversing term order changed nothing, which argued the field does not do vocabulary
-recall). At n=20 the term list is nominally best. The effect is still only 0.25 points
-against a resolution floor of about 1.6, so **this is not a resolved win**, and the honest
-statement is that the earlier "prompts do not do vocabulary recall" conclusion rested on
-one clip and does not reproduce as a ranking. It is not overturned either; both sit inside
-the noise.
+**3. The best Japanese arm is a term list, but not because of vocabulary recall.**
+`terms ja` at -0.25 is the best cell in the table and it beat the topic sentence, which
+nominally reverses the single-clip ranking (there a 17-token topic sentence matched a
+38-token term list). The effect is 0.25 points against a resolution floor of about 1.6, so
+**this is not a resolved win** either way.
+
+What the term arms do settle is the *mechanism*, because the transcripts were kept
+(`--keep-hyp`) and the prompted terms can be counted directly. Across the Japanese files,
+the five prompted terms appear **19 times in the references, 72 times without any prompt,
+and 77 times with the term prompt**: adding the prompt moved emissions by 5 occurrences,
+under 7%, while the model was already producing these terms at 3.8x the reference rate
+unprompted. One term went from 47 emissions to 51 against 7 in the reference; one prompted
+term never appeared at all, in any condition.
+
+So the field is not performing vocabulary recall on this material, and the earlier
+conclusion from the single clip stands, now for a stronger reason. It also means a term
+prompt cannot fix a rare-word miss here: the words are not being missed, they are being
+over-produced, which is a different failure that a bias prompt makes marginally worse.
+Whatever the -0.25 points came from, it was not the terms.
 
 **Your content shape did not matter the way the shapes suggest it should.** An imperative,
 a scene-setting description of the recording, a topic sentence and a bare term list all
@@ -234,8 +285,12 @@ is by far the stronger effect. Benchmarks pass no prompt, so the overlap rows in
 - Content shape matters less than language. Term list, topic sentence, description and
   imperative all behave similarly within a language, which is why none of them is
   recommended over the others on the evidence here.
+- **Do not reach for it to fix a missed proper noun.** Term counts moved under 7% when the
+  terms were prompted, and on this material the model over-produces them unprompted
+  anyway. If a name comes out wrong, this field is not the fix.
 - Put terms you care about **last**, since only the final 31 tokens survive. Though note
-  the ordering experiment above suggests this matters less than it should.
+  the ordering experiment and the emission counts both suggest this matters less than it
+  should.
 - If you use it at all, verify on your own audio. The effect is small enough to flip with
   the model or the clip.
 - Japanese punctuation is a marginally better separator than Latin commas.
