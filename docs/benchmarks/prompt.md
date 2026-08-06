@@ -225,6 +225,20 @@ user can act on, and it is consistent with the mechanism: the model treats the p
 its own prior output, so text in the wrong script is a register the model then has to
 escape.
 
+Having found that CER missed the English spacing collapse entirely, the Japanese arms were
+checked for the equivalent blind spot, and there is none. Across the 17 Japanese files,
+punctuation density stays at 7.6 to 10.6 marks per 1000 characters and the Latin fraction at
+1.4 to 1.7% in every arm, against 30.7 and 5.0% in the references. Total character counts
+vary by about 10%. So no arm is quietly degrading readability the way the English ones do;
+the small CER differences are the whole story on Japanese.
+
+That check does surface something unrelated to prompting: **the model emits Japanese
+punctuation at roughly a third of the reference rate in every condition, prompted or not.**
+The prompt-driven spread is 3.0 marks per 1000 against a 20.1 gap to the reference, so this
+is a property of the model rather than of this lever. Coverage CER barely sees it because
+`。` and `、` are single characters in a 4300-character transcript. It matters for anyone
+reading the output rather than scoring it, and it is not something a prompt fixes.
+
 **3. The best Japanese arm is a term list, but not because of vocabulary recall.**
 `terms ja` at -0.25 is the best cell in the table and it beat the topic sentence, which
 nominally reverses the single-clip ranking (there a 17-token topic sentence matched a

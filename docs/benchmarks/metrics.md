@@ -24,6 +24,27 @@ one substituted word is one word-level error but only a fraction of the characte
 CJK sentence. That is also why English and Japanese always appear in separate columns
 here.
 
+### What stripping punctuation and whitespace hides
+
+Two defects are invisible to every metric above, and both were found only by reading the
+transcripts rather than the scores:
+
+- **Word spacing on space-delimited output.** Because whitespace is deleted before
+  scoring, a hypothesis can lose almost all its spaces and still score normally on
+  character coverage. Conversely, word-level coverage over-punishes it: one arm of the
+  prompt experiment emitted 2 spaces where the unprompted run emitted 4016, which read as
+  97% coverage WER while the character content was within 3 points of baseline. See
+  [prompt.md](prompt.md).
+- **Punctuation density.** Voxtral emits Japanese `。` and `、` at roughly a third of the
+  rate the references use (7.6 to 10.6 marks per 1000 characters against 30.7), in every
+  configuration measured. Since punctuation is stripped, no number in these documents
+  reflects it, and it does not appear as a regression anywhere.
+
+Neither is a scoring bug: both metrics do what they are specified to do, and stripping is
+what makes the kanji/kana leniency rule and the editorial references workable. But a
+config that only damages spacing or punctuation can score clean here, so **read a sample of
+the actual output before concluding a config is harmless.**
+
 ## Coverage CER, and why it had to exist
 
 The references for the spontaneous recordings were written for readability, not for ASR
