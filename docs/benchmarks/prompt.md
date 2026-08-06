@@ -7,11 +7,22 @@ general one: it writes into that model's decoder left-pad region. The `whisper-*
 nothing here transfers to it.
 
 **Conclusion first.** `--prompt` is a weak and unreliable lever, worth a few tenths of a
-CER point at best, and it can be negative. The one thing that matters is a prohibition:
-**it is not an instruction field.** Putting an ASR-style imperative there costs about 6
-CER points on Japanese and 13.8 WER points on English, which makes it the most expensive
-single mistake available in the CLI. It also conflicts badly with
-`--overlap-seconds`, and the CLI refuses to use both.
+CER point at best, and it can be negative. Two prohibitions matter more than any gain.
+
+**It is not an instruction field.** Putting an ASR-style imperative there costs about 6 CER
+points on Japanese on a single clip, and 14 WER points on English at n=20.
+
+**On English audio, do not use it at all.** Measured across eight prompt variants on 20
+files, *every* variant cost English 14 to 72 WER points, whatever it contained and whatever
+language it was written in. Japanese audio is far more tolerant: the worst variant cost 3.3
+points and the best two were slight improvements. The deciding factor is the language of the
+audio, not whether the prompt language matches it, which is the opposite of what this
+project concluded from the 7-file corpus.
+
+If you use it on Japanese audio, write it in Japanese. All four Japanese-language variants
+landed within 0.26 points of no-prompt; all four English-language ones cost 1.4 to 3.3.
+
+It also conflicts badly with `--overlap-seconds`, and the CLI refuses to use both.
 
 ## What the field actually is
 
@@ -30,11 +41,19 @@ Two consequences follow directly and both were confirmed by measurement:
 
 ## Corpus
 
-Two clips and one corpus, because the effect is small enough that the material changes
+Two clips and two corpora, because the effect is small enough that the material changes
 the sign. Single-clip work: the 935s Japanese prepared-narration recording (4205 scored
 characters) and a 180s excerpt (943 characters), both with verbatim references, so plain
-CER applies. Corpus work: 7 spontaneous recordings, 5 Japanese and 2 English, coverage
-metric. `scripts/benchmarks/ab_prompt.py`, `scripts/benchmarks/run_corpus.py`.
+CER applies. Corpus work: the early sweeps used 7 spontaneous recordings (5 Japanese, 2
+English); the crossed language experiment uses all 20 (17 Japanese, 3 English). Coverage
+metric throughout. `scripts/benchmarks/ab_prompt.py`,
+`scripts/benchmarks/sweep_prompt_language.py`, `scripts/benchmarks/run_corpus.py`.
+
+The single-clip prompt contents are redacted below because they were real domain
+vocabulary. The 20-file experiment does not need that redaction: its term lists are derived
+from the references by a rule (tokens appearing in at least two files, ranked by frequency),
+so the arm is reproducible from the corpus without publishing anyone's word list, and the
+selection cannot be tuned to the outcome.
 
 ## Experiment: style, ordering and separators
 
@@ -112,8 +131,74 @@ Putting "Transcribe the audio accurately." in the prompt field:
 
 That fits the mechanism exactly. An English instruction is English text the decoder
 believes it just emitted, so it pulls English output badly off-register while barely
-perturbing Japanese. **The warning stands; the magnitude depends on whether the prompt
-language matches the audio.**
+perturbing Japanese.
+
+The reading at the time was "the magnitude depends on whether the prompt language matches
+the audio". The crossed experiment below tests that directly and **it is wrong**: what
+predicts the damage is the *audio* language, not the match between prompt and audio.
+
+## Experiment: prompt content crossed with prompt language, 20 files
+
+The earlier corpus test had one prompt, written in English, on a corpus that is mostly
+Japanese, so "an instruction is harmful" and "an English prompt on Japanese audio is
+harmful" were the same measurement. This crosses four content shapes against both
+languages, all 20 files, one prompt per arm applied to every file, so each arm yields an
+audio-Japanese and an audio-English row. `scripts/benchmarks/sweep_prompt_language.py`,
+30s chunks, batch 32, kv8, delay 2400, M2 Ultra 128GB. The no-prompt row reproduced the
+headline exactly (16.22% / 25.24%), which is the check that this script decodes the same
+way `run_corpus.py` does.
+
+| prompt content | lang | tokens | JP coverage CER (17 files) | vs none | EN coverage WER (3 files) | vs none |
+|---|---|---|---|---|---|---|
+| none | - | 0 | 16.22% | - | 25.24% | - |
+| instruction | en | 6 | 17.62% | +1.40 | 39.54% | +14.30 |
+| instruction | ja | 12 | 16.48% | +0.26 | 82.05% | +56.81 |
+| description | en | 12 | 18.22% | +2.00 | 95.33% | +70.09 |
+| description | ja | 13 | 16.39% | +0.17 | 71.79% | +46.55 |
+| topic | en | 10 | 19.53% | +3.31 | 96.48% | +71.25 |
+| topic | ja | 16 | **16.20%** | **-0.02** | 78.99% | +53.76 |
+| terms | en | 16 | 18.50% | +2.28 | 97.60% | +72.37 |
+| terms | ja | 24 | **15.97%** | **-0.25** | 82.47% | +57.23 |
+
+Nothing truncated: the longest arm is 24 tokens against a 31-token window, so none of this
+is a truncation artifact. Prompt texts were the four shapes written natively in each
+language; the term lists were derived mechanically from the references (tokens appearing in
+at least two files, ranked by frequency) rather than hand-picked, so they could not be
+chosen to flatter the result.
+
+**Three results, in order of how much they change the guidance.**
+
+**1. English audio is catastrophically prompt-sensitive and Japanese audio is not.** Every
+one of the eight prompts cost English between 14 and 72 WER points, while the worst
+Japanese cost was 3.31 and the best two were improvements. The language of the prompt
+barely matters for this: a Japanese prompt on English audio (+46 to +57) is as ruinous as
+an English one (+14 to +72). The prompt-language-match hypothesis predicted the opposite
+and is discarded. Note that n=3 for English, so treat the magnitudes as directional; the
+sign is unambiguous, since all eight arms agree.
+
+**2. On Japanese, a prompt in Japanese is at worst free and possibly a small gain.** All
+four Japanese-language arms land within 0.26 points of baseline, two of them below it,
+and per file they improve 8 to 12 of the 17 Japanese files. All four English-language arms
+cost 1.40 to 3.31 points and hurt 11 to 13 of 17. That asymmetry is the one thing here a
+user can act on, and it is consistent with the mechanism: the model treats the prompt as
+its own prior output, so text in the wrong script is a register the model then has to
+escape.
+
+**3. The best Japanese arm is a term list, which contradicts the n=1 finding.** `terms ja`
+at -0.25 is the best cell in the table, and it beat the topic sentence. The single-clip
+experiment concluded the opposite (a 17-token topic sentence matched a 38-token term list,
+and reversing term order changed nothing, which argued the field does not do vocabulary
+recall). At n=20 the term list is nominally best. The effect is still only 0.25 points
+against a resolution floor of about 1.6, so **this is not a resolved win**, and the honest
+statement is that the earlier "prompts do not do vocabulary recall" conclusion rested on
+one clip and does not reproduce as a ranking. It is not overturned either; both sit inside
+the noise.
+
+**Your content shape did not matter the way the shapes suggest it should.** An imperative,
+a scene-setting description of the recording, a topic sentence and a bare term list all
+behave alike within a language: same sign, same rough magnitude, ordered differently on
+Japanese than on English. Whatever the field does, it is not reading the prompt as an
+instruction, a description or a vocabulary list. It is conditioning register.
 
 ## Experiment: prompt plus overlap is catastrophic
 
@@ -138,9 +223,17 @@ is by far the stronger effect. Benchmarks pass no prompt, so the overlap rows in
 
 ## Practical guidance
 
-- **Never put an instruction there.** Use domain vocabulary or a short topic sentence
-  describing the recording.
-- Prefer prose: a 17-token topic sentence matched a 38-token term list.
+- **On English audio, leave it empty.** Every variant tested at n=20 cost 14 to 72 WER
+  points. This is the strongest guidance on this page, and it does not depend on what the
+  prompt says.
+- **Never put an instruction there**, in any language. Use domain vocabulary or a short
+  topic sentence describing the recording.
+- **Write the prompt in the language of the audio.** On Japanese audio the four
+  Japanese-language variants were free to marginally positive; the English-language ones all
+  cost 1.4 to 3.3 points.
+- Content shape matters less than language. Term list, topic sentence, description and
+  imperative all behave similarly within a language, which is why none of them is
+  recommended over the others on the evidence here.
 - Put terms you care about **last**, since only the final 31 tokens survive. Though note
   the ordering experiment above suggests this matters less than it should.
 - If you use it at all, verify on your own audio. The effect is small enough to flip with

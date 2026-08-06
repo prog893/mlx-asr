@@ -77,10 +77,17 @@ options and never measurably worse**, which is a weaker justification than "long
 chunks are worse" but the one the data supports. An earlier version of these docs
 claimed the stronger thing; that was a correction, not a new measurement.
 
-On the 20-file corpus the 60s-versus-30s difference does not resolve either
+On the **7-file** corpus the 60s-versus-30s difference does not resolve either
 (+1.67, CI [-1.22, +4.73]), and 30s/batch 32 was nominally better on every axis
 including speed. Between-file variance dwarfs the effect. The shipped default is per
 machine, from `profiles.json`.
+
+The corpus has since grown to 20 files, which lowers the resolution floor from about 3.2
+points to about 1.6 (same per-file SD of 3.50, more files). A +1.67-point effect sits
+almost exactly on that new floor, so this comparison is the one small-corpus result that a
+re-run at n=20 could plausibly turn from "not resolvable" into a decision, and it is the
+top entry on the open list for that reason. The 20-file re-run has not been done: it costs
+two full corpus passes and, unlike the headline, no published number depends on it.
 
 ## Experiment: prefix overlap
 

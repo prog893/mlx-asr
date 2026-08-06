@@ -34,13 +34,19 @@ that make plain CER meaningless.
 
 **Between-file variance here is larger than most of the config effects being measured.**
 Per-file coverage error spans 11-28% for a single unchanged config, so a 1-point
-difference between two configs is a tie unless a paired test says otherwise. At n=7 the
-corpus resolves effects of roughly 3.2 points.
+difference between two configs is a tie unless a paired test says otherwise. With a
+per-file paired SD of 3.50 points, the resolution floor depends on how much audio a given
+experiment used: roughly **3.2 points at n=7** and **1.6 at n=20**.
 
-**The samples are small and uneven.** Corpus results are n=20 files in two languages, of
-which only 3 are English. Timing results are n=7, since only those files have authored
-subtitle tracks. Several single-clip findings in this project reversed sign when a real
-corpus arrived, which is why single-clip and corpus results are always labelled as such.
+**The samples are small and uneven, and they differ between findings.** Only the engine
+comparison in [engines.md](engines.md) uses all 20 files; **every other lever doc here is
+n=7 or a single clip**, because those sweeps predate the corpus growth and re-running one
+costs a full corpus pass per arm. So a finding marked "not resolvable" may mean "smaller
+than 3.2 points" rather than "smaller than 1.6", and a few sit between the two. Where that
+matters the doc says so. Of 20 files only 3 are English, and timing results are n=7 because
+only those files have authored subtitle tracks. Several single-clip findings in this project
+reversed sign when a real corpus arrived, which is why single-clip and corpus results are
+always labelled as such.
 
 **A significant result on one clip means "real on this clip", not "real".** Two different
 methods answer two different questions; see the comparison section of
