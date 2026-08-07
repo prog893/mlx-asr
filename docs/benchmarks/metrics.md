@@ -188,8 +188,9 @@ instead of inflating both intervals. Sign convention in the output is `diff = a 
 **"Would this hold on other audio?"** Bootstrap over *files*, length-weighted
 (`scripts/benchmarks/compare_engines.py`). This is the only method that speaks to
 generalization, and it is much stricter: the per-file paired difference between two real
-configs has SD 3.50 points, so at n=7 the corpus resolves effects of about **3.2 points
-or larger**.
+configs has SD 3.50 points, so the corpus resolves effects of about **3.2 points at n=7
+and 1.6 at n=20**. Most lever docs here are n=7; check which the experiment used before
+reading "not resolvable" as "small".
 
 That gap between the two is why several single-clip results in this project reversed on a
 corpus. A significant paired result on one clip means "real on this clip", not "real".

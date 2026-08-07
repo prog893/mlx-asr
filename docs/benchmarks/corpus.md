@@ -118,8 +118,9 @@ metric.
 
 More than feels necessary. Between-file variation on this corpus is larger than most
 of the config effects being tested: the same unchanged config spans 11-28% per-file
-coverage error. At 7 files the corpus resolves differences of roughly 3.2 points, so
-anything smaller than that needs either a paired test or more audio. Several
+coverage error. Resolution depends on how many files an experiment uses: roughly 3.2
+points at 7 files and 1.6 at all 20, so anything smaller than that needs either a paired
+test or more audio. Several
 single-clip findings here reversed sign when a real corpus arrived.
 
 Decoding is deterministic per machine, so repeating a run adds no information. Only

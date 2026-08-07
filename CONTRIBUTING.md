@@ -85,7 +85,8 @@ uv run python scripts/benchmarks/compare_engines.py a.json b.json               
 Report the difference with its confidence interval and say how many files it covers. Note
 the two scripts answer different questions: the first says "better on this clip", the
 second says "better on this kind of audio", and only the second speaks to generalization.
-At n=7 the corpus used here resolves about 3.2 points.
+The resolution depends on how many files you run: with a per-file paired SD of about
+3.5 points, that is roughly 3.2 points at n=7 and 1.6 at n=20. State which you used.
 
 Decoding is deterministic on a given machine, so **repeating a run adds no information**;
 only more audio does. It is *not* deterministic across machines, so do not compare a run

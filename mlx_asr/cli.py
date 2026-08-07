@@ -226,21 +226,27 @@ def build_parser():
                    choices=[*WRITERS.keys(), "all"])
     p.add_argument("-o", "--output", help="output path (default: input stem + ext)")
     p.add_argument("--prompt",
-                   help="domain keywords or a topic sentence, to bias vocabulary. "
-                        "NOT an instruction field: the decoder treats this as text "
-                        "it already emitted, so an imperative like 'transcribe "
-                        "accurately' costs ~6 CER points. Only the last ~31 tokens "
-                        "are used. Ignored when --overlap-seconds is active")
+                   help="domain keywords or a topic sentence, in the same language as "
+                        "the audio. A weak lever, and easy to make things worse with: it "
+                        "is NOT an instruction field (the decoder reads it as text it "
+                        "already emitted), it does not recall vocabulary, and on "
+                        "space-delimited audio such as English it wrecks word spacing, "
+                        "so leave it empty there. Only the last ~31 tokens are used. "
+                        "Ignored when --overlap-seconds is active. "
+                        "See docs/benchmarks/prompt.md")
     p.add_argument("--chunk-seconds", type=float, default=None,
                    help="chunk/window length. Voxtral: default from the hardware "
-                        "profile. kotoba: the window length, its biggest lever "
-                        "(23 points across 10-30s) and material-dependent, so "
-                        "sweep it. Ignored by the whisper-* models, whose 30s "
-                        "window is fixed")
+                        "profile, and a throughput knob rather than an accuracy one. "
+                        "kotoba: the window length, and its biggest lever by far; it is "
+                        "material-dependent, so sweep it on your own audio. Ignored by "
+                        "the whisper-* models, whose 30s window is fixed. "
+                        "See docs/benchmarks/chunking.md")
     p.add_argument("--max-batch", type=int, default=None,
                    help="default: from the hardware profile (see mlx-asr-bench)")
     p.add_argument("--delay-ms", type=int, default=2400,
-                   help="transcription delay; higher is more accurate, 2400 is the sweet spot")
+                   help="transcription delay. The largest accuracy lever here and it "
+                        "costs no speed; 2400 is both the default and the maximum the "
+                        "model supports. See docs/benchmarks/delay.md")
     p.add_argument("--kv-bits", type=int, default=None, choices=[4, 8],
                    help="quantize the KV cache; 8 is the profile default (faster, "
                         "no measured accuracy cost)")
@@ -252,8 +258,10 @@ def build_parser():
                         "Declines automatically when it would not help")
     p.add_argument("--overlap-seconds", type=float, default=None,
                    help="prepend this much preceding audio to each chunk as "
-                        "warm-up context and discard its transcript; recovers "
-                        "accuracy lost at chunk seams (default: from profile)")
+                        "warm-up context and discard its transcript, to recover "
+                        "accuracy lost at chunk seams. Helped on one clip and not on a "
+                        "corpus, so it is off unless --fast asks for short chunks "
+                        "(default: from profile). See docs/benchmarks/chunking.md")
     p.add_argument("--gain", default="auto",
                    help="input level. 'auto' (default) boosts only audio quieter "
                         "than -6 dBFS peak, up to -1 dBFS, and leaves anything "
@@ -281,7 +289,8 @@ def build_parser():
                         "means more, shorter cues")
     p.add_argument("--max-chars", type=int, default=None,
                    help="split a cue once it reaches this many characters "
-                        "(default 28); worth under a point anywhere in 28-72")
+                        "(default 28); barely affects accuracy anywhere in its useful "
+                        "range")
     p.add_argument("--max-dur-seconds", type=float, default=None, metavar="SEC",
                    help="hard cap on cue duration (default 7.0); a safety valve "
                         "that the other two rules normally pre-empt")
@@ -372,8 +381,11 @@ def main(argv=None):
         overlap_s = prof.get("overlap_seconds", 0.0)
         # Overlap pays only where seams are dense. At the profile's long chunks a
         # paired test finds no benefit (60s: -0.69 points, CI [-1.47, +0.07]),
-        # but --fast halves the chunk length, and there it is a significant win
-        # (30s: +1.80 points, CI [+0.62, +3.20]).
+        # while at 30s it won +1.80 points, CI [+0.62, +3.20], on a single clip.
+        # That win did NOT reproduce on the 20-file corpus (-1.47, CI [-4.33,
+        # +2.36], sign reversed), which is why overlap is tied to --fast rather
+        # than defaulted on: --fast is an explicit request for the short-chunk
+        # regime the single-clip result describes. See docs/benchmarks/chunking.md.
         if a.fast and chunk_s < prof["chunk_seconds"]:
             overlap_s = max(overlap_s, 8.0)
     if a.vad:

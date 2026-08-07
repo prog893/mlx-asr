@@ -91,9 +91,10 @@ Voxtral-only, because the engines do not share a long-form algorithm. Drop the
 flag, or use the default --model voxtral.
 ```
 
-`--prompt` is one of those, Voxtral only. It takes domain terms or a topic sentence,
-not an instruction: the decoder treats it as text it already emitted, so "transcribe
-accurately" makes things worse.
+`--prompt` is one of those, Voxtral only. It takes domain terms or a topic sentence in the
+same language as the audio, not an instruction: the decoder treats it as text it already
+emitted, so "transcribe accurately" makes things worse. On English audio any prompt wrecks
+word spacing, so leave it empty there.
 
 Reference: [docs/MODELS.md](docs/MODELS.md).
 

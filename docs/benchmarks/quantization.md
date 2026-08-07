@@ -37,7 +37,7 @@ conclusion that precision is a non-factor here.
 ## Method
 
 `scripts/benchmarks/sweep_precision.py`. Everything fixed except the weights: 60s chunks, batch
-16, delay 2400ms, same prompt. M2 Ultra 128GB, since a 16GB M4 16GB cannot hold fp16 at all.
+16, delay 2400ms, same prompt. M2 Ultra 128GB, since a 16GB M4 cannot hold fp16 at all.
 Differences are checked with a paired test over 40 regions of the same clip
 (`scripts/benchmarks/compare_configs.py`) rather than by eyeballing two overall CERs.
 

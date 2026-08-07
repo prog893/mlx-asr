@@ -21,7 +21,7 @@ Verified end to end, each decoding to the correct duration:
 |---|---|---|
 | WAV (pcm_s16le, s24le, f32le, mulaw) | 8k, 16k, 96k | 16/24/32-bit, mono + stereo |
 | FLAC | 48k | 32-bit |
-| AAC / M4 16GBA, ALAC | 16k, 44.1k | mono + stereo |
+| AAC / M4A, ALAC | 16k, 44.1k | mono + stereo |
 | MP3 | 22.05k | mono |
 | Opus | 48k | mono |
 | MP4 video | 16k | mono (audio stream extracted) |
@@ -68,9 +68,9 @@ quotes the corpus number instead. `whisper-tiny` scoring better than
 `whisper-base` is the same problem showing through: at n=1 that is noise, not a
 fact about model size.
 
-Voxtral's x-realtime looks bad because a 16GB M4 16GB is the floor case for it. Its
-encoder is compute-bound, and the same code reaches 22.8x on an M2 Ultra 128GB (see
-docs/benchmarks/decode-throughput.md).
+Voxtral's x-realtime looks bad because a 16GB M4 is the floor case for it. Its
+encoder is compute-bound, and the same code reaches 29.8x on an idle M2 Ultra 128GB over
+the 20-file corpus (see docs/benchmarks/engines.md).
 
 The `kotoba` alias is v2.0 and gains nothing from v2.2. Both hold the same ASR
 weights, identical in value across all 539 tensors (max absolute difference exactly
@@ -167,13 +167,13 @@ All verified working through the brew binary.
 | flag | values | default | measured effect |
 |---|---|---|---|
 | `--delay-ms` | int | `2400` | the biggest accuracy lever, and free: 25.62% at 480ms, 20.51% at 960ms, 16.44% at 2400ms, at the same speed |
-| `--chunk-seconds` | float | per machine (60s) | 60s vs 30s is not resolvable on the corpus, so pick on speed |
+| `--chunk-seconds` | float | per machine (60s) | 60s vs 30s is not resolvable at n=20 (+0.10 points, CI [-1.89, +2.03]), so pick on speed |
 | `--max-batch` | int | per machine | throughput is **not monotonic** in this: B=2..8 is slower per step than B=1 |
 | `--kv-bits` | `4` or `8` | `8` | free: slightly faster, 39 of 40 scored regions identical to unquantized |
 | `--no-kv-quant` | flag | off | disables the above |
 | `--fast` | flag | off | halves the chunk, doubles the batch, adds warm-up overlap. Declines automatically when it would not help |
 | `--overlap-seconds` | float | `0` | won 1.5-1.8 points at 30s chunks on one clip, **did not reproduce on the corpus** (sign reversed) |
-| `--prompt` | text | none | vocabulary bias. **Not an instruction field**: an imperative costs ~6 CER points, because the decoder reads it as text it already emitted. Last ~31 tokens only. Ignored when overlap is active |
+| `--prompt` | text | none | register bias, not vocabulary recall (term counts move under 7% when prompted). **Not an instruction field**: an imperative costs ~6 CER points, because the decoder reads it as text it already emitted. **Write it in the audio's language, and leave it empty on English audio**: at n=20 every prompt suppressed English word spacing badly. Last ~31 tokens only. Ignored when overlap is active |
 | `--gain` | `auto` `none` `peak` `rms` or dB | `auto` | `auto` boosts only below -6 dBFS peak, so it is a no-op on healthy audio. Quiet input costs ~3.8 points because the mel floor is absolute |
 | `--peak-dbfs` / `--rms-dbfs` | float | `-1.0` / `-23.0` | targets for `--gain peak` / `--gain rms` |
 | `--vad` | flag | off | Silero VAD cut points. **Measured worse on clean speech** by 0.8-3.0 points; for material where energy minima mislead |

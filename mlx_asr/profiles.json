@@ -2,7 +2,7 @@
   "_comment": "Known-good decode configs per machine. Throughput is NOT monotonic in batch size, so these are measured, not calculated. Add yours: run `mlx-asr-bench` and open an issue with its output. Keys are matched as substrings of `sysctl -n machdep.cpu.brand_string` plus a RAM window in nameplate GiB. Machines with no entry fall through to a derived formula (see hardware.py: derive_batch), not to a bucket table.",
   "_schema": {
     "batch": "rows decoded in lockstep; the single most important knob",
-    "chunk_seconds": "audio per row; shorter = fewer decode steps but more seams (worse CER)",
+    "chunk_seconds": "audio per row; shorter = fewer decode steps per row but more chunk seams. 30s vs 60s is not resolvable on the 20-file corpus (+0.10, CI [-1.89, +2.03]), so this is a throughput choice, not an accuracy one",
     "measured_x_realtime": "end-to-end on the reference clip, incl. model load",
     "peak_gb": "GPU peak at this batch; keep under ~60% of gpu_working_set_gb",
     "source": "who measured it and on what",
@@ -20,7 +20,7 @@
       "chunk_seconds": 60,
       "kv_bits": 8,
       "overlap_seconds": 0,
-      "notes": "10 GPU cores, ~120GB/s. 60s chunks need no overlap (few seams); with --fast the CLI drops to 30s/B32 where overlap earns 1.8 CER points back. B=4..8 is a hard valley (110ms/step vs 22ms at B=1) and B=48 exceeds the ~8.4GB KV wall. The encoder is 36% of wall clock and compute-bound, so shorter chunks stop paying well before the batch limit.",
+      "notes": "10 GPU cores, ~120GB/s. 60s chunks need no overlap (few seams); with --fast the CLI drops to 30s/B32 where overlap earned 1.8 CER points back on one clip, though that did not reproduce on a 20-file corpus. B=4..8 is a hard valley (110ms/step vs 22ms at B=1) and B=48 exceeds the ~8.4GB KV wall. The encoder is 36% of wall clock and compute-bound, so shorter chunks stop paying well before the batch limit.",
       "measured_x_realtime": 7.5,
       "measured_cer": 0.0744,
       "peak_gb": 6.8,
@@ -37,7 +37,7 @@
       "chunk_seconds": 60,
       "kv_bits": 8,
       "overlap_seconds": 0,
-      "notes": "60 GPU cores, ~800GB/s. 21.4x at CER 7.37%; --fast gives 30s/B32 + 8s overlap for 26.7x at 7.25%, which is the best speed/accuracy point measured on any machine. A whole 935s clip fits in one batch of 16, so long chunks cost nothing beyond the decode length of the longest row.",
+      "notes": "60 GPU cores, ~800GB/s. 21.4x at CER 7.37% on the single reference clip; --fast gives 30s/B32 + 8s overlap for 26.7x at 7.25% there. Both are single-clip figures: over the 20-file corpus 30s and 60s are indistinguishable on accuracy (+0.10, CI [-1.89, +2.03]), so treat chunk length here as a throughput choice. A whole 935s clip fits in one batch of 16, so long chunks cost nothing beyond the decode length of the longest row.",
       "measured_x_realtime": 21.4,
       "measured_cer": 0.0737,
       "peak_gb": 9.1,
@@ -49,7 +49,7 @@
     "_comment": "Inputs to hardware.py:derive_batch, used only when no profile above matches. Batch itself is computed from GPU working set, GPU cores, model weight size and chunk length, then snapped onto FAST_BATCHES; it is deliberately NOT a table, because memory and core count are detectable at runtime while the batch-size valley is not.",
     "chunk_seconds_default": 60.0,
     "chunk_seconds_low_core": 60.0,
-    "_chunk_note": "60s both ways for now. Shorter chunks trade seam accuracy for decode steps, and on a low-core GPU the compute-bound encoder makes short chunks a net loss; that is measured on the M4 but not yet on any other low-core part, so the two values are kept separate rather than collapsed.",
+    "_chunk_note": "60s both ways for now. On a low-core GPU the compute-bound encoder makes short chunks a net loss on throughput; that is measured on the M4 but not yet on any other low-core part, so the two values are kept separate rather than collapsed. This is a speed argument, not an accuracy one: 30s and 60s are indistinguishable on accuracy over the 20-file corpus.",
     "kv_bits": 8
   }
 }
