@@ -64,6 +64,7 @@ about.
 | Batching the encoder | 0.84-0.91x. It is compute-bound at ~4950 FLOP/byte, so batching cannot help. |
 | `mx.compile` on the decode step | Equal or worse at every batch size. |
 | Reshaping to dodge the batch valley | `fold` is bit-exact but worth 3-7%; splitting is 1.8-4x worse. |
+| Forcing MLX's `qmv_wide` kernel at the batch valley | 14-27% *slower* at B=2-8 on a gen-14 Ultra, reproducibly. MLX's gen-15 gate is right. |
 | Prefix overlap at long chunks | No benefit once seams are sparse. |
 | Carrying decoder context across seams | Recovers 0.17 of the ~1.5 points seams cost, at 2x wall clock. |
 | Silero VAD cut points | 0.8-3.0 points worse than energy minima, significantly. |

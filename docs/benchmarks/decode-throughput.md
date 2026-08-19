@@ -212,3 +212,53 @@ Anything landing in the 2-11 range falls back to 1, because the real choice ther
 Contributing a measured profile for a machine that is not listed is the most useful
 contribution to this project, and needs no audio: see
 [../../CONTRIBUTING.md](../../CONTRIBUTING.md).
+
+## Experiment: is the batch valley MLX's affine `qmv_wide` gate? No.
+
+A promising-looking lead, tested and closed. MLX dispatches small-batch quantized matvecs
+to a kernel called `qmv_wide`, built specifically for M=2..8, which loads each weight group
+once and reuses it across the vectors in a tile instead of re-streaming the whole weight
+matrix per vector. That is exactly the amortization a bandwidth-bound decoder wants, and
+exactly the batch range where this project measures a valley. But it is gated
+(`mlx/backend/metal/quantized.cpp:299-301` at v0.32.0, verbatim):
+
+```cpp
+// affine qmv_wide only beats qmv on gen-15+; fp benefits on every gen.
+inline bool use_qmv_wide(const std::string& mode, metal::Device& d) {
+  return mode != "affine" || d.get_architecture_gen() >= 15;
+}
+```
+
+The M2 Ultra reports `applegpu_g14d`, GPU generation 14, and the shipped weights are 4-bit
+**affine**, so this machine has never reached `qmv_wide`. The hypothesis was that the gate is
+mistuned for an Ultra: it was justified upstream from an M2 Pro, and an Ultra has a very
+different bandwidth-to-core ratio, which is the regime where amortizing weight reads should
+pay more rather than less.
+
+`MLX_METAL_GPU_ARCH=applegpu_g15d` flips only that gate (and the dense `gemv_wide` one),
+which makes it a clean diagnostic even though it is a lie about the hardware and could never
+ship. Two interleaved runs of each arm, decode steps/s, idle host:
+
+| batch | affine `qmv` (default) | forced `qmv_wide` | change |
+|---|---|---|---|
+| 1 | 89.4 / 90.2 | 88.5 / 90.1 | -0.5% |
+| 2 | 73.0 / 77.3 | 63.9 / 64.0 | **-14.8%** |
+| 4 | 61.3 / 61.2 | 52.3 / 52.4 | **-14.5%** |
+| 8 | 40.5 / 40.6 | 27.3 / 32.1 | **-26.8%** |
+
+**Refuted, and reproducibly so.** B=1 is the built-in control: the `M >= 2` guard means it
+takes `qmv` under either setting, and it moved 0.5%, which is the noise floor and confirms
+the override changed nothing else. Every batch from 2 to 8 got materially *slower*.
+
+So the gate is correctly tuned for this hardware rather than mistuned, and the valley has a
+different cause. This also settles a question the journal had recorded as untestable: the
+`vector_limit` threshold is compile-time C++, but the architecture generation feeding it is a
+runtime environment variable, so the dispatch *can* be moved from Python. It just does not
+help.
+
+Worth stating what remains unexplained. `qmv_wide` reads fewer weight bytes per step by
+construction, and it is still slower here, so at B=2..8 this decoder is not purely
+bandwidth-bound in the way the B=1 figure suggests. Something else, most likely occupancy or
+scheduling at low thread counts, dominates in that range. That is consistent with the other
+negative results on this page (encoder batching, `mx.compile`, reshaping) and it is why
+`FAST_BATCHES` remains an empirical list rather than a formula.
