@@ -2026,9 +2026,9 @@ identical 30s config for the headline. That is what withdrew the ~1 point per-fi
 
 ## 2026-08-19: Qwen3-ASR, designed and not yet built
 
-Recorded as a handover rather than a result, because the design is settled and the
-implementation is not. Everything below was verified against source or the HuggingFace API,
-not taken from a summary.
+Investigated as a candidate engine and not implemented, so this records what the
+investigation established rather than a measurement. Everything below was verified against
+source or the HuggingFace API rather than taken from a summary.
 
 **What the engine is.** `Qwen/Qwen3-ASR-1.7B` and `-0.6B`, Apache-2.0, 4.4M downloads,
 Japanese explicit on the model card (30 languages plus 22 Chinese dialects). Official MLX
@@ -2060,55 +2060,23 @@ belongs behind a research script rather than in the shipped CLI.
 interpolates an unrecognised string verbatim, so `--language ja` would have silently produced
 the prefix `language ja<asr_text>`. That whole class of failure is now handled centrally.
 
-### Continuation prompt
+### What is left to do
 
-> Build Qwen3-ASR as a shipped engine in mlx-asr. The design is in JOURNAL.md under
-> "2026-08-19: Qwen3-ASR, designed and not yet built" and in the project memory note
-> `qwen3-asr-integration-state`. Read both first, plus `mlx_asr/languages.py`, which already
-> solves the language-form problem.
->
-> Add two registry entries to `mlx_asr/models.py` with a new backend string `mlx-qwen3`:
-> `qwen3-asr` -> `mlx-community/Qwen3-ASR-1.7B-8bit` (weights_gb 2.3) and `qwen3-asr-small`
-> -> `mlx-community/Qwen3-ASR-0.6B-8bit` (weights_gb 0.94). Both `deterministic=True`, both
-> multilingual, both `chunked_long_form=True` with `opts={"chunk_length_s": 60.0}`. Do NOT
-> leave the library's 1200s default: at that value a sub-20-minute file is one chunk, so
-> batching never engages and there is exactly one cue. Also teach `infer_backend` about
-> `qwen3-asr`/`qwen3_asr`, before the `whisper` check.
->
-> Add `transcribe_mlx_qwen3` to `mlx_asr/backends.py`, returning the usual
-> `(cues, full_text, meta)`. Pass the decoded array from `load_audio_16k` rather than a path,
-> so PyAV stays the single decoder. Always pass an explicit mapped language via
-> `languages.to_english_name(...)` with the engine's own vocabulary, both because `ja` would
-> otherwise be silently mis-prompted and because there is an upstream bug where multi-chunk
-> autodetect reassigns `language` inside the loop and leaves the `language X<asr_text>` prefix
-> embedded in later chunks' text. Put `cue_source: "chunk_boundaries"` in `meta` so a break-F1
-> figure can never be quoted as comparable to Voxtral's or Whisper's.
->
-> Make `-f srt` and `-f vtt` a hard error on this engine, exit 2, in the same style as
-> `UnsupportedFlags`: this model emits no speech-level timestamps, so a subtitle file would be
-> one cue containing everything. `txt` and `json` are fine. Refuse `--max-batch` for now and
-> say why in the per-flag table: `batch_size` does exist upstream, but it is a no-op unless
-> `--chunk-seconds` is also lowered enough to produce multiple chunks, and the measured
-> "never use 2-8" guidance is about Voxtral's decoder with no evidence here.
->
-> Three existing tests will fail and each should be rewritten rather than worked around:
-> `tests/test_models.py` asserts the backend is one of three strings, and asserts
-> `deterministic == (backend == "voxtral")`, which was true and is now not. Extend
-> `test_voxtral_only_flags_error_on_other_engines` to parameterise over `qwen3-asr` as well as
-> `whisper-turbo`. Add tests that `--language ja` maps to `Japanese` and never passes through,
-> and that `-f srt` exits 2 on this engine.
->
-> Then benchmark on the IDLE M2 Ultra only, one run at a time, nothing else on the machine,
-> and check `machine_state` reports `busy: false` before starting. Sweep `--chunk-seconds`
-> 30/60/120/300 on the 7-file subset first, because the library default is a value nobody has
-> measured and it changes cue count, batching and peak memory at once. Then one full-corpus run
-> per alias against the current headline (Voxtral 16.22% JP / 21.50% EN / 29.6x; turbo-nocond
-> 14.49% +/- 0.27 / 18.34% +/- 0.69). One run each, since it is greedy, plus one repeat of the
-> 1.7B purely as a determinism check. Report kana and lenient CER alongside coverage CER: the
-> Japanese finetune advertises inverse text normalisation, so digits-versus-spelled-out is a
-> real confound against these references. Record `mx.get_peak_memory()`; the audio encoder
-> stays unquantized at every precision level and the attention mask is materialised densely,
-> so this engine's memory profile is unlike the others.
->
-> Do not delegate benchmarking to subagents. See the memory note
-> `subagents-must-not-benchmark`.
+Not started. The work is: two registry entries on a new `mlx-qwen3` backend, an adapter
+in `backends.py` returning the usual cue list, `-f srt`/`-f vtt` as a hard error naming
+the missing-timestamps reason, and `--max-batch` refused for now because `batch_size` is
+a no-op unless `--chunk-seconds` is lowered enough to produce more than one chunk.
+
+Three existing tests will fail and each should be rewritten rather than worked around:
+`tests/test_models.py` asserts the backend is one of three strings, and asserts
+`deterministic == (backend == "voxtral")`, which was true until this engine.
+
+The first experiment is a `--chunk-seconds` sweep at 30/60/120/300 on the 7-file subset,
+because the library default of 1200s is a value nobody has measured and it moves cue
+count, batching and peak memory at once. Only then a full-corpus run per alias, one run
+each since it is greedy, plus one repeat purely as a determinism check. Report kana and
+lenient CER beside coverage CER: the Japanese finetune advertises inverse text
+normalisation, so digits versus spelled-out numbers is a real confound against these
+references. Record peak memory too, since the audio encoder stays unquantized at every
+precision level and the attention mask is materialised densely, so this engine's memory
+profile is unlike the others here.
