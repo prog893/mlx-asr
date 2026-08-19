@@ -120,6 +120,23 @@ uv run python scripts/benchmarks/repeat_distribution.py --runs r*.json --baselin
 uv run python scripts/benchmarks/rescore_all.py --reference R bench_out/*.srt
 ```
 
+Plotting the evidence behind a comparison, since an interval in a sentence hides its
+shape. Needs the `eval` extra for matplotlib; files are labelled by duration, never by
+name:
+
+```bash
+uv run python scripts/benchmarks/plot_evidence.py paired A.json B.json --out p.png
+uv run python scripts/benchmarks/plot_evidence.py bootstrap A.json B.json --out b.png
+uv run python scripts/benchmarks/plot_evidence.py runs --baseline vox.json \
+    --runs w1.json w2.json w3.json --out r.png
+uv run python scripts/benchmarks/plot_evidence.py sensitivity --hyp-dir DIR \
+    --corpus DIR --out s.png
+```
+
+`paired` is the one to reach for first: it shows whether an aggregate is broad agreement
+or two files pulling against each other, which the point estimate cannot distinguish and
+which decides whether more audio would help.
+
 Decode throughput, **no audio needed**, and the basis of the contributed-profile flow:
 
 ```bash

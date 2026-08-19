@@ -195,6 +195,31 @@ reading "not resolvable" as "small".
 That gap between the two is why several single-clip results in this project reversed on a
 corpus. A significant paired result on one clip means "real on this clip", not "real".
 
+### The English bootstrap is n=3, and that is worse than it sounds
+
+A bootstrap resamples files with replacement, so the number of *distinct* resamples it can
+ever draw is the number of multisets of size n from n items, `C(2n-1, n)`:
+
+| files | distinct resamples possible |
+|---|---|
+| 3 | **10** |
+| 7 | 1,716 |
+| 17 | 1.17e9 |
+| 20 | 6.89e10 |
+
+At n=3 there are ten possible resamples no matter how many are requested, so the resulting
+histogram is a handful of spikes and the 2.5th and 97.5th percentiles land on specific
+compositions rather than on a smooth tail. `plot_evidence.py bootstrap` makes this visible
+immediately: the Japanese panel is a smooth distribution centred near zero, and the English
+panel next to it is five bars.
+
+The consequence is not that the English numbers are wrong, but that **a 95% interval is the
+wrong summary for them**. Two English comparisons can both be reported as "not resolvable"
+while one has every resample on the same side of zero and the other is split evenly. Read
+the per-file numbers and the direction for English, not the interval. Anything that rests
+on the English side is a direction with n=3 behind it, which is why those conclusions are
+labelled as directional throughout these documents.
+
 **Do not use repeat runs for statistical power.** Voxtral decodes greedily, so a rerun is
 byte-identical on the same machine and adds no information; only more audio adds power.
 Whisper does sample, so it genuinely needs a run distribution: see

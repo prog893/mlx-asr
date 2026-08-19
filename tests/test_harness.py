@@ -413,3 +413,47 @@ def test_warn_if_busy_says_accuracy_survives_but_timing_does_not():
     assert "x-realtime" in msg and "Accuracy is unaffected" in msg
     assert "50.0GB" in msg
     assert warn_if_busy({"busy": False}, log=lines.append) is False
+
+
+def test_plot_evidence_reuses_the_one_t_table():
+    """The plotting tool must not carry its own copy of the t distribution.
+
+    It did, briefly, keyed on n instead of degrees of freedom, so a 3-run interval came
+    out as +/-1.77 where the printed figure said +/-0.60. Both were describing the same
+    three numbers. A plot that disagrees with the table it illustrates is worse than no
+    plot, because the reader has no way to tell which one is wrong.
+    """
+    src = (ROOT / "scripts" / "benchmarks" / "plot_evidence.py").read_text()
+    assert "from benchmarks.repeat_distribution import t_crit" in src
+    # No second hardcoded t table anywhere in the file.
+    assert "12.706" not in src, "plot_evidence.py has its own t table again"
+
+
+def test_t_crit_is_keyed_on_degrees_of_freedom():
+    """t_crit(2) is the value for 3 samples, not for 2.
+
+    Pinned because the off-by-one is invisible in the output: both keys return a
+    plausible-looking number and the interval is simply too wide or too narrow.
+    """
+    from benchmarks.repeat_distribution import t_crit
+
+    assert abs(t_crit(2) - 4.303) < 0.001      # n=3
+    assert abs(t_crit(1) - 12.706) < 0.001     # n=2
+    assert abs(t_crit(5) - 2.571) < 0.001      # n=6
+
+
+def test_bootstrap_at_n3_is_reported_as_granular():
+    """A bootstrap over 3 files has only 10 distinct resamples, so its CI is not a
+    smooth interval and must not be read as one.
+
+    This is arithmetic, not a measurement: multisets of size n from n items is
+    C(2n-1, n). At n=3 that is 10, so the 2.5th and 97.5th percentiles land on
+    specific compositions. The English side of this corpus is n=3, and every English
+    conclusion here rests on it.
+    """
+    from math import comb
+
+    assert comb(2 * 3 - 1, 3) == 10
+    assert comb(2 * 7 - 1, 7) == 1716
+    # By n=17 the resample space is large enough that percentiles are meaningful.
+    assert comb(2 * 17 - 1, 17) > 10 ** 9

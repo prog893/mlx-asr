@@ -36,6 +36,8 @@ vad = [
 eval = [
     "pykakasi>=2.3.0",
     "rapidfuzz>=3.14.5",
+    # plot_evidence.py only. Research-side, never imported by the CLI.
+    "matplotlib>=3.9.0",
 ]
 # The whisper-* aliases and the mlx-chunked driver used by --model kotoba, plus
 # scripts/benchmarks/run_whisper.py.
