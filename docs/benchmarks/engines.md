@@ -1,10 +1,10 @@
 # Lever: which engine
 
 **Conclusion first.** Whisper large-v3-turbo with `condition_on_previous_text=False` is
-the most accurate option on this corpus, by about 1.5 points, and the result is
-statistically resolved. Voxtral is ~1.35x faster, needs no language hint, needs no
-long-form-stability flag, and is reproducible on a given machine, which is why it is the
-default. At Whisper's *library defaults* Voxtral beats every Whisper size on Japanese by
+the most accurate option on this corpus, by about 1.7 points on Japanese, and the result is
+statistically resolved by every test available here including a bootstrap over files.
+Voxtral is 1.35-1.65x faster, needs no language hint, needs no long-form-stability flag, and
+is reproducible on a given machine, which is why it is the default. At Whisper's *library defaults* Voxtral beats every Whisper size on Japanese by
 8.5 to 42.8 points, which says more about those defaults than about either model. No
 "fastest on Apple Silicon" claim survives measurement.
 
@@ -80,18 +80,42 @@ Measured 2026-08-06 on an idle `Apple M2 Ultra 128GB (Mac14,14)`, mlx 0.32.0, ma
 `condition_on_previous_text=False` and the language taken per file from its reference.
 Arms were run one at a time, never concurrently.
 
+**Re-measured 2026-08-19** after fixing a reference-loading defect that fused a word at
+every line break on the word-level path. The English figures below supersede the earlier
+ones; Japanese is unchanged, because Japanese has no word spaces and could not be affected.
+
 | | Voxtral (deterministic) | turbo-nocond, 3 runs | verdict |
 |---|---|---|---|
-| JP coverage CER, 17 files | 16.22% | 14.48 / 14.77 / 14.96 -> **14.74% ±0.24** | CI [14.14, 15.34] entirely below -> **whisper** |
-| EN coverage WER, 3 files | 25.24% | 22.42 / 22.84 / 23.16 -> **22.81% ±0.37** | CI [21.88, 23.73] entirely below -> **whisper** |
-| x realtime | **29.8x** | 21.3 / 21.5 / 23.3x | **voxtral, ~1.35x** |
+| JP coverage CER, 17 files | 16.22% | 14.29 / 14.37 / 14.79 -> **14.49% ±0.27** | CI [13.82, 15.15] entirely below -> **whisper** |
+| EN coverage WER, 3 files | 21.50% | 17.85 / 18.04 / 19.13 -> **18.34% ±0.69** | CI [16.62, 20.07] entirely below -> **whisper** |
+| x realtime | **29.6x** | 18.0 / 21.6 / 22.0x | **voxtral, ~1.4x** |
+
+### The generalization test, finally run
+
+The interval above answers "does this hold on a rerun", which is what
+`repeat_distribution.py` is for. It contains no between-file uncertainty, so on its own it
+cannot say whether the result would hold on different audio. That second question needs a
+bootstrap over *files*, and it had never been run at this sample size. It resolves:
+
+| test | result | verdict |
+|---|---|---|
+| 3 repeat runs vs the fixed baseline | 3/3 beat it | whisper |
+| run-distribution t-interval | [13.82, 15.15], below 16.22 | whisper |
+| **bootstrap over 17 files** | **+1.85, CI [+0.58, +3.33]** | **whisper** |
+| sign test over files | 13 of 17 won, p=0.049 | whisper |
+
+All four agree, so the engine conclusion is stronger than it was when it rested on the
+rerun interval alone. Note the file bootstrap is the strictest of these and its interval is
+much wider, which is the honest measure of how much this generalizes: the lower bound is
++0.58 points, not +1.7.
 
 Whisper wins accuracy on both units, in all 3 runs, with the whole interval below
-Voxtral's fixed value. Voxtral is about 1.35x faster. Per file the split is structural
-rather than noisy: Whisper wins 12 of 20 files in all 3 runs and loses 7 of 20 in all 3,
-with only 1 file changing sign between runs. So the aggregate reflects a consistent
-per-file ordering rather than one file carrying the result, and the 7 losses are the
-reason the win is ~1.5 points rather than a rout.
+Voxtral's fixed value. Voxtral is 1.35-1.65x faster depending on the Whisper run, since
+Whisper's sampling ladder makes its own throughput vary by more than 20%. Per file the split
+is structural rather than noisy: Whisper wins 13 of 20 files in all 3 runs and loses 5 of 20
+in all 3, with 2 files changing sign between runs. So the aggregate reflects a consistent
+per-file ordering rather than one file carrying the result, and those 5 losses are the reason
+the win is under 2 points rather than a rout.
 
 The method matters for the Whisper column. Its temperature-fallback ladder samples, so a
 single run is a draw rather than a score; the interval above is a one-sample t-interval on
@@ -106,7 +130,7 @@ The ordering held at every corpus size and only became resolvable as n grew:
 |---|---|---|---|---|
 | original | 5 | 16.44% | 15.91% ±0.94 (n=6) | not resolvable |
 | grown | 12 | 16.08% | 14.07% ±0.17 (n=3) | whisper better |
-| final | 17 | 16.22% | 14.74% ±0.24 (n=3) | whisper better |
+| final | 17 | 16.22% | 14.49% ±0.27 (n=3) | whisper better, and resolved over files |
 
 Voxtral's own number barely moved (16.44 -> 16.08 -> 16.22) while the corpus more than
 tripled, which says the original 5 files were not unrepresentative. What changed is the
@@ -118,15 +142,24 @@ its state. This closes the gap the previous version of this section described: t
 had come from a single session with no surviving result file, and a re-run attempted
 earlier on 2026-08-06 was voided because the host was doing unrelated GPU work throughout.
 
-Two things the re-measurement establishes beyond the comparison itself. Voxtral's accuracy
-reproduced the earlier session **exactly** on both aggregates (16.22% and 25.24%), which
-is evidence that the voided session's accuracy work was sound even though its timings were
-not. Whisper's accuracy did not reproduce exactly, and is not expected to: its mean moved
-from 14.93% to 14.74%, well inside the run-to-run spread, which is the behaviour that
-requires 3 runs in the first place.
+Two things the re-measurement establishes beyond the comparison itself. Voxtral's Japanese
+accuracy reproduced the earlier session **exactly** (16.22%), across three separate sessions
+and two reference-loader versions, which is evidence that the voided session's accuracy work
+was sound even though its timings were not. Whisper's accuracy did not reproduce exactly,
+and is not expected to: its Japanese mean has read 14.93%, 14.74% and 14.49% across
+sessions, all inside the run-to-run spread, which is the behaviour that requires 3 runs in
+the first place.
 
-Throughput changed more than accuracy did. Voxtral now measures 29.8x against 22.8x
-before, and Whisper 21.3-23.3x against 15.0-20.1x. The previous figures came from the
+The English figures moved for a different and non-statistical reason: a reference-loading
+defect fixed on 2026-08-19. Reference lines were joined with no separator, so on the
+word-level path the last word of each line fused to the first of the next. One
+subtitle-shaped reference carried 131 such fusions and scored 20.09% where the correct
+figure is 3.29%, moving the Voxtral English aggregate from 25.24% to 21.50% and Whisper's
+from 22.81% to 18.34%. Japanese could not be affected, having no word spaces. Every English
+number published before that date is superseded; see [metrics.md](metrics.md).
+
+Throughput changed more than accuracy did. Voxtral now measures 29.6-29.8x against 22.8x
+before, and Whisper 18.0-23.3x against 15.0-20.1x. The previous figures came from the
 session with no recorded machine state, so the most likely explanation is that they were
 taken while the host was busy. That is the argument for recording state automatically
 rather than noting it by hand, which the runners now do.

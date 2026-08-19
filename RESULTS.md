@@ -7,20 +7,30 @@ what is still open.
 ## Headline
 
 20 recordings, 7.95h of Japanese and English, on an idle Apple M2 Ultra 128GB (Mac14,14),
-measured 2026-08-06:
+re-measured 2026-08-19 after a reference-loading fix (see below):
 
 | engine | JP coverage CER | EN coverage WER | x realtime |
 |---|---|---|---|
-| voxtral (default) | 16.22% | 25.24% | **29.8x** |
-| whisper-turbo, no-condition | **14.74%** ±0.24 | **22.81%** ±0.37 | 21.3-23.3x |
+| voxtral (default) | 16.22% | 21.50% | **29.6x** |
+| whisper-turbo, no-condition | **14.49%** ±0.27 | **18.34%** ±0.69 | 18.0-22.0x |
 
-Whisper is about 1.5 points more accurate and the gap is statistically resolved (3 runs,
-both intervals entirely below Voxtral). Voxtral is ~1.35x faster, needs no language hint,
-has better-behaved timestamps, and reproduces byte-identically on a given machine, which is
-why it is the default. Whisper's ± is a run distribution, not a confidence interval on the
-audio: it samples, so it gets 3 runs while Voxtral gets one. Read
-[metrics.md](docs/benchmarks/metrics.md) before quoting either figure: the references are
-editorial, so plain CER on this material is meaningless.
+Whisper is about 1.7 points more accurate on Japanese, and the result holds under all three
+tests this project has: 3/3 repeat runs beat the baseline, the run-distribution interval
+[13.82, 15.15] is entirely below it, and the bootstrap over *files* gives +1.85 points with
+CI [+0.58, +3.33], 13 of 17 files won, sign test p=0.049. That third test is the one that
+speaks to generalization and it had never been run at this sample size.
+
+Voxtral is ~1.4x faster, needs no language hint, has better-behaved timestamps, and
+reproduces byte-identically on a given machine, which is why it is the default. Whisper's ±
+is a run distribution, not a confidence interval on the audio: it samples, so it gets 3 runs
+while Voxtral gets one.
+
+**The English figures changed on 2026-08-19** and every earlier English number in this repo
+is superseded. Reference lines were being joined with no separator, fusing a word at every
+line break on the word-level path; one subtitle-shaped reference carried 131 such fusions
+and scored 20.09% where the correct figure is 3.29%. Japanese was never affected, because it
+has no word spaces. See [metrics.md](docs/benchmarks/metrics.md), which also explains why
+plain CER is meaningless on this editorial material.
 
 ## What was measured
 

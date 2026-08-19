@@ -32,6 +32,26 @@ that make plain CER meaningless.
 
 ## Read this before quoting a number
 
+**Every English figure measured before 2026-08-19 is superseded, and only the engine
+comparison has been re-measured.** Reference lines were joined with no separator, so on the
+word-level path the last word of each line fused to the first word of the next. Japanese was
+never affected, because it has no word spaces and the scorer strips whitespace anyway. The
+damage depended entirely on where a reference broke its lines: the two plain transcripts end
+every line with punctuation and had **zero** fused words, while the one subtitle-shaped
+reference had 131 and scored 20.09% where the truth is 3.29%.
+
+Corrected where re-measured: Voxtral English 25.24% -> **21.50%**, Whisper turbo-nocond
+22.81% -> **18.34%** (see [engines.md](engines.md)). **Not** re-measured, so read the English
+column of these as "wrong by roughly 3 to 4 points, direction intact":
+[delay.md](delay.md), [input-level.md](input-level.md), [chunking.md](chunking.md),
+[prompt.md](prompt.md), [determinism.md](determinism.md).
+
+Those are left rather than re-run because each would cost a full corpus pass per arm, and in
+every case the English side is n=3 and was already labelled directional. The offset is
+shared across arms within a comparison, so paired conclusions survive; absolute English
+levels do not. Japanese figures throughout these documents are unaffected and stand.
+
+
 **Between-file variance here is larger than most of the config effects being measured.**
 Per-file coverage error spans 11-28% for a single unchanged config, so a 1-point
 difference between two configs is a tie unless a paired test says otherwise. With a
