@@ -2023,3 +2023,92 @@ decoding is greedy.
 A cross-machine comparison came free with this, since the Ultra had already produced the
 identical 30s config for the headline. That is what withdrew the ~1 point per-file floor
 (see the determinism section above): 11 of 18 files identical, 16 within 0.16 points.
+
+## 2026-08-19: Qwen3-ASR, designed and not yet built
+
+Recorded as a handover rather than a result, because the design is settled and the
+implementation is not. Everything below was verified against source or the HuggingFace API,
+not taken from a summary.
+
+**What the engine is.** `Qwen/Qwen3-ASR-1.7B` and `-0.6B`, Apache-2.0, 4.4M downloads,
+Japanese explicit on the model card (30 languages plus 22 Chinese dialects). Official MLX
+conversions at `mlx-community/Qwen3-ASR-1.7B-8bit` (2.29GiB) and `-0.6B-8bit` (0.94GiB).
+`mlx-audio` has had a first-class `qwen3_asr` loader since 0.3.1, registered in its dispatch
+table, so **the code is already in this project's venv and the formula's pinned 0.4.7**. Zero
+new dependencies. It decodes greedily (`temperature=0.0` becomes `mx.argmax`, no temperature
+ladder), so it is deterministic like Voxtral and gets one run rather than a distribution. It
+also does real language identification and reports what it detected, which no other engine
+here does reliably.
+
+**The blocker, and it is structural.** Its segment timestamps are
+`start = offset_sec` and `end = offset_sec + len(chunk_audio)/sample_rate`. Those are chunk
+boundaries, not speech boundaries. No variant of the model has finer times, and the streaming
+path is worse rather than better: its per-token times are a fraction of the 8192-token
+*budget*, not of elapsed time, so at 300 tokens every timestamp lands in the first 4% of the
+chunk. With the library default `chunk_duration=1200.0`, any file under 20 minutes yields one
+segment, i.e. an SRT containing a single cue holding the whole transcript.
+
+The user's call: not supporting SRT is acceptable **provided the failure is explicit**. So
+`-f srt` and `-f vtt` must be a hard error, exit 2, with a message saying this engine
+produces no speech-level timestamps; `txt` and `json` work normally. The only real route to
+word times is `Qwen3-ForcedAligner-0.6B` (80ms resolution, single forward pass, MLX
+conversion exists, 1.19GiB), but Japanese alignment there needs `nagisa` plus DyNet, so it
+belongs behind a research script rather than in the shipped CLI.
+
+**Already shipped, do not redo.** `--language` normalisation landed in `mlx_asr/languages.py`
+(commit 2025599). Qwen3-ASR wants an English language *name*, and its prompt builder
+interpolates an unrecognised string verbatim, so `--language ja` would have silently produced
+the prefix `language ja<asr_text>`. That whole class of failure is now handled centrally.
+
+### Continuation prompt
+
+> Build Qwen3-ASR as a shipped engine in mlx-asr. The design is in JOURNAL.md under
+> "2026-08-19: Qwen3-ASR, designed and not yet built" and in the project memory note
+> `qwen3-asr-integration-state`. Read both first, plus `mlx_asr/languages.py`, which already
+> solves the language-form problem.
+>
+> Add two registry entries to `mlx_asr/models.py` with a new backend string `mlx-qwen3`:
+> `qwen3-asr` -> `mlx-community/Qwen3-ASR-1.7B-8bit` (weights_gb 2.3) and `qwen3-asr-small`
+> -> `mlx-community/Qwen3-ASR-0.6B-8bit` (weights_gb 0.94). Both `deterministic=True`, both
+> multilingual, both `chunked_long_form=True` with `opts={"chunk_length_s": 60.0}`. Do NOT
+> leave the library's 1200s default: at that value a sub-20-minute file is one chunk, so
+> batching never engages and there is exactly one cue. Also teach `infer_backend` about
+> `qwen3-asr`/`qwen3_asr`, before the `whisper` check.
+>
+> Add `transcribe_mlx_qwen3` to `mlx_asr/backends.py`, returning the usual
+> `(cues, full_text, meta)`. Pass the decoded array from `load_audio_16k` rather than a path,
+> so PyAV stays the single decoder. Always pass an explicit mapped language via
+> `languages.to_english_name(...)` with the engine's own vocabulary, both because `ja` would
+> otherwise be silently mis-prompted and because there is an upstream bug where multi-chunk
+> autodetect reassigns `language` inside the loop and leaves the `language X<asr_text>` prefix
+> embedded in later chunks' text. Put `cue_source: "chunk_boundaries"` in `meta` so a break-F1
+> figure can never be quoted as comparable to Voxtral's or Whisper's.
+>
+> Make `-f srt` and `-f vtt` a hard error on this engine, exit 2, in the same style as
+> `UnsupportedFlags`: this model emits no speech-level timestamps, so a subtitle file would be
+> one cue containing everything. `txt` and `json` are fine. Refuse `--max-batch` for now and
+> say why in the per-flag table: `batch_size` does exist upstream, but it is a no-op unless
+> `--chunk-seconds` is also lowered enough to produce multiple chunks, and the measured
+> "never use 2-8" guidance is about Voxtral's decoder with no evidence here.
+>
+> Three existing tests will fail and each should be rewritten rather than worked around:
+> `tests/test_models.py` asserts the backend is one of three strings, and asserts
+> `deterministic == (backend == "voxtral")`, which was true and is now not. Extend
+> `test_voxtral_only_flags_error_on_other_engines` to parameterise over `qwen3-asr` as well as
+> `whisper-turbo`. Add tests that `--language ja` maps to `Japanese` and never passes through,
+> and that `-f srt` exits 2 on this engine.
+>
+> Then benchmark on the IDLE M2 Ultra only, one run at a time, nothing else on the machine,
+> and check `machine_state` reports `busy: false` before starting. Sweep `--chunk-seconds`
+> 30/60/120/300 on the 7-file subset first, because the library default is a value nobody has
+> measured and it changes cue count, batching and peak memory at once. Then one full-corpus run
+> per alias against the current headline (Voxtral 16.22% JP / 21.50% EN / 29.6x; turbo-nocond
+> 14.49% +/- 0.27 / 18.34% +/- 0.69). One run each, since it is greedy, plus one repeat of the
+> 1.7B purely as a determinism check. Report kana and lenient CER alongside coverage CER: the
+> Japanese finetune advertises inverse text normalisation, so digits-versus-spelled-out is a
+> real confound against these references. Record `mx.get_peak_memory()`; the audio encoder
+> stays unquantized at every precision level and the attention mask is materialised densely,
+> so this engine's memory profile is unlike the others.
+>
+> Do not delegate benchmarking to subagents. See the memory note
+> `subagents-must-not-benchmark`.
