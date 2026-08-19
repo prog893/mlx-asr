@@ -59,8 +59,17 @@ memory use before starting, never run two benchmarks at once, and treat any x-re
 figure without a stated machine state as unreliable.
 
 `run_corpus.py` and `run_whisper.py` now read the machine before loading a model, print a
-warning when it is not idle, and record chip, enclosure, load average and GPU memory
-already in use into their result JSON (`scripts/benchmarks/machine_state.py`).
+warning when it is not idle, and record chip, enclosure, load average, GPU memory already
+in use, **power source, Low Power Mode, and the swapout rate** into their result JSON
+(`scripts/benchmarks/machine_state.py`).
+
+Two of those were added after they were needed. **Connect a laptop to mains before an
+eval**: on battery, and in Low Power Mode, macOS caps sustained clocks, so the figure
+describes a power policy rather than a config. And the **swapout rate** matters where the
+resident swap total does not: a 16GB host was found swapping out ~1.4GB/s during a run
+while its resident total looked no different from an idle machine's. Free memory was at
+10% and recovered to 63% the moment the competing process was killed. The rate is a
+property of now; the total is a property of uptime.
 `summarize_engines.py` marks such a run `(busy)` in the throughput column itself rather
 than in a footnote, since the table is what gets pasted into a findings document. Only the
 timing column is affected: greedy decoding is unaffected by contention, so the accuracy

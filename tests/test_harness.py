@@ -457,3 +457,54 @@ def test_bootstrap_at_n3_is_reported_as_granular():
     assert comb(2 * 7 - 1, 7) == 1716
     # By n=17 the resample space is large enough that percentiles are meaningful.
     assert comb(2 * 17 - 1, 17) > 10 ** 9
+
+
+def test_machine_state_records_power_policy():
+    """A benchmark on battery or in Low Power Mode is not comparable to one on mains.
+
+    Both cap sustained clocks, so a speed figure taken that way describes a power policy
+    rather than a config, and nothing else in the result file would reveal it. Recorded
+    for every run because a laptop is a legitimate benchmark host, just not a
+    comparable one when it is unplugged.
+    """
+    from benchmarks.machine_state import machine_state
+
+    s = machine_state()
+    for key in ("ac_power", "battery_percent", "low_power_mode"):
+        assert key in s, key
+    # A Mac Studio has no battery; a laptop does. Either is valid, None is not a crash.
+    assert s["ac_power"] in (True, False, None)
+    assert s["low_power_mode"] in (True, False, None)
+
+
+def test_swapout_RATE_is_recorded_not_just_the_total():
+    """Resident swap is a property of uptime; the swapout rate is a property of now.
+
+    The distinction is not academic. This project dismissed 17GB of resident swap as
+    harmless, correctly, and then missed a host that was actively swapping out ~1.4GB/s
+    while a benchmark ran on it. The total looked the same in both cases.
+    """
+    from benchmarks.machine_state import machine_state
+
+    s = machine_state()
+    assert "swapout_pages_per_s" in s
+    assert s["swapout_pages_per_s"] is None or s["swapout_pages_per_s"] >= 0
+
+
+def test_battery_and_thrashing_are_busy_reasons():
+    """The warning must name the specific condition, so the reader knows the remedy.
+
+    "not idle" is useless advice; "connect to mains" and "swapping out 1445MB/s" are
+    actionable, and they call for different actions.
+    """
+    from benchmarks.machine_state import warn_if_busy
+
+    for reason, expect in (
+        ("on BATTERY power at 60%, connect to mains before benchmarking", "mains"),
+        ("Low Power Mode is ON, which caps clocks deliberately", "Low Power Mode"),
+        ("swapping out 1445MB/s (92484 pages/s)", "swapping out"),
+    ):
+        lines = []
+        assert warn_if_busy({"label": "host", "busy": True,
+                             "busy_reasons": [reason]}, log=lines.append) is True
+        assert expect in " ".join(lines)

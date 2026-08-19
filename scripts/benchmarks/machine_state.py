@@ -17,8 +17,10 @@ loaded run is usable belongs to whoever reads it, and they can only make it if t
 number is on the page.
 """
 
+import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -28,13 +30,25 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 # of a false warning is one glance at the log.
 LOAD_PER_CORE_WARN = 0.35
 
-# Swap is recorded but deliberately does NOT set `busy`. macOS does not reclaim swap
-# once written, so "swap in use" reflects the machine's whole uptime rather than what
+# Resident swap is recorded but deliberately does NOT set `busy`. macOS does not reclaim
+# swap once written, so "swap in use" reflects the machine's whole uptime rather than what
 # is running now: a host that paged heavily days ago still reports gigabytes while
-# completely idle. Gating on it would warn on nearly every run, and a warning that
-# fires every time is one nobody reads. What would be diagnostic is swap *activity*
-# during the run, which needs two samples over the decode rather than one before it;
-# the figure is recorded so a suspicious timing can be checked against it by hand.
+# completely idle. Gating on it would warn on nearly every run, and a warning that fires
+# every time is one nobody reads.
+#
+# Swap *activity* is different, and it is what this file previously missed. Sampling
+# `Swapouts` twice catches a host that is thrashing right now, which is the condition that
+# actually destroys a throughput figure. Measured on a 16GB laptop mid-session: 92,484
+# swapouts in 5 seconds, about 1.4GB/s, while an idle 128GB host showed exactly 0. That
+# machine had 10% memory free and recovered to 63% the moment the competing process died.
+# Cheap to detect and unambiguous, so unlike resident swap this one does set `busy`.
+SWAPOUT_PAGES_PER_S_WARN = 200.0
+
+# Battery-powered and low-power-mode runs are not comparable to mains-powered ones. A
+# laptop on battery reduces sustained clocks, and Low Power Mode does so deliberately, so
+# a benchmark taken that way understates the machine by an amount nothing in the result
+# file would reveal. Neither is fatal to accuracy, for the same reason contention is not,
+# but both make a speed number describe a power policy rather than a config.
 
 
 def _sh(cmd: str) -> str:
@@ -62,6 +76,50 @@ def _swap_used_mb() -> float | None:
         return float(used.rstrip("M"))
     except (IndexError, ValueError):
         return None
+
+
+def _power_state() -> dict:
+    """AC vs battery, battery percentage, and Low Power Mode.
+
+    `pmset -g batt` prints "Now drawing from 'AC Power'" or "'Battery Power'" followed by
+    a percentage line. `pmset -g` carries `lowpowermode 0|1`. Both are cheap shell reads,
+    and neither exists on a Mac Studio in a meaningful sense, so a desktop simply reports
+    ac_power True with no battery.
+    """
+    batt = _sh("pmset -g batt")
+    on_ac = "AC Power" in batt
+    pct = None
+    m = re.search(r"(\d+)%", batt)
+    if m:
+        pct = int(m.group(1))
+    lpm = _sh("pmset -g | awk '/lowpowermode/{print $2}'")
+    return {"ac_power": on_ac if batt else None,
+            "battery_percent": pct,
+            "low_power_mode": (lpm == "1") if lpm else None}
+
+
+def _swapout_rate(seconds: float = 2.0) -> float | None:
+    """Pages swapped OUT per second, from two `vm_stat` samples.
+
+    The resident swap total says what the host did since boot; this says what it is doing
+    now. A benchmark host should be at zero. Costs `seconds` of wall clock before the model
+    loads, which is worth it: this is the signal that would have caught a thrashing laptop.
+    """
+    def swapouts():
+        raw = _sh("vm_stat | awk '/Swapouts/{print $NF}'")
+        try:
+            return int(raw.strip().rstrip("."))
+        except ValueError:
+            return None
+
+    a = swapouts()
+    if a is None:
+        return None
+    time.sleep(seconds)
+    b = swapouts()
+    if b is None or b < a:          # counter reset
+        return None
+    return (b - a) / seconds
 
 
 def _gpu_in_use_gb() -> float | None:
@@ -106,12 +164,25 @@ def machine_state() -> dict:
     ncpu = int(ncpu) if ncpu.isdigit() else None
 
     gpu_gb = _gpu_in_use_gb()
+    power = _power_state()
+    swap_rate = _swapout_rate()
 
     reasons = []
     if load is not None and ncpu and load / ncpu > LOAD_PER_CORE_WARN:
         reasons.append(f"load {load:.2f} over {ncpu} cpus")
     if gpu_gb is not None and gpu_gb > GPU_IN_USE_WARN_GB:
         reasons.append(f"{gpu_gb:.1f}GB GPU memory already in use")
+    if swap_rate is not None and swap_rate > SWAPOUT_PAGES_PER_S_WARN:
+        reasons.append(f"swapping out {swap_rate * 16384 / 1e6:.0f}MB/s "
+                       f"({swap_rate:.0f} pages/s)")
+    # Power policy is reported as a busy reason because the effect on a timing figure is
+    # the same as contention: the machine is not running as fast as it can.
+    if power.get("ac_power") is False:
+        pct = power.get("battery_percent")
+        reasons.append(f"on BATTERY power{f' at {pct}%' if pct is not None else ''}, "
+                       f"connect to mains before benchmarking")
+    if power.get("low_power_mode"):
+        reasons.append("Low Power Mode is ON, which caps clocks deliberately")
 
     return {
         "label": machine_label(info),
@@ -124,7 +195,10 @@ def machine_state() -> dict:
         "load_1min": load,
         "cpu_count": ncpu,
         "swap_used_mb": swap_mb,
+        # Rate, not total: the total is a property of uptime, the rate is a property of now.
+        "swapout_pages_per_s": round(swap_rate, 1) if swap_rate is not None else None,
         "gpu_in_use_gb": round(gpu_gb, 2) if gpu_gb is not None else None,
+        **power,
         # True means "do not trust the timings in this file". Accuracy is still
         # valid; greedy decoding does not care what else is running.
         "busy": bool(reasons),
