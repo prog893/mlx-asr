@@ -610,3 +610,36 @@ def test_video_without_audio_is_reported_clearly(tmp_path):
         pytest.skip("this ffmpeg cannot encode h264")
     with pytest.raises(AudioError, match="no audio stream"):
         load_audio_16k(str(out))
+
+
+def test_vad_weights_are_pinned_to_a_tag_and_verified_by_hash():
+    """A size check cannot distinguish revisions of silero_vad.onnx.
+
+    Measured 2026-08-19: the file at refs master, v5.1.2 and v6.0 is 2327524 bytes in
+    every case, with three different sha256s. The old code fetched from `master` and
+    accepted any cached file over 100KB, so two users could silently run different VAD
+    weights and get different chunk boundaries. That is the one class of
+    non-reproducibility this project cannot tolerate quietly.
+    """
+    from mlx_asr import vad
+
+    assert "/master/" not in vad.MODEL_URL, "VAD weights must not track a branch"
+    assert vad.SILERO_TAG in vad.MODEL_URL
+    assert len(vad.MODEL_SHA256) == 64
+    assert int(vad.MODEL_SHA256, 16) >= 0        # is hex
+
+
+def test_vad_rejects_weights_that_do_not_match_the_pin(tmp_path, monkeypatch):
+    """A wrong download must raise, not proceed.
+
+    Silently using unexpected weights would produce cut points nobody could reproduce,
+    and the failure would surface much later as an unexplained accuracy difference.
+    """
+    from mlx_asr import vad
+
+    bad = tmp_path / "silero_vad.onnx"
+    bad.write_bytes(b"not the model")
+    monkeypatch.setattr(vad.urllib.request, "urlretrieve",
+                        lambda url, path: None)   # leave the wrong bytes in place
+    with pytest.raises(RuntimeError, match="Refusing to use them"):
+        vad._ensure_model(bad)

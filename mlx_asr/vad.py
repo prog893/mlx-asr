@@ -16,6 +16,7 @@ Uses the ONNX build of Silero VAD to avoid a torch dependency. The model is ~2MB
 and downloaded once from the silero-vad repo.
 """
 
+import hashlib
 import os
 import urllib.request
 from pathlib import Path
@@ -24,10 +25,26 @@ import numpy as np
 
 from .audio import SAMPLE_RATE, split_at_silences
 
+# Pinned to a TAG, not to master, and verified by hash. Three refs of this file
+# (master, v5.1.2, v6.0) all serve exactly 2327524 bytes with three different sha256s,
+# so the weights change while the size does not. The old cache check was
+# `st_size < 100_000`, which cannot tell them apart: a user who cached in July and one
+# who caches today would silently run different VAD weights and get different chunk
+# boundaries. In a project whose central claim is byte-identical reproducibility on a
+# given machine, that is the wrong failure to leave open.
+SILERO_TAG = "v5.1.2"
 MODEL_URL = (
-    "https://raw.githubusercontent.com/snakers4/silero-vad/master/"
+    f"https://raw.githubusercontent.com/snakers4/silero-vad/{SILERO_TAG}/"
     "src/silero_vad/data/silero_vad.onnx"
 )
+# sha256 of the file at SILERO_TAG, computed from the downloaded bytes on 2026-08-19.
+# For the record, the three refs at that date, all 2327524 bytes:
+#   v5.1.2  2623a2953f6ff3d2c1e61740c6cdb7168133479b267dfef114a4a3cc5bdd788f  (this one)
+#   v6.0    597d30b3ec076608d059477bb14cfeffdf951bf5cae370d38f65d33bbfe82004
+#   master  1a153a22f4509e292a94e67d6f9b85e8deb25b4988682b7e174c65279d8788e3
+# v5.1.2 is chosen because it is what the cache already held, so pinning it changes no
+# existing user's cut points. Moving to v6.0 is a separate, measurable decision.
+MODEL_SHA256 = "2623a2953f6ff3d2c1e61740c6cdb7168133479b267dfef114a4a3cc5bdd788f"
 WINDOW = 512   # samples of new audio per call at 16kHz
 CONTEXT = 64   # samples of the PREVIOUS window that must be prepended
 
@@ -40,9 +57,33 @@ def _cache_path() -> Path:
     return base / "silero_vad.onnx"
 
 
+def _sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
 def _ensure_model(path: Path) -> Path:
-    if not path.exists() or path.stat().st_size < 100_000:
-        urllib.request.urlretrieve(MODEL_URL, path)
+    """Download the pinned VAD weights, verifying the hash rather than the size.
+
+    A size check cannot detect a different revision of this file, because every
+    revision is the same length. Re-downloads once if the cached copy does not match,
+    which repairs a cache populated by an older version of this code, and refuses
+    rather than silently proceeding if the fresh download is also wrong: at that point
+    something is serving unexpected bytes and guessing is worse than stopping.
+    """
+    if path.exists() and _sha256(path) == MODEL_SHA256:
+        return path
+    urllib.request.urlretrieve(MODEL_URL, path)
+    got = _sha256(path)
+    if got != MODEL_SHA256:
+        raise RuntimeError(
+            f"silero-vad weights from {MODEL_URL} hashed {got}, expected "
+            f"{MODEL_SHA256}. Refusing to use them: VAD cut points would not be "
+            f"reproducible. Delete {path} and retry, or report this."
+        )
     return path
 
 
