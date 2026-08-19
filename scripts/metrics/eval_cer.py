@@ -21,7 +21,12 @@ def srt_to_text(path: str) -> str:
         if not line or line.isdigit() or SRT_TIME.match(line):
             continue
         lines.append(line)
-    return "".join(lines)
+    # NEWLINE, not "": a subtitle cue routinely breaks mid-sentence, so joining with
+    # nothing fuses the last word of one cue to the first word of the next. Harmless
+    # for CJK (normalize strips whitespace) and worth 16.8 WER points on one English
+    # subtitle file here, because the word tokenizer then sees one token where there
+    # were two. See load_reference in eval_coverage.py.
+    return "\n".join(lines)
 
 
 def load_text(path: str) -> str:
