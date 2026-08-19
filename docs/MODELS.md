@@ -100,6 +100,26 @@ mlx-asr audio.wav --model whisper-tiny --language ja
 mlx-asr audio.wav --model kotoba                     # forces ja on its own
 ```
 
+### `--language` takes any spelling
+
+The engines disagree about what a language argument is: `whisper-*` wants an ISO 639-1
+code, `kotoba` forces `ja` internally, and Qwen3-ASR wants an English language *name*.
+Worse, each of them accepts a wrong value silently and transcribes worse rather than
+failing, which reads as an unexplained accuracy loss.
+
+So the CLI normalises instead of passing through. All of these mean Japanese:
+
+```
+ja    ja_JP    ja-JP    JA    jpn    ja-Hira-JP    Japanese    japanese
+```
+
+Region and script subtags are dropped, since an engine selects a language rather than a
+locale: `en-US` and `en-GB` are both `en`. An unrecognised value is an **error with exit
+2**, checked before the audio is read so a typo costs nothing, and the message names the
+accepted set. Tag parsing is `langcodes`; the accepted names come from each engine's own
+published vocabulary, so a checkpoint that drops a language stops accepting it with no
+change here.
+
 `--language` is not syntactically required on the `whisper-*` aliases, and they
 run without it. It is listed above because omitting it means Whisper guesses from
 the first 30 seconds, and on this project's material that guess returned Russian

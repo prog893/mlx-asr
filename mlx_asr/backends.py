@@ -63,7 +63,13 @@ def transcribe_mlx_whisper(audio_path: str, model, language=None, log=print,
     opts = dict(model.opts)
     opts.update({k: v for k, v in overrides.items() if v is not None})
     if language:
-        opts["language"] = language
+        # Normalised rather than passed through. mlx-whisper wants an ISO 639-1 code, and
+        # given anything else it treats the string as a decoder prompt hint instead of a
+        # language selection, which reads as a mysterious accuracy loss rather than as a
+        # rejected argument. "ja_JP", "JA" and "jpn" are all things a user reasonably
+        # types; each becomes "ja" here. See mlx_asr/languages.py.
+        from .languages import to_iso
+        opts["language"] = to_iso(language, model.alias)
     if not opts.get("condition_on_previous_text", True):
         log("[whisper] condition_on_previous_text=False (prevents cross-window "
             "repetition loops on long audio)")
@@ -103,8 +109,14 @@ def transcribe_mlx_chunked(audio_path: str, model, language=None, log=print,
     opts.update({k: v for k, v in overrides.items() if v is not None})
     chunk_len = opts.pop("chunk_length_s", 10.0)
     opts.pop("batch_size", None)      # transformers-only knob
-    lang = language or (model.languages if model.languages != "multilingual"
-                        else None)
+    # Same normalisation as the whisper path; the chunked driver hands the code to
+    # mlx-whisper's decoder in the end. A single-language model's own tag is already a
+    # bare code, so it needs no round trip.
+    if language:
+        from .languages import to_iso
+        lang = to_iso(language, model.alias)
+    else:
+        lang = (model.languages if model.languages != "multilingual" else None)
     audio = np.asarray(load_audio_16k(audio_path), dtype=np.float32)
     cues, text, meta = transcribe_chunked(
         audio, model.repo, chunk_length_s=chunk_len, language=lang, log=log,

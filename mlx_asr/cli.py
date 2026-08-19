@@ -53,6 +53,7 @@ from .audio import (
     split_with_overlap,
 )
 from .hardware import machine_info, resolve_profile
+from .languages import UnknownLanguage, to_iso
 from .models import DEFAULT_ALIAS, REGISTRY, describe_registry, resolve as resolve_model
 from .output import WRITERS, build_cues
 from .text import transcript_text, write_text
@@ -165,6 +166,11 @@ def _run_other_backend(a, spec, log, t_start):
     ) if val]
     if unsupported:
         raise UnsupportedFlags(unsupported, spec.alias)
+    # Validated HERE rather than inside the backend, so a typo costs nothing. The audio
+    # decode below reads the whole file, which on a 93-minute recording is not free, and
+    # rejecting the argument afterwards would be a slow way to say "you meant jp".
+    if a.language:
+        to_iso(a.language, spec.alias)
     if not spec.deterministic:
         log(f"[{spec.backend}] this engine samples, so repeat runs differ "
             f"(~0.5 CER points on our corpus); it is not reproducible like "
@@ -219,9 +225,11 @@ def build_parser():
     p.add_argument("--list-models", action="store_true",
                    help="show the model registry with per-model caveats and exit")
     p.add_argument("--language",
-                   help="language code for the Whisper/kotoba backends. Voxtral "
-                        "takes none. Whisper autodetects from the first 30s if "
-                        "omitted, which misfires on mixed-language audio")
+                   help="language of the audio, in any spelling: ja, ja_JP, jpn and "
+                        "Japanese all work, and each engine gets the form it wants. "
+                        "Whisper autodetects when omitted, which misfires on "
+                        "mixed-language audio. Voxtral takes no language token and "
+                        "rejects this flag. An unrecognised value is an error")
     p.add_argument("-f", "--output-format", default="srt",
                    choices=[*WRITERS.keys(), "all"])
     p.add_argument("-o", "--output", help="output path (default: input stem + ext)")
@@ -524,6 +532,12 @@ def cli():
     except UnsupportedFlags as e:
         # 2, matching argparse's usage-error convention: this is a bad invocation,
         # not a failure to process the input.
+        print(f"error: {e}", file=sys.stderr)
+        return 2
+    except UnknownLanguage as e:
+        # Also a bad invocation, so also 2. An unrecognised --language must never be
+        # passed through: the engines differ on whether they want a code or a name, and
+        # every one of them accepts a wrong string silently and transcribes worse.
         print(f"error: {e}", file=sys.stderr)
         return 2
     except KeyboardInterrupt:

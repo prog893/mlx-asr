@@ -508,3 +508,37 @@ def test_battery_and_thrashing_are_busy_reasons():
         assert warn_if_busy({"label": "host", "busy": True,
                              "busy_reasons": [reason]}, log=lines.append) is True
         assert expect in " ".join(lines)
+
+
+@pytest.mark.parametrize("form", ["ja", "ja_JP", "JA", "jpn", "Japanese", "japanese"])
+def test_cli_accepts_every_spelling_of_a_language(form, tmp_path):
+    """A user should not have to know which spelling an engine wants.
+
+    All six reach the audio-loading stage, so they exit 1 on the missing file rather
+    than 2 on a bad argument. Before normalisation, mlx-whisper would have silently
+    treated "Japanese" and "jpn" as decoder prompt hints instead of language selections.
+    """
+    r = subprocess.run(
+        CLI + [str(tmp_path / "nope.wav"), "--model", "whisper-turbo",
+               "--language", form],
+        capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode == 1, (form, r.returncode, r.stderr)
+    assert "not recognised" not in r.stderr, form
+
+
+@pytest.mark.parametrize("form", ["Klingon", "xx", "notalanguage"])
+def test_cli_rejects_an_unknown_language_before_reading_the_audio(form, tmp_path):
+    """Exit 2, and before the decode.
+
+    Validating after the audio read would make a typo cost a full file decode, which on a
+    93-minute recording is slow enough to matter. Exit 2 matches the convention for a bad
+    invocation used by the unsupported-flag path.
+    """
+    r = subprocess.run(
+        CLI + [str(tmp_path / "nope.wav"), "--model", "whisper-turbo",
+               "--language", form],
+        capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode == 2, (form, r.returncode, r.stdout, r.stderr)
+    assert "not recognised" in r.stderr
+    # The audio was never opened, so the file error must NOT appear.
+    assert "no such file" not in r.stderr, form

@@ -145,6 +145,11 @@ class MlxAsr < Formula
     sha256 "98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe"
   end
 
+  resource "langcodes" do
+    url "https://files.pythonhosted.org/packages/dd/c1/d10b371bcba7abce05e2b33910e39c33cfa496a53f13640b7b8e10bb4d2b/langcodes-3.5.1-py3-none-any.whl"
+    sha256 "b6a9c25c603804e2d169165091d0cdb23934610524a21d226e4f463e8e958a72"
+  end
+
   resource "llvmlite" do
     url "https://files.pythonhosted.org/packages/9c/23/fe9316d14626b42c73ef0b502e724705a6ee9450afe53759c0a99c37c2d7/llvmlite-0.48.0-cp313-cp313-macosx_12_0_arm64.whl"
     sha256 "a83a99ef0c05b4ccddf9b6218ed9fe84b653a0caf7c1d9dbe148d6d16c67f518"

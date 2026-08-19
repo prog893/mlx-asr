@@ -21,6 +21,12 @@ dependencies = [
     "mistral-common>=1.11.7",
     "mlx-audio>=0.4.5",
     "mlx-lm>=0.31.3",
+    # BCP-47 tag parsing, so "ja", "ja_JP", "JA" and "jpn" all mean the same thing to
+    # every engine. 178KB, pure Python, no dependencies of its own. Deliberately WITHOUT
+    # the [data] extra: English display names would pull language-data (5.6MB) plus
+    # marisa-trie, a native extension needing another pinned arm64 wheel in the formula,
+    # to resolve about thirty fixed strings the engines already publish themselves.
+    "langcodes>=3.5.0",
 ]
 
 [project.scripts]
