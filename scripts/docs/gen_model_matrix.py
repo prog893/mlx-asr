@@ -48,9 +48,22 @@ PEAK = {
     ("qwen3-asr-small", "8bit"): "2.36GB",
     ("qwen3-asr", "bf16"): "5.66GB",
     ("qwen3-asr-small", "bf16"): "2.92GB",
-    # voxtral, from the precision sweep on the narration clip at 60s/B16.
-    ("voxtral", "4bit"): "9.36GB",
-    ("voxtral", "fp16"): "15.28GB",
+    # The intermediate rungs, from one 93-minute file rather than the corpus. Peak memory
+    # is set by the config and the longest window, not by file count: on every arm above
+    # that ran the full corpus, the max landed on the longest file.
+    ("qwen3-asr", "4bit"): "3.19GB",
+    ("qwen3-asr", "5bit"): "3.40GB",
+    ("qwen3-asr", "6bit"): "3.62GB",
+    ("qwen3-asr-small", "4bit"): "2.06GB",
+    ("qwen3-asr-small", "5bit"): "2.14GB",
+    ("qwen3-asr-small", "6bit"): "2.21GB",
+    # voxtral, 20-file corpus at the shipped per-machine config (60s/B16 on the Ultra).
+    # Lower than the 9.36/15.28GB in quantization.md, which used the narration clip at a
+    # different chunk/batch pair; both are real, this one is comparable to the rows above.
+    ("voxtral", "4bit"): "6.77GB",
+    ("voxtral", "fp16"): "12.98GB",
+    # kotoba, 3 longest corpus files through the CLI (the chunked driver, 10s windows).
+    ("kotoba", None): "3.03GB",
 }
 
 
