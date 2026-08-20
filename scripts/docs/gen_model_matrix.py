@@ -27,24 +27,12 @@ from mlx_asr.models import (  # noqa: E402
 
 HF = "https://huggingface.co"
 
-# Plain CER and x-realtime on the 180s Japanese narration clip, keyed by internal alias.
-# Measured through the installed binary (scripts/benchmarks/matrix_models.py), one clip,
-# so it says "this loads and roughly how fast", not which model is better. Kept here
-# rather than in the registry because it is a benchmark result, not a shipped default,
-# and only exists for the default precision of each size.
-CLIP = {
-    "voxtral":          ("11.76%", "1.7x"),
-    "whisper-turbo":    ("13.67%", "15.1x"),
-    "whisper-large-v3": ("14.41%", "6.1x"),
-    "whisper-large-v2": ("13.45%", "4.0x"),
-    "whisper-medium":   ("16.42%", "10.8x"),
-    "whisper-small":    ("24.47%", "21.7x"),
-    "whisper-base":     ("35.59%", "20.9x"),
-    "whisper-tiny":     ("32.10%", "51.4x"),
-    "kotoba":           ("22.67%", "9.8x"),
-    "qwen3-asr":        ("19.70%", "19.6x"),
-    "qwen3-asr-small":  ("18.86%", "25.4x"),
-}
+# Peak GPU memory, GB, keyed by (internal alias, quantization). Measured on an M2 Ultra
+# over the 20-file corpus with mx.get_peak_memory(), reset per file.
+#
+# Published instead of download size because the working set is what decides whether a
+# machine can run something; a 3GB download that peaks at 15GB does not fit 16GB.
+PEAK = {}
 
 
 def hub_size_gb(repo: str) -> tuple[bool, float]:
@@ -72,7 +60,7 @@ def main():
         print(f"### `--model {fam}`\n")
 
         cols = ((["`--size`"] if multi_size else [])
-                + ["`--quantization`", "weights", "on disk", "clip CER", "x-rt"])
+                + ["`--quantization`", "weights", "download", "peak GPU memory"])
         print("| " + " | ".join(cols) + " |")
         print("|" + "---|" * len(cols))
 
@@ -86,17 +74,20 @@ def main():
                     missing.append(repo)
                 cells = []
                 if multi_size:
-                    cells.append(f"`{m.size}`"
-                                 + (" **default**" if m.size == default_size else ""))
+                    # Marked on the first row of the group only: repeating it down every
+                    # precision row reads as though each were separately default.
+                    mark = (" **default**"
+                            if m.size == default_size and q == quants[0] else "")
+                    cells.append(f"`{m.size}`{mark}")
                 cells.append((f"`{q}`" + (" **default**" if repo == m.repo else ""))
-                             if q else "only one")
+                             if q else "-")
                 # The repo id is the link, so there is no separate link column.
                 cells.append(f"[{repo}]({HF}/{repo})")
                 cells.append(f"{gb:.2f}GB" if gb else "?")
-                # Only the default precision was measured, so the others say so rather
-                # than borrowing a number they did not earn.
-                cer, xrt = CLIP.get(m.alias, ("", "")) if repo == m.repo else ("", "")
-                cells += [cer or "not run", xrt or ""]
+                # Measured working set, which is what limits a machine. Only exists for
+                # variants that have been run; the rest say so rather than borrowing a
+                # number from a sibling.
+                cells.append(PEAK.get((m.alias, q), "not measured"))
                 print("| " + " | ".join(cells) + " |")
         print()
 

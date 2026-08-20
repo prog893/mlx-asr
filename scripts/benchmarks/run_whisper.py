@@ -225,6 +225,9 @@ def main():
     agg_charged = {"char": 0.0, "word": 0.0}
 
     for stem, wav, refpath, dur, lang, _ in prepared:
+        # Reset per file so the figure is this file's working set rather than the
+        # high-water mark of every file before it.
+        mx.reset_peak_memory()
         t0 = time.perf_counter()
         try:
             r = transcribe(str(wav), path_or_hf_repo=a.model, language=lang,
@@ -235,6 +238,7 @@ def main():
             mx.clear_cache()
             continue
         wall = time.perf_counter() - t0
+        peak_gb = mx.get_peak_memory() / 1e9
 
         hyp_text = r["text"]
         if hypdir:
@@ -252,6 +256,7 @@ def main():
                      "requested_language": lang or "auto",
                      "detected_language": r.get("language"),
                      "segments": len(r.get("segments", [])),
+                     "peak_memory_gb": round(peak_gb, 2),
                      **{k: v for k, v in s.items() if k != "excused_runs"},
                      "excused_run_count": len(s["excused_runs"])})
         print(f"{stem:<26} {unit[0]} {dur:>6.0f} {s['ref_chars']:>6} "
@@ -275,6 +280,9 @@ def main():
             n = sum(1 for r in rows if r.get("unit") == unit)
             print(f"aggregate {m} over {n} {unit}-unit files "
                   f"({agg_ref[unit]} ref {unit}s, length-weighted): {v*100:.2f}%")
+    peaks = [r["peak_memory_gb"] for r in rows if "peak_memory_gb" in r]
+    if peaks:
+        print(f"peak GPU memory: {max(peaks):.2f}GB")
     print(f"throughput: {tot_dur/max(tot_wall,1e-9):.1f}x realtime "
           f"({tot_dur/3600:.2f}h audio in {tot_wall/60:.1f} min of decode; "
           f"model load {load_s:.0f}s excluded)")
@@ -307,6 +315,10 @@ def _dump(a, label, agg_ref, agg_charged, rows, tot_dur, tot_wall, load_s,
                    "aggregate": summary, "ref_units": agg_ref,
                    "x_realtime": round(tot_dur / max(tot_wall, 1e-9), 2),
                    "model_load_s": round(load_s, 1),
+                   "peak_memory_gb": (max(r["peak_memory_gb"] for r in rows
+                                          if "peak_memory_gb" in r)
+                                      if any("peak_memory_gb" in r for r in rows)
+                                      else None),
                    "results": rows}, f, indent=2, ensure_ascii=False)
 
 

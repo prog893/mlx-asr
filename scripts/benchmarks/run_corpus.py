@@ -160,6 +160,7 @@ def main():
     agg_ref = {"char": 0, "word": 0}
     agg_charged = {"char": 0.0, "word": 0.0}
     for stem, wav, refpath, dur in prepared:
+        mx.reset_peak_memory()
         audio = load_audio_16k(str(wav))
         dur = len(audio) / SAMPLE_RATE
         chunks, offsets, warmup = split_with_overlap(
@@ -181,6 +182,7 @@ def main():
             mx.clear_cache()
             continue
         wall = time.perf_counter() - t0
+        peak_gb = mx.get_peak_memory() / 1e9
 
         hyp_text = transcript_text(model, timed_all)
         if hypdir:
@@ -197,6 +199,7 @@ def main():
         tot_dur += dur
         rows.append({"file": stem, "duration_s": round(dur, 1), "unit": unit,
                      "x_realtime": round(dur / wall, 1), "chunks": len(chunks),
+                     "peak_memory_gb": round(peak_gb, 2),
                      **{k: v for k, v in s.items() if k != "excused_runs"},
                      "excused_run_count": len(s["excused_runs"])})
         print(f"{stem:<26} {unit[0]} {dur:>6.0f} {s['ref_chars']:>6} "
@@ -224,6 +227,8 @@ def main():
                        "aggregate": summary,
                        "ref_units": agg_ref,
                        "x_realtime": round(tot_dur / max(tot_wall, 1e-9), 2),
+                       "peak_memory_gb": (max((r["peak_memory_gb"] for r in rows
+                                               if "peak_memory_gb" in r), default=None)),
                        "results": rows}, f, indent=2, ensure_ascii=False)
         print(f"[saved] {a.json}")
     return 0
