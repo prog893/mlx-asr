@@ -63,6 +63,9 @@ activations rather than the weights, so the whole whisper ladder lands between 4
 Every run prints its own peak, since the figure moves with the machine, the audio length
 and the flags. `--stats-json` writes the same number to a file.
 
+`voxtral` and `qwen3-asr` decode greedily and rerun byte-identically on one machine;
+`whisper` samples and does not ([benchmarks/determinism.md](benchmarks/determinism.md)).
+
 Accuracy and throughput per model: [benchmarks/engines.md](benchmarks/engines.md) (20
 recordings, 7.95h) and [benchmarks/qwen3-asr.md](benchmarks/qwen3-asr.md), which describe
 the corpus and method each figure came from.
@@ -232,17 +235,6 @@ Repetition loops occur on some material (9 of 20 corpus files) and are a propert
 weights. Each is capped to one window and the CLI warns when it sees one.
 `mlx_asr` drives the chunk loop rather than the library, because upstream's `max_tokens` is
 a per-file budget whose exhaustion stops transcription silently.
-
-## Reproducibility
-
-`voxtral` and `qwen3-asr` decode greedily, so a rerun on the same machine gives
-byte-identical output. `whisper` samples through its temperature fallback, so its output
-differs between runs: three `--size base` runs on identical audio produced three different
-transcripts.
-
-Voxtral's reproducibility is per machine. The same audio, flags and weights give different
-output on an M4 and an M2 Ultra, because GPU reduction order differs and that flips argmax
-ties. Keep config comparisons on one machine.
 
 ## Bring your own model
 

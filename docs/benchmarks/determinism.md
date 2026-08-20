@@ -99,6 +99,10 @@ reduction order, and it cannot be predicted or averaged away on any individual f
 
 ## Whisper: samples, so it needs a run distribution
 
+Three `--size base` runs on identical audio and identical flags produced three
+different transcripts. Use `voxtral` or `qwen3-asr` when a repeatable transcript
+matters, or when benchmarking anything.
+
 Whisper's temperature-fallback ladder samples whenever a segment trips the
 compression-ratio or logprob threshold, so one run is a draw. Six repeat runs of the
 identical `turbo-nocond` config on identical audio, 7-file corpus:

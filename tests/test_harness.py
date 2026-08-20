@@ -727,3 +727,25 @@ def test_cli_rejects_an_unknown_language_before_reading_the_audio(form, tmp_path
     assert "not recognised" in r.stderr
     # The audio was never opened, so the file error must NOT appear.
     assert "no such file" not in r.stderr, form
+
+
+def test_markdown_tables_are_separated_from_following_prose():
+    """A table row immediately followed by prose renders the prose AS TABLE ROWS.
+
+    This shipped: a splice dropped the blank line after the last row of the model table
+    in MODELS.md, so two sentences of explanation appeared as two extra table cells on
+    GitHub. Invisible in a terminal and in `git diff`, so it needs a test rather than
+    proofreading.
+    """
+    import re
+
+    for doc in sorted((ROOT / "docs").rglob("*.md")) + [ROOT / "README.md",
+                                                        ROOT / "RESULTS.md"]:
+        text = doc.read_text(encoding="utf-8")
+        # A line starting with | (a row), then a line starting with a letter, backtick
+        # or bold marker (prose), with no blank line between them.
+        bad = re.findall(r"\n(\|[^\n]*\|)\n([A-Za-z`*][^\n]*)", text)
+        assert not bad, (
+            f"{doc.relative_to(ROOT)}: table row followed directly by prose, which "
+            f"GitHub renders as extra rows. Add a blank line.\n"
+            + "\n".join(f"  row: {r[:60]}\n  prose: {p[:60]}" for r, p in bad[:3]))
