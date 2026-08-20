@@ -143,15 +143,15 @@ What each model scored: [docs/MODELS.md](docs/MODELS.md).
 
 ## Why the defaults are what they are
 
-Every default here was measured, and several went against the obvious choice. The
-findings are in [docs/benchmarks/](docs/benchmarks/), one document per lever, each with
-its corpus, method and conclusion. [RESULTS.md](RESULTS.md) is the index.
+Every default was measured, and several went against the obvious choice:
+[docs/DEFAULTS.md](docs/DEFAULTS.md) lists each one with the number behind it. The full
+findings are in [docs/benchmarks/](docs/benchmarks/), one document per lever, indexed by
+[RESULTS.md](RESULTS.md).
 
 The short version: transcription delay is the biggest lever and is free; batch size is not
 monotonic, so 2-8 is worse than 1; VAD cut points score worse than energy minima;
-quantization costs nothing measurable; and the subtitle cue defaults are deliberately
-*not* the optimum of either sweep that was run, because the references available here all
-follow one editor's conventions.
+quantization costs nothing measurable; and whisper defaults to turbo rather than large-v3
+because it ties it on accuracy at twice the speed.
 
 ## License
 

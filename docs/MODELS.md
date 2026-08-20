@@ -134,109 +134,118 @@ because the engines do not share a long-form algorithm. Drop the flag, or use th
 default --model voxtral.
 ```
 
+`-` means the flag exits 2 on that model.
+
 | flag | `voxtral` | `whisper` | `kotoba` | `qwen3-asr` |
 |---|---|---|---|---|
-| `--size` | error | tiny..turbo | error | 0.6B, 1.7B |
-| `--quantization` | 4bit, fp16 | error | error | 4bit..8bit, bf16 |
-| `--language` | error | yes | forced `ja` | yes, as an English name |
-| `--chunk-seconds` | chunk length | error | window length | window length |
-| `-f srt` / `vtt` / `all` | yes | yes | yes | **error** |
-| `--delay-ms` | yes | error | error | error |
-| `--max-batch` | yes | error | error | error |
-| `--kv-bits` / `--no-kv-quant` | yes | error | error | error |
-| `--fast` | yes | error | error | error |
-| `--overlap-seconds` | yes | error | error | error |
-| `--prompt` | yes | error | error | error |
-| `--vad` | yes | error | error | error |
-| `--compact-silence` | yes | error | error | error |
-| `--gain` / `--peak-dbfs` / `--rms-dbfs` | yes | error | error | error |
-| `--gap-seconds` / `--max-chars` / `--max-dur-seconds` | yes | error | error | error |
+| `--size` | - | `tiny` `base` `small` `medium` `large-v2` `large-v3` `turbo` | - | `0.6B` `1.7B` |
+| `--quantization` | `4bit` `fp16` | - | - | `4bit` `5bit` `6bit` `8bit` `bf16` |
+| `--language` | - | yes | forced `ja` | yes, as an English name |
+| `--chunk-seconds` | chunk length | - | window length | window length |
+| `-f srt` / `vtt` / `all` | yes | yes | yes | - |
+| `--delay-ms` | yes | - | - | - |
+| `--max-batch` | yes | - | - | - |
+| `--kv-bits` / `--no-kv-quant` | yes | - | - | - |
+| `--fast` | yes | - | - | - |
+| `--overlap-seconds` | yes | - | - | - |
+| `--prompt` | yes | - | - | - |
+| `--vad` | yes | - | - | - |
+| `--compact-silence` | yes | - | - | - |
+| `--gain` / `--peak-dbfs` / `--rms-dbfs` | yes | - | - | - |
+| `--gap-seconds` / `--max-chars` / `--max-dur-seconds` | yes | - | - | - |
 
-`--delay-ms` and `--gain` have non-`None` defaults, so they count as passed only when set
-away from the default.
+`--delay-ms` and `--gain` ship with real values rather than being off by default, so they
+only trip the check when you set them to something else. Passing `--delay-ms 2400` or
+`--gain auto` on whisper is accepted, since that is what it would have done anyway.
 
-Three flags are refused for a reason other than "no such knob":
+Three of those cells exit 2 even though the underlying knob exists:
 
-`--chunk-seconds` on `whisper`, because that driver's 30s window comes from the model's
-positional encoding. A flag that appeared to change it would report a config that did not
-run.
+- `--chunk-seconds` on `whisper`: the 30s window comes from the model's positional
+  encoding, so a flag that appeared to change it would report a config that never ran.
+- `--max-batch` on `qwen3-asr`: `generate(batch_size=)` exists upstream but does nothing
+  unless `--chunk-seconds` is low enough to produce more than one chunk, and no batch size
+  has been measured for this decoder. Refused until it is.
+- `-f srt`/`vtt`/`all` on `qwen3-asr`: its timestamps are decode-window boundaries, so a
+  subtitle file would be one cue per window.
 
-`--max-batch` on `qwen3-asr`, because `generate(batch_size=)` exists upstream but does
-nothing unless `--chunk-seconds` is low enough to yield more than one chunk, and the
-never-use-2-8 finding behind Voxtral's default was measured on a different decoder.
+## Flag values and defaults
 
-`-f srt`/`vtt`/`all` on `qwen3-asr`, because its timestamps are decode-window boundaries.
+Values, defaults and what each flag does. **Why** each default is what it is, with the
+measurement behind it, is in [DEFAULTS.md](DEFAULTS.md).
 
-## `--model voxtral` flags
+### voxtral
 
-| flag | values | default | measured effect |
+| flag | values | default | effect |
 |---|---|---|---|
-| `--delay-ms` | int | `2400` | the biggest accuracy lever, and free: 25.62% at 480ms, 20.51% at 960ms, 16.44% at 2400ms, at the same speed |
-| `--chunk-seconds` | float | per machine (60s) | 60s vs 30s is not resolvable at n=20 (+0.10 points, CI [-1.89, +2.03]), so pick on speed |
-| `--max-batch` | int | per machine | throughput is **not monotonic** in this: B=2..8 is slower per step than B=1 |
-| `--quantization` | `4bit` `fp16`/`none` | `4bit` | fp16 is a **tie** on accuracy (0.07 points, CI [-0.33, +0.48]) at 1.6x the wall clock and 15.3GB peak against 9.4GB, so it does not fit 16GB. It also moves the batch the run plans for. The 6bit and 8bit repos on the hub do not load |
-| `--kv-bits` | `4` or `8` | `8` | free: slightly faster, 39 of 40 scored regions identical to unquantized |
-| `--no-kv-quant` | flag | off | disables the above |
-| `--fast` | flag | off | halves the chunk, doubles the batch, adds warm-up overlap. Declines automatically when it would not help |
-| `--overlap-seconds` | float | `0` | won 1.5-1.8 points at 30s chunks on one clip, **did not reproduce on the corpus** (sign reversed) |
-| `--prompt` | text | none | register bias, not vocabulary recall (term counts move under 7% when prompted). **Not an instruction field**: an imperative costs ~6 CER points, because the decoder reads it as text it already emitted. **Write it in the audio's language, and leave it empty on English audio**: at n=20 every prompt suppressed English word spacing badly. Last ~31 tokens only. Ignored when overlap is active |
-| `--gain` | `auto` `none` `peak` `rms` or dB | `auto` | `auto` boosts only below -6 dBFS peak, so it is a no-op on healthy audio. Quiet input costs ~3.8 points because the mel floor is absolute |
+| `--delay-ms` | int | `2400` | transcription delay. Largest accuracy lever here and it costs no speed; 2400 is also the model's maximum |
+| `--chunk-seconds` | float | per machine | chunk length. A throughput knob, not an accuracy one, in the 30-60s range |
+| `--max-batch` | int | per machine | chunks decoded together. Not monotonic: 2-8 is slower per step than 1 |
+| `--quantization` | `4bit` `fp16`/`none` | `4bit` | weight precision. Also sets the weight footprint used to size the batch |
+| `--kv-bits` | `4` `8` | `8` | quantize the KV cache |
+| `--no-kv-quant` | flag | off | disable KV quantization |
+| `--fast` | flag | off | halve the chunk, double the batch, add warm-up overlap. Declines when it would not help |
+| `--overlap-seconds` | float | `0` | preceding audio prepended to each chunk as context, then discarded |
+| `--prompt` | text | none | text the decoder treats as already emitted. Last ~31 tokens only, ignored when overlap is active |
+| `--gain` | `auto` `none` `peak` `rms`, or dB | `auto` | input level. `auto` boosts below -6 dBFS peak and leaves louder audio untouched |
 | `--peak-dbfs` / `--rms-dbfs` | float | `-1.0` / `-23.0` | targets for `--gain peak` / `--gain rms` |
-| `--vad` | flag | off | Silero VAD cut points. **Measured worse on clean speech** by 0.8-3.0 points; for material where energy minima mislead |
-| `--compact-silence` | flag | off | drops long pauses before decode, remaps timestamps back. Helps some quantizations, badly hurts others |
+| `--vad` | flag | off | place chunk boundaries with Silero VAD instead of energy minima |
+| `--compact-silence` | flag | off | drop long pauses before decode, remap timestamps back |
 
-## `--model whisper` flags
+### whisper
 
-`--language` and `--size`; no others.
-
-`condition_on_previous_text=False` is applied to `small` and larger and is not exposed as
-a flag. Leaving it on lets a repetition loop feed itself across 30s windows, worth up to
-22.6 CER points on long audio. `tiny` and `base` keep the library default.
-
-**Not reproducible.** Whisper's temperature fallback samples, so repeat runs of one config
-differ: three `--size base` runs on identical audio produced three different transcripts
-(33.69% and 35.59% CER on two of them). Use `voxtral` or `qwen3-asr` if you need a
-repeatable transcript or are benchmarking.
-
-Voxtral's reproducibility is per machine, not absolute. The same audio, flags and weights
-give different output on an M4 and an M2 Ultra, because GPU reduction order differs and
-that flips argmax ties. Keep config comparisons on one machine.
-
-## `--model kotoba` flags
-
-| flag | values | default | notes |
+| flag | values | default | effect |
 |---|---|---|---|
-| `--chunk-seconds` | float | `10` | window length, and this model's largest lever: 23 points across 10-30s. Material-dependent, so sweep it on your own audio ([chunking.md](benchmarks/chunking.md)) |
-| `--language` | | forced `ja` | Japanese-only weights; the flag is accepted and has no effect to select anything else |
+| `--size` | see matrix | `turbo` | which checkpoint |
+| `--language` | any spelling | autodetect | ISO code internally. Autodetect reads the first 30s only |
 
-## `--model qwen3-asr` flags
+`condition_on_previous_text=False` is applied to `small` and larger and is not a flag,
+because enabling it is never right on long audio. `tiny` and `base` keep the library
+default.
 
-`--language` and `--chunk-seconds`, and both matter more than usual.
+### kotoba
+
+| flag | values | default | effect |
+|---|---|---|---|
+| `--chunk-seconds` | float | `10` | independent window length, and this model's largest lever |
+| `--language` | | forced `ja` | Japanese-only weights |
+
+### qwen3-asr
+
+| flag | values | default | effect |
+|---|---|---|---|
+| `--size` | `0.6B` `1.7B` | `1.7B` | which checkpoint |
+| `--quantization` | `4bit` `5bit` `6bit` `8bit` `bf16`/`none` | `8bit` | weight precision |
+| `--chunk-seconds` | float | `30` | decode window. Shorter is better on accuracy, speed and memory here |
+| `--language` | any spelling | `English` | English name internally. Never autodetects, see below |
 
 ```bash
 mlx-asr jp.wav --model qwen3-asr --language ja -f txt
-mlx-asr jp.wav --model qwen3-asr --language ja -f txt --chunk-seconds 15    # less memory
-mlx-asr jp.wav --model qwen3-asr --language ja -f txt --quantization 4bit   # 1.61GB
-mlx-asr jp.wav --model qwen3-asr --language ja -f txt --quantization none   # bf16
+mlx-asr jp.wav --model qwen3-asr --language ja -f txt --size 0.6B --quantization 4bit
 ```
 
-| flag | values | default | measured effect |
-|---|---|---|---|
-| `--language` | any spelling | **English** | not optional in practice. Omitting it forces English rather than autodetecting, because upstream autodetect corrupts multi-chunk text |
-| `--chunk-seconds` | float | `30` | 19.98% / 21.42% / 23.55% / 62.47% coverage CER at 30 / 60 / 120 / 300s. Shorter is better on accuracy, speed **and** memory, and 15s ties 30s on accuracy while using less of both |
-| `--quantization` | `4bit` `5bit` `6bit` `8bit` `none` | `8bit` | 8bit is measured, not assumed: bf16 tied it (20.16% vs 19.98%) at 1.36x the wall clock and 1.4x the peak memory. Below 8bit is a size choice and is **unmeasured** here (4bit is 1.61GB against bf16's 4.08GB) |
-
-Caveats, both specific to this model:
+Two behaviours specific to this model:
 
 Segment times are decode-window boundaries, not speech, so `-f srt`, `-f vtt` and `-f all`
 exit 2 and its JSON carries `cue_source: "chunk_boundaries"`.
 
+`--language` is effectively required. Omitting it forces English rather than
+autodetecting, because upstream reassigns the language inside the chunk loop and leaves a
+`language X<asr_text>` prefix in later chunks' text.
+
 Repetition loops occur on some material (9 of 20 corpus files) and are a property of the
-weights. Each is capped to one window and the CLI warns when it sees one. `mlx_asr` drives
-the chunk loop rather than the library, because upstream's `max_tokens` is a per-file
-budget whose exhaustion stops transcription silently: one 26-minute recording returned a
-single segment covering 2% of its audio. Detail:
-[benchmarks/qwen3-asr.md](benchmarks/qwen3-asr.md).
+weights. Each is capped to one window and the CLI warns when it sees one.
+`mlx_asr` drives the chunk loop rather than the library, because upstream's `max_tokens` is
+a per-file budget whose exhaustion stops transcription silently.
+
+## Reproducibility
+
+`voxtral` and `qwen3-asr` decode greedily, so a rerun on the same machine gives
+byte-identical output. `whisper` samples through its temperature fallback and does not:
+three `--size base` runs on identical audio produced three different transcripts.
+
+Voxtral's reproducibility is per machine. The same audio, flags and weights give different
+output on an M4 and an M2 Ultra, because GPU reduction order differs and that flips argmax
+ties. Keep config comparisons on one machine.
 
 ## Bring your own model
 
@@ -251,29 +260,29 @@ mlx-asr audio.wav --model mlx-community/whisper-medium-mlx --language de
 mlx-asr audio.wav --model ./models/my-conversion
 ```
 
-Routing rules, in order: `voxtral` in the id goes to the Voxtral decoder, `qwen3-asr` to
-the Qwen3 loop, `kotoba` or `distil` to the chunked driver (a distil checkpoint keeps 2-4
-decoder layers and cannot carry state across sequential windows), `whisper` to the
-sequential driver, anything else to Voxtral. `qwen3-asr` is matched first, so
-`Qwen3-ASR-1.7B-whisper-distilled` reaches the loader that can read its config.
+The backend is matched on the id, first hit wins:
+
+1. `voxtral` -> Voxtral decoder
+2. `qwen3-asr` -> Qwen3 chunk loop
+3. `kotoba` or `distil` -> chunked driver (a distil checkpoint keeps 2-4 decoder layers
+   and cannot carry state across sequential windows)
+4. `whisper` -> sequential driver
+5. anything else -> Voxtral
+
+`qwen3-asr` is checked before `whisper` and `distil` so that an id carrying both,
+`Qwen3-ASR-1.7B-whisper-distilled`, reaches the loader that can read its config.
 
 ### Formats that will not work
 
-GGUF, ONNX, ExecuTorch, OpenVINO and CoreML checkpoints cannot be loaded. `mx.load` reads
-GGUF tensors, but the `mlx-audio` and `mlx-whisper` loaders need a safetensors layout plus
-`config.json`, so GGUF is not a drop-in even at the tensor level. Supporting it means
-adopting llama.cpp's runtime, which costs the multi-stream batching this project's
-throughput depends on (3-4x) to gain a quantization difference measured at 0.07 CER
-points.
+GGUF, ONNX, ExecuTorch, OpenVINO and CoreML. `mx.load` reads GGUF tensors, but the
+`mlx-audio` and `mlx-whisper` loaders need a safetensors layout plus `config.json`, so
+GGUF is not a drop-in even at the tensor level; loading it means adopting llama.cpp's
+runtime and losing the multi-stream batching this project's throughput depends on.
 
-This rules out some well-regarded quants. unsloth publishes no Voxtral, GGUF only for
-Qwen3-ASR, and unquantized transformers weights for Whisper, so there is nothing there
-that both loads and differs from what ships.
-
-Little is lost: on Apple Silicon quantization saves memory but not time, and costs no
-accuracy. Five Voxtral precisions span 0.43 CER points, and on whisper.cpp q5_0 ran 27%
-*slower* than fp16 at identical CER, since dequantization is work an fp16 matmul skips.
-See [benchmarks/quantization.md](benchmarks/quantization.md).
+That rules out unsloth, which publishes no Voxtral, GGUF only for Qwen3-ASR, and
+unquantized transformers weights for Whisper. Quantization saves memory here without
+costing accuracy or gaining speed, so little is lost:
+[benchmarks/quantization.md](benchmarks/quantization.md).
 
 ### Converting transformers weights
 

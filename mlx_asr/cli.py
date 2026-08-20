@@ -268,23 +268,28 @@ def _run_other_backend(a, spec, log, t_start):
 
     duration = len(load_audio_16k(a.audio)) / SAMPLE_RATE
     log(f"[model] {spec.label} ({spec.repo})")
+    mx.reset_peak_memory()
     cues, full_text, meta = run(spec, a.audio, language=a.language, log=log,
                                 **overrides)
     total = time.perf_counter() - t_start
+    peak_gb = mx.get_peak_memory() / 1e9
 
     _write_outputs(a, cues, full_text, {
         "model": spec.repo, "backend": spec.backend,
         "duration_s": round(duration, 2), "wall_s": round(total, 2),
         "x_realtime": round(duration / total, 2),
+        "peak_memory_gb": round(peak_gb, 2),
         **meta,
     }, log)
     log(f"[total] {duration:.1f}s audio in {total:.1f}s "
-        f"({duration / total:.1f}x realtime, incl. model load)")
+        f"({duration / total:.1f}x realtime, incl. model load), "
+        f"peak {peak_gb:.2f}GB GPU")
     if a.stats_json:
         with open(a.stats_json, "w") as f:
             json.dump({"duration_s": duration, "wall_s": total,
                        "x_realtime": duration / total, "model": spec.repo,
                        "backend": spec.backend, "cues": len(cues),
+                       "peak_memory_gb": round(peak_gb, 2),
                        "machine": machine_info(), **meta}, f, indent=2)
     return 0
 
@@ -593,6 +598,7 @@ def main(argv=None):
         else:
             log(f"[prompt] {len(prompt_ids)} bias tokens")
 
+    mx.reset_peak_memory()
     timed_all, stats = [], {"encode_s": 0.0, "decode_s": 0.0, "steps": 0}
     for i in range(0, len(chunks), batch):
         timed, st = transcribe_batch(
@@ -632,8 +638,10 @@ def main(argv=None):
             WRITERS[fmt](cues, path)
         log(f"[saved] {path}")
 
+    peak_gb = mx.get_peak_memory() / 1e9
     log(f"[total] {duration:.1f}s audio in {total:.1f}s "
-        f"({duration / total:.1f}x realtime, incl. {t_model:.1f}s model load)")
+        f"({duration / total:.1f}x realtime, incl. {t_model:.1f}s model load), "
+        f"peak {peak_gb:.2f}GB GPU")
 
     if a.stats_json:
         with open(a.stats_json, "w") as f:
@@ -656,7 +664,8 @@ def main(argv=None):
                 # figure once drifted from the shipped default for want of this.
                 "cue_config": _resolved_cue_config(cue_opts),
                 "machine": info, "profile_source": prof["matched"],
-                "model_load_s": t_model, **stats,
+                "model_load_s": t_model, "peak_memory_gb": round(peak_gb, 2),
+                **stats,
             }, f, indent=2)
     return 0
 
