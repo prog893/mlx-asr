@@ -2205,3 +2205,101 @@ Tests: 469 pass. The three that had to change were rewritten, not worked around
 the truncation fix, the per-window budget, the loop detector, window tiling, the digit
 reader, and one that derives the runner's `meta` lookups from the adapter so a renamed key
 cannot break a run again, which it had.
+
+## 2026-08-21: whisper sizes were measured at the wrong config, and a doc rewrite
+
+### The size table described configs the CLI does not run
+
+Found while auditing why MODELS.md published one-clip CER numbers under a "do not pick a
+model from these" warning. The user's objection was that if a number cannot be used, it
+should not be in a reference table, and following that led somewhere worse: the *corpus*
+size-sweep table in engines.md measured `large-v2`, `medium` and `small` at mlx-whisper's
+library defaults, while the CLI ships those three with `condition_on_previous_text=False`.
+
+Re-measured all seven sizes at the shipped config, 20 files, idle Ultra, one arm at a
+time, with peak GPU memory:
+
+| size | JP covCER | EN covWER | x rt | peak GB | old (library defaults) |
+|---|---|---|---|---|---|
+| tiny | 51.28% | 32.17% | 52.7x | 3.98 | 59.27% |
+| base | 29.93% | 27.14% | 34.5x | 4.07 | 29.96% |
+| small | 21.33% | 22.68% | 20.1x | 4.37 | 28.61% |
+| medium | 21.63% | 18.23% | 21.4x | 5.43 | 28.93% |
+| large-v2 | 17.87% | 17.68% | 14.4x | 6.97 | 25.02% |
+| large-v3 | **14.55%** | 18.26% | 11.4x | 7.00 | 39.91% |
+| turbo | 14.68% | 18.31% | 23.7x | 5.53 | 24.97% |
+
+`large-v3` was off by 25 points, which reads as a broken model rather than a bad default.
+
+**The default's justification changed.** turbo does not beat large-v3 on accuracy; it
+*ties* it (14.68 against 14.55, inside turbo's own ±0.27 rerun spread) while running 2.1x
+faster in 1.5GB less memory. The old table appeared to show an outright accuracy win, so
+the reason for the default was wrong even though the default itself was right.
+
+The turbo arm ran on a busy host, so 23.7x is a floor. Its 14.68% agrees with the
+separately published 3-run mean of 14.49% ±0.27, which makes it a harness consistency
+check.
+
+### Peak GPU memory replaced download size everywhere
+
+The user's point: disk is not the scarce resource. Both corpus runners and the CLI now
+record `mx.get_peak_memory()`, and every model/size/quant cell in MODELS.md has a measured
+figure.
+
+The interesting result is that peak memory barely tracks the download. whisper `tiny`
+downloads 0.07GB and peaks at **3.98GB**, because the working set is the 30s mel window
+and decoder activations rather than the weights. The whole whisper ladder lands between 4
+and 7GB, so picking `tiny` to save memory buys almost nothing and costs 37 CER points.
+
+Voxtral on the corpus: 4bit 6.77GB, fp16 12.98GB. Both lower than the 9.36/15.28GB in
+quantization.md, which used the narration clip at a different chunk/batch pair.
+
+### An unresolved contradiction, now issue #2
+
+Measuring voxtral fp16 for its memory figure produced 15.12% JP against 4bit's 16.21% on
+the corpus. The narration clip had those tied at 0.07 points, CI [-0.33, +0.48], and that
+tie is the basis for both the 4bit default and the "precision costs nothing measurable"
+conclusion.
+
+It is not run noise: Voxtral decodes greedily and reruns byte-identically on one machine.
+It is also not yet a finding: one run each, different material, different chunk/batch. Left
+as issue #2 with the paired test named, default unchanged.
+
+### Selection is now two layers, breaking change
+
+`--model` takes a family (`voxtral`, `whisper`, `kotoba`, `qwen3-asr`) and `--size` picks
+within it, so 11 flat names became 4 choices. The per-size names (`whisper-turbo`,
+`qwen3-asr-small`, ...) are gone with no aliases, on the user's call that there are no
+users yet. Passing one exits 2 naming the replacement rather than reaching the hub as a
+repo id and 404ing.
+
+The two second-layer flags are deliberately asymmetric, and the asymmetry is measured:
+size spans 43 CER points across whisper's range, precision spans 0.43 across five voxtral
+builds. So size defaults are evidence-based per family and precision defaults to the
+cheapest that loses nothing.
+
+`--quantization` is a lookup from (model, precision) to a published repo id, nothing more.
+It also carries `weights_gb`, which matters on the voxtral path because `derive_batch`
+subtracts the weight footprint from the GPU budget: on an unprofiled 16GB-class machine
+4bit derives batch 32 and fp16 derives batch 1. Without that coupling fp16 would have
+planned for memory already spent and failed as an OOM.
+
+### Docs restructured after a hard review
+
+Shipped v0.2.0 through v0.3.0 during this. The review points worth keeping:
+
+- Do not publish numbers you then tell the reader to ignore. Either the measurement is
+  usable or it does not belong in a reference table.
+- Reference and rationale are different documents. MODELS.md says what is accepted and
+  what the values are; DEFAULTS.md (new) says why each default is what it is, with the
+  measurement.
+- Caveats belong where the flag is documented, not appended to an examples block.
+- Upstream limitations belong in issues, not in prose arguing with the reader (#1, #2).
+- Audio input is a separate concern from model selection: AUDIO.md (new), which also
+  documents the conversion the code actually does (downmix to mono, resample to 16kHz,
+  fltp via libswresample) rather than asserting that nothing is constrained.
+- Do not state that working code works. Only caveats are worth documenting.
+
+A markdown bug shipped twice before being caught: the paragraph after each generated table
+was absorbed into the table, because the splice inserting the tables stripped the
+generator's trailing blank line. There is now a test.
