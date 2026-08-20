@@ -5,7 +5,9 @@ because the references deliberately omit audio and plain CER counts correct
 transcription of that audio as error. Four corpus files read **over 100% plain CER**
 while scoring 15-20% on the coverage-aware metric. Use `coverage CER/WER` for editorial
 references, plain CER only for verbatim ones, and lenient CER as the fair Japanese
-number. Kana CER is reported but should not be quoted as "the" figure: it over-forgives.
+number. Kana CER is reported but should not be quoted as "the" figure: it over-forgives,
+and until 2026-08-19 it also under-forgave, because pykakasi never read numerals (see
+below).
 
 ## The metrics, and when each is wrong
 
@@ -15,6 +17,7 @@ number. Kana CER is reported but should not be quoted as "the" figure: it over-f
 | `eval_coverage` | long insertion runs, as omitted-from-reference audio | the reference is editorial |
 | `eval_cer_lenient` | kana/kanji respelling of the **same** word | you want the fair Japanese number |
 | `eval_cer_kana` | anything sharing a reading | almost never; see below |
+| `eval_coverage_kana` | both of the above at once | an editorial reference *and* a model that reformats numbers |
 | `eval_timing` | n/a, scores timestamps | you have a timed reference |
 
 All are NFKC-normalized with punctuation and whitespace stripped. Scoring unit is chosen
@@ -144,6 +147,28 @@ the magnitude claim, but it does not alter any decision. Kana CER, by contrast, 
 occasionally reorder configs (fp16 leads on kana but not on CER or lenient), which is a
 second reason to prefer lenient.
 
+### Kana CER never forgave digits, which is most of the confound
+
+Found while integrating Qwen3-ASR, and it qualifies every kana figure above:
+**pykakasi does not read numerals.** It converts `2018年` to `2018ねん`, not to
+`にせんじゅうはちねん`, so the digits-versus-spelled-out difference, the largest
+orthographic class on this material, was charged in full by the very metric meant to
+forgive it. On two spellings of one sentence (`答えは1500でした` against
+`こたえはせんごひゃくでした`, nothing misheard) kana CER read **55%** where the corrected
+figure is 0%.
+
+`eval_cer_lenient.read_number` fills the gap, and `eval_coverage_kana` uses it by
+default. It is **opt-in** in the older plain scripts (`--read-digits`), so every kana
+figure already published in this repo keeps the meaning it had; those figures still
+understate leniency wherever the material contains numbers. This matters most for a model
+doing inverse text normalisation, which is why it surfaced with Qwen3-ASR rather than
+earlier.
+
+Stated limits: counter-specific readings are not modelled (`4年` reads as よんねん here,
+not よねん), and a digit string a speaker would read one digit at a time is read as a
+quantity unless it is longer than 20 digits or carries a leading zero. Each leaves a small
+residual charge, so this narrows the confound rather than erasing it.
+
 ## Score the text, not the subtitle layout
 
 Cue segmentation is underdetermined: many groupings of the same tokens are equally valid,
@@ -231,7 +256,8 @@ Whisper does sample, so it genuinely needs a run distribution: see
 cd scripts        # metrics is a package here, so -m needs it on the path
 uv run python -m metrics.eval_coverage REFERENCE HYPOTHESIS [--verbose]
 uv run python -m metrics.eval_cer REFERENCE HYPOTHESIS
-uv run python -m metrics.eval_cer_lenient REFERENCE HYPOTHESIS
+uv run python -m metrics.eval_cer_lenient REFERENCE HYPOTHESIS [--read-digits]
+uv run python -m metrics.eval_coverage_kana REFERENCE HYPOTHESIS
 uv run python -m metrics.eval_timing REF.srt HYP.srt
 ```
 

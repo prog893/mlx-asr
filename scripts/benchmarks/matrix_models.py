@@ -40,9 +40,14 @@ def srt_to_text(path):
 
 def run_one(alias, spec, audio, outdir, extra_args=()):
     """Invoke the CLI exactly as a user would, and report what happened."""
-    out = outdir / f"{alias}.srt"
+    # Ask each engine for a format it can honestly produce. `qwen3-asr` refuses srt
+    # and vtt because its timestamps are decode-window boundaries, so requesting srt
+    # there would report a correct refusal as an engine failure. That distinction is
+    # the whole point of this matrix, so it has to be encoded rather than papered over.
+    fmt = "txt" if spec.no_speech_timestamps else "srt"
+    out = outdir / f"{alias}.{fmt}"
     cmd = [sys.executable, "-m", "mlx_asr.cli", str(audio),
-           "--model", alias, "-o", str(out)]
+           "--model", alias, "-o", str(out), "-f", fmt]
     # Whisper autodetects and misfires on this material (it has returned Russian
     # for Japanese), so the matrix passes the hint every engine that takes one
     # needs. Voxtral takes none and reports the flag as ignored.
@@ -68,9 +73,19 @@ def run_one(alias, spec, audio, outdir, extra_args=()):
         return row
 
     row["ok"] = True
-    row["cues"] = Path(out).read_text(encoding="utf-8").count(" --> ")
+    row["format"] = fmt
+    # A txt row has no cues by construction; reporting 0 would read as "produced no
+    # subtitles" rather than "was not asked for any".
+    row["cues"] = (Path(out).read_text(encoding="utf-8").count(" --> ")
+                   if fmt == "srt" else None)
     row["out"] = str(out)
     return row
+
+
+def hypothesis_text(row) -> str:
+    """The transcript from a matrix row, whichever format it was written in."""
+    return (srt_to_text(row["out"]) if row.get("format", "srt") == "srt"
+            else Path(row["out"]).read_text(encoding="utf-8").strip())
 
 
 def main():
@@ -99,7 +114,7 @@ def main():
         print(f"[{alias}] {spec.repo} ({spec.backend}) ...", flush=True)
         row = run_one(alias, spec, a.audio, outdir)
         if row["ok"] and scorer:
-            row["cer"] = round(100 * scorer(ref, srt_to_text(row["out"])), 2)
+            row["cer"] = round(100 * scorer(ref, hypothesis_text(row)), 2)
         if duration is None and row["ok"]:
             from mlx_asr.audio import SAMPLE_RATE, load_audio_16k
             duration = len(load_audio_16k(a.audio)) / SAMPLE_RATE
@@ -117,7 +132,7 @@ def main():
     digests = {}
     for r in rows:
         if r["ok"]:
-            digests.setdefault(srt_to_text(r["out"]), []).append(r["alias"])
+            digests.setdefault(hypothesis_text(r), []).append(r["alias"])
     collisions = [v for v in digests.values() if len(v) > 1]
     if collisions:
         print("\nHARNESS BUG: identical output from different models: "
@@ -131,7 +146,7 @@ def main():
         print(f"{r['alias']:<{width}}  {r['backend']:<12} "
               f"{'yes' if r['ok'] else 'NO':<6} "
               f"{r.get('x_realtime', ''):>6} {r.get('cer', ''):>7}  "
-              f"{r.get('cues', r.get('error', ''))}")
+              f"{r.get('cues') if r.get('cues') is not None else r.get('error', 'txt (no cues)')}")
 
     if a.json:
         with open(a.json, "w") as f:

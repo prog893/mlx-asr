@@ -1,9 +1,12 @@
 """Tests for the model registry.
 
 The registry is where a measured finding becomes a default, so the tests here
-mostly guard against a default silently reverting. The specific one that matters:
+mostly guard against a default silently reverting. The specific ones that matter:
 `condition_on_previous_text=False` on the large Whisper models is worth up to 22
-CER points on long audio, and it is easy to drop while editing a dataclass.
+CER points on long audio, and `chunk_length_s` on `qwen3-asr` overrides a library
+default (1200s) at which a sub-20-minute file becomes one chunk and one cue. Both
+are easy to drop while editing a dataclass, and neither failure is visible in the
+output.
 """
 
 import sys
@@ -30,14 +33,26 @@ def test_default_is_registered_and_deterministic():
     assert m.deterministic
 
 
+BACKENDS = ("voxtral", "mlx-whisper", "mlx-chunked", "mlx-qwen3")
+
+# The greedy backends. Voxtral decodes with argmax and no temperature ladder;
+# Qwen3-ASR's `temperature=0.0` becomes `mx.argmax` for the same reason. Whisper's
+# temperature fallback samples, so it is not on this list and its repeat runs
+# spread ~0.5 CER points.
+GREEDY_BACKENDS = ("voxtral", "mlx-qwen3")
+
+
 def test_every_entry_is_self_consistent():
     for alias, m in REGISTRY.items():
         assert m.alias == alias
         assert "/" in m.repo, f"{alias} repo should be an HF id"
-        assert m.backend in ("voxtral", "mlx-whisper", "mlx-chunked")
+        assert m.backend in BACKENDS
         assert m.weights_gb > 0
-        # only voxtral is greedy here
-        assert m.deterministic == (m.backend == "voxtral")
+        # `deterministic` drives a user-facing caveat ("this engine samples, so
+        # repeat runs differ") and the benchmark decision to give an engine one run
+        # rather than a distribution, so it has to track what the decoder actually
+        # does. It was `backend == "voxtral"` until qwen3-asr, which is greedy too.
+        assert m.deterministic == (m.backend in GREEDY_BACKENDS), alias
 
 
 @pytest.mark.parametrize("alias", [
@@ -69,8 +84,7 @@ def test_every_alias_runs_on_mlx():
     point at 1.4x the throughput, so keeping it meant a 2.5GB dependency for a
     path nobody should pick."""
     for alias, m in REGISTRY.items():
-        assert m.backend in ("voxtral", "mlx-whisper", "mlx-chunked"), (alias,
-                                                                       m.backend)
+        assert m.backend in BACKENDS, (alias, m.backend)
 
 
 def test_kotoba_points_at_the_upstream_repo_not_a_third_party_mirror():
@@ -95,6 +109,234 @@ def test_voxtral_needs_no_language_but_whisper_does():
     assert REGISTRY["voxtral"].needs_language is False
     assert REGISTRY["whisper-turbo"].needs_language is True
     assert REGISTRY["kotoba"].needs_language is True
+    # Qwen3-ASR has the best language ID here and still needs to be told, because
+    # its autodetect path reassigns `language` inside the chunk loop upstream and
+    # leaves a `language X<asr_text>` prefix in every chunk after the first.
+    assert REGISTRY["qwen3-asr"].needs_language is True
+
+
+@pytest.mark.parametrize("alias", ["qwen3-asr", "qwen3-asr-small"])
+def test_qwen3_is_greedy_and_says_so(alias):
+    """It decodes with `mx.argmax` (temperature 0.0, no fallback ladder), so it gets
+    one benchmark run rather than a distribution, like voxtral and unlike whisper."""
+    assert REGISTRY[alias].deterministic is True
+    assert REGISTRY[alias].backend == "mlx-qwen3"
+
+
+@pytest.mark.parametrize("alias", ["qwen3-asr", "qwen3-asr-small"])
+def test_qwen3_declares_it_has_no_speech_timestamps(alias):
+    """The flag that makes `-f srt` a hard error.
+
+    Its segments are `start=offset`, `end=offset+len(chunk)/sr`: the decode window
+    the text came from, not when the speech happened. No variant of these weights
+    has finer times, so a subtitle file would carry cues that do not correspond to
+    speech, and at a long window it would be one cue holding the whole transcript.
+    """
+    assert REGISTRY[alias].no_speech_timestamps is True
+    # The engines that do have real timestamps must not pick this up.
+    assert REGISTRY["voxtral"].no_speech_timestamps is False
+    assert REGISTRY["whisper-turbo"].no_speech_timestamps is False
+
+
+@pytest.mark.parametrize("alias", ["qwen3-asr", "qwen3-asr-small"])
+def test_qwen3_ships_the_measured_window_not_the_librarys(alias):
+    """The library default is `chunk_duration=1200.0`, i.e. 20 minutes.
+
+    At that value nearly every real file is a single chunk: one segment, and the
+    batched path can never engage since it needs more than one. 30s is the measured
+    optimum on the 7-file corpus, where unusually for this project shorter is better
+    on accuracy, speed and memory at once, monotonically up to 300s (19.98% / 21.42% /
+    23.55% / 62.47% coverage CER at 30/60/120/300s). Regression-guarded because a
+    revert to the library value costs 42 points and would look like a tidy-up.
+    """
+    assert REGISTRY[alias].opts.get("chunk_length_s") == 30.0
+
+
+def test_qwen3_repos_are_the_official_mlx_conversions():
+    """Both aliases must name `mlx-community` builds of the Apache-2.0 originals.
+
+    mlx-audio's loader has handled `qwen3_asr` since 0.3.1 and is in its dispatch
+    table, so these need no conversion step and no new dependency.
+    """
+    assert REGISTRY["qwen3-asr"].repo == "mlx-community/Qwen3-ASR-1.7B-8bit"
+    assert REGISTRY["qwen3-asr-small"].repo == "mlx-community/Qwen3-ASR-0.6B-8bit"
+
+
+def test_the_smaller_qwen3_is_recorded_as_smaller():
+    """`weights_gb` feeds the memory-derived batch fallback, so a wrong value there
+    picks a batch size for the wrong model."""
+    assert (REGISTRY["qwen3-asr-small"].weights_gb
+            < REGISTRY["qwen3-asr"].weights_gb)
+
+
+# --- the adapter's guards against silent truncation ------------------------
+#
+# These use a stub model rather than the weights, so they run in CI and on a laptop.
+# The failure they cover is the worst kind this project has: upstream `max_tokens` is
+# a budget for the WHOLE FILE, and when it runs out the chunk loop just `break`s, so
+# the output is a short but perfectly well-formed transcript of the first part of the
+# audio. Measured on a real 1553s file: one segment, 110.77% coverage CER, 1523
+# seconds silently absent.
+
+class _StubQwen3:
+    """Records every `generate` call, and returns canned per-call text.
+
+    ``texts`` is consumed one entry per call, so a test can make a single window
+    misbehave and assert that the others are unaffected. A callable gets the chunk
+    length, for text whose rate depends on the window.
+    """
+
+    def __init__(self, texts):
+        self._texts = list(texts) if isinstance(texts, (list, tuple)) else texts
+        self.calls = []
+
+    def generate(self, audio, **kw):
+        self.calls.append({"samples": len(audio), **kw})
+        if callable(self._texts):
+            text = self._texts(len(audio) / 16000)
+        elif self._texts:
+            text = self._texts.pop(0)
+        else:
+            text = ""
+        return type("R", (), {"segments": [], "text": text,
+                              "language": ["Japanese"]})()
+
+
+def _silence(seconds):
+    import numpy as np
+
+    return np.zeros(int(seconds * 16000), dtype="float32")
+
+
+def test_the_token_budget_is_per_window_not_per_file():
+    """The bug this whole code path exists for.
+
+    Upstream `max_tokens` is a budget for the WHOLE FILE and running out only makes the
+    chunk loop `break`, so the tail of the audio silently produces no text. Measured on
+    a real 1553s recording: one segment and 110.77% coverage CER, because the first
+    window looped and ate all 8192 tokens. Raising the budget did not help (the same
+    file came back 8% covered at 19950 tokens); it has to be per window.
+    """
+    from mlx_asr.backends import TOKENS_PER_SECOND, qwen3_decode
+
+    stub = _StubQwen3(lambda secs: "あ" * 10)
+    qwen3_decode(stub, _silence(600), "Japanese", 60.0, log=lambda *x: None)
+    assert len(stub.calls) >= 10, len(stub.calls)
+    # Each call's budget is sized to its own window, never to the file.
+    for call in stub.calls:
+        secs = call["samples"] / 16000
+        assert call["max_tokens"] <= max(256, int(secs * TOKENS_PER_SECOND) + 1), call
+        assert call["max_tokens"] < 600 * TOKENS_PER_SECOND
+
+
+def test_a_short_tail_window_keeps_room_for_a_sentence():
+    """Scaling down without a floor would be its own bug: a 2s tail chunk must not be
+    capped at 50 tokens."""
+    from mlx_asr.backends import MIN_CHUNK_MAX_TOKENS, qwen3_decode
+
+    stub = _StubQwen3(lambda secs: "あ")
+    qwen3_decode(stub, _silence(3), "Japanese", 60.0, log=lambda *x: None)
+    assert stub.calls[0]["max_tokens"] == MIN_CHUNK_MAX_TOKENS
+
+
+def test_an_explicit_budget_is_not_overridden():
+    """A benchmark arm testing the library default has to be able to ask for it."""
+    from mlx_asr.backends import qwen3_decode
+
+    stub = _StubQwen3(lambda secs: "あ")
+    qwen3_decode(stub, _silence(120), "Japanese", 60.0, log=lambda *x: None,
+                 max_tokens=8192)
+    assert all(c["max_tokens"] == 8192 for c in stub.calls), stub.calls
+
+
+def test_one_runaway_window_no_longer_costs_the_rest_of_the_file():
+    """The property the per-window budget buys, stated as a test.
+
+    First window loops; every later window must still be decoded and present. Before
+    this, the loop consumed the file's budget and everything after it was dropped.
+    """
+    from mlx_asr.backends import qwen3_decode
+
+    lines = []
+    n_windows = 10
+    texts = ["ループした文章です、" * 2048] + ["正常な文字起こしです。"] * (n_windows + 4)
+    cues, text, meta = qwen3_decode(_StubQwen3(texts), _silence(600), "Japanese",
+                                    60.0, log=lines.append)
+    assert meta["runaway_segments"] == 1, meta
+    # Full audio span, and the healthy windows are in the output.
+    assert meta["audio_coverage"] == 1.0, meta
+    assert len(cues) >= n_windows, len(cues)
+    assert text.count("正常な文字起こしです。") >= n_windows - 1
+    assert any("repetition loops" in ln for ln in lines), lines
+    assert not any("MISSING" in ln for ln in lines), lines
+
+
+def test_full_coverage_produces_no_warning():
+    from mlx_asr.backends import qwen3_decode
+
+    lines = []
+    _, _, meta = qwen3_decode(_StubQwen3(lambda secs: "あ" * int(secs * 7)),
+                              _silence(120), "Japanese", 60.0, log=lines.append)
+    assert meta["audio_coverage"] == 1.0
+    assert meta["runaway_segments"] == 0
+    assert lines == [], lines
+
+
+def test_dense_real_speech_is_not_flagged_as_a_loop():
+    """The threshold has to sit above a fast speaker, or the flag is noise. 9 chars/s
+    is the top of the range measured on this corpus."""
+    from mlx_asr.backends import qwen3_decode
+
+    _, _, meta = qwen3_decode(_StubQwen3(lambda secs: "あ" * int(secs * 9)),
+                              _silence(120), "Japanese", 60.0, log=lambda *x: None)
+    assert meta["runaway_segments"] == 0, meta
+
+
+def test_windows_tile_the_audio_without_gaps():
+    """Cue times are derived from these offsets, so a gap or overlap would put text at
+    the wrong timestamp. Upstream's splitter is used for the cut points, so this is
+    really a check that its offsets are threaded through unchanged."""
+    from mlx_asr.backends import qwen3_decode
+
+    cues, _, meta = qwen3_decode(_StubQwen3(lambda secs: "あ" * 10),
+                                 _silence(300), "Japanese", 60.0,
+                                 log=lambda *x: None)
+    assert cues[0][0] == 0.0
+    for (s0, e0, _), (s1, _, _) in zip(cues, cues[1:]):
+        assert abs(e0 - s1) < 1e-6, (e0, s1)
+    assert abs(cues[-1][1] - 300.0) < 1.0, cues[-1]
+    assert meta["chunk_seconds"] == 60.0
+
+
+def test_the_meta_does_not_claim_a_language_was_detected():
+    """This engine's language ID is its most distinctive feature and is unusable here,
+    so the output must not imply it ran.
+
+    The whisper backend sets `detected_language` from a real detection. Copying that
+    key here would put "detected_language": "Japanese" in a JSON produced by a run that
+    forced Japanese and detected nothing, which is the same quiet untruth as a flag that
+    looks honoured and does nothing.
+    """
+    from mlx_asr.backends import qwen3_decode
+
+    _, _, meta = qwen3_decode(_StubQwen3(lambda secs: "あ" * 10), _silence(60),
+                              "Japanese", 30.0, log=lambda *x: None)
+    assert "detected_language" not in meta, meta
+    assert meta["language_source"] == "forced"
+    assert meta["requested_language"] == "Japanese"
+
+
+def test_an_empty_window_is_counted_not_hidden():
+    """A window that returns nothing is a fact about the decode, and it is the shape a
+    partial failure takes now that the budget is per window."""
+    from mlx_asr.backends import qwen3_decode
+
+    texts = ["ある程度の文字起こし", "", "続きの文字起こしです"] + [""] * 20
+    cues, _, meta = qwen3_decode(_StubQwen3(texts), _silence(180), "Japanese", 60.0,
+                                 log=lambda *x: None)
+    assert meta["empty_segments"] >= 1, meta
+    # An empty window produces no cue, so the cue count is below the window count.
+    assert len(cues) < meta["segments"]
 
 
 def test_only_the_chunked_drivers_take_a_window_length():
@@ -107,6 +349,7 @@ def test_only_the_chunked_drivers_take_a_window_length():
     flag that appeared to change it would be a lie.
     """
     assert REGISTRY["kotoba"].chunked_long_form is True
+    assert REGISTRY["qwen3-asr"].chunked_long_form is True
     assert REGISTRY["whisper-turbo"].chunked_long_form is False
     assert REGISTRY["voxtral"].chunked_long_form is False
 
@@ -135,10 +378,30 @@ def test_resolve_accepts_alias_repo_and_unknown():
     ("kotoba-tech/kotoba-whisper-v2.2", "mlx-chunked"),
     ("some/distil-whisper-large-v3", "mlx-chunked"),
     ("mlx-community/whisper-small-mlx", "mlx-whisper"),
+    ("Qwen/Qwen3-ASR-1.7B", "mlx-qwen3"),
+    ("mlx-community/Qwen3-ASR-0.6B-8bit", "mlx-qwen3"),
+    ("some/qwen3_asr-finetune", "mlx-qwen3"),
+    # The qwen3 test runs BEFORE the whisper one, so an id carrying both words
+    # routes to the loader that can actually read the config.
+    ("some/Qwen3-ASR-1.7B-whisper-distilled", "mlx-qwen3"),
     ("some/unknown-model", "voxtral"),
 ])
 def test_infer_backend(repo, backend):
     assert infer_backend(repo) == backend
+
+
+def test_an_unlisted_qwen3_repo_gets_the_qwen3_defaults():
+    """An inferred entry must carry the same three corrections a registry entry does,
+    or `--model Qwen/Qwen3-ASR-1.7B` would silently behave differently from
+    `--model qwen3-asr`: a 1200s window, a sampling caveat printed for a greedy
+    engine, and an SRT written from chunk boundaries.
+    """
+    m = resolve("Qwen/Qwen3-ASR-1.7B")
+    assert m.backend == "mlx-qwen3"
+    assert m.deterministic is True
+    assert m.no_speech_timestamps is True
+    assert m.opts.get("chunk_length_s") == 30.0
+    assert m.opts.get("condition_on_previous_text") is None
 
 
 def test_describe_registry_mentions_every_alias_and_its_caveats():
@@ -149,3 +412,6 @@ def test_describe_registry_mentions_every_alias_and_its_caveats():
     assert "deterministic" in out
     # the language restriction is a caveat a user must see before trusting output
     assert "ja" in out
+    # `--list-models` is where a user picks an engine, so a refused output format
+    # has to appear there rather than only as an error after they have chosen.
+    assert "no srt/vtt" in out

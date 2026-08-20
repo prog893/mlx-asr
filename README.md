@@ -1,14 +1,13 @@
 # mlx-asr
 
-One CLI over three speech-to-text engines on Apple Silicon. Point it at a file, get
+One CLI over four speech-to-text engines on Apple Silicon. Point it at a file, get
 a subtitle file. Runs locally, with sensible defaults per machine.
 
-All three engines are multilingual, but the tuning and measurement here are aimed
-at **Japanese**: the defaults were chosen against Japanese audio, the accuracy work
-uses character-level metrics suited to a script with no word boundaries, and one
-engine (`kotoba`) is Japanese-only. English is measured and works; other languages
-are inherited from the upstream models and untested here. See
-[docs/benchmarks/](docs/benchmarks/).
+The tuning and measurement here are aimed at **Japanese**: the defaults were chosen
+against Japanese audio, the accuracy work uses character-level metrics suited to a
+script with no word boundaries, and one engine (`kotoba`) is Japanese-only. English is
+measured and works; other languages are inherited from the upstream models and
+untested here. See [docs/benchmarks/](docs/benchmarks/).
 
 ## Install
 
@@ -91,6 +90,10 @@ Voxtral-only, because the engines do not share a long-form algorithm. Drop the
 flag, or use the default --model voxtral.
 ```
 
+The same applies to output formats an engine cannot honestly produce, so `-f srt` on
+`qwen3-asr` exits 2 rather than writing a file whose cue times are decode-window
+boundaries.
+
 `--prompt` is one of those, Voxtral only. It takes domain terms or a topic sentence in the
 same language as the audio, not an instruction: the decoder treats it as text it already
 emitted, so "transcribe accurately" makes things worse. On English audio any prompt wrecks
@@ -105,10 +108,12 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 | `voxtral` (default) | Mistral's 2026 realtime model. Takes a vocabulary prompt, decodes greedily so reruns on one machine are byte-identical, and has the steadiest timestamps here |
 | `whisper-*` | OpenAI's Whisper in seven sizes, `tiny` through `large-v3`. The best-understood option, and the most accurate on the test corpus |
 | `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, and Japanese only |
+| `qwen3-asr`, `qwen3-asr-small` | Alibaba's Qwen3-ASR, 1.7B and 0.6B. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
 | any HF repo id | the backend is inferred from the name |
 
-The `whisper-*` aliases do better when you set `--language`. Voxtral takes no
-language flag, and `kotoba` forces Japanese on its own.
+The `whisper-*` and `qwen3-asr*` aliases do better when you set `--language`, and each
+gets the form it wants (a code for Whisper, an English name for Qwen) from whatever you
+type. Voxtral takes no language flag, and `kotoba` forces Japanese on its own.
 
 What each model scored: [docs/MODELS.md](docs/MODELS.md).
 

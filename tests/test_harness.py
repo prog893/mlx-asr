@@ -274,9 +274,20 @@ UNSUPPORTED_ON_WHISPER = [
     "--gap-seconds=0.7", "--max-chars=32", "--max-dur-seconds=5",
 ]
 
+# Every non-Voxtral engine has to refuse the same set, so the parameterisation runs
+# over engines as well as flags. `qwen3-asr` is here because it is the case where
+# refusing is a judgement rather than a mechanical fact: `--max-batch` maps to a
+# real upstream `batch_size`, but it is a no-op unless --chunk-seconds is low enough
+# to yield more than one chunk, and the "never use 2-8" guidance this project has
+# was measured on Voxtral's decoder, not this one. `--chunk-seconds` is excluded
+# from the list because both of these engines honour it or refuse it by their own
+# rule (chunked drivers take it; sequential whisper does not).
+NON_VOXTRAL_ENGINES = ["whisper-turbo", "qwen3-asr"]
 
+
+@pytest.mark.parametrize("alias", NON_VOXTRAL_ENGINES)
 @pytest.mark.parametrize("flag", UNSUPPORTED_ON_WHISPER)
-def test_voxtral_only_flags_error_on_other_engines(flag, tmp_path):
+def test_voxtral_only_flags_error_on_other_engines(flag, alias, tmp_path):
     """An unhonourable flag must exit nonzero, not warn and continue.
 
     A flag that looks accepted and then does nothing yields output the user reads as
@@ -284,12 +295,138 @@ def test_voxtral_only_flags_error_on_other_engines(flag, tmp_path):
     figure describing a cue config the CLI never applied. The check runs before any
     audio is read, so a nonexistent input still produces the flag error.
     """
+    # -f srt is refused on qwen3-asr for a different reason, and it is the default,
+    # so ask for a format every engine can write to isolate the flag under test.
     r = subprocess.run(
-        CLI + [str(tmp_path / "nope.wav"), "--model", "whisper-turbo", flag],
+        CLI + [str(tmp_path / "nope.wav"), "--model", alias, "-f", "txt", flag],
         capture_output=True, text=True, cwd=ROOT)
     assert r.returncode == 2, (r.returncode, r.stdout, r.stderr)
-    assert "not supported by --model whisper-turbo" in r.stderr
+    assert f"not supported by --model {alias}" in r.stderr
     assert flag.split("=")[0] in r.stderr
+
+
+def test_max_batch_refusal_on_qwen3_says_why_rather_than_calling_it_absent(tmp_path):
+    """The reason has to be the real one.
+
+    `batch_size` does exist upstream, so "this engine has no such knob" would be
+    false. It is refused because it does nothing at the default window and because
+    nothing about the right value has been measured for this decoder. A user told
+    the wrong reason cannot work out that lowering --chunk-seconds is the lever.
+    """
+    r = subprocess.run(
+        CLI + [str(tmp_path / "nope.wav"), "--model", "qwen3-asr", "-f", "txt",
+               "--max-batch", "8"],
+        capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode == 2, (r.returncode, r.stderr)
+    assert "--chunk-seconds" in r.stderr, r.stderr
+    assert "Voxtral-only" not in r.stderr, r.stderr
+
+
+@pytest.mark.parametrize("fmt", ["srt", "vtt", "all"])
+def test_subtitle_formats_are_refused_on_an_engine_without_speech_timestamps(
+        fmt, tmp_path):
+    """`-f srt` on qwen3-asr must exit 2, not write a one-cue file.
+
+    Its segment times are `offset` and `offset + len(chunk)/sr`, i.e. the decode
+    window, so every cue boundary is an artefact of chunking. At the 60s default a
+    3-minute file yields three cues of a minute each; at the library's own 1200s
+    default it yields one cue holding the entire transcript. Either would look like
+    a subtitle track and be unusable as one, which is the silent-ignore failure this
+    CLI refuses everywhere else. `all` is refused too rather than writing the two
+    formats it can and saying nothing.
+    """
+    r = subprocess.run(
+        CLI + [str(tmp_path / "nope.wav"), "--model", "qwen3-asr", "-f", fmt],
+        capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode == 2, (r.returncode, r.stdout, r.stderr)
+    assert "no speech-level timestamps" in r.stderr, r.stderr
+    # The message must name the way out, not just the refusal.
+    assert "-f txt" in r.stderr, r.stderr
+
+
+@pytest.mark.parametrize("fmt", ["txt", "json"])
+def test_untimed_formats_are_not_refused_on_qwen3(fmt, tmp_path):
+    """The refusal must be scoped to the formats that carry timestamps.
+
+    Checked by getting past the format gate to the missing-file error, so this fails
+    if the gate ever widens to txt/json.
+    """
+    r = subprocess.run(
+        CLI + [str(tmp_path / "nope.wav"), "--model", "qwen3-asr", "-f", fmt],
+        capture_output=True, text=True, cwd=ROOT)
+    assert "no speech-level timestamps" not in r.stderr, r.stderr
+    assert r.returncode != 2, (r.returncode, r.stderr)
+
+
+def test_subtitle_formats_still_work_on_the_timestamped_engines(tmp_path):
+    """The mirror case: the refusal is a property of one engine, not of `-f srt`."""
+    for alias in ("voxtral", "whisper-turbo"):
+        r = subprocess.run(
+            CLI + [str(tmp_path / "nope.wav"), "--model", alias, "-f", "srt"],
+            capture_output=True, text=True, cwd=ROOT)
+        assert "no speech-level timestamps" not in r.stderr, (alias, r.stderr)
+
+
+def test_qwen3_language_is_validated_as_a_name_before_the_audio_is_read(tmp_path):
+    """A language Qwen3-ASR does not have must be rejected up front.
+
+    `to_iso` would accept any valid ISO code, including ones absent from this
+    model's 30-language vocabulary, and the failure would then arrive after the
+    whole file had been decoded. Estonian is a real language and a valid code, and
+    this checkpoint does not claim it.
+    """
+    r = subprocess.run(
+        CLI + [str(tmp_path / "nope.wav"), "--model", "qwen3-asr", "-f", "txt",
+               "--language", "et"],
+        capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode == 2, (r.returncode, r.stderr)
+    assert "not recognised" in r.stderr, r.stderr
+    assert "qwen3-asr" in r.stderr, r.stderr
+
+
+def test_the_qwen3_runner_reads_only_meta_keys_the_adapter_produces():
+    """A harness bug that costs a whole run, and it took one to find it.
+
+    `run_qwen3.py` copies decode-health fields out of the adapter's meta into each
+    result row. A key renamed on one side and not the other raises KeyError after the
+    model has loaded and the first file has decoded, i.e. minutes into a run that then
+    has to start over. Derived from the adapter rather than restated, so the two cannot
+    drift.
+    """
+    import re
+
+    from mlx_asr import backends
+
+    src = (ROOT / "scripts" / "benchmarks" / "run_qwen3.py").read_text()
+    wanted = set(re.findall(r'meta\["([a-z_]+)"\]', src))
+    assert wanted, "no meta lookups found; did the runner change shape?"
+
+    class _Stub:
+        def generate(self, audio, **kw):
+            return type("R", (), {"segments": [], "text": "テスト",
+                                  "language": ["Japanese"]})()
+
+    import numpy as np
+
+    _, _, meta = backends.qwen3_decode(_Stub(), np.zeros(16000 * 5, dtype="float32"),
+                                       "Japanese", 60.0, log=lambda *x: None)
+    missing = wanted - set(meta)
+    assert not missing, f"run_qwen3.py reads meta keys the adapter does not set: {missing}"
+
+
+@pytest.mark.parametrize("form", ["ja", "ja_JP", "JA", "jpn", "japanese"])
+def test_qwen3_maps_every_spelling_of_japanese_to_the_english_name(form):
+    """`ja` must never reach this engine.
+
+    Its prompt builder looks the string up in the checkpoint's own vocabulary and,
+    on a miss, interpolates it verbatim, so `--language ja` would produce the prefix
+    `language ja<asr_text>` and a token sequence the model never saw in training.
+    No exception, no warning, just worse output. This asserts the mapping the CLI
+    applies, at the boundary the backend passes to `generate`.
+    """
+    from mlx_asr.languages import to_english_name
+
+    assert to_english_name(form, None, "qwen3-asr") == "Japanese", form
 
 
 def test_language_errors_on_voxtral():

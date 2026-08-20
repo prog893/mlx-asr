@@ -11,8 +11,10 @@ re-measured 2026-08-19 after a reference-loading fix (see below):
 
 | engine | JP coverage CER | EN coverage WER | x realtime |
 |---|---|---|---|
-| voxtral (default) | 16.22% | 21.50% | **29.6x** |
+| voxtral (default) | 16.22% | 21.50% | 29.6x |
 | whisper-turbo, no-condition | **14.49%** ±0.27 | **18.34%** ±0.69 | 18.0-22.0x |
+| qwen3-asr (1.7B) | 19.33% | 25.45% | 21.8x |
+| qwen3-asr-small (0.6B) | 23.27% | 24.26% | **32.8x** |
 
 Whisper is about 1.7 points more accurate on Japanese, and the result holds under all three
 tests this project has: 3/3 repeat runs beat the baseline, the run-distribution interval
@@ -24,6 +26,12 @@ Voxtral is ~1.4x faster, needs no language hint, has better-behaved timestamps, 
 reproduces byte-identically on a given machine, which is why it is the default. Whisper's ±
 is a run distribution, not a confidence interval on the audio: it samples, so it gets 3 runs
 while Voxtral gets one.
+
+The two Qwen3-ASR rows were added on 2026-08-19 and change no default: the 1.7B is last on
+accuracy and slower than Voxtral. The 0.6B is the fastest engine measured here (32.8x, in
+2.36GB) and the only reason either ships. Both **write no subtitles**, since their
+timestamps are decode-window boundaries. See
+[qwen3-asr.md](docs/benchmarks/qwen3-asr.md).
 
 **The English figures changed on 2026-08-19** and every earlier English number in this repo
 is superseded. Reference lines were being joined with no separator, fusing a word at every
@@ -37,6 +45,7 @@ plain CER is meaningless on this editorial material.
 | lever | conclusion | detail |
 |---|---|---|
 | transcription delay | `2400` is worth 9 points and free. The strongest result here. | [delay.md](docs/benchmarks/delay.md) |
+| Qwen3-ASR | Neither alias beats an existing default on accuracy; the 0.6B is the fastest engine here. Writes no subtitles. 30s window, measured. | [qwen3-asr.md](docs/benchmarks/qwen3-asr.md) |
 | chunking | 30s vs 60s is not resolvable on the corpus (+0.10, CI [-1.89, +2.03]), so choose on speed. Overlap helps only where seams are dense. Energy cuts beat VAD. | [chunking.md](docs/benchmarks/chunking.md) |
 | engine choice | Whisper turbo + no-condition is more accurate; Voxtral is faster and reproducible. | [engines.md](docs/benchmarks/engines.md) |
 | batch size | Not monotonic. Never use 2-8. | [decode-throughput.md](docs/benchmarks/decode-throughput.md) |

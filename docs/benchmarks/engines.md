@@ -90,6 +90,12 @@ ones; Japanese is unchanged, because Japanese has no word spaces and could not b
 | EN coverage WER, 3 files | 21.50% | 17.85 / 18.04 / 19.13 -> **18.34% ±0.69** | CI [16.62, 20.07] entirely below -> **whisper** |
 | x realtime | **29.6x** | 18.0 / 21.6 / 22.0x | **voxtral, ~1.4x** |
 
+Qwen3-ASR was added as a fourth engine on 2026-08-19 and is measured on the same 20 files
+with the same scorers: 19.33% JP / 25.45% EN at 21.8x for the 1.7B, 23.27% / 24.26% at
+32.8x for the 0.6B. Both are behind the two rows above on Japanese, so neither changes the
+verdict here; the 0.6B is the fastest engine this project has measured. It gets one run
+each, being greedy, and it writes no subtitles. See [qwen3-asr.md](qwen3-asr.md).
+
 ### The generalization test, finally run
 
 The interval above answers "does this hold on a rerun", which is what
@@ -384,6 +390,10 @@ faster (~1.4-2x), needs no language hint, needs no stability flag, has better-be
 timestamps ([timestamps.md](timestamps.md)), and reproduces on a given machine
 ([determinism.md](determinism.md)). Whisper is one flag away for anyone who wants the
 accuracy.
+
+The two `qwen3-asr` aliases ship without displacing anything. The 1.7B is last of the four
+on accuracy; the 0.6B is the fastest here (32.8x in 2.36GB), which is the case for keeping
+it. Both refuse `-f srt`.
 
 ## What this does and does not settle
 

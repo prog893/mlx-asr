@@ -56,6 +56,8 @@ larger models; treat it as "what you wait for", not a throughput benchmark.
 | `whisper-base` | `mlx-community/whisper-base-mlx` | MLX | sequential 30s | yes | 35.59% | 20.9x |
 | `whisper-tiny` | `mlx-community/whisper-tiny-mlx` | MLX | sequential 30s | yes | 32.10% | 51.4x |
 | `kotoba` | `kotoba-tech/kotoba-whisper-v2.0` | MLX (converted on first use) | chunked 10s windows (our driver) | yes | 22.67% | 9.8x |
+| `qwen3-asr` | `mlx-community/Qwen3-ASR-1.7B-8bit` | MLX | chunked 30s windows (our loop, upstream cut points) | yes, txt/json only | 19.70% | 19.6x |
+| `qwen3-asr-small` | `mlx-community/Qwen3-ASR-0.6B-8bit` | MLX | chunked 30s windows | yes, txt/json only | 18.86% | 25.4x |
 
 Reproduce with `scripts/benchmarks/matrix_models.py`. How the metrics work and why the
 sample sizes constrain what you can read off them:
@@ -66,7 +68,13 @@ Do not pick a model from that table. It is one clip in one language, and the
 `voxtral` on accuracy, the reverse of what you see here. That is why the README
 quotes the corpus number instead. `whisper-tiny` scoring better than
 `whisper-base` is the same problem showing through: at n=1 that is noise, not a
-fact about model size.
+fact about model size. So is `qwen3-asr-small` beating `qwen3-asr` on this clip; on the
+20-file corpus the ordering reverses by 3.9 points.
+
+The two `qwen3-asr` rows were produced with `-f txt`, since they refuse `srt`. Note the
+x-realtime column includes model load, which flatters small models: these two load in
+about 3s where Voxtral takes 14s on this machine, so most of the apparent gap here is
+startup, not throughput. The corpus figures exclude load.
 
 Voxtral's x-realtime looks bad because a 16GB M4 is the floor case for it. Its
 encoder is compute-bound, and the same code reaches 29.8x on an idle M2 Ultra 128GB over
@@ -98,7 +106,13 @@ mlx-asr audio.wav --model whisper-small --language ja
 mlx-asr audio.wav --model whisper-base --language ja
 mlx-asr audio.wav --model whisper-tiny --language ja
 mlx-asr audio.wav --model kotoba                     # forces ja on its own
+mlx-asr audio.wav --model qwen3-asr --language ja -f txt        # -f srt is an error
+mlx-asr audio.wav --model qwen3-asr-small --language ja -f json
 ```
+
+The two `qwen3-asr` aliases are the only ones where `-f` is not free: they need `txt` or
+`json`, because the engine emits no timestamp finer than its own decode window. Asking for
+`srt`, `vtt` or `all` exits 2.
 
 ### `--language` takes any spelling
 
@@ -157,20 +171,21 @@ output a user will read as having been produced with it, which is the same class
 mistake as publishing a measurement from a config that was never applied. This project
 did exactly that once, with a subtitle-cue setting.
 
-| flag | `voxtral` | `whisper-*` | `kotoba` |
-|---|---|---|---|
-| `--language` | **error** (takes no language token) | **used** (guessing costs 25 points) | forced to `ja` |
-| `--chunk-seconds` | chunk length | **error** (30s window is fixed by the model) | **window length, its biggest lever** |
-| `--max-batch` | yes | error | error |
-| `--delay-ms` | yes | error | error |
-| `--kv-bits` / `--no-kv-quant` | yes | error | error |
-| `--fast` | yes | error | error |
-| `--overlap-seconds` | yes | error | error |
-| `--prompt` | yes | error | error |
-| `--vad` | yes | error | error |
-| `--compact-silence` | yes | error | error |
-| `--gain` / `--peak-dbfs` / `--rms-dbfs` | yes | error | error |
-| `--gap-seconds` / `--max-chars` / `--max-dur-seconds` | yes | error | error |
+| flag | `voxtral` | `whisper-*` | `kotoba` | `qwen3-asr*` |
+|---|---|---|---|---|
+| `--language` | **error** (takes no language token) | **used** (guessing costs 25 points) | forced to `ja` | **used**, as an English *name*; defaults to English rather than autodetecting |
+| `--chunk-seconds` | chunk length | **error** (30s window is fixed by the model) | **window length, its biggest lever** | window length; **30s** here (measured), not the library's 1200s |
+| `-f srt` / `-f vtt` / `-f all` | yes | yes | yes | **error** (no speech-level timestamps) |
+| `--max-batch` | yes | error | error | error, with a different reason (see below) |
+| `--delay-ms` | yes | error | error | error |
+| `--kv-bits` / `--no-kv-quant` | yes | error | error | error |
+| `--fast` | yes | error | error | error |
+| `--overlap-seconds` | yes | error | error | error |
+| `--prompt` | yes | error | error | error |
+| `--vad` | yes | error | error | error |
+| `--compact-silence` | yes | error | error | error |
+| `--gain` / `--peak-dbfs` / `--rms-dbfs` | yes | error | error | error |
+| `--gap-seconds` / `--max-chars` / `--max-dur-seconds` | yes | error | error | error |
 
 `--delay-ms` and `--gain` have non-default values, so they only count as passed when set
 away from the default; the default is not something you asked for.
@@ -179,6 +194,15 @@ away from the default; the default is not something you asked for.
 `whisper-*` it is refused rather than approximated, because that driver's 30s window is
 set by the model's positional encoding and a flag that appeared to change it would be a
 lie.
+
+`--max-batch` on `qwen3-asr` is the one refusal whose reason is not "the knob does not
+exist". It does: `generate(batch_size=)` batches whole chunks upstream. It is refused
+because it is a no-op unless `--chunk-seconds` is low enough to produce more than one
+chunk, and because the only batch-size finding this project has (never use 2-8) was
+measured on Voxtral's decoder, which shares nothing with this one. Exposing a knob whose
+effect here is unmeasured, and silently nothing at the default window, is the same
+mistake as a flag that looks honoured and does nothing. The error message says so and
+points at `--chunk-seconds`.
 
 ### Voxtral options
 
@@ -233,13 +257,45 @@ done
 spontaneous corpus (27.0 / 31.3 / 49.7% at 10 / 20 / 30s), but 20s won on clean
 narration in the v2.2 sweep. Sweep it on your own audio.
 
+### qwen3-asr options
+
+`--language` and `--chunk-seconds`, and both matter more than usual.
+
+```bash
+mlx-asr jp.wav --model qwen3-asr --language ja -f txt
+mlx-asr jp.wav --model qwen3-asr --language ja -f txt --chunk-seconds 15   # less memory
+```
+
+| flag | values | default | measured effect |
+|---|---|---|---|
+| `--language` | any spelling | **English** | not optional in practice. Omitting it forces English rather than autodetecting, because upstream autodetect corrupts multi-chunk text |
+| `--chunk-seconds` | float | `30` | 19.98% / 21.42% / 23.55% / 62.47% coverage CER at 30 / 60 / 120 / 300s. Shorter is better on accuracy, speed **and** memory, and 15s ties 30s on accuracy while using less of both |
+
+Two things about this engine that no other one here does:
+
+**It writes no subtitles.** Its segment times are the boundaries of the decode window the
+text came from, so `-f srt`, `-f vtt` and `-f all` exit 2. Every JSON it writes carries
+`cue_source: "chunk_boundaries"` so a timing figure cannot be taken from it by mistake.
+
+**Its long-form loop is ours, not the library's.** Upstream's `max_tokens` is a budget for
+the whole file, and exhausting it silently stops transcription: measured on one 26-minute
+recording, the output was a single segment covering 2% of the audio at 110.77% coverage
+CER. The budget has to be per window, so `mlx_asr/backends.py` drives the chunk loop.
+Repetition loops still occur (they are a property of the weights) but now cost one window
+each, and the CLI warns when it sees one. Full detail:
+[benchmarks/qwen3-asr.md](benchmarks/qwen3-asr.md).
+
 ## Using weights that are not in the registry
 
 `--model` takes any HF repo id, and the backend is inferred from the name:
-`voxtral` in the id routes to the Voxtral path, `kotoba` or `distil` to the
-chunked driver (a distil checkpoint keeps 2-4 decoder layers and cannot carry
-state across sequential windows), `whisper` to the sequential driver, and anything
-else to Voxtral.
+`voxtral` in the id routes to the Voxtral path, `qwen3-asr` to the Qwen3 loop,
+`kotoba` or `distil` to the chunked driver (a distil checkpoint keeps 2-4 decoder
+layers and cannot carry state across sequential windows), `whisper` to the sequential
+driver, and anything else to Voxtral. `qwen3-asr` is tested before the other two, so an
+id carrying both words (`Qwen3-ASR-1.7B-whisper-distilled`) reaches the loader that can
+read its config. An inferred Qwen3 entry gets the same 30s window and the same refused
+formats as a registry one, so `--model Qwen/Qwen3-ASR-1.7B` behaves like
+`--model qwen3-asr`.
 
 ```bash
 mlx-asr audio.wav --model mlx-community/whisper-medium-mlx --language de

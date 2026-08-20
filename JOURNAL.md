@@ -2062,6 +2062,8 @@ the prefix `language ja<asr_text>`. That whole class of failure is now handled c
 
 ### What is left to do
 
+**Done on 2026-08-20; see the section at the end of this file for what was actually built and measured.** Two items below turned out to be wrong: the sweep found 30s rather than any of the values it proposed as candidates, and the `--max-batch` reasoning missed that the library's token budget is per FILE, which silently truncates long audio and had to be fixed before any number here was trustworthy. Left in place unedited, as the plan it was.
+
 Not started. The work is: two registry entries on a new `mlx-qwen3` backend, an adapter
 in `backends.py` returning the usual cue list, `-f srt`/`-f vtt` as a hard error naming
 the missing-timestamps reason, and `--max-batch` refused for now because `batch_size` is
@@ -2080,3 +2082,126 @@ normalisation, so digits versus spelled-out numbers is a real confound against t
 references. Record peak memory too, since the audio encoder stays unquantized at every
 precision level and the attention mask is materialised densely, so this engine's memory
 profile is unlike the others here.
+
+## 2026-08-20: Qwen3-ASR, built and measured
+
+The plan in the section above, executed. It ships as two aliases on a new `mlx-qwen3`
+backend and **changes no default**. Three findings were not in the design, and two of
+them are bugs the design would have shipped.
+
+### The library silently truncates long audio
+
+This is the one that matters, and it is worth stating precisely because the failure
+produces a **well-formed transcript** rather than an error. Upstream `max_tokens`
+(default 8192) is a budget for the whole file, and exhausting it only makes the chunk
+loop `break`:
+
+```python
+remaining_tokens = max_tokens
+for chunk_audio, offset_sec in chunk_iter:
+    if remaining_tokens <= 0:
+        break                       # no exception, no warning
+    remaining_tokens -= gen_toks
+```
+
+Measured on one 1553s Japanese recording at a 30s window:
+
+| configuration | segments | audio covered | coverage CER |
+|---|---|---|---|
+| library default (whole-file budget 8192) | 1 | 2% | 110.77% |
+| whole-file budget scaled to duration (19950) | 2 | 8% | 96.69% |
+| per-window budget (shipped) | 52 | 100% | **19.15%** |
+
+The first window entered a repetition loop (one 7-character phrase repeated 2048 times, exactly 8192 tokens
+at 1.75 chars/token), spent the file's whole budget, and the loop broke. 1523 of 1553
+seconds were never decoded and nothing said so. **Raising the budget does not fix it**,
+as the middle row shows; it only lets the loop run longer. So `backends.py` drives the
+chunk loop itself with a per-window budget, using upstream's own cut points and the same
+`generate` per window. `audio_coverage` and `runaway_segments` are now recorded per file
+and warned about, because this class of failure is invisible in a score.
+
+Found by running the sweep, not by reading the source: the design had read the same
+function and missed it. The 96.69% row is the useful one, because it is the fix that
+looked obviously right and was not.
+
+### Shorter windows are better on every axis, which no other engine here does
+
+7-file subset, one run per arm, sequential on the idle Ultra:
+
+| window | JP covCER | kanaCER | EN covWER | x rt | peak GB |
+|---|---|---|---|---|---|
+| 15s | 20.04% | 21.88% | 30.38% | **22.3x** | **3.73** |
+| **30s** | **19.98%** | **21.20%** | 31.38% | 19.2x | 4.05 |
+| 60s | 21.42% | 22.12% | **29.86%** | 16.7x | 4.10 |
+| 120s | 23.55% | 23.27% | 34.47% | 15.5x | 4.68 |
+| 300s | 62.47% | 74.08% | 37.24% | 9.4x | 5.77 |
+
+Accuracy, throughput and memory all improve as the window shrinks, so above 30s there is
+no trade to make. The mechanism is the loops: a runaway generation runs until its window's
+budget is exhausted, and that budget scales with window length, so a longer window means a
+loop destroys more transcript *and* costs more decode time. 5 of 7 files looped at 30s; 7
+of 7 at 120s and 300s. 300s is catastrophic rather than merely worse (one file at 149.38%).
+
+15s was added after the fact, because the first four arms were monotonic and a sweep whose
+winner sits on its own boundary has not found an optimum. It shows the curve flattening
+(20.04% against 19.98%, a tie on a corpus resolving ~3.2 points), so 30s is the optimum
+and neither value is a boundary any more.
+
+### The headline: last on accuracy, and the 0.6B is the fastest thing here
+
+20 files, 7.95h, one run each (greedy), idle host, `busy: false` recorded, no truncation.
+
+| engine | JP covCER | EN covWER | x rt | peak GB |
+|---|---|---|---|---|
+| whisper-turbo, no-condition | **14.49%** ±0.27 | **18.34%** ±0.69 | 18.0-22.0x | |
+| voxtral (default) | 16.22% | 21.50% | 29.6x | |
+| qwen3-asr (1.7B) | 19.33% | 25.45% | 21.8x | 4.05 |
+| qwen3-asr-small (0.6B) | 23.27% | 24.26% | **32.8x** | **2.36** |
+
+Nothing recommends the 1.7B: third of three on accuracy, slower than the default. The
+0.6B is the reason either ships, and only on axes it was not being judged on: fastest
+engine measured in this project, in 2.36GB. Its English WER beating the 1.7B's is n=3 and
+should not be quoted.
+
+Determinism confirmed rather than assumed: 7 files decoded twice in one process, **7 of 7
+byte-identical**. Wall clock varied up to 4%, which is scheduling noise.
+
+### Kana CER never forgave digits, which was most of the confound
+
+The design predicted an inverse-text-normalisation confound and asked for kana CER to
+bound it. Measuring it exposed that **pykakasi does not read numerals**: it converts
+`2018年` to `2018ねん`, so the digits-versus-spelled-out difference, the largest
+orthographic class on this material, was charged in full by the metric meant to forgive
+it. On two spellings of one sentence, kana CER read **55%** with nothing misheard, against
+0% once digits are read.
+
+`eval_cer_lenient.read_number` fills the gap and `eval_coverage_kana` (new, coverage-aware
+kana and lenient CER) uses it. Opt-in in the older plain scripts, so previously published
+kana figures keep their meaning; they understate leniency wherever numbers appear. The
+1.7B's kana CER is 1.4 points below its coverage CER, the largest such gap here, which
+bounds the orthographic share of its 3.1-point deficit at well under the deficit.
+
+A 25-digit run in a real hypothesis then crashed the reader mid-sweep (past 京, no group
+name), which cost an arm. Long runs and leading-zero strings now read digit by digit, and
+the two supplementary metrics are wrapped so a scoring failure cannot discard a decode
+that already cost GPU time.
+
+### What shipped
+
+Two aliases (`qwen3-asr`, `qwen3-asr-small`), 30s windows, deterministic, multilingual,
+zero new dependencies. `-f srt`/`-f vtt`/`-f all` are exit 2 via a new `UnsupportedFormat`,
+since the timestamps are decode-window boundaries; `cue_source: "chunk_boundaries"` is in
+every result file so no timing figure can be taken from them by mistake. `--language` is
+always passed explicitly, mapped to the English name, because autodetect reassigns the
+language inside the chunk loop upstream and leaves `language X<asr_text>` embedded in later
+chunks' text; with no flag the engine is forced to English and says so. That makes its
+language identification, its most distinctive feature, unusable here until upstream is
+fixed. `--max-batch` is refused with its own message: `batch_size` exists, but it is a
+no-op at the default window and the "never use 2-8" finding was measured on Voxtral's
+decoder.
+
+Tests: 469 pass. The three that had to change were rewritten, not worked around
+(`deterministic == (backend == "voxtral")` became a greedy-backend set). New guards cover
+the truncation fix, the per-window budget, the loop detector, window tiling, the digit
+reader, and one that derives the runner's `meta` lookups from the adapter so a renamed key
+cannot break a run again, which it had.

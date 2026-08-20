@@ -153,3 +153,159 @@ def test_extra_ratio_flags_an_editorial_reference():
     ref = "あ" * 100
     _, s = score_pair(ref, "あ" * 100 + "い" * 100, 30, 6)
     assert s["extra_ratio"] > 1.5, s
+
+
+# --- coverage-aware kana and lenient CER ----------------------------------
+#
+# Needed for Qwen3-ASR, whose Japanese finetune does inverse text normalisation: it
+# prefers "2018年" where a reference typist may have written the reading out. Plain
+# coverage CER charges every such difference as a misrecognition, so a model that
+# formats numbers differently from the reference scores worse than one that misheard
+# them. These exist so the size of that confound is measurable rather than argued
+# about.
+
+pytest.importorskip("pykakasi", reason="kana metrics need the eval extra")
+
+from metrics.eval_cer_lenient import read_number, to_kana  # noqa: E402
+from metrics.eval_coverage_kana import coverage_kana, coverage_lenient  # noqa: E402
+
+
+@pytest.mark.parametrize("digits,reading", [
+    ("0", "れい"),
+    ("7", "なな"),
+    ("10", "じゅう"),          # 1 is dropped before じゅう
+    ("18", "じゅうはち"),
+    ("100", "ひゃく"),         # and before ひゃく
+    ("300", "さんびゃく"),      # irregular: not さんひゃく
+    ("600", "ろっぴゃく"),
+    ("800", "はっぴゃく"),
+    ("1000", "せん"),
+    ("3000", "さんぜん"),       # irregular: not さんせん
+    ("8000", "はっせん"),
+    ("2018", "にせんじゅうはち"),
+    ("10000", "いちまん"),      # 万 upward keeps いち, unlike じゅう/ひゃく/せん
+    ("2026", "にせんにじゅうろく"),
+    ("1,500", "せんごひゃく"),   # thousands separator
+    ("１９", "じゅうきゅう"),     # full-width
+    ("3.5", "さんてんご"),       # decimals are read digit by digit after てん
+])
+def test_number_readings_are_correct(digits, reading):
+    """pykakasi does not read numerals, so this table is the metric's own arithmetic.
+
+    Hand-checkable, and the irregular forms are the point: a naive ones-plus-unit
+    generator gets 300, 600, 800, 3000 and 8000 wrong, and each error would show up as
+    a permanent residual charge on any file mentioning a price or a year.
+    """
+    assert read_number(digits) == reading
+
+
+@pytest.mark.parametrize("digits", [
+    "0" * 40,
+    "1234567890123456789012345",        # 25 digits, past 京
+    "9" * 64,
+    "007",                              # leading zeros: an identifier, not seven
+    "00",
+])
+def test_absurd_digit_runs_do_not_crash(digits):
+    """A real hypothesis crashed the sweep here, so this is a regression test.
+
+    A transcript contains digit strings that are not quantities: identifiers, and
+    run-together timestamps such as `19時0分23秒`. Anything past 京 has no everyday group
+    name, and indexing the table for one raised IndexError mid-run, after four files had
+    already decoded. These read digit by digit, which is what a speaker does anyway.
+    """
+    out = read_number(digits)
+    assert out and not any(c.isdigit() for c in out), out
+
+
+def test_no_digit_string_can_crash_the_reader():
+    """Exhaustive over lengths and shapes, because this runs inside a scorer.
+
+    A crash here does not produce a wrong number, it destroys a benchmark arm that has
+    already spent minutes of GPU time. Cheap to rule out completely.
+    """
+    import random
+
+    rng = random.Random(0)
+    cases = ["", "0", "9"]
+    for length in range(1, 40):
+        cases.append("".join(rng.choice("0123456789") for _ in range(length)))
+        cases.append("1" + "0" * (length - 1))
+    cases += ["1.5", "0.000", "1,234,567.89", "１２，３４５", "12.", ".5", "1..2"]
+    for case in cases:
+        read_number(case)                     # must not raise
+        to_kana(f"これは{case}年です", read_digits=True)
+
+
+def test_pykakasi_alone_does_not_read_digits():
+    """States the gap this fills, so the opt-in is not mistaken for redundancy.
+
+    Without it, kana CER charges a digit/spelled-out difference in full, which on an
+    inverse-text-normalising model is the largest orthographic difference there is.
+    """
+    assert to_kana("2018年") == "2018ねん"
+    assert to_kana("2018年", read_digits=True) == "にせんじゅうはちねん"
+
+
+def test_a_digit_spelling_difference_is_charged_plainly_and_forgiven_on_readings():
+    """The whole reason these two metrics exist, on a hand-checkable pair.
+
+    Same sentence, the year written as digits in one and spelled out in the other.
+    Nothing was misheard, so coverage CER should be clearly nonzero (it charges every
+    differing character) while the reading-based figures should be much lower.
+    """
+    ref = "答えは1500でした"
+    hyp = "こたえはせんごひゃくでした"
+    _, plain = score_pair(ref, hyp, 30, 6)
+    kana = coverage_kana(ref, hyp, 30)
+    lenient = coverage_lenient(ref, hyp, 30)
+    assert plain["coverage_cer"] > 0.3, plain
+    assert kana["coverage_cer"] < plain["coverage_cer"], (kana, plain)
+    assert lenient["lenient_cer"] < plain["coverage_cer"], (lenient, plain)
+
+
+def test_identical_text_scores_zero_on_every_variant():
+    ref = "これは完全に正しい文字起こしです"
+    assert coverage_kana(ref, ref, 30)["coverage_cer"] == 0.0
+    assert coverage_lenient(ref, ref, 30)["lenient_cer"] == 0.0
+
+
+def test_a_real_misrecognition_is_not_forgiven():
+    """Leniency must not swallow errors. Different word, different reading: charged
+    by all three metrics, or the kana figure would be meaningless as a quality
+    number."""
+    ref = "ビールを飲みました"
+    hyp = "ワインを買いました"
+    _, plain = score_pair(ref, hyp, 30, 6)
+    assert plain["coverage_cer"] > 0.0
+    assert coverage_kana(ref, hyp, 30)["coverage_cer"] > 0.0
+    assert coverage_lenient(ref, hyp, 30)["lenient_cer"] > 0.0
+
+
+def test_kana_metrics_refuse_space_delimited_text():
+    """pykakasi passes English through unchanged, so running it there would report the
+    plain figure under a kana label. Returning None makes the caller skip the file
+    instead of aggregating a mislabelled number."""
+    assert coverage_kana("this is english text", "this is english text") is None
+    assert coverage_lenient("this is english text", "this is english text") is None
+
+
+def test_cut_material_is_still_excused_on_the_kana_path():
+    """The references omit audio on purpose, so the coverage rule has to survive the
+    reading conversion. Without the min_cut rescaling, a run excused on characters
+    could be charged on kana purely because kana expand."""
+    ref = "本日は晴天なり" * 12
+    hyp = ref[:40] + "これは参照から省かれた音声の書き起こしです" * 4 + ref[40:]
+    kana = coverage_kana(ref, hyp, 30)
+    assert kana["insertions_excused"] > 0, kana
+    assert kana["coverage_cer"] < 0.25, kana
+
+
+def test_lenient_excludes_cut_runs_before_comparing_readings():
+    """The composition order matters. Forgiving first would run reading comparison
+    over cut segments thousands of characters long: slow, and it would compare
+    unrelated text. Coverage first, then forgive what is left charged."""
+    ref = "本日は晴天なり" * 12
+    hyp = ref + "まったく別の話題についての長い挿入がここに入ります" * 4
+    lenient = coverage_lenient(ref, hyp, 30)
+    assert lenient["lenient_cer"] < 0.05, lenient

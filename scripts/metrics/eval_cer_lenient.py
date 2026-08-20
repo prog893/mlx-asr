@@ -30,6 +30,7 @@ the reference verbatim.
 """
 
 import argparse
+import re
 
 import pykakasi
 from rapidfuzz.distance import Levenshtein
@@ -38,9 +39,109 @@ from metrics.eval_cer import load_text, normalize
 
 _kks = pykakasi.kakasi()
 
+# --- Japanese number readings ---------------------------------------------
+#
+# pykakasi does NOT read digits: it converts `2018年` to `2018ねん`, leaving the
+# numeral alone. So kana CER as originally written collapses kanji/kana variants but
+# NOT digits-versus-spelled-out, which is the single largest orthographic difference
+# on this material and the one an inverse-text-normalising model produces most.
+# Measured on the pair `答えは1500でした` / `こたえはせんごひゃくでした`: kana CER
+# reads 55% for two spellings of the same sentence, all of it from the numeral,
+# against 0% once the digits are read.
+#
+# `read_digits=True` fills that in. It is OPT-IN and off by default so that every
+# figure already published from `eval_cer_kana.py` and `eval_cer_lenient.py` keeps
+# its meaning; only the coverage-aware wrappers in eval_coverage_kana.py ask for it.
+#
+# Limits, stated rather than discovered later: counter-specific readings are not
+# modelled (4年 is read よんねん here, not よねん; 19時 becomes じゅうきゅうじ, not じゅうくじ),
+# and a digit string a speaker would read one digit at a time is still read as a
+# number. Each leaves a small residual charge, so this narrows the confound without
+# claiming to erase it.
+_ONES = {1: "いち", 2: "に", 3: "さん", 4: "よん", 5: "ご",
+         6: "ろく", 7: "なな", 8: "はち", 9: "きゅう"}
+# Irregular in exactly the places Japanese phonology requires: 300/600/800 and
+# 3000/8000 are not the regular ones-plus-unit forms, and 1 is dropped before
+# じゅう/ひゃく/せん.
+_TENS = {1: "じゅう", **{d: _ONES[d] + "じゅう" for d in range(2, 10)}}
+_HUNDREDS = {1: "ひゃく", 2: "にひゃく", 3: "さんびゃく", 4: "よんひゃく", 5: "ごひゃく",
+             6: "ろっぴゃく", 7: "ななひゃく", 8: "はっぴゃく", 9: "きゅうひゃく"}
+_THOUSANDS = {1: "せん", 2: "にせん", 3: "さんぜん", 4: "よんせん", 5: "ごせん",
+              6: "ろくせん", 7: "ななせん", 8: "はっせん", 9: "きゅうせん"}
+# 万 upward take the full ones reading, so 1万 is いちまん and never まん.
+_GROUPS = ["", "まん", "おく", "ちょう", "けい"]
 
-def to_kana(text: str) -> str:
-    """Hiragana reading of a string."""
+# Above 京 (10^20) Japanese has no everyday group name, and a digit string that long is
+# not a quantity anyway: it is an ID, an account number or a run-together timestamp,
+# which a speaker reads digit by digit. Both cases are handled by reading each digit
+# separately rather than by extending the table with names nobody says.
+_MAX_GROUPED_DIGITS = 4 * len(_GROUPS)
+
+_DIGIT_RUN = re.compile(r"[0-9０-９][0-9０-９,，]*(?:[.．][0-9０-９]+)?")
+
+
+def _read_group(n: int) -> str:
+    """Read 1..9999, the unit Japanese numbers are grouped in."""
+    out = ""
+    if n >= 1000:
+        out += _THOUSANDS[n // 1000]
+        n %= 1000
+    if n >= 100:
+        out += _HUNDREDS[n // 100]
+        n %= 100
+    if n >= 10:
+        out += _TENS[n // 10]
+        n %= 10
+    if n:
+        out += _ONES[n]
+    return out
+
+
+def read_number(token: str) -> str:
+    """Hiragana reading of a digit string. `2018` -> `にせんじゅうはち`.
+
+    Handles thousands separators and a decimal point (read as てん, then digit by
+    digit, which is how a decimal is actually spoken). Returns the input unchanged if
+    it is not a number, so a caller never has to pre-validate.
+    """
+    token = token.translate(str.maketrans("０１２３４５６７８９，．", "0123456789,."))
+    token = token.replace(",", "")
+    whole, _, frac = token.partition(".")
+    if not whole.isdigit():
+        return token
+    # Beyond 京, and for leading-zero strings, read digit by digit. A 24-digit run in a
+    # transcript is an identifier or a run-together timestamp, not a quantity, and that
+    # is how a speaker says it. Also keeps the group table from being indexed past its
+    # end, which a real hypothesis did hit.
+    if len(whole) > _MAX_GROUPED_DIGITS or (len(whole) > 1 and whole[0] == "0"):
+        return "".join("れい" if c == "0" else _ONES[int(c)] for c in whole)
+    n = int(whole)
+    if n == 0:
+        head = "れい"
+    else:
+        head, groups = "", []
+        # Split into 4-digit groups from the right, which is how 万/億/兆 work.
+        while n:
+            groups.append(n % 10000)
+            n //= 10000
+        for i in reversed(range(len(groups))):
+            if not groups[i]:
+                continue
+            head += _read_group(groups[i]) + _GROUPS[i]
+    if frac.isdigit():
+        head += "てん" + "".join(_ONES[int(c)] if c != "0" else "れい" for c in frac)
+    return head
+
+
+def to_kana(text: str, read_digits: bool = False) -> str:
+    """Hiragana reading of a string.
+
+    ``read_digits`` also reads numerals aloud, which pykakasi does not do. Off by
+    default: turning it on changes every kana figure this project has published, so
+    it is requested explicitly by the coverage-aware wrappers rather than assumed.
+    """
+    if read_digits:
+        text = _DIGIT_RUN.sub(lambda m: read_number(m.group(0)), text)
     return "".join(item["hira"] for item in _kks.convert(text))
 
 
@@ -57,7 +158,7 @@ def _script(ch: str) -> str:
     return "other"
 
 
-def _same_reading(a: str, b: str) -> bool:
+def _same_reading(a: str, b: str, read_digits: bool = False) -> bool:
     """True when the two strings differ only in how the SAME word is written.
 
     Two guards, both needed:
@@ -71,14 +172,20 @@ def _same_reading(a: str, b: str) -> bool:
        in hiragana is the same word respelled, so it is forgiven; two different
        kanji words that merely share a reading are NOT, because a reader sees
        the wrong word.
+
+    ``read_digits`` extends guard 1 to numerals, so `2018年` and `にせんじゅうはちねん`
+    compare equal. Off by default, since it changes every figure already published
+    from this module; see ``to_kana``.
     """
     if a == b:
         return True
-    ka, kb = to_kana(a), to_kana(b)
+    ka, kb = to_kana(a, read_digits), to_kana(b, read_digits)
     if not ka or ka != kb:
         return False
     # Require that the difference is a script change, not a kanji-to-different
-    # -kanji swap: at least one side must contain no kanji at all.
+    # -kanji swap: at least one side must contain no kanji at all. A digit run
+    # counts as "not kanji" for this purpose: a numeral is a spelling of a number,
+    # not a word choice, so `2018年` vs `にせんじゅうはちねん` must pass here.
     a_kanji = any(_script(c) == "kanji" for c in a)
     b_kanji = any(_script(c) == "kanji" for c in b)
     if a_kanji and b_kanji:
@@ -93,12 +200,15 @@ def _same_reading(a: str, b: str) -> bool:
     return not ({"hira", "kata"} <= scripts)
 
 
-def lenient_ops(ref: str, hyp: str, context: int = 4):
+def lenient_ops(ref: str, hyp: str, context: int = 4, read_digits: bool = False):
     """Align once, then forgive edits that are only spelling differences.
 
     Returns (n_errors, forgiven, detail) where detail lists the forgiven pairs.
     Adjacent edit operations are grouped into regions before comparison, because
     a single orthographic variant usually shows up as several character edits.
+
+    ``read_digits`` also forgives digits-versus-spelled-out numbers; see ``to_kana``
+    for why that is opt-in.
     """
     ops = Levenshtein.editops(ref, hyp)
     if not ops:
@@ -140,7 +250,7 @@ def lenient_ops(ref: str, hyp: str, context: int = 4):
             j += 1
         r_core = r_seg[i : len(r_seg) - j]
         h_core = h_seg[i : len(h_seg) - j]
-        if _same_reading(r_core, h_core):
+        if _same_reading(r_core, h_core, read_digits):
             forgiven += cost
             detail.append((r_core, h_core, cost))
         else:
@@ -155,15 +265,22 @@ def main():
     p.add_argument("--verbose", action="store_true",
                    help="list the forgiven spelling variants")
     p.add_argument("--limit", type=int, default=25)
+    p.add_argument("--read-digits", action="store_true",
+                   help="also read numerals aloud, so 2018年 and にせんじゅうはちねん "
+                        "compare equal. pykakasi does not do this, so kana CER "
+                        "without it charges every digit/spelled-out difference as a "
+                        "misrecognition. Off by default because it changes every "
+                        "figure previously published from this script")
     a = p.parse_args()
 
     ref = normalize(load_text(a.reference))
     hyp = normalize(load_text(a.hypothesis))
 
     strict = Levenshtein.distance(ref, hyp)
-    kana_ref, kana_hyp = to_kana(ref), to_kana(hyp)
+    kana_ref = to_kana(ref, a.read_digits)
+    kana_hyp = to_kana(hyp, a.read_digits)
     kana_d = Levenshtein.distance(kana_ref, kana_hyp)
-    n_err, forgiven, detail = lenient_ops(ref, hyp)
+    n_err, forgiven, detail = lenient_ops(ref, hyp, read_digits=a.read_digits)
 
     print(f"ref_chars={len(ref)} hyp_chars={len(hyp)}")
     print(f"CER        = {strict / max(len(ref), 1):.4f}  ({strict} edits)")

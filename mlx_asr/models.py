@@ -1,8 +1,9 @@
 """The model registry: what `--model` accepts and how each one is run.
 
-This exists because the three engines here are not interchangeable in the way a
+This exists because the four engines here are not interchangeable in the way a
 single `--model` flag makes them look, and pretending otherwise produces bad
-numbers. The differences that matter, all measured (see docs/benchmarks/engines.md):
+numbers. The differences that matter, all measured except where noted (see
+docs/benchmarks/engines.md):
 
   voxtral       MLX. Batched, chunked, greedy: byte-identical across reruns *on one
                 machine*, so one run is its score, though GPU reduction order
@@ -21,6 +22,13 @@ numbers. The differences that matter, all measured (see docs/benchmarks/engines.
                 cannot carry state across windows: the sequential algorithm costs
                 these weights 68 points. Japanese only. The weights are a
                 third-party MLX conversion, since the authors publish torch only.
+  qwen3-asr     MLX, chunked long-form inside mlx-audio's own loader. Greedy
+                (`temperature=0.0` becomes `mx.argmax`, no fallback ladder), so
+                deterministic like Voxtral. It is the only engine here that does
+                real language identification and reports what it found. Its
+                timestamps are CHUNK boundaries, not speech boundaries, so
+                subtitle formats are refused rather than approximated (see
+                `no_speech_timestamps`).
 
 Everything here runs on MLX. A `transformers` backend used to exist, running
 kotoba through the authors' torch/MPS pipeline as a correctness reference; the MLX
@@ -43,7 +51,7 @@ class Model:
 
     alias: str
     repo: str
-    backend: str                  # voxtral | mlx-whisper | mlx-chunked
+    backend: str                  # voxtral | mlx-whisper | mlx-chunked | mlx-qwen3
     label: str
     languages: str = "multilingual"
     deterministic: bool = False
@@ -53,12 +61,24 @@ class Model:
     # Rough VRAM at the default batch, for the memory-derived fallback.
     weights_gb: float = 2.0
 
+    # True when this engine emits no timestamp finer than a chunk boundary, so a
+    # subtitle file made from it would be a lie. Data rather than derived from the
+    # backend string, because it is a property of the weights (no Qwen3-ASR variant
+    # has speech-level times) and the CLI has to refuse `-f srt` on it.
+    no_speech_timestamps: bool = False
+
     @property
     def needs_language(self) -> bool:
         """True if this backend takes a language token, i.e. guessing costs
         accuracy. Whisper autodetects from the first 30s, which on real material
-        misfires (it returned Russian for Japanese files here)."""
-        return self.backend in ("mlx-whisper", "mlx-chunked")
+        misfires (it returned Russian for Japanese files here).
+
+        Qwen3-ASR is included even though its own language ID is the best here,
+        because its multi-chunk autodetect path is buggy upstream: `language` is
+        reassigned inside the loop from the first chunk's detection, so later
+        chunks keep the `language X<asr_text>` prefix embedded in their text. An
+        explicitly passed language avoids that branch entirely."""
+        return self.backend in ("mlx-whisper", "mlx-chunked", "mlx-qwen3")
 
     @property
     def chunked_long_form(self) -> bool:
@@ -70,7 +90,7 @@ class Model:
         across 10-30s windows) and it is material-dependent, so it has to be
         reachable. The sequential `mlx-whisper` driver is excluded because its
         30s window is fixed by the model's positional encoding, not a choice."""
-        return self.backend == "mlx-chunked"
+        return self.backend in ("mlx-chunked", "mlx-qwen3")
 
 
 REGISTRY: dict[str, Model] = {
@@ -174,6 +194,46 @@ REGISTRY: dict[str, Model] = {
                   "points, because a 2-layer distil decoder cannot carry state "
                   "across windows",
         ),
+        Model(
+            alias="qwen3-asr",
+            repo="mlx-community/Qwen3-ASR-1.7B-8bit",
+            backend="mlx-qwen3",
+            label="Qwen3-ASR 1.7B (8-bit)",
+            deterministic=True,
+            weights_gb=2.3,
+            # 30s, and measured rather than inherited. The library default is
+            # 1200s, at which any file under 20 minutes is a single chunk: one
+            # segment, and the batched path can never engage since it needs more
+            # than one. Swept 15/30/60/120/300s on the 7-file corpus and, unlike
+            # every other engine here, shorter is better on ACCURACY, SPEED and
+            # MEMORY at once, monotonically: 19.98% / 21.42% / 23.55% / 62.47%
+            # coverage CER at 30/60/120/300s. Longer windows give a repetition
+            # loop a larger token budget to burn, so one loop wrecks more
+            # transcript and costs more time. 15s ties on accuracy (20.04%) and
+            # is faster, so this is a plateau rather than a boundary; 30s is the
+            # optimum. See docs/benchmarks/qwen3-asr.md.
+            opts={"chunk_length_s": 30.0},
+            no_speech_timestamps=True,
+            notes="greedy, so reproducible. Does real language ID and reports "
+                  "it. Timestamps are CHUNK boundaries only, so -f srt and "
+                  "-f vtt are refused; use txt or json",
+        ),
+        Model(
+            alias="qwen3-asr-small",
+            repo="mlx-community/Qwen3-ASR-0.6B-8bit",
+            backend="mlx-qwen3",
+            label="Qwen3-ASR 0.6B (8-bit)",
+            deterministic=True,
+            weights_gb=0.94,
+            # Same 30s as its sibling. The window sweep was run on the 1.7B; the
+            # mechanism behind it (a longer window gives a repetition loop a
+            # bigger budget) is a property of the decoding loop rather than of the
+            # size, so it carries over. Not separately measured.
+            opts={"chunk_length_s": 30.0},
+            no_speech_timestamps=True,
+            notes="the 0.6B sibling of qwen3-asr; same caveats, same refused "
+                  "output formats",
+        ),
     ]
 }
 
@@ -185,6 +245,13 @@ def infer_backend(repo: str) -> str:
     low = repo.lower()
     if "voxtral" in low:
         return "voxtral"
+    # Ahead of both the distil and whisper checks. These two name an *architecture*,
+    # so they are stronger evidence than the generic words "distil" and "whisper",
+    # which a derivative id can carry alongside them
+    # ("Qwen3-ASR-1.7B-whisper-distilled"). Routing such an id to either Whisper
+    # driver would fail on a config those loaders cannot read.
+    if "qwen3-asr" in low or "qwen3_asr" in low:
+        return "mlx-qwen3"
     # distil derivatives keep few decoder layers and need the chunked driver;
     # the sequential one costs kotoba 68 points (docs/benchmarks/engines.md)
     if "kotoba" in low or "distil" in low:
@@ -205,11 +272,23 @@ def resolve(name: str | None) -> Model:
         if m.repo == name:
             return m
     backend = infer_backend(name)
+    # The two greedy backends. An unlisted repo on either one still gets the
+    # `deterministic` flag right, because the CLI prints a "this engine samples"
+    # caveat off it and a wrong caveat is worse than none.
+    deterministic = backend in ("voxtral", "mlx-qwen3")
+    opts = {}
+    if backend == "mlx-whisper":
+        opts = {"condition_on_previous_text": False}
+    elif backend == "mlx-qwen3":
+        # Same as the registry entries: measured best on this corpus, against a
+        # library default of 1200s at which a sub-20-minute file is one chunk and
+        # one cue. See docs/benchmarks/qwen3-asr.md.
+        opts = {"chunk_length_s": 30.0}
     return Model(alias=name, repo=name, backend=backend,
                  label=name.split("/")[-1],
-                 deterministic=(backend == "voxtral"),
-                 opts=({"condition_on_previous_text": False}
-                       if backend == "mlx-whisper" else {}),
+                 deterministic=deterministic,
+                 opts=opts,
+                 no_speech_timestamps=(backend == "mlx-qwen3"),
                  notes="not in the registry; defaults inferred from the repo id")
 
 
@@ -223,6 +302,10 @@ def describe_registry() -> str:
             flags.append("deterministic")
         if m.languages != "multilingual":
             flags.append(m.languages)
+        # A caveat that changes which command a user can run at all, so it belongs
+        # in the one-line summary rather than only in the notes below it.
+        if m.no_speech_timestamps:
+            flags.append("no srt/vtt")
         tag = ("  [" + ", ".join(flags) + "]") if flags else ""
         rows.append(f"  {alias:<{width}}  {m.label}{tag}")
         rows.append(f"  {'':<{width}}  {m.repo}")

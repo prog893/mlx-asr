@@ -4,7 +4,7 @@
     mlx-asr audio.wav --model whisper-turbo
     mlx-asr --list-models
 
-One CLI over three engines, because on measured evidence no single one wins
+One CLI over four engines, because on measured evidence no single one wins
 everything (docs/benchmarks/engines.md):
 
     voxtral        fastest, deterministic, best timestamp stability, no language
@@ -14,6 +14,9 @@ everything (docs/benchmarks/engines.md):
     kotoba         Japanese-specialised. Runs on MLX through our own chunked
                    driver (chunked.py), since Whisper's sequential algorithm
                    costs a 2-layer distil decoder 68 points.
+    qwen3-asr      deterministic and does real language ID, but emits no
+                   timestamp finer than its own chunk boundaries, so `-f srt`
+                   and `-f vtt` are refused on it: txt and json only.
 
 Defaults per model come from `models.py`; defaults per machine come from
 `hardware.py`, which uses measured profiles where a machine has been benchmarked
@@ -21,7 +24,7 @@ and a formula elsewhere. Batch size is not a fixed constant because throughput i
 not monotonic in it: on a 16GB M4, B=2..8 is *slower* per step than B=1 (see
 docs/benchmarks/decode-throughput.md), so "bigger batch is better" lands in the worst regime.
 
-The flags are mostly NOT portable across the three engines, because the engines do
+The flags are mostly NOT portable across the four engines, because the engines do
 not share a long-form algorithm. **An unsupported flag is a hard error** (exit 2),
 never a warning and never silently dropped: a flag that looks accepted and then
 does nothing yields output the user reads as having been produced with it, which is
@@ -32,6 +35,10 @@ rejects `--language`, the one flag that applies everywhere except here.
 thing on each side (chunk length for Voxtral, independent-window length for the
 chunked drivers, and unsupported on sequential Whisper, whose 30s window is fixed by
 the model).
+
+The same rule covers `-f`: an *output format* the engine cannot honestly produce is
+refused too (`UnsupportedFormat`), which is why `-f srt` exits 2 on `qwen3-asr`
+instead of writing a file whose cue boundaries are decode windows.
 """
 
 import argparse
@@ -53,7 +60,7 @@ from .audio import (
     split_with_overlap,
 )
 from .hardware import machine_info, resolve_profile
-from .languages import UnknownLanguage, to_iso
+from .languages import UnknownLanguage, to_english_name, to_iso
 from .models import DEFAULT_ALIAS, REGISTRY, describe_registry, resolve as resolve_model
 from .output import WRITERS, build_cues
 from .text import transcript_text, write_text
@@ -64,27 +71,54 @@ PROG = "mlx-asr"
 class UnsupportedFlags(Exception):
     """A flag was passed that the selected engine cannot honour.
 
-    An error rather than a warning on purpose. The three engines do not share a
+    An error rather than a warning on purpose. The engines do not share a
     long-form algorithm, so most flags belong to exactly one of them; a flag that
     is accepted and then quietly does nothing yields output the user will read as
     having been produced with it. That is how a published break-F1 figure in this
     project came to describe a cue config the CLI never applied.
+
+    ``hint`` overrides the default explanation, for the cases where the reason is
+    specific to one engine rather than "this is Voxtral-only".
     """
 
-    def __init__(self, flags, alias):
+    def __init__(self, flags, alias, hint=None):
         self.flags, self.alias = flags, alias
         # --language is the one flag that goes the other way: every engine but
         # Voxtral takes it, so the remedy differs.
-        if flags == ["--language"]:
+        if hint is None and flags == ["--language"]:
             hint = (f"{alias} detects the language itself and takes no language "
-                    f"token. Drop the flag, or pass it to a whisper-* or kotoba "
-                    f"model.")
-        else:
+                    f"token. Drop the flag, or pass it to a whisper-*, kotoba or "
+                    f"qwen3-asr model.")
+        elif hint is None:
             hint = ("These are Voxtral-only, because the engines do not share a "
                     "long-form algorithm. Drop the flag, or use the default "
                     "--model voxtral.")
         super().__init__(f"{', '.join(flags)}: not supported by --model {alias}. "
                          + hint)
+
+
+class UnsupportedFormat(Exception):
+    """The selected engine cannot produce the requested output format.
+
+    Separate from ``UnsupportedFlags`` because the reason is a property of the
+    weights rather than of the driver, and the remedy is a different format rather
+    than a different engine. Same exit code (2) and the same principle: Qwen3-ASR
+    emits nothing finer than a chunk boundary, so writing an SRT from it would
+    produce a file whose cue times are the window the text came from. One cue
+    holding a whole transcript is not a subtitle track, and a user who asked for
+    one and got that would have no way to tell.
+    """
+
+    def __init__(self, fmt, alias, ok_formats=("txt", "json")):
+        self.fmt, self.alias = fmt, alias
+        super().__init__(
+            f"-f {fmt}: --model {alias} produces no speech-level timestamps, so a "
+            f"{fmt} file from it would hold one cue per decode window (up to the "
+            f"whole transcript in a single cue) rather than per phrase. Its "
+            f"segment times are chunk boundaries, and no variant of these weights "
+            f"has finer ones. Use -f {' or -f '.join(ok_formats)}, or a "
+            f"whisper-*/voxtral model for subtitles."
+        )
 
 
 def _resolved_cue_config(overrides: dict) -> dict:
@@ -117,12 +151,34 @@ def _write_outputs(a, cues, full_text, meta, log):
         log(f"[saved] {path}")
 
 
+TIMESTAMPED_FORMATS = ("srt", "vtt")
+
+
+def _check_output_format(a, spec):
+    """Refuse a subtitle format on an engine with no speech-level timestamps.
+
+    Checked before anything is loaded or decoded, so a 93-minute file is not read
+    to produce a file that cannot be right. `-f all` is refused for the same
+    reason it would be wrong to write two of its four formats and say nothing:
+    that is the silent-ignore failure this CLI rejects everywhere else.
+    """
+    if not spec.no_speech_timestamps:
+        return
+    wanted = list(WRITERS) if a.output_format == "all" else [a.output_format]
+    bad = [f for f in wanted if f in TIMESTAMPED_FORMATS]
+    if bad:
+        raise UnsupportedFormat("all" if a.output_format == "all" else bad[0],
+                                spec.alias)
+
+
 def _run_other_backend(a, spec, log, t_start):
-    """Whisper / transformers path. Kept separate from the Voxtral path because
-    almost none of the Voxtral machinery (batching, chunk seams, KV quantization,
-    prompt bias) applies, and pretending otherwise would mean silently ignoring
-    half the flags the user passed."""
+    """Whisper / kotoba / Qwen3-ASR path. Kept separate from the Voxtral path
+    because almost none of the Voxtral machinery (batching, chunk seams, KV
+    quantization, prompt bias) applies, and pretending otherwise would mean
+    silently ignoring half the flags the user passed."""
     from .backends import run
+
+    _check_output_format(a, spec)
 
     # --chunk-seconds is the one chunking flag that carries over, and only to the
     # chunked drivers: there it picks the window length, which is the largest
@@ -165,12 +221,32 @@ def _run_other_backend(a, spec, log, t_start):
         ("--max-dur-seconds", a.max_dur_seconds),
     ) if val]
     if unsupported:
-        raise UnsupportedFlags(unsupported, spec.alias)
+        hint = None
+        # Qwen3-ASR is the one engine where --max-batch is refused for a reason
+        # other than "the knob does not exist". It does: `generate(batch_size=)`
+        # batches whole chunks. But it is a no-op unless the audio produces more
+        # than one chunk, and the only batch-size guidance this project has
+        # ("never use 2-8") was measured on Voxtral's decoder, which shares
+        # nothing with this one. Refusing beats shipping a knob whose effect is
+        # unmeasured here and silently nothing at the default window.
+        if spec.backend == "mlx-qwen3" and unsupported == ["--max-batch"]:
+            hint = (f"{spec.alias} does batch whole chunks upstream, but only "
+                    f"when the audio yields more than one, and this project has "
+                    f"measured nothing about the right value for this decoder. "
+                    f"Refused rather than exposed unmeasured. Lower "
+                    f"--chunk-seconds if you want more, shorter windows.")
+        raise UnsupportedFlags(unsupported, spec.alias, hint)
     # Validated HERE rather than inside the backend, so a typo costs nothing. The audio
     # decode below reads the whole file, which on a 93-minute recording is not free, and
     # rejecting the argument afterwards would be a slow way to say "you meant jp".
     if a.language:
-        to_iso(a.language, spec.alias)
+        if spec.backend == "mlx-qwen3":
+            # Qwen wants an English name, and its accepted set is narrower than
+            # "any valid ISO code", so validating with to_iso here would pass a
+            # language the model does not have and fail later, after the decode.
+            to_english_name(a.language, None, spec.alias)
+        else:
+            to_iso(a.language, spec.alias)
     if not spec.deterministic:
         log(f"[{spec.backend}] this engine samples, so repeat runs differ "
             f"(~0.5 CER points on our corpus); it is not reproducible like "
@@ -226,12 +302,20 @@ def build_parser():
                    help="show the model registry with per-model caveats and exit")
     p.add_argument("--language",
                    help="language of the audio, in any spelling: ja, ja_JP, jpn and "
-                        "Japanese all work, and each engine gets the form it wants. "
+                        "Japanese all work, and each engine gets the form it wants "
+                        "(whisper-* a code, qwen3-asr an English name). "
                         "Whisper autodetects when omitted, which misfires on "
-                        "mixed-language audio. Voxtral takes no language token and "
+                        "mixed-language audio; qwen3-asr is forced to English when "
+                        "omitted, because its own autodetect corrupts multi-chunk "
+                        "text upstream. Voxtral takes no language token and "
                         "rejects this flag. An unrecognised value is an error")
     p.add_argument("-f", "--output-format", default="srt",
-                   choices=[*WRITERS.keys(), "all"])
+                   choices=[*WRITERS.keys(), "all"],
+                   help="srt/vtt/txt/json, or all. srt and vtt are an ERROR on "
+                        "engines that emit no speech-level timestamps "
+                        "(qwen3-asr): its cue times are decode-window "
+                        "boundaries, so a subtitle file would be one cue holding "
+                        "everything")
     p.add_argument("-o", "--output", help="output path (default: input stem + ext)")
     p.add_argument("--prompt",
                    help="domain keywords or a topic sentence, in the same language as "
@@ -246,11 +330,15 @@ def build_parser():
                    help="chunk/window length. Voxtral: default from the hardware "
                         "profile, and a throughput knob rather than an accuracy one. "
                         "kotoba: the window length, and its biggest lever by far; it is "
-                        "material-dependent, so sweep it on your own audio. Ignored by "
+                        "material-dependent, so sweep it on your own audio. qwen3-asr: "
+                        "the window length too, defaulted to 30s here rather than the "
+                        "library's 1200s, at which any file under 20 minutes is a "
+                        "single window. Ignored by "
                         "the whisper-* models, whose 30s window is fixed. "
                         "See docs/benchmarks/chunking.md")
     p.add_argument("--max-batch", type=int, default=None,
-                   help="default: from the hardware profile (see mlx-asr-bench)")
+                   help="default: from the hardware profile (see mlx-asr-bench). "
+                        "Voxtral only")
     p.add_argument("--delay-ms", type=int, default=2400,
                    help="transcription delay. The largest accuracy lever here and it "
                         "costs no speed; 2400 is both the default and the maximum the "
@@ -532,6 +620,12 @@ def cli():
     except UnsupportedFlags as e:
         # 2, matching argparse's usage-error convention: this is a bad invocation,
         # not a failure to process the input.
+        print(f"error: {e}", file=sys.stderr)
+        return 2
+    except UnsupportedFormat as e:
+        # Also 2, and for the same reason as the flags: asking an engine for a
+        # subtitle file it cannot honestly produce is a bad invocation. Writing a
+        # one-cue SRT and warning would leave a plausible-looking file on disk.
         print(f"error: {e}", file=sys.stderr)
         return 2
     except UnknownLanguage as e:
