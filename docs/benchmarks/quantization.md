@@ -1,7 +1,9 @@
 # Lever: weight and KV-cache precision
 
-**Voxtral only.** `--kv-bits` and the weight choice apply to our own batched decoder. The
-`whisper-*` aliases point at fp16 MLX conversions and take no precision flag; whisper.cpp
+**`--kv-bits` is Voxtral only**, since it applies to our own batched decoder.
+**`--quantization` works on any model that publishes more than one build**, currently
+`voxtral` and the two `qwen3-asr*` models; the `whisper-*` aliases point at fp16 MLX
+conversions with no quantized builds in use here, so it errors there. whisper.cpp
 quantization is covered in [engines.md](engines.md), where it costs speed rather than
 accuracy.
 
@@ -25,7 +27,7 @@ The default is picked by this rule, in this order:
 
 | model | default | other options | why that default |
 |---|---|---|---|
-| `voxtral` | 4-bit | none published that load | fp16 is 8.9GB of weights, 15.3GB peak and 1.6x the wall clock, for 0.07 CER points. Measured below |
+| `voxtral` | 4-bit | `fp16` | fp16 is 8.9GB of weights, 15.3GB peak and 1.6x the wall clock, for 0.07 CER points. Measured below |
 | `whisper-*` | fp16 | none | 0.08-3.1GB; no quantized MLX builds in use here |
 | `kotoba` | fp16 | none | 1.6GB, converted on first use |
 | `qwen3-asr` | **8-bit** | 4bit, 5bit, 6bit, bf16 | bf16 **tied** it on accuracy (20.16% vs 19.98%) while costing **1.36x the wall clock** (14.1x vs 19.2x) and **1.4x the peak memory** (5.66 vs 4.05GB) |
@@ -44,6 +46,22 @@ runtime conversion, so only precisions that exist are accepted and an unpublishe
 an error naming what does exist rather than a 404 mid-download. It therefore does not
 combine with a repo id passed to `--model`, which already names its own precision, and it
 errors on models that ship a single build. `--list-models` prints the options per model.
+
+`none` resolves to whichever unquantized build a model publishes, which is not the same
+name everywhere: bf16 for Qwen3-ASR, fp16 for Voxtral. Both spellings work on either.
+
+On `voxtral` the flag also moves the **weight footprint used to size the batch**. That is
+not bookkeeping: `derive_batch` subtracts it from the GPU budget, so on an unprofiled
+16GB-class machine 4-bit derives batch 32 and fp16 derives batch 1. Claiming 4-bit's
+2.5GB while loading 8.9GB would plan for memory already spent, and the failure would
+surface as an OOM rather than as a bad default.
+
+**Two published Voxtral quants are deliberately absent**, because they crash rather than
+run: `mlx-community/Voxtral-Mini-4B-Realtime-6bit` and
+`ellamind/Voxtral-Mini-4B-Realtime-8bit-mlx` ship a `config.json` with no `model_type`,
+so mlx-audio routes them to the non-realtime loader and dies in `post_load_hook`
+(re-verified 2026-08-20). Listing them would turn a usage error into a crash after a
+multi-gigabyte download.
 
 **A full ladder is not swept per model.** The sweep below answered the general question
 once (is quantization silently costing quality?) and the answer was no, by a margin far
@@ -155,6 +173,9 @@ returns triples that the dense `mx.fast.scaled_dot_product_attention` rejects.
 `config.json` with no `model_type`, so mlx-audio routes them to the non-realtime
 `voxtral` loader and dies in `post_load_hook`. That is a repo packaging problem, not a
 precision result, and the locally converted 8-bit row above covers the same point.
+
+Still true on 2026-08-20, which is why `--quantization` on `voxtral` offers only `4bit`
+and `fp16`: those are the builds that load.
 
 ## Adjacent questions that came up and were closed
 

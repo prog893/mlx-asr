@@ -102,6 +102,31 @@ class Model:
     # one precision and `--quantization` is refused on it.
     quant_repos: dict = field(default_factory=dict)
 
+    # Precision -> weights on disk, GB, where it differs enough to matter.
+    #
+    # Separate from `quant_repos` and not always populated, because it only feeds the
+    # batch-size fallback on the Voxtral path. Getting it wrong there is not cosmetic:
+    # `derive_batch` subtracts the weight footprint from the GPU budget, so running
+    # fp16 (8.9GB) while claiming 2.5GB would size a batch for memory the machine does
+    # not have. Any precision absent here falls back to `weights_gb`.
+    quant_weights_gb: dict = field(default_factory=dict)
+
+    # Spellings of "no quantization". The published unquantized build is named bf16
+    # for Qwen3-ASR and fp16 for Voxtral, so both are accepted for either and the
+    # lookup below resolves whichever that alias actually publishes.
+    _FULL_PRECISION_ALIASES = ("none", "full", "fp16", "f16", "bf16")
+
+    def _quant_key(self, quant: str) -> str:
+        """Normalise a requested precision to a key in `quant_repos`."""
+        key = quant.strip().lower()
+        if key not in self._FULL_PRECISION_ALIASES:
+            return key
+        # Whichever name this alias publishes its unquantized build under.
+        for candidate in ("bf16", "fp16"):
+            if candidate in self.quant_repos:
+                return candidate
+        return key
+
     def repo_for(self, quant: str | None) -> str:
         """The repo id for a requested precision. Raises on an unpublished one.
 
@@ -111,15 +136,17 @@ class Model:
         """
         if not quant:
             return self.repo
-        key = quant.lower()
-        # "none" means unquantized, which is what the caller means by "no
-        # quantization" even though the published build is named bf16.
-        if key in ("none", "full", "fp16", "f16", "bf16"):
-            key = "bf16"
+        key = self._quant_key(quant)
         if key in self.quant_repos:
             return self.quant_repos[key]
         raise UnknownQuantization(quant, self.quant_repos, self.alias,
                                   is_repo_id=(self.alias == self.repo))
+
+    def weights_gb_for(self, quant: str | None) -> float:
+        """Weight footprint for a precision, for the batch-size fallback."""
+        if not quant:
+            return self.weights_gb
+        return self.quant_weights_gb.get(self._quant_key(quant), self.weights_gb)
 
     @property
     def needs_language(self) -> bool:
@@ -157,8 +184,30 @@ REGISTRY: dict[str, Model] = {
             label="Voxtral Realtime 4B (4-bit)",
             deterministic=True,
             weights_gb=2.5,
+            # Only the two builds that LOAD. `mlx-community/...-6bit` and
+            # `ellamind/...-8bit-mlx` both ship a config.json with no `model_type`,
+            # so mlx-audio routes them to the non-realtime `voxtral` loader and dies
+            # in post_load_hook with "TokenizersBackend has no attribute tokenizer".
+            # Verified still true on 2026-08-20. Listing them would turn a usage
+            # error into a crash after a multi-gigabyte download, which is strictly
+            # worse than saying they are unavailable.
+            #
+            # 4-bit is the default and it is measured: fp16 through 4-bit span 0.43
+            # CER points on the narration clip (a tie), while fp16 costs 1.6x the
+            # wall clock and 15.3GB of peak memory against 9.4GB. So the ladder here
+            # exists to let someone verify that on their own audio, not because a
+            # higher precision is expected to help.
+            quant_repos={
+                "4bit": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+                "fp16": "mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16",
+            },
+            # fp16 is 8.9GB on disk against 4-bit's 3.15GB, and this number is
+            # subtracted from the GPU budget when sizing a batch. A 16GB machine
+            # cannot run fp16 at all, and it must not be told it can.
+            quant_weights_gb={"4bit": 2.5, "fp16": 8.9},
             notes="fastest here; greedy so reproducible; no language token; "
-                  "best timestamp stability",
+                  "best timestamp stability. --quantization takes 4bit or "
+                  "none/fp16 (fp16 is a tie on accuracy at 1.6x the cost)",
         ),
         Model(
             alias="whisper-turbo",
@@ -393,8 +442,15 @@ def quantization_help() -> str:
 
 
 def _quant_sort_key(q: str):
-    """Order precisions smallest-first, with bf16 last rather than alphabetically."""
-    return (1, 0) if q == "bf16" else (0, int(q.rstrip("bit")))
+    """Order precisions smallest-first, unquantized last rather than alphabetically.
+
+    Alphabetical would put bf16 and fp16 first and read as though they were the
+    default. Anything that is not an `<n>bit` name sorts last, so a precision naming
+    scheme this does not know about degrades to the end of the list instead of raising
+    (an earlier version did `int(q.rstrip("bit"))` and crashed `--help` on `fp16`).
+    """
+    digits = q[:-3] if q.endswith("bit") else ""
+    return (0, int(digits)) if digits.isdigit() else (1, q)
 
 
 def describe_registry() -> str:

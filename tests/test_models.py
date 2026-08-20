@@ -186,6 +186,63 @@ def test_quantization_maps_to_published_repos_only():
             m.repo_for(absent)
 
 
+def test_voxtral_offers_only_the_builds_that_load():
+    """Two published Voxtral quants CRASH rather than run.
+
+    `mlx-community/...-6bit` and `ellamind/...-8bit-mlx` ship a config.json with no
+    `model_type`, so mlx-audio routes them to the non-realtime loader and dies in
+    post_load_hook. Listing them would turn a usage error into a crash after a
+    multi-gigabyte download, so the ladder holds only the two that work.
+    """
+    m = REGISTRY["voxtral"]
+    assert set(m.quant_repos) == {"4bit", "fp16"}, m.quant_repos
+    for repo in m.quant_repos.values():
+        assert "6bit" not in repo and "8bit" not in repo, repo
+        assert repo.startswith("mlx-community/"), repo
+
+
+def test_voxtral_weights_gb_travels_with_the_precision():
+    """The coupling that would otherwise mis-size a batch silently.
+
+    `derive_batch` subtracts the weight footprint from the GPU budget, so running fp16
+    (8.9GB) while still claiming 4-bit's 2.5GB plans for ~6.4GB of memory that is
+    already spent. The failure would surface as an OOM, not as a bad default.
+    """
+    m = REGISTRY["voxtral"]
+    assert m.weights_gb_for(None) == m.weights_gb
+    assert m.weights_gb_for("4bit") == 2.5
+    assert m.weights_gb_for("fp16") == 8.9
+    assert m.weights_gb_for("none") == 8.9        # 'none' resolves to fp16 here
+    # And it really changes the derived batch, rather than just being recorded.
+    from mlx_asr.hardware import derive_batch
+
+    small = derive_batch(gpu_gb=12.7, weights_gb=8.9, chunk_seconds=60.0,
+                         gpu_cores=10)
+    big = derive_batch(gpu_gb=12.7, weights_gb=2.5, chunk_seconds=60.0, gpu_cores=10)
+    assert small < big or small == 1, (small, big)
+
+
+def test_none_resolves_per_alias_to_whatever_that_model_publishes():
+    """Qwen3-ASR publishes its unquantized build as bf16 and Voxtral as fp16, so
+    `--quantization none` cannot map to a single fixed name."""
+    assert REGISTRY["voxtral"].repo_for("none").endswith("-fp16")
+    assert REGISTRY["qwen3-asr"].repo_for("none").endswith("-bf16")
+    # And each accepts the other's spelling, since a user should not have to know.
+    assert REGISTRY["voxtral"].repo_for("bf16").endswith("-fp16")
+    assert REGISTRY["qwen3-asr"].repo_for("fp16").endswith("-bf16")
+
+
+def test_precisions_sort_smallest_first_with_unquantized_last():
+    """Alphabetical would put bf16/fp16 first and read as the default. A name this
+    does not parse must sort last rather than raise: an earlier version did
+    `int(q.rstrip("bit"))` and crashed --help on `fp16`."""
+    from mlx_asr.models import _quant_sort_key
+
+    assert sorted(["fp16", "8bit", "4bit", "6bit"], key=_quant_sort_key) == [
+        "4bit", "6bit", "8bit", "fp16"]
+    assert sorted(["bf16", "4bit", "weird"], key=_quant_sort_key)[0] == "4bit"
+
+
 def test_none_means_unquantized():
     """What a user means by "no quantization" is bf16 here, and several spellings of
     that are reasonable to type."""
@@ -218,7 +275,7 @@ def test_eight_bit_is_the_default_and_it_is_the_measured_one():
 def test_an_alias_with_one_precision_refuses_the_flag():
     from mlx_asr.models import UnknownQuantization
 
-    for alias in ("voxtral", "whisper-turbo", "kotoba"):
+    for alias in ("whisper-turbo", "whisper-tiny", "kotoba"):
         assert not REGISTRY[alias].quant_repos, alias
         with pytest.raises(UnknownQuantization) as e:
             REGISTRY[alias].repo_for("4bit")

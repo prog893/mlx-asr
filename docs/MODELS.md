@@ -176,7 +176,7 @@ did exactly that once, with a subtitle-cue setting.
 | `--language` | **error** (takes no language token) | **used** (guessing costs 25 points) | forced to `ja` | **used**, as an English *name*; defaults to English rather than autodetecting |
 | `--chunk-seconds` | chunk length | **error** (30s window is fixed by the model) | **window length, its biggest lever** | window length; **30s** here (measured), not the library's 1200s |
 | `-f srt` / `-f vtt` / `-f all` | yes | yes | yes | **error** (no speech-level timestamps) |
-| `--quantization` | error (one build) | error (one build) | error (one build) | **used**: 4bit, 5bit, 6bit, 8bit (default), bf16 |
+| `--quantization` | **used**: 4bit (default), fp16 | error (one build) | error (one build) | **used**: 4bit, 5bit, 6bit, 8bit (default), bf16 |
 | `--max-batch` | yes | error | error | error, with a different reason (see below) |
 | `--delay-ms` | yes | error | error | error |
 | `--kv-bits` / `--no-kv-quant` | yes | error | error | error |
@@ -214,6 +214,7 @@ All verified working through the brew binary.
 | `--delay-ms` | int | `2400` | the biggest accuracy lever, and free: 25.62% at 480ms, 20.51% at 960ms, 16.44% at 2400ms, at the same speed |
 | `--chunk-seconds` | float | per machine (60s) | 60s vs 30s is not resolvable at n=20 (+0.10 points, CI [-1.89, +2.03]), so pick on speed |
 | `--max-batch` | int | per machine | throughput is **not monotonic** in this: B=2..8 is slower per step than B=1 |
+| `--quantization` | `4bit` `fp16`/`none` | `4bit` | fp16 is a **tie** on accuracy (0.07 points, CI [-0.33, +0.48]) at 1.6x the wall clock and 15.3GB peak against 9.4GB, so it does not fit 16GB. It also moves the batch the run plans for. The 6bit and 8bit repos on the hub do not load |
 | `--kv-bits` | `4` or `8` | `8` | free: slightly faster, 39 of 40 scored regions identical to unquantized |
 | `--no-kv-quant` | flag | off | disables the above |
 | `--fast` | flag | off | halves the chunk, doubles the batch, adds warm-up overlap. Declines automatically when it would not help |

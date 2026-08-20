@@ -493,7 +493,7 @@ def test_quantization_is_refused_rather_than_ignored_everywhere_it_cannot_apply(
     cases = [
         # (model, expected fragment)
         ("whisper-turbo", "ships one precision"),
-        ("voxtral", "ships one precision"),
+        ("kotoba", "ships one precision"),
         ("mlx-community/Qwen3-ASR-1.7B-4bit", "only supported for the built-in models"),
     ]
     for model, fragment in cases:

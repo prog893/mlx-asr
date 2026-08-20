@@ -346,13 +346,15 @@ def build_parser():
                         "See docs/benchmarks/chunking.md")
     p.add_argument("--quantization", default=None, metavar="PRECISION",
                    help=f"weight precision, where the alias publishes a choice. "
-                        f"Per model: {quantization_help()}. 'none' is an alias for "
-                        f"bf16. The defaults are measured, not assumed: bf16 tied "
-                        f"8bit on accuracy (20.16%% vs 19.98%%) at 1.36x the wall "
-                        f"clock and 1.4x the peak memory, so 8bit ships. Smaller is "
-                        f"a real choice on a small machine (4bit is 1.61GB against "
-                        f"bf16's 4.08GB) but is UNMEASURED below 8bit here. An "
-                        f"unpublished value is an error naming what exists. "
+                        f"Per model: {quantization_help()}. 'none' means whichever "
+                        f"unquantized build that model publishes (bf16 or fp16). "
+                        f"The defaults are measured: on qwen3-asr bf16 tied 8bit "
+                        f"(20.16%% vs 19.98%%) at 1.36x the wall clock and 1.4x the "
+                        f"peak memory, and on voxtral fp16 tied 4bit at 1.6x the "
+                        f"wall clock and 15.3GB of peak memory against 9.4GB, so it "
+                        f"does not fit 16GB at all. Going BELOW each default is a "
+                        f"size choice and is unmeasured here. An unpublished value "
+                        f"is an error naming what exists. "
                         f"See docs/benchmarks/quantization.md")
     p.add_argument("--max-batch", type=int, default=None,
                    help="default: from the hardware profile (see mlx-asr-bench). "
@@ -435,10 +437,17 @@ def main(argv=None):
     if a.quantization:
         repo = spec.repo_for(a.quantization)      # raises UnknownQuantization
         if repo != spec.repo:
+            # weights_gb travels with the repo. On the Voxtral path it is subtracted
+            # from the GPU budget to size a batch, so leaving it at the 4-bit value
+            # while loading fp16 would plan for 6.4GB of memory that is already
+            # spent, and the failure would look like an OOM rather than a bad
+            # default. Harmless on the other backends, which do their own batching.
             spec = replace(spec, repo=repo,
+                           weights_gb=spec.weights_gb_for(a.quantization),
                            label=f"{spec.label.rsplit(' (', 1)[0]} "
                                  f"({a.quantization})")
-            log(f"[model] --quantization {a.quantization} -> {repo}")
+            log(f"[model] --quantization {a.quantization} -> {repo} "
+                f"({spec.weights_gb:g}GB weights)")
 
     # Non-Voxtral engines do their own long-form segmentation, so they skip the
     # chunking/batching path entirely and only share the output writers.
@@ -621,6 +630,12 @@ def main(argv=None):
             json.dump({
                 "duration_s": duration, "wall_s": total,
                 "x_realtime": duration / total, "model": spec.repo,
+                # `model` already names the precision, but only if you know the repo
+                # naming. Recorded separately because weight precision changes the
+                # batch this run planned for, so a throughput figure is not
+                # comparable across it.
+                "quantization": a.quantization or "default",
+                "weights_gb": spec.weights_gb,
                 "chunks": len(chunks), "chunk_seconds": chunk_s, "batch": batch,
                 "overlap_seconds": overlap_s,
                 "delay_ms": a.delay_ms, "kv_bits": kv_bits,
