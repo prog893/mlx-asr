@@ -11,6 +11,54 @@ inside the noise, while fp16 costs 1.6x the wall clock and 15.3GB of peak memory
 9.4GB. **Use 4-bit.** `--kv-bits 8` is separately close to free and is on by default.
 Do not read 4-bit landing nominally best as evidence that quantization helps.
 
+## The policy: one measured default per model, and `--quantization` to override it
+
+Each model ships **one default precision, chosen by measurement where a choice exists**,
+and `--quantization` exposes the rest where the converters published more than one build.
+
+The default is picked by this rule, in this order:
+
+1. **Take the cheapest precision that costs no measurable accuracy.** Precision buys
+   nothing on this workload (the sweep below spans 0.43 CER points from fp16 to 4-bit,
+   inside the noise), so paying for it in time and memory is a bad trade.
+2. **Where only one build exists, ship that.** Nothing to choose.
+
+| model | default | other options | why that default |
+|---|---|---|---|
+| `voxtral` | 4-bit | none published that load | fp16 is 8.9GB of weights, 15.3GB peak and 1.6x the wall clock, for 0.07 CER points. Measured below |
+| `whisper-*` | fp16 | none | 0.08-3.1GB; no quantized MLX builds in use here |
+| `kotoba` | fp16 | none | 1.6GB, converted on first use |
+| `qwen3-asr` | **8-bit** | 4bit, 5bit, 6bit, bf16 | bf16 **tied** it on accuracy (20.16% vs 19.98%) while costing **1.36x the wall clock** (14.1x vs 19.2x) and **1.4x the peak memory** (5.66 vs 4.05GB) |
+| `qwen3-asr-small` | **8-bit** | 4bit, 5bit, 6bit, bf16 | same, and the gap is wider: bf16 26.24% vs 23.27%, and 23.0x vs 32.8x, which would remove the only reason this model ships |
+
+So the shorthand is a precision name rather than a repo id:
+
+```bash
+mlx-asr jp.wav --model qwen3-asr --language ja -f txt                      # 8-bit
+mlx-asr jp.wav --model qwen3-asr --language ja -f txt --quantization 4bit  # 1.61GB
+mlx-asr jp.wav --model qwen3-asr --language ja -f txt --quantization none  # bf16
+```
+
+`--quantization` is a **lookup from (model, precision) to a published repo id**, not a
+runtime conversion, so only precisions that exist are accepted and an unpublished one is
+an error naming what does exist rather than a 404 mid-download. It therefore does not
+combine with a repo id passed to `--model`, which already names its own precision, and it
+errors on models that ship a single build. `--list-models` prints the options per model.
+
+**A full ladder is not swept per model.** The sweep below answered the general question
+once (is quantization silently costing quality?) and the answer was no, by a margin far
+under what this corpus can resolve: at n=7 it resolves about 3.2 points, and 8-bit versus
+4-bit would need roughly 1,000 files. New models therefore inherit that conclusion, and a
+single bf16-versus-default check is run to confirm the default rather than a five-arm
+ladder. **4bit through 6bit on `qwen3-asr*` are exposed but unmeasured here**, which the
+`--help` text says.
+
+The one thing worth checking afresh on a new engine is not accuracy but **decoder
+degeneracy**, where the effect size is large rather than fractional. On Qwen3-ASR it made
+no difference: bf16 and 8-bit produced near-identical repetition-loop counts (2/0/18/0/31
+against 3/0/19/0/31 per file), so its loops are not a quantization artifact. See
+[qwen3-asr.md](qwen3-asr.md).
+
 ## Corpus
 
 The single 935s Japanese prepared-narration clip with a complete verbatim reference, so

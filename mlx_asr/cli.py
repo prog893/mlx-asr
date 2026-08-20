@@ -46,6 +46,7 @@ import inspect
 import json
 import sys
 import time
+from dataclasses import replace
 from pathlib import Path
 
 import mlx.core as mx
@@ -61,7 +62,14 @@ from .audio import (
 )
 from .hardware import machine_info, resolve_profile
 from .languages import UnknownLanguage, to_english_name, to_iso
-from .models import DEFAULT_ALIAS, REGISTRY, describe_registry, resolve as resolve_model
+from .models import (
+    DEFAULT_ALIAS,
+    REGISTRY,
+    UnknownQuantization,
+    describe_registry,
+    quantization_help,
+    resolve as resolve_model,
+)
 from .output import WRITERS, build_cues
 from .text import transcript_text, write_text
 
@@ -295,11 +303,11 @@ def build_parser():
     p.add_argument("audio", nargs="?",
                    help="input audio/video file (anything ffmpeg reads)")
     p.add_argument("--model", default=DEFAULT_ALIAS,
-                   help=f"registry alias or any HF repo id "
+                   help=f"a built-in model name or any HF repo id "
                         f"(default: {DEFAULT_ALIAS}). "
                         f"Aliases: {', '.join(REGISTRY)}")
     p.add_argument("--list-models", action="store_true",
-                   help="show the model registry with per-model caveats and exit")
+                   help="list the built-in models with their caveats and exit")
     p.add_argument("--language",
                    help="language of the audio, in any spelling: ja, ja_JP, jpn and "
                         "Japanese all work, and each engine gets the form it wants "
@@ -336,6 +344,16 @@ def build_parser():
                         "single window. Ignored by "
                         "the whisper-* models, whose 30s window is fixed. "
                         "See docs/benchmarks/chunking.md")
+    p.add_argument("--quantization", default=None, metavar="PRECISION",
+                   help=f"weight precision, where the alias publishes a choice. "
+                        f"Per model: {quantization_help()}. 'none' is an alias for "
+                        f"bf16. The defaults are measured, not assumed: bf16 tied "
+                        f"8bit on accuracy (20.16%% vs 19.98%%) at 1.36x the wall "
+                        f"clock and 1.4x the peak memory, so 8bit ships. Smaller is "
+                        f"a real choice on a small machine (4bit is 1.61GB against "
+                        f"bf16's 4.08GB) but is UNMEASURED below 8bit here. An "
+                        f"unpublished value is an error naming what exists. "
+                        f"See docs/benchmarks/quantization.md")
     p.add_argument("--max-batch", type=int, default=None,
                    help="default: from the hardware profile (see mlx-asr-bench). "
                         "Voxtral only")
@@ -408,6 +426,19 @@ def main(argv=None):
     log = (lambda *x: None) if a.quiet else print
     t_start = time.perf_counter()
     spec = resolve_model(a.model)
+
+    # Resolved here, before either backend and before any audio is read, so an
+    # unpublished precision costs nothing and a valid one is simply a different
+    # repo id from that point on. Every downstream consumer (the loader, the
+    # stats JSON, the log line) then sees one repo and cannot disagree about
+    # which weights ran.
+    if a.quantization:
+        repo = spec.repo_for(a.quantization)      # raises UnknownQuantization
+        if repo != spec.repo:
+            spec = replace(spec, repo=repo,
+                           label=f"{spec.label.rsplit(' (', 1)[0]} "
+                                 f"({a.quantization})")
+            log(f"[model] --quantization {a.quantization} -> {repo}")
 
     # Non-Voxtral engines do their own long-form segmentation, so they skip the
     # chunking/batching path entirely and only share the output writers.
@@ -620,6 +651,12 @@ def cli():
     except UnsupportedFlags as e:
         # 2, matching argparse's usage-error convention: this is a bad invocation,
         # not a failure to process the input.
+        print(f"error: {e}", file=sys.stderr)
+        return 2
+    except UnknownQuantization as e:
+        # Also 2: a precision the alias does not publish is a bad invocation, and
+        # falling back to the default would run different weights than were asked
+        # for while reporting success.
         print(f"error: {e}", file=sys.stderr)
         return 2
     except UnsupportedFormat as e:

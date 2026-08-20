@@ -253,6 +253,57 @@ aliases. So the aggregate is partly a measure of how often this engine breaks do
 this specific material rather than of its transcription quality, and a different corpus
 could move it in either direction.
 
+## Experiment: why the default is 8-bit rather than bf16
+
+7-file subset, window fixed at 30s, one run per arm, idle host, `busy: false` recorded.
+Only the weights change.
+
+| model | precision | JP coverage CER | kana CER | EN coverage WER | x realtime | peak GB | weights |
+|---|---|---|---|---|---|---|---|
+| 1.7B | **8-bit** | **19.98%** | 21.20% | 31.38% | **19.2x** | **4.05** | **2.47GB** |
+| 1.7B | bf16 | 20.16% | **20.95%** | 31.41% | 14.1x | 5.66 | 4.08GB |
+| 0.6B | **8-bit** | **23.27%** | **21.88%** | 30.38% | **32.8x** | **2.36** | **1.01GB** |
+| 0.6B | bf16 | 26.24% | 26.93% | **29.35%** | 23.0x | 2.92 | 1.57GB |
+
+The 0.6B 8-bit row is its 7-file entry at the same window and config as the others.
+
+**bf16 buys nothing and costs a third of the throughput.** On the 1.7B it is +0.18 points,
+which against this corpus's ~3.2-point resolution is a tie, for **1.36x the wall clock**
+and **1.4x the peak memory**. On the 0.6B it is worse on both: 2.97 points *behind* and
+1.43x slower, and it would drop that model from 32.8x to 23.0x, i.e. below Voxtral, which
+would remove the only reason it ships at all.
+
+That +0.18 and the 0.6B's -2.97 are both inside noise individually; what is not noise is
+the cost, which tracks weight bytes exactly as the bandwidth model predicts and as the
+Voxtral fp16 measurement found ([quantization.md](quantization.md)).
+
+One nuance recorded rather than hidden: bf16 wins the 1.7B's *kana* CER (20.95% vs
+21.20%), so its errors may be marginally more phonetically faithful where its character
+score is not better. That is the same pattern fp16 showed on Voxtral, and it is also
+inside the noise band.
+
+**4bit through 6bit are exposed via `--quantization` but not measured here.** Going below
+8-bit is a size choice (4bit is 1.61GB against bf16's 4.08GB) that this corpus cannot
+adjudicate on accuracy, so the flag documents them as unmeasured rather than implying a
+ranking.
+
+### Quantization does not cause the repetition loops
+
+Worth checking, because it was a live hypothesis: repetition is a decoder degeneracy, and
+quantization noise perturbs exactly the near-tie logits that sustain one, so unlike a
+fractional CER difference a loop-rate change would be large enough for this corpus to see.
+
+Per-file looping-window counts, 1.7B at 30s, in corpus order:
+
+| precision | per-file loop counts (shortest file first) | files affected |
+|---|---|---|
+| 8-bit | 3, 0, 19, 0, 31, 40, 52 | 5 of 7 |
+| bf16 | 2, 0, 18, 0, 31, 38, 56 | 5 of 7 |
+
+Effectively identical, including which files are affected and which are clean. So the
+loops are a property of these weights on this material, not an artifact of the shipped
+precision, and running bf16 is not a workaround for them.
+
 ## Determinism: confirmed
 
 7 files, decoded twice each in one process, 30s windows, idle host.

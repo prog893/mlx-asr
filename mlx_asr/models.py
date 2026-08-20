@@ -45,6 +45,32 @@ HF repo id, in which case the backend is inferred from the id.
 from dataclasses import dataclass, field
 
 
+class UnknownQuantization(ValueError):
+    """The requested precision is not published for this alias.
+
+    An error rather than a fallback, and it names the accepted set. Guessing would
+    mean a 404 from the hub after the user has waited, or worse, silently running a
+    different precision than they asked for, which is the same class of quiet
+    substitution this CLI refuses for flags and output formats.
+    """
+
+    def __init__(self, value, available, alias="", is_repo_id=False):
+        self.value, self.available, self.alias = value, available, alias
+        if available:
+            shown = ", ".join(sorted(available))
+            msg = (f"--quantization {value!r} is not published for --model {alias}. "
+                   f"Available: {shown}. 'none' means bf16.")
+        elif is_repo_id:
+            # Refused rather than ignored, per this CLI's rule: dropping it would
+            # hand back a transcript at a different precision than was asked for.
+            msg = ("--quantization is only supported for the built-in models "
+                   "(see --list-models), so it cannot be combined with a repo id.")
+        else:
+            msg = (f"--quantization is not supported by --model {alias}: it ships one "
+                   f"precision.")
+        super().__init__(msg)
+
+
 @dataclass(frozen=True)
 class Model:
     """One selectable engine+weights combination."""
@@ -66,6 +92,34 @@ class Model:
     # backend string, because it is a property of the weights (no Qwen3-ASR variant
     # has speech-level times) and the CLI has to refuse `-f srt` on it.
     no_speech_timestamps: bool = False
+    # Precision -> repo id, for the aliases that publish more than one build.
+    #
+    # Data rather than a template, for the same reason `languages.py` keeps its
+    # vocabulary as data: the accepted set is then auditable and matches what is
+    # actually published. A template (`f"{base}-{quant}"`) would happily accept
+    # `--quantization 3bit` and fail at download time with a 404 from huggingface_hub
+    # rather than a usage error naming the real options. Empty means the alias ships
+    # one precision and `--quantization` is refused on it.
+    quant_repos: dict = field(default_factory=dict)
+
+    def repo_for(self, quant: str | None) -> str:
+        """The repo id for a requested precision. Raises on an unpublished one.
+
+        This is the whole of what `--quantization` is: a lookup from (alias,
+        precision) to a published repo id. Nothing is quantized at runtime, so an
+        entry has to exist for the value to be accepted.
+        """
+        if not quant:
+            return self.repo
+        key = quant.lower()
+        # "none" means unquantized, which is what the caller means by "no
+        # quantization" even though the published build is named bf16.
+        if key in ("none", "full", "fp16", "f16", "bf16"):
+            key = "bf16"
+        if key in self.quant_repos:
+            return self.quant_repos[key]
+        raise UnknownQuantization(quant, self.quant_repos, self.alias,
+                                  is_repo_id=(self.alias == self.repo))
 
     @property
     def needs_language(self) -> bool:
@@ -214,9 +268,24 @@ REGISTRY: dict[str, Model] = {
             # optimum. See docs/benchmarks/qwen3-asr.md.
             opts={"chunk_length_s": 30.0},
             no_speech_timestamps=True,
+            # 8-bit is the default because it is measured: bf16 scored 20.16%
+            # against 8-bit's 19.98% on the 7-file corpus, a tie against the ~3.2
+            # points this corpus resolves, while costing 1.36x the wall clock
+            # (14.1x vs 19.2x) and 1.4x the peak memory (5.66 vs 4.05GB). The
+            # ladder is exposed rather than hidden because a precision is a
+            # size/quality knob like a Whisper size, and 4bit at 1.61GB is a real
+            # choice on a small machine. See docs/benchmarks/quantization.md.
+            quant_repos={
+                "4bit": "mlx-community/Qwen3-ASR-1.7B-4bit",
+                "5bit": "mlx-community/Qwen3-ASR-1.7B-5bit",
+                "6bit": "mlx-community/Qwen3-ASR-1.7B-6bit",
+                "8bit": "mlx-community/Qwen3-ASR-1.7B-8bit",
+                "bf16": "mlx-community/Qwen3-ASR-1.7B-bf16",
+            },
             notes="greedy, so reproducible. Does real language ID and reports "
                   "it. Timestamps are CHUNK boundaries only, so -f srt and "
-                  "-f vtt are refused; use txt or json",
+                  "-f vtt are refused; use txt or json. --quantization takes "
+                  "4bit..8bit or none",
         ),
         Model(
             alias="qwen3-asr-small",
@@ -231,8 +300,19 @@ REGISTRY: dict[str, Model] = {
             # size, so it carries over. Not separately measured.
             opts={"chunk_length_s": 30.0},
             no_speech_timestamps=True,
+            # Same default and same reason, and here the cost of bf16 is worse:
+            # 26.24% against 23.27%, and 23.0x against 32.8x, which would remove
+            # the only reason this alias ships (it is the fastest engine measured
+            # in this project).
+            quant_repos={
+                "4bit": "mlx-community/Qwen3-ASR-0.6B-4bit",
+                "5bit": "mlx-community/Qwen3-ASR-0.6B-5bit",
+                "6bit": "mlx-community/Qwen3-ASR-0.6B-6bit",
+                "8bit": "mlx-community/Qwen3-ASR-0.6B-8bit",
+                "bf16": "mlx-community/Qwen3-ASR-0.6B-bf16",
+            },
             notes="the 0.6B sibling of qwen3-asr; same caveats, same refused "
-                  "output formats",
+                  "output formats. The fastest engine measured here",
         ),
     ]
 }
@@ -289,7 +369,32 @@ def resolve(name: str | None) -> Model:
                  deterministic=deterministic,
                  opts=opts,
                  no_speech_timestamps=(backend == "mlx-qwen3"),
-                 notes="not in the registry; defaults inferred from the repo id")
+                 notes="not a built-in model; defaults inferred from the repo id")
+
+
+def quantization_help() -> str:
+    """Per-alias precision options, for `--help`.
+
+    Derived from the registry rather than written out, so a precision added or
+    dropped in one place cannot leave the help text claiming otherwise. That is the
+    same failure mode as a flag the CLI accepts and ignores: the text is read as
+    authoritative and nothing checks it.
+    """
+    lines = []
+    for alias, m in REGISTRY.items():
+        if m.quant_repos:
+            opts = sorted(m.quant_repos, key=_quant_sort_key)
+            default = next((q for q, r in m.quant_repos.items() if r == m.repo), None)
+            shown = [f"{q} (default)" if q == default else q for q in opts]
+            lines.append(f"{alias}: {', '.join(shown)}")
+    if not lines:
+        return "no alias currently publishes a precision choice"
+    return "; ".join(lines)
+
+
+def _quant_sort_key(q: str):
+    """Order precisions smallest-first, with bf16 last rather than alphabetically."""
+    return (1, 0) if q == "bf16" else (0, int(q.rstrip("bit")))
 
 
 def describe_registry() -> str:
@@ -311,5 +416,12 @@ def describe_registry() -> str:
         rows.append(f"  {'':<{width}}  {m.repo}")
         if m.notes:
             rows.append(f"  {'':<{width}}  {m.notes}")
+        # Listed per alias, since which precisions exist is a property of what the
+        # converters published for those weights and differs between aliases.
+        if m.quant_repos:
+            opts = sorted(m.quant_repos, key=_quant_sort_key)
+            default = next((q for q, r in m.quant_repos.items() if r == m.repo), None)
+            shown = ", ".join(f"{q} (default)" if q == default else q for q in opts)
+            rows.append(f"  {'':<{width}}  --quantization: {shown}")
         rows.append("")
     return "\n".join(rows).rstrip()

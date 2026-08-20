@@ -453,6 +453,12 @@ PORTABLE_FLAGS = {
     "--help", "--model", "--list-models", "--language", "--output-format",
     "--output", "--chunk-seconds",   # chunked drivers only; whisper-* refuse it
     "--quiet", "--stats-json",
+    # Refused per alias rather than per engine, because whether it applies depends on
+    # what the converters published for those weights rather than on the driver: the
+    # qwen3-asr* aliases take it, every other alias errors, and so does a raw repo id
+    # (which already names its own precision). Covered by its own tests below and in
+    # test_models.py rather than by the whisper rejection list.
+    "--quantization",
 }
 
 
@@ -473,6 +479,44 @@ def test_every_voxtral_only_flag_is_covered_by_the_list():
         parser_flags.update(o for o in action.option_strings if o.startswith("--"))
     listed = {f.split("=")[0] for f in UNSUPPORTED_ON_WHISPER}
     assert parser_flags - PORTABLE_FLAGS - listed == set()
+
+
+def test_quantization_is_refused_rather_than_ignored_everywhere_it_cannot_apply(
+        tmp_path):
+    """Every rejection path, through the real CLI, exiting 2.
+
+    Listing it in PORTABLE_FLAGS above exempts it from the whisper sweep, so this is
+    what keeps that exemption honest. Silently ignoring it is the specific failure to
+    avoid: a user who passes 4bit and gets 8-bit weights has a transcript that is not
+    what they asked for and no way to tell.
+    """
+    cases = [
+        # (model, expected fragment)
+        ("whisper-turbo", "ships one precision"),
+        ("voxtral", "ships one precision"),
+        ("mlx-community/Qwen3-ASR-1.7B-4bit", "only supported for the built-in models"),
+    ]
+    for model, fragment in cases:
+        r = subprocess.run(
+            CLI + [str(tmp_path / "nope.wav"), "--model", model,
+                   "--quantization", "4bit", "-f", "txt"],
+            capture_output=True, text=True, cwd=ROOT)
+        assert r.returncode == 2, (model, r.returncode, r.stderr)
+        assert fragment in r.stderr, (model, r.stderr)
+
+
+def test_an_unpublished_precision_errors_before_any_download(tmp_path):
+    """2bit is not published for these weights, so it must be a usage error rather
+    than a 404 from the hub after the user has waited for a download."""
+    r = subprocess.run(
+        CLI + [str(tmp_path / "nope.wav"), "--model", "qwen3-asr",
+               "--quantization", "2bit", "-f", "txt"],
+        capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode == 2, (r.returncode, r.stderr)
+    assert "not published" in r.stderr
+    # The message has to name what does exist, or the user is left guessing.
+    for published in ("4bit", "6bit", "8bit", "bf16"):
+        assert published in r.stderr, published
 
 
 def test_machine_state_records_identity_and_load():

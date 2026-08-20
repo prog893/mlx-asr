@@ -146,7 +146,7 @@ reports the flag as ignored if you pass it.
 | flag | values | default | notes |
 |---|---|---|---|
 | `--model` | alias or HF repo id | `voxtral` | an unknown repo id gets a backend inferred from its name |
-| `--list-models` | flag | off | prints the registry with per-model caveats, then exits |
+| `--list-models` | flag | off | prints the built-in models with their caveats and precision options, then exits |
 | `-f, --output-format` | `srt` `vtt` `txt` `json` `all` | `srt` | `all` writes one file per format |
 | `-o, --output` | path | input stem + extension | with `-f all` this is a path **stem**, not a directory; parent dirs are created |
 | `--quiet` | flag | off | silences stdout entirely. Download progress bars still appear: those are huggingface_hub writing to stderr |
@@ -176,6 +176,7 @@ did exactly that once, with a subtitle-cue setting.
 | `--language` | **error** (takes no language token) | **used** (guessing costs 25 points) | forced to `ja` | **used**, as an English *name*; defaults to English rather than autodetecting |
 | `--chunk-seconds` | chunk length | **error** (30s window is fixed by the model) | **window length, its biggest lever** | window length; **30s** here (measured), not the library's 1200s |
 | `-f srt` / `-f vtt` / `-f all` | yes | yes | yes | **error** (no speech-level timestamps) |
+| `--quantization` | error (one build) | error (one build) | error (one build) | **used**: 4bit, 5bit, 6bit, 8bit (default), bf16 |
 | `--max-batch` | yes | error | error | error, with a different reason (see below) |
 | `--delay-ms` | yes | error | error | error |
 | `--kv-bits` / `--no-kv-quant` | yes | error | error | error |
@@ -263,13 +264,16 @@ narration in the v2.2 sweep. Sweep it on your own audio.
 
 ```bash
 mlx-asr jp.wav --model qwen3-asr --language ja -f txt
-mlx-asr jp.wav --model qwen3-asr --language ja -f txt --chunk-seconds 15   # less memory
+mlx-asr jp.wav --model qwen3-asr --language ja -f txt --chunk-seconds 15    # less memory
+mlx-asr jp.wav --model qwen3-asr --language ja -f txt --quantization 4bit   # 1.61GB
+mlx-asr jp.wav --model qwen3-asr --language ja -f txt --quantization none   # bf16
 ```
 
 | flag | values | default | measured effect |
 |---|---|---|---|
 | `--language` | any spelling | **English** | not optional in practice. Omitting it forces English rather than autodetecting, because upstream autodetect corrupts multi-chunk text |
 | `--chunk-seconds` | float | `30` | 19.98% / 21.42% / 23.55% / 62.47% coverage CER at 30 / 60 / 120 / 300s. Shorter is better on accuracy, speed **and** memory, and 15s ties 30s on accuracy while using less of both |
+| `--quantization` | `4bit` `5bit` `6bit` `8bit` `none` | `8bit` | 8bit is measured, not assumed: bf16 tied it (20.16% vs 19.98%) at 1.36x the wall clock and 1.4x the peak memory. Below 8bit is a size choice and is **unmeasured** here (4bit is 1.61GB against bf16's 4.08GB) |
 
 Two things about this engine that no other one here does:
 

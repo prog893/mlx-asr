@@ -1,14 +1,14 @@
 class MlxAsr < Formula
   include Language::Python::Virtualenv
 
-  desc "Batch speech-to-text on Apple Silicon: Voxtral, Whisper, kotoba-whisper"
+  desc "Batch speech-to-text on Apple Silicon: Voxtral, Whisper, kotoba, Qwen3-ASR"
   homepage "https://github.com/prog893/mlx-asr"
   # No `version` line: Homebrew scans it from the tag, and declaring both is
   # flagged as redundant. Note the tag must be written out rather than
   # interpolated as "v#{version}", since style autocorrect sorts `url` above
   # `version`, at which point the interpolation resolves to a bare "v" and the
   # clone fails with "Remote branch v not found in upstream origin".
-  url "https://github.com/prog893/mlx-asr.git", tag: "v0.1.0"
+  url "https://github.com/prog893/mlx-asr.git", tag: "v0.2.0"
   license "MIT"
 
   # A git URL with a tag rather than a release tarball, matching the other
@@ -450,6 +450,16 @@ class MlxAsr < Formula
     # downloading any weights, which a sandboxed `brew test` cannot do.
     assert_match "voxtral", shell_output("#{bin}/mlx-asr --list-models")
     assert_match "kotoba", shell_output("#{bin}/mlx-asr --list-models")
+    assert_match "qwen3-asr", shell_output("#{bin}/mlx-asr --list-models")
+
+    # An engine that cannot honour a flag or a format must exit 2 rather than
+    # produce output the user reads as having been made with it. Both checks run
+    # without weights, so they belong in a sandboxed test: the format refusal is
+    # decided before anything is loaded.
+    assert_match "no speech-level timestamps",
+                 shell_output("#{bin}/mlx-asr x.wav --model qwen3-asr -f srt 2>&1", 2)
+    assert_match "not supported by --model whisper-turbo",
+                 shell_output("#{bin}/mlx-asr x.wav --model whisper-turbo --vad 2>&1", 2)
 
     # A real transcription needs weights, so instead prove the engine imports
     # and that Metal is reachable, which is the part most likely to break.
@@ -460,6 +470,11 @@ class MlxAsr < Formula
       assert mx.sum(mx.ones((4, 4))).item() == 16.0
       assert machine_info()["chip"]
       assert "voxtral" in REGISTRY
+      # The qwen3 loader lives in mlx-audio's dispatch table rather than here, so
+      # a version bump that dropped it would break the alias at runtime with the
+      # weights already downloaded. Cheap to catch at install time instead.
+      from mlx_audio.stt.utils import MODEL_REMAPPING
+      assert "qwen3_asr" in MODEL_REMAPPING, sorted(MODEL_REMAPPING)
     PYTHON
 
     # And that a synthetic WAV survives decode + SRT writing, model aside.

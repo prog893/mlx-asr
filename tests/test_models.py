@@ -162,6 +162,109 @@ def test_qwen3_repos_are_the_official_mlx_conversions():
     assert REGISTRY["qwen3-asr-small"].repo == "mlx-community/Qwen3-ASR-0.6B-8bit"
 
 
+# --- --quantization -------------------------------------------------------
+#
+# The flag is nothing but a lookup from (alias, precision) to a published repo id;
+# nothing is quantized at runtime. So the table has to match what the converters
+# actually published, and an unpublished value has to be a usage error rather than a
+# 404 from the hub after the user has waited.
+
+def test_quantization_maps_to_published_repos_only():
+    from mlx_asr.models import UnknownQuantization
+
+    m = REGISTRY["qwen3-asr"]
+    assert m.repo_for("4bit") == "mlx-community/Qwen3-ASR-1.7B-4bit"
+    assert m.repo_for("6bit") == "mlx-community/Qwen3-ASR-1.7B-6bit"
+    # Every published precision resolves, and each names its own repo.
+    for q, repo in m.quant_repos.items():
+        assert m.repo_for(q) == repo
+        assert q.replace("bit", "bit") in repo or q == "bf16"
+    # 2bit and 3bit are not published for these weights, so they must not be
+    # accepted by a template that would 404 at download time.
+    for absent in ("2bit", "3bit", "nvfp4", "mxfp8", "q8_0"):
+        with pytest.raises(UnknownQuantization):
+            m.repo_for(absent)
+
+
+def test_none_means_unquantized():
+    """What a user means by "no quantization" is bf16 here, and several spellings of
+    that are reasonable to type."""
+    m = REGISTRY["qwen3-asr"]
+    bf16 = "mlx-community/Qwen3-ASR-1.7B-bf16"
+    for spelling in ("none", "None", "full", "fp16", "f16", "bf16", "BF16"):
+        assert m.repo_for(spelling) == bf16, spelling
+
+
+def test_omitting_the_flag_gives_the_registry_default():
+    for alias in ("qwen3-asr", "qwen3-asr-small"):
+        assert REGISTRY[alias].repo_for(None) == REGISTRY[alias].repo
+
+
+def test_eight_bit_is_the_default_and_it_is_the_measured_one():
+    """Regression guard on a measured default.
+
+    bf16 scored 20.16% against 8-bit's 19.98% on the 7-file corpus, a tie against the
+    ~3.2 points this corpus resolves, while costing 1.36x the wall clock (14.1x vs
+    19.2x) and 1.4x the peak memory (5.66 vs 4.05GB). On the 0.6B the gap is worse
+    (26.24% vs 23.27%, 23.0x vs 32.8x). So 8bit is not a guess and a silent switch to
+    bf16 would cost real speed for no accuracy.
+    """
+    for alias in ("qwen3-asr", "qwen3-asr-small"):
+        m = REGISTRY[alias]
+        assert m.repo == m.quant_repos["8bit"], alias
+        assert m.repo.endswith("-8bit"), alias
+
+
+def test_an_alias_with_one_precision_refuses_the_flag():
+    from mlx_asr.models import UnknownQuantization
+
+    for alias in ("voxtral", "whisper-turbo", "kotoba"):
+        assert not REGISTRY[alias].quant_repos, alias
+        with pytest.raises(UnknownQuantization) as e:
+            REGISTRY[alias].repo_for("4bit")
+        assert "ships one precision" in str(e.value)
+
+
+def test_a_raw_repo_id_refuses_the_flag_with_the_real_reason():
+    """The flag is a lookup keyed on alias, so a repo id has already answered it.
+
+    Refused rather than ignored, per this CLI's rule everywhere else: dropping it
+    would hand back a transcript at a different precision than the user asked for.
+    """
+    from mlx_asr.models import UnknownQuantization
+
+    m = resolve("mlx-community/Qwen3-ASR-1.7B-4bit")
+    assert m.quant_repos == {}
+    with pytest.raises(UnknownQuantization) as e:
+        m.repo_for("8bit")
+    assert "cannot be combined with a repo id" in str(e.value), str(e.value)
+
+
+def test_the_help_text_is_derived_from_the_registry():
+    """A hand-written list of precisions in the help would drift from what ships,
+    which is the same failure as a flag that is accepted and ignored."""
+    from mlx_asr.models import quantization_help
+
+    text = quantization_help()
+    for alias, m in REGISTRY.items():
+        if m.quant_repos:
+            assert alias in text, alias
+            for q in m.quant_repos:
+                assert q in text, (alias, q)
+        else:
+            # An alias with no choice must not appear as though it had one.
+            assert f"{alias}:" not in text, alias
+    assert "8bit (default)" in text
+
+
+def test_list_models_shows_the_precisions_per_alias():
+    out = describe_registry()
+    assert "--quantization: 4bit, 5bit, 6bit, 8bit (default), bf16" in out
+    # Ordered smallest-first with bf16 last, not alphabetically (which would put
+    # bf16 first and read as the default).
+    assert out.index("4bit") < out.index("bf16")
+
+
 def test_the_smaller_qwen3_is_recorded_as_smaller():
     """`weights_gb` feeds the memory-derived batch fallback, so a wrong value there
     picks a batch size for the wrong model."""
