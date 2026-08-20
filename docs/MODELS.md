@@ -95,6 +95,42 @@ publish transformers format only. That takes a few seconds, needs no torch, and
 is cached under `~/.cache/huggingface/hub/mlx-asr-converted/`. See
 [Converting your own weights](#converting-your-own-weights).
 
+## Every combination, and what it resolves to
+
+`--model` picks the family; `--size` and `--quantization` pick the variant. This is the
+complete mapping, and it is **generated** from the registry rather than maintained by
+hand (`scripts/docs/gen_model_matrix.py`), which also verifies every id against the
+Hugging Face API. Sizes are as-published on disk, so they include the tokenizer and
+config alongside the weights.
+
+| `--model` | `--size` | `--quantization` | weights | on disk | Hugging Face |
+|---|---|---|---|---|---|
+| `voxtral` **(default)** | n/a | `4bit` | `mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit` | 3.15GB | [link](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit) |
+| `voxtral` | n/a | `fp16` | `mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16` | 8.89GB | [link](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16) |
+| `whisper` | `tiny` | n/a | `mlx-community/whisper-tiny-mlx` | 0.07GB | [link](https://huggingface.co/mlx-community/whisper-tiny-mlx) |
+| `whisper` | `base` | n/a | `mlx-community/whisper-base-mlx` | 0.14GB | [link](https://huggingface.co/mlx-community/whisper-base-mlx) |
+| `whisper` | `small` | n/a | `mlx-community/whisper-small-mlx` | 0.48GB | [link](https://huggingface.co/mlx-community/whisper-small-mlx) |
+| `whisper` | `medium` | n/a | `mlx-community/whisper-medium-mlx` | 1.52GB | [link](https://huggingface.co/mlx-community/whisper-medium-mlx) |
+| `whisper` | `large-v2` | n/a | `mlx-community/whisper-large-v2-mlx` | 3.08GB | [link](https://huggingface.co/mlx-community/whisper-large-v2-mlx) |
+| `whisper` | `large-v3` | n/a | `mlx-community/whisper-large-v3-mlx` | 3.08GB | [link](https://huggingface.co/mlx-community/whisper-large-v3-mlx) |
+| `whisper` **(default)** | `turbo` | n/a | `mlx-community/whisper-large-v3-turbo` | 1.61GB | [link](https://huggingface.co/mlx-community/whisper-large-v3-turbo) |
+| `kotoba` **(default)** | n/a | n/a | `kotoba-tech/kotoba-whisper-v2.0` | 1.52GB | [link](https://huggingface.co/kotoba-tech/kotoba-whisper-v2.0) |
+| `qwen3-asr` | `0.6B` | `4bit` | `mlx-community/Qwen3-ASR-0.6B-4bit` | 0.71GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-4bit) |
+| `qwen3-asr` | `0.6B` | `5bit` | `mlx-community/Qwen3-ASR-0.6B-5bit` | 0.79GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-5bit) |
+| `qwen3-asr` | `0.6B` | `6bit` | `mlx-community/Qwen3-ASR-0.6B-6bit` | 0.86GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-6bit) |
+| `qwen3-asr` | `0.6B` | `8bit` *(default)* | `mlx-community/Qwen3-ASR-0.6B-8bit` | 1.01GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-8bit) |
+| `qwen3-asr` | `0.6B` | `bf16` | `mlx-community/Qwen3-ASR-0.6B-bf16` | 1.57GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-bf16) |
+| `qwen3-asr` | `1.7B` | `4bit` | `mlx-community/Qwen3-ASR-1.7B-4bit` | 1.61GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-4bit) |
+| `qwen3-asr` | `1.7B` | `5bit` | `mlx-community/Qwen3-ASR-1.7B-5bit` | 1.82GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-5bit) |
+| `qwen3-asr` | `1.7B` | `6bit` | `mlx-community/Qwen3-ASR-1.7B-6bit` | 2.04GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-6bit) |
+| `qwen3-asr` **(default)** | `1.7B` | `8bit` *(default)* | `mlx-community/Qwen3-ASR-1.7B-8bit` | 2.47GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-8bit) |
+| `qwen3-asr` | `1.7B` | `bf16` | `mlx-community/Qwen3-ASR-1.7B-bf16` | 4.08GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-bf16) |
+
+Everything is `mlx-community` except `kotoba`, which is the authors' own transformers
+build converted locally on first use. See
+[Why mlx-community](#why-mlx-community-and-not-unsloth-or-gguf) for why that is not just
+inertia.
+
 ## Minimal command, per model
 
 Every one of these is the complete command. No other flag is required.
@@ -293,6 +329,44 @@ CER. The budget has to be per window, so `mlx_asr/backends.py` drives the chunk 
 Repetition loops still occur (they are a property of the weights) but now cost one window
 each, and the CLI warns when it sees one. Full detail:
 [benchmarks/qwen3-asr.md](benchmarks/qwen3-asr.md).
+
+## Why mlx-community, and not unsloth or GGUF
+
+Asked because unsloth's quants have a good reputation, and they do. The blocker is
+format, not quality.
+
+**This CLI can only load MLX-format weights**, because the whole reason it exists is a
+custom batched MLX decoder. Checked against what each publisher actually ships:
+
+| publisher | what they ship for our models | usable here |
+|---|---|---|
+| `mlx-community` | MLX safetensors, 4/5/6/8bit + bf16/fp16 | **yes** |
+| `unslothai` | `Qwen3-ASR-{0.6B,1.7B}-GGUF` (Q8_0, bf16, plus mmproj) | no: GGUF |
+| `unsloth` | `whisper-{large-v3,turbo,small}` as transformers safetensors | no: not MLX, and unquantized, so nothing to gain |
+| everyone else | mostly GGUF, ONNX, ExecuTorch, OpenVINO, CoreML | no |
+
+**unsloth publishes no Voxtral at all**, and for Qwen3-ASR only GGUF. Their Whisper repos
+are plain transformers weights rather than quants, so even setting format aside there is
+no quantization there to benefit from.
+
+**GGUF is llama.cpp's format and MLX cannot load it.** Adopting llama.cpp's runtime to
+reach those quants would mean giving up multi-stream batching, which is worth 3-4x here,
+to chase a quantization difference measured at 0.07 CER points. That trade is not close.
+`mx.load` does read GGUF tensors, but the loaders in `mlx-audio` and `mlx-whisper` expect
+a safetensors layout plus a `config.json`, so a GGUF file is not a drop-in even at the
+tensor level.
+
+Worth stating plainly because it inverts the usual intuition: on Apple Silicon,
+**quantization here buys memory, not speed, and buys no accuracy**. Five Voxtral
+precisions span 0.43 CER points, and on whisper.cpp q5_0 measured *27% slower* than fp16
+at identical CER, because dequantization is work an fp16 matmul does not do. So a
+better-quantized checkpoint is not a lever this project is missing out on. See
+[benchmarks/quantization.md](benchmarks/quantization.md).
+
+**If a specific quant is wanted anyway**, two routes exist and neither needs a new
+publisher: convert locally with `mlx_audio.convert` (which is how the measured 8bit,
+mxfp8 and nvfp4 Voxtral rows were produced) and pass the output directory to `--model`,
+or pass any MLX-format repo id directly.
 
 ## Using weights that are not in the registry
 

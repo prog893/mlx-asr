@@ -124,6 +124,20 @@ nothing.
 wants (a code for Whisper, an English name for Qwen) from whatever you type. Voxtral takes
 no language flag, and `kotoba` forces Japanese on its own.
 
+`--list-models` prints the sizes and precisions each family accepts. The complete
+mapping from every `--model`/`--size`/`--quantization` combination to its Hugging Face
+repo id, with sizes on disk, is in
+[docs/MODELS.md](docs/MODELS.md#every-combination-and-what-it-resolves-to); it is
+generated from the registry, not hand-maintained.
+
+All weights are `mlx-community` MLX builds, except `kotoba` which converts the authors'
+own weights locally on first use. **unsloth and GGUF quants cannot be used here**: unsloth
+publishes no Voxtral, only GGUF for Qwen3-ASR, and unquantized transformers weights for
+Whisper, while GGUF is llama.cpp's format that MLX cannot load. That is a format
+constraint rather than a quality judgement, and it costs little, since quantization here
+buys memory rather than accuracy or speed
+([why](docs/MODELS.md#why-mlx-community-and-not-unsloth-or-gguf)).
+
 What each model scored: [docs/MODELS.md](docs/MODELS.md).
 
 ## Why the defaults are what they are

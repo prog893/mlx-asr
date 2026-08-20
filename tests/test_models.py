@@ -693,6 +693,23 @@ def test_an_unlisted_qwen3_repo_gets_the_qwen3_defaults():
     assert m.opts.get("condition_on_previous_text") is None
 
 
+def test_the_docs_combination_table_covers_every_reachable_variant():
+    """docs/MODELS.md lists every model/size/quant -> repo mapping, and it must not go
+    stale: a generated table that has drifted is worse than no table, because it reads
+    as authoritative. Checked against the registry rather than against a snapshot, so
+    adding a precision fails here until the table is regenerated
+    (`scripts/docs/gen_model_matrix.py`).
+    """
+    doc = (Path(__file__).resolve().parents[1] / "docs" / "MODELS.md").read_text()
+    table = doc.split("## Every combination")[1].split("## ")[0]
+    for m in REGISTRY.values():
+        repos = set(m.quant_repos.values()) | {m.repo}
+        for repo in repos:
+            assert repo in table, f"{repo} missing from the MODELS.md table"
+            # Each row must carry a working hub link, since that is the point of it.
+            assert f"huggingface.co/{repo}" in table, repo
+
+
 def test_describe_registry_lists_every_family_size_and_caveat():
     """`--list-models` is where a user picks, so everything reachable must appear.
 
