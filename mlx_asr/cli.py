@@ -241,11 +241,11 @@ def _run_other_backend(a, spec, log, t_start):
         # nothing with this one. Refusing beats shipping a knob whose effect is
         # unmeasured here and silently nothing at the default window.
         if spec.backend == "mlx-qwen3" and unsupported == ["--max-batch"]:
-            hint = (f"{spec.alias} does batch whole chunks upstream, but only "
-                    f"when the audio yields more than one, and this project has "
-                    f"measured nothing about the right value for this decoder. "
-                    f"Refused rather than exposed unmeasured. Lower "
-                    f"--chunk-seconds if you want more, shorter windows.")
+            hint = (f"{spec.alias} batches whole chunks upstream, but only when the "
+                    f"audio yields more than one, and no batch size has been measured "
+                    f"for this decoder. Lower --chunk-seconds for more, shorter "
+                    f"windows. Tracking: "
+                    f"https://github.com/prog893/mlx-asr/issues/1")
         raise UnsupportedFlags(unsupported, spec.alias, hint)
     # Validated HERE rather than inside the backend, so a typo costs nothing. The audio
     # decode below reads the whole file, which on a 93-minute recording is not free, and

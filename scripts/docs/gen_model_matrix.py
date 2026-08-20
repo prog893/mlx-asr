@@ -121,6 +121,8 @@ def main():
                 # number from a sibling.
                 cells.append(PEAK.get((m.alias, q), "not measured"))
                 print("| " + " | ".join(cells) + " |")
+        # Trailing blank line per table. Without it GitHub swallows the next paragraph
+        # into the final row as if it were more table.
         print()
 
     print(f"{sum(len(v) for v in families().values())} entries checked.",

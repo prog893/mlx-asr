@@ -20,12 +20,12 @@ points, inside the noise ([quantization.md](benchmarks/quantization.md)).
 
 | default | why |
 |---|---|
-| `voxtral` 4bit | fp16 is a tie (0.07 points, CI [-0.33, +0.48]) at 1.6x the wall clock and 15.3GB peak against 9.4GB, so it does not fit 16GB at all |
+| `voxtral` 4bit | fp16 is a tie on the narration clip (0.07 points, CI [-0.33, +0.48]) at 1.6x the wall clock, and does not fit 16GB. **Open:** on the 20-file corpus fp16 measured 1.1 points *better* (15.12% against 16.21%), which needs a paired test before it means anything ([#2](https://github.com/prog893/mlx-asr/issues/2)) |
 | `qwen3-asr` 8bit | bf16 is a tie on the 1.7B (20.16% against 19.98%) at 1.36x the wall clock and 1.4x the memory, and 3 points *worse* on the 0.6B |
 | `--kv-bits 8` | faster, and 39 of 40 scored regions identical to unquantized |
 
-4bit through 6bit on `qwen3-asr` are reachable but unmeasured here; below 8bit is a size
-choice, not an accuracy one.
+4bit through 6bit on `qwen3-asr` have measured memory (see MODELS.md) but no accuracy
+figure, so going below 8bit there is a size choice on unmeasured accuracy.
 
 ## Chunking and windows
 
