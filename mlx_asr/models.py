@@ -57,9 +57,14 @@ class UnknownQuantization(ValueError):
     def __init__(self, value, available, alias="", is_repo_id=False):
         self.value, self.available, self.alias = value, available, alias
         if available:
-            shown = ", ".join(sorted(available))
+            shown = ", ".join(sorted(available, key=_quant_sort_key))
+            # Name the unquantized build this model actually publishes: it is bf16 for
+            # Qwen3-ASR and fp16 for Voxtral, so a fixed string would be wrong for one
+            # of them.
+            full = next((c for c in ("bf16", "fp16") if c in available), None)
+            hint = f" 'none' means {full}." if full else ""
             msg = (f"--quantization {value!r} is not published for --model {alias}. "
-                   f"Available: {shown}. 'none' means bf16.")
+                   f"Available: {shown}.{hint}")
         elif is_repo_id:
             # Refused rather than ignored, per this CLI's rule: dropping it would
             # hand back a transcript at a different precision than was asked for.

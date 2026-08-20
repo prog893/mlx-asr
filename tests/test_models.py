@@ -243,6 +243,25 @@ def test_precisions_sort_smallest_first_with_unquantized_last():
     assert sorted(["bf16", "4bit", "weird"], key=_quant_sort_key)[0] == "4bit"
 
 
+def test_the_error_names_the_right_unquantized_build_per_model():
+    """"'none' means bf16" is wrong on Voxtral, whose unquantized build is fp16.
+
+    A fixed string would mislead on one of the two models, and the whole point of the
+    message is to tell the user what to type instead.
+    """
+    from mlx_asr.models import UnknownQuantization
+
+    with pytest.raises(UnknownQuantization) as e:
+        REGISTRY["voxtral"].repo_for("8bit")
+    assert "'none' means fp16" in str(e.value), str(e.value)
+    # And the list is ordered smallest-first, not alphabetically.
+    assert "Available: 4bit, fp16" in str(e.value), str(e.value)
+
+    with pytest.raises(UnknownQuantization) as e:
+        REGISTRY["qwen3-asr"].repo_for("3bit")
+    assert "'none' means bf16" in str(e.value), str(e.value)
+
+
 def test_none_means_unquantized():
     """What a user means by "no quantization" is bf16 here, and several spellings of
     that are reasonable to type."""

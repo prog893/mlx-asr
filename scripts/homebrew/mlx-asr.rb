@@ -8,7 +8,7 @@ class MlxAsr < Formula
   # interpolated as "v#{version}", since style autocorrect sorts `url` above
   # `version`, at which point the interpolation resolves to a bare "v" and the
   # clone fails with "Remote branch v not found in upstream origin".
-  url "https://github.com/prog893/mlx-asr.git", tag: "v0.2.1"
+  url "https://github.com/prog893/mlx-asr.git", tag: "v0.2.2"
   license "MIT"
 
   # A git URL with a tag rather than a release tarball, matching the other
