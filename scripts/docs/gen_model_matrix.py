@@ -32,7 +32,26 @@ HF = "https://huggingface.co"
 #
 # Published instead of download size because the working set is what decides whether a
 # machine can run something; a 3GB download that peaks at 15GB does not fit 16GB.
-PEAK = {}
+PEAK = {
+    # whisper, shipped config, 20 files. Notice these barely track the download: tiny
+    # downloads 0.07GB and peaks at 3.98, because the working set is dominated by the
+    # 30s mel window and decoder activations rather than by weights.
+    ("whisper-tiny", None): "3.98GB",
+    ("whisper-base", None): "4.07GB",
+    ("whisper-small", None): "4.37GB",
+    ("whisper-medium", None): "5.43GB",
+    ("whisper-large-v2", None): "6.97GB",
+    ("whisper-large-v3", None): "7.00GB",
+    ("whisper-turbo", None): "5.53GB",
+    # qwen3-asr at its default 8bit, 30s windows, 20 files.
+    ("qwen3-asr", "8bit"): "4.05GB",
+    ("qwen3-asr-small", "8bit"): "2.36GB",
+    ("qwen3-asr", "bf16"): "5.66GB",
+    ("qwen3-asr-small", "bf16"): "2.92GB",
+    # voxtral, from the precision sweep on the narration clip at 60s/B16.
+    ("voxtral", "4bit"): "9.36GB",
+    ("voxtral", "fp16"): "15.28GB",
+}
 
 
 def hub_size_gb(repo: str) -> tuple[bool, float]:

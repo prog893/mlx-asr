@@ -1,12 +1,16 @@
 # Lever: which engine
 
 **Conclusion first.** Whisper large-v3-turbo with `condition_on_previous_text=False` is
-the most accurate option on this corpus, by about 1.7 points on Japanese, and the result is
-statistically resolved by every test available here including a bootstrap over files.
-Voxtral is 1.35-1.65x faster, needs no language hint, needs no long-form-stability flag, and
-is reproducible on a given machine, which is why it is the default. At Whisper's *library defaults* Voxtral beats every Whisper size on Japanese by
-8.5 to 42.8 points, which says more about those defaults than about either model. No
-"fastest on Apple Silicon" claim survives measurement.
+the most accurate option on this corpus, by about 1.7 points on Japanese, resolved by every
+test available here including a bootstrap over files. Voxtral is 1.35-1.65x faster, needs
+no language hint, needs no long-form-stability flag, and is reproducible on a given
+machine, which is why it is the default. No "fastest on Apple Silicon" claim survives
+measurement.
+
+Whisper's *library defaults* are worth 7 to 25 CER points on this material, all of it
+cross-window repetition loops, so any Whisper figure taken without
+`condition_on_previous_text=False` describes the defaults rather than the model. The CLI
+ships that flag on `small` and larger.
 
 ## Corpus
 
@@ -30,7 +34,55 @@ length-weighted, 20k resamples (`scripts/benchmarks/compare_engines.py`).
 Whisper samples, so a single run is a draw from a distribution; see
 [determinism.md](determinism.md) for why the headline uses a 3-run mean.
 
-## Experiment: the size sweep, 7 files
+## Experiment: every Whisper size at the config that ships
+
+**Superseded the earlier 7-file size sweep, which measured the wrong thing.** That table
+ran `large-v2`, `medium` and `small` at mlx-whisper's library defaults, while the CLI
+ships those three with `condition_on_previous_text=False`. Its rows therefore described
+configs this CLI does not run, and understated them by 7 to 25 points. The old numbers
+are kept below the new ones because the gap between them is the finding.
+
+20 files, 7.95h, idle M2 Ultra, `--no-condition` on `small` and larger (which is what
+ships) and library defaults on `tiny` and `base` (also what ships). Peak GPU memory from
+`mx.get_peak_memory()`, reset per file.
+
+| size | JP coverage CER | EN coverage WER | x realtime | peak GPU | old table, library defaults |
+|---|---|---|---|---|---|
+| `tiny` | 51.28% | 32.17% | **52.7x** | **3.98GB** | 59.27% |
+| `base` | 29.93% | 27.14% | 34.5x | 4.07GB | 29.96% |
+| `small` | 21.33% | 22.68% | 20.1x | 4.37GB | 28.61% |
+| `medium` | 21.63% | 18.23% | 21.4x | 5.43GB | 28.93% |
+| `large-v2` | 17.87% | 17.68% | 14.4x | 6.97GB | 25.02% |
+| `large-v3` | **14.55%** | 18.26% | 11.4x | 7.00GB | 39.91% |
+| `turbo` **(ships)** | 14.68% | **18.31%** | 23.7x | 5.53GB | 24.97% |
+
+Three things follow.
+
+**`turbo` remains the right default**, and now for a clearer reason than before: it ties
+`large-v3` on Japanese (14.68% against 14.55%, well inside the ±0.27 that repeat runs of
+turbo spread) while running **2.1x faster** and using 1.5GB less memory. The earlier
+7-file table appeared to show turbo winning outright on accuracy; at n=20 with both at
+their shipped config the honest statement is that they are tied and turbo is cheaper.
+
+**`large-v3` was the worst-served by the old measurement.** 39.91% at library defaults
+against 14.55% shipped, a 25-point artifact of cross-window repetition loops that
+`condition_on_previous_text=False` prevents. Anyone reading the old table would have
+concluded the model was broken.
+
+**Peak memory barely tracks download size.** `tiny` downloads 0.07GB and peaks at 3.98GB,
+because the working set is the 30s mel window and decoder activations rather than the
+weights. So the whole size ladder fits in 4 to 7GB, and picking `tiny` to save memory buys
+almost nothing while costing 37 points.
+
+The `turbo` row was measured while the host was not idle, so its 23.7x is a floor rather
+than a clean figure; the accuracy figures are unaffected, since contention costs wall clock
+only. Its 14.68% is consistent with the separately published 3-run mean of 14.49% ±0.27.
+
+### The superseded 7-file table
+
+Kept for the record. Library defaults except where a row says otherwise, so the
+`large-v2`, `medium`, `small`, `base`, `tiny` and plain `large-v3`/`turbo` rows do not
+describe anything the CLI runs.
 
 | engine / config | JP coverage CER | EN coverage WER | x realtime |
 |---|---|---|---|
