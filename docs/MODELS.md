@@ -45,26 +45,29 @@ not audio each produce one line and exit 1, not a traceback.
 every engine that takes it. x-realtime includes model load, so it understates the
 larger models; treat it as "what you wait for", not a throughput benchmark.
 
-| alias | weights | runtime | long-form algorithm | works | CER | x-rt |
+| model | size | weights | long-form algorithm | works | CER | x-rt |
 |---|---|---|---|---|---|---|
-| `voxtral` **(default)** | `mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit` | MLX | batched chunks, our decoder | yes | **11.76%** | 1.7x |
-| `whisper-turbo` | `mlx-community/whisper-large-v3-turbo` | MLX | sequential 30s | yes | 13.67% | 15.1x |
-| `whisper-large-v3` | `mlx-community/whisper-large-v3-mlx` | MLX | sequential 30s | yes | 14.41% | 6.1x |
-| `whisper-large-v2` | `mlx-community/whisper-large-v2-mlx` | MLX | sequential 30s | yes | 13.45% | 4.0x |
-| `whisper-medium` | `mlx-community/whisper-medium-mlx` | MLX | sequential 30s | yes | 16.42% | 10.8x |
-| `whisper-small` | `mlx-community/whisper-small-mlx` | MLX | sequential 30s | yes | 24.47% | 21.7x |
-| `whisper-base` | `mlx-community/whisper-base-mlx` | MLX | sequential 30s | yes | 35.59% | 20.9x |
-| `whisper-tiny` | `mlx-community/whisper-tiny-mlx` | MLX | sequential 30s | yes | 32.10% | 51.4x |
-| `kotoba` | `kotoba-tech/kotoba-whisper-v2.0` | MLX (converted on first use) | chunked 10s windows (our driver) | yes | 22.67% | 9.8x |
-| `qwen3-asr` | `mlx-community/Qwen3-ASR-1.7B-8bit` | MLX | chunked 30s windows (our loop, upstream cut points) | yes, txt/json only | 19.70% | 19.6x |
-| `qwen3-asr-small` | `mlx-community/Qwen3-ASR-0.6B-8bit` | MLX | chunked 30s windows | yes, txt/json only | 18.86% | 25.4x |
+| `voxtral` **(default)** | | `mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit` | batched chunks, our decoder | yes | **11.76%** | 1.7x |
+| `whisper` | `turbo` **(default)** | `mlx-community/whisper-large-v3-turbo` | sequential 30s | yes | 13.67% | 15.1x |
+| `whisper` | `large-v3` | `mlx-community/whisper-large-v3-mlx` | sequential 30s | yes | 14.41% | 6.1x |
+| `whisper` | `large-v2` | `mlx-community/whisper-large-v2-mlx` | sequential 30s | yes | 13.45% | 4.0x |
+| `whisper` | `medium` | `mlx-community/whisper-medium-mlx` | sequential 30s | yes | 16.42% | 10.8x |
+| `whisper` | `small` | `mlx-community/whisper-small-mlx` | sequential 30s | yes | 24.47% | 21.7x |
+| `whisper` | `base` | `mlx-community/whisper-base-mlx` | sequential 30s | yes | 35.59% | 20.9x |
+| `whisper` | `tiny` | `mlx-community/whisper-tiny-mlx` | sequential 30s | yes | 32.10% | 51.4x |
+| `kotoba` | | `kotoba-tech/kotoba-whisper-v2.0` | chunked 10s windows (our driver) | yes | 22.67% | 9.8x |
+| `qwen3-asr` | `1.7B` **(default)** | `mlx-community/Qwen3-ASR-1.7B-8bit` | chunked 30s windows (our loop, upstream cut points) | yes, txt/json only | 19.70% | 19.6x |
+| `qwen3-asr` | `0.6B` | `mlx-community/Qwen3-ASR-0.6B-8bit` | chunked 30s windows | yes, txt/json only | 18.86% | 25.4x |
+
+Everything runs on MLX. The `weights` column is the default precision; `--quantization`
+reaches the others where they exist.
 
 Reproduce with `scripts/benchmarks/matrix_models.py`. How the metrics work and why the
 sample sizes constrain what you can read off them:
 [benchmarks/README.md](benchmarks/README.md).
 
 Do not pick a model from that table. It is one clip in one language, and the
-20-file corpus in [docs/benchmarks/engines.md](benchmarks/engines.md) puts `whisper-turbo` ahead of
+20-file corpus in [docs/benchmarks/engines.md](benchmarks/engines.md) puts whisper turbo ahead of
 `voxtral` on accuracy, the reverse of what you see here. That is why the README
 quotes the corpus number instead. `whisper-tiny` scoring better than
 `whisper-base` is the same problem showing through: at n=1 that is noise, not a
@@ -98,16 +101,16 @@ Every one of these is the complete command. No other flag is required.
 
 ```bash
 mlx-asr audio.wav                                    # voxtral, writes audio.srt
-mlx-asr audio.wav --model whisper-turbo --language ja
-mlx-asr audio.wav --model whisper-large-v3 --language ja
-mlx-asr audio.wav --model whisper-large-v2 --language ja
-mlx-asr audio.wav --model whisper-medium --language ja
-mlx-asr audio.wav --model whisper-small --language ja
-mlx-asr audio.wav --model whisper-base --language ja
-mlx-asr audio.wav --model whisper-tiny --language ja
+mlx-asr audio.wav --model whisper --language ja       # turbo, the default size
+mlx-asr audio.wav --model whisper --size large-v3 --language ja
+mlx-asr audio.wav --model whisper --size large-v2 --language ja
+mlx-asr audio.wav --model whisper --size medium --language ja
+mlx-asr audio.wav --model whisper --size small --language ja
+mlx-asr audio.wav --model whisper --size base --language ja
+mlx-asr audio.wav --model whisper --size tiny --language ja
 mlx-asr audio.wav --model kotoba                     # forces ja on its own
 mlx-asr audio.wav --model qwen3-asr --language ja -f txt        # -f srt is an error
-mlx-asr audio.wav --model qwen3-asr-small --language ja -f json
+mlx-asr audio.wav --model qwen3-asr --size 0.6B --language ja -f json
 ```
 
 The two `qwen3-asr` aliases are the only ones where `-f` is not free: they need `txt` or
@@ -116,7 +119,7 @@ The two `qwen3-asr` aliases are the only ones where `-f` is not free: they need 
 
 ### `--language` takes any spelling
 
-The engines disagree about what a language argument is: `whisper-*` wants an ISO 639-1
+The engines disagree about what a language argument is: `whisper` wants an ISO 639-1
 code, `kotoba` forces `ja` internally, and Qwen3-ASR wants an English language *name*.
 Worse, each of them accepts a wrong value silently and transcribes worse rather than
 failing, which reads as an unexplained accuracy loss.
@@ -134,7 +137,7 @@ accepted set. Tag parsing is `langcodes`; the accepted names come from each engi
 published vocabulary, so a checkpoint that drops a language stops accepting it with no
 change here.
 
-`--language` is not syntactically required on the `whisper-*` aliases, and they
+`--language` is not syntactically required on `whisper`, and it
 run without it. It is listed above because omitting it means Whisper guesses from
 the first 30 seconds, and on this project's material that guess returned Russian
 for Japanese audio, costing 25 CER points. `kotoba` needs no hint because it is
@@ -171,12 +174,13 @@ output a user will read as having been produced with it, which is the same class
 mistake as publishing a measurement from a config that was never applied. This project
 did exactly that once, with a subtitle-cue setting.
 
-| flag | `voxtral` | `whisper-*` | `kotoba` | `qwen3-asr*` |
+| flag | `voxtral` | `whisper` | `kotoba` | `qwen3-asr` |
 |---|---|---|---|---|
 | `--language` | **error** (takes no language token) | **used** (guessing costs 25 points) | forced to `ja` | **used**, as an English *name*; defaults to English rather than autodetecting |
 | `--chunk-seconds` | chunk length | **error** (30s window is fixed by the model) | **window length, its biggest lever** | window length; **30s** here (measured), not the library's 1200s |
 | `-f srt` / `-f vtt` / `-f all` | yes | yes | yes | **error** (no speech-level timestamps) |
 | `--quantization` | **used**: 4bit (default), fp16 | error (one build) | error (one build) | **used**: 4bit, 5bit, 6bit, 8bit (default), bf16 |
+| `--size` | error (one size) | **used**: tiny..large-v3, turbo (default) | error (one size) | **used**: 0.6B, 1.7B (default) |
 | `--max-batch` | yes | error | error | error, with a different reason (see below) |
 | `--delay-ms` | yes | error | error | error |
 | `--kv-bits` / `--no-kv-quant` | yes | error | error | error |
@@ -192,7 +196,7 @@ did exactly that once, with a subtitle-cue setting.
 away from the default; the default is not something you asked for.
 
 `--chunk-seconds` is the only flag that means different things on different engines. On
-`whisper-*` it is refused rather than approximated, because that driver's 30s window is
+`whisper` it is refused rather than approximated, because that driver's 30s window is
 set by the model's positional encoding and a flag that appeared to change it would be a
 lie.
 
@@ -225,7 +229,7 @@ All verified working through the brew binary.
 | `--vad` | flag | off | Silero VAD cut points. **Measured worse on clean speech** by 0.8-3.0 points; for material where energy minima mislead |
 | `--compact-silence` | flag | off | drops long pauses before decode, remaps timestamps back. Helps some quantizations, badly hurts others |
 
-### whisper-* options
+### whisper options
 
 Only `--language` beyond the global set. The registry also applies
 `condition_on_previous_text=False`, which is not exposed as a flag because
@@ -334,5 +338,5 @@ Verified byte-for-byte: the self-converted v2.0 produces output identical to an
 independently published MLX conversion of the same checkpoint.
 
 The same applies to any transformers-format Whisper repo passed to the chunked
-driver. It is not applied to the sequential `whisper-*` path, where every registry
+driver. It is not applied to the sequential `whisper` path, where every built-in
 alias already points at MLX weights.

@@ -63,12 +63,15 @@ from .audio import (
 from .hardware import machine_info, resolve_profile
 from .languages import UnknownLanguage, to_english_name, to_iso
 from .models import (
-    DEFAULT_ALIAS,
     REGISTRY,
+    UnknownModel,
     UnknownQuantization,
+    UnknownSize,
     describe_registry,
+    families,
     quantization_help,
     resolve as resolve_model,
+    size_help,
 )
 from .output import WRITERS, build_cues
 from .text import transcript_text, write_text
@@ -298,14 +301,21 @@ def build_parser():
     p = argparse.ArgumentParser(
         prog=PROG,
         description="Fast multi-model batch ASR on Apple Silicon "
-                    "(Voxtral, Whisper, kotoba-whisper)",
+                    "(Voxtral, Whisper, kotoba-whisper, Qwen3-ASR). "
+                    "--model picks the family; --size and --quantization pick the "
+                    "variant.",
     )
     p.add_argument("audio", nargs="?",
                    help="input audio/video file (anything ffmpeg reads)")
-    p.add_argument("--model", default=DEFAULT_ALIAS,
-                   help=f"a built-in model name or any HF repo id "
-                        f"(default: {DEFAULT_ALIAS}). "
-                        f"Aliases: {', '.join(REGISTRY)}")
+    p.add_argument("--model", default=None,
+                   help=f"which model family, or any HF repo id (default: voxtral). "
+                        f"Families: {', '.join(families())}. Pick the variant with "
+                        f"--size and --quantization")
+    p.add_argument("--size", default=None,
+                   help=f"which size within the family. {size_help()}. Defaults are "
+                        f"measured, not the largest: whisper defaults to turbo, which "
+                        f"beats large-v3 here by 1.5 points AND runs ~2x faster. "
+                        f"Refused on a family that has one size")
     p.add_argument("--list-models", action="store_true",
                    help="list the built-in models with their caveats and exit")
     p.add_argument("--language",
@@ -427,7 +437,7 @@ def main(argv=None):
 
     log = (lambda *x: None) if a.quiet else print
     t_start = time.perf_counter()
-    spec = resolve_model(a.model)
+    spec = resolve_model(a.model, a.size)
 
     # Resolved here, before either backend and before any audio is read, so an
     # unpublished precision costs nothing and a valid one is simply a different
@@ -666,6 +676,16 @@ def cli():
     except UnsupportedFlags as e:
         # 2, matching argparse's usage-error convention: this is a bad invocation,
         # not a failure to process the input.
+        print(f"error: {e}", file=sys.stderr)
+        return 2
+    except UnknownModel as e:
+        # 2, like every other bad invocation. Named rather than passed to the hub as a
+        # repo id: the per-size model names that worked up to v0.2.2 are exactly what
+        # an old script will send, and a 404 from huggingface_hub would not say that
+        # `--model whisper --size turbo` is the replacement.
+        print(f"error: {e}", file=sys.stderr)
+        return 2
+    except UnknownSize as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
     except UnknownQuantization as e:

@@ -8,7 +8,7 @@ class MlxAsr < Formula
   # interpolated as "v#{version}", since style autocorrect sorts `url` above
   # `version`, at which point the interpolation resolves to a bare "v" and the
   # clone fails with "Remote branch v not found in upstream origin".
-  url "https://github.com/prog893/mlx-asr.git", tag: "v0.2.2"
+  url "https://github.com/prog893/mlx-asr.git", tag: "v0.3.0"
   license "MIT"
 
   # A git URL with a tag rather than a release tarball, matching the other
@@ -458,8 +458,8 @@ class MlxAsr < Formula
     # decided before anything is loaded.
     assert_match "no speech-level timestamps",
                  shell_output("#{bin}/mlx-asr x.wav --model qwen3-asr -f srt 2>&1", 2)
-    assert_match "not supported by --model whisper-turbo",
-                 shell_output("#{bin}/mlx-asr x.wav --model whisper-turbo --vad 2>&1", 2)
+    assert_match "not supported by --model whisper",
+                 shell_output("#{bin}/mlx-asr x.wav --model whisper --vad 2>&1", 2)
 
     # A real transcription needs weights, so instead prove the engine imports
     # and that Metal is reachable, which is the part most likely to break.

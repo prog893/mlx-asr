@@ -38,15 +38,54 @@ rather than carry a 2.5GB torch dependency for a path nobody should pick.
 So each entry carries not just a repo id but the flags that make that engine
 behave, and a `deterministic` flag the CLI surfaces rather than hiding.
 
-`--model` accepts a registry alias (`voxtral`, `whisper-turbo`, ...) or any raw
-HF repo id, in which case the backend is inferred from the id.
+## Selection is two layers
+
+`--model` picks a **family** (`voxtral`, `whisper`, `kotoba`, `qwen3-asr`), and
+`--size` plus `--quantization` pick the variant within it. So eleven entries are
+four choices, and the second layer is where "same model, different tradeoff" lives:
+
+    mlx-asr a.wav --model whisper --size small --language ja
+    mlx-asr a.wav --model qwen3-asr --size 0.6B --quantization 4bit -f txt
+
+The two second-layer flags are not equivalent, and the difference is measured.
+**Size is a large accuracy lever** (43 CER points from `tiny` to `turbo`), so each
+family's default is chosen on evidence: `whisper` defaults to `turbo`, not to the
+larger `large-v3`, which is both less accurate here and half the speed.
+**Precision is not a lever at all** (0.43 points across five variants of Voxtral), so
+its default is the cheapest that loses nothing, and the flag exists mainly to let
+someone re-check that on their own audio or to fit a smaller machine.
+
+`--model` also takes any HF repo id, in which case the backend is inferred from the
+id and both second-layer flags are refused: a repo id already names its variant.
+
+`Model.alias` (`whisper-turbo`, `qwen3-asr-small`) is now **internal identity only**.
+Those were the `--model` values up to v0.2.2; passing one now is an error that names
+the two-flag replacement, rather than being forwarded to the hub as a repo id.
 """
 
 from dataclasses import dataclass, field
 
 
+class UnknownSize(ValueError):
+    """The requested size is not one this family publishes.
+
+    An error rather than a nearest match, for the same reason as the precision case:
+    silently running `small` when `smol` was asked for would hand back a transcript
+    from different weights than the user believes, and on this corpus size is worth up
+    to 43 CER points, so the substitution would not be subtle.
+    """
+
+    def __init__(self, value, available, family=""):
+        self.value, self.available, self.family = value, available, family
+        shown = ", ".join(available)
+        super().__init__(
+            f"--size {value!r} is not available for --model {family}. "
+            f"Sizes: {shown}."
+        )
+
+
 class UnknownQuantization(ValueError):
-    """The requested precision is not published for this alias.
+    """The requested precision is not published for this model.
 
     An error rather than a fallback, and it names the accepted set. Guessing would
     mean a 404 from the hub after the user has waited, or worse, silently running a
@@ -54,7 +93,7 @@ class UnknownQuantization(ValueError):
     substitution this CLI refuses for flags and output formats.
     """
 
-    def __init__(self, value, available, alias="", is_repo_id=False):
+    def __init__(self, value, available, alias="", is_repo_id=False, hint=""):
         self.value, self.available, self.alias = value, available, alias
         if available:
             shown = ", ".join(sorted(available, key=_quant_sort_key))
@@ -62,9 +101,10 @@ class UnknownQuantization(ValueError):
             # Qwen3-ASR and fp16 for Voxtral, so a fixed string would be wrong for one
             # of them.
             full = next((c for c in ("bf16", "fp16") if c in available), None)
-            hint = f" 'none' means {full}." if full else ""
-            msg = (f"--quantization {value!r} is not published for --model {alias}. "
-                   f"Available: {shown}.{hint}")
+            none_hint = f" 'none' means {full}." if full else ""
+            msg = (f"--quantization {value!r} is not published for --model {alias} "
+                   f"in a form that loads. Available: {shown}.{none_hint}"
+                   + (f"\n{hint}" if hint else ""))
         elif is_repo_id:
             # Refused rather than ignored, per this CLI's rule: dropping it would
             # hand back a transcript at a different precision than was asked for.
@@ -78,12 +118,21 @@ class UnknownQuantization(ValueError):
 
 @dataclass(frozen=True)
 class Model:
-    """One selectable engine+weights combination."""
+    """One selectable engine+weights combination: a family at one size.
+
+    `--model` picks the family and `--size` picks among its entries, so `alias` is
+    the internal identity (`whisper:turbo`) rather than something a user types.
+    """
 
     alias: str
     repo: str
     backend: str                  # voxtral | mlx-whisper | mlx-chunked | mlx-qwen3
     label: str
+    # The two halves of what a user selects. `family` is the `--model` value and
+    # `size` the `--size` value; a single-size family leaves `size` empty and refuses
+    # the flag, exactly as a single-precision model refuses --quantization.
+    family: str = ""
+    size: str = ""
     languages: str = "multilingual"
     deterministic: bool = False
     # Backend-specific defaults, applied unless the user overrides them.
@@ -115,6 +164,12 @@ class Model:
     # fp16 (8.9GB) while claiming 2.5GB would size a batch for memory the machine does
     # not have. Any precision absent here falls back to `weights_gb`.
     quant_weights_gb: dict = field(default_factory=dict)
+    # Extra line appended to an UnknownQuantization message, for a family where a
+    # precision was MEASURED but cannot be shipped. Voxtral is the case: three rows in
+    # docs/benchmarks/quantization.md (8bit affine, mxfp8, nvfp4) came from local
+    # conversions, and the only published 8bit/6bit repos crash on load. Without this
+    # the doc shows an 8bit result with no route to it.
+    quant_hint: str = ""
 
     # Spellings of "no quantization". The published unquantized build is named bf16
     # for Qwen3-ASR and fp16 for Voxtral, so both are accepted for either and the
@@ -144,8 +199,9 @@ class Model:
         key = self._quant_key(quant)
         if key in self.quant_repos:
             return self.quant_repos[key]
-        raise UnknownQuantization(quant, self.quant_repos, self.alias,
-                                  is_repo_id=(self.alias == self.repo))
+        raise UnknownQuantization(quant, self.quant_repos, self.family or self.alias,
+                                  is_repo_id=(self.alias == self.repo),
+                                  hint=self.quant_hint)
 
     def weights_gb_for(self, quant: str | None) -> float:
         """Weight footprint for a precision, for the batch-size fallback."""
@@ -184,6 +240,7 @@ REGISTRY: dict[str, Model] = {
     for m in [
         Model(
             alias="voxtral",
+            family="voxtral",
             repo="mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
             backend="voxtral",
             label="Voxtral Realtime 4B (4-bit)",
@@ -210,12 +267,26 @@ REGISTRY: dict[str, Model] = {
             # subtracted from the GPU budget when sizing a batch. A 16GB machine
             # cannot run fp16 at all, and it must not be told it can.
             quant_weights_gb={"4bit": 2.5, "fp16": 8.9},
+            # 8bit, mxfp8 and nvfp4 all have measured rows in
+            # docs/benchmarks/quantization.md, from local conversions rather than the
+            # hub, so the route to them is a convert step rather than a repo id.
+            quant_hint=(
+                "8bit, mxfp8 and nvfp4 were measured from LOCAL conversions (the "
+                "published 6bit and 8bit repos crash on load). To reproduce one:\n"
+                "  python -m mlx_audio.convert --hf-path "
+                "mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16 \\\n"
+                "    --mlx-path ./voxtral-8bit --quantize --q-bits 8 --q-group-size 64\n"
+                "then pass --model ./voxtral-8bit. All five precisions scored within "
+                "0.43 CER points, so expect no accuracy change."
+            ),
             notes="fastest here; greedy so reproducible; no language token; "
-                  "best timestamp stability. --quantization takes 4bit or "
-                  "none/fp16 (fp16 is a tie on accuracy at 1.6x the cost)",
+                  "best timestamp stability. fp16 is a tie on accuracy at 1.6x "
+                  "the cost, so 4bit is the default",
         ),
         Model(
             alias="whisper-turbo",
+            family="whisper",
+            size="turbo",
             repo="mlx-community/whisper-large-v3-turbo",
             backend="mlx-whisper",
             label="Whisper large-v3-turbo",
@@ -227,6 +298,8 @@ REGISTRY: dict[str, Model] = {
         ),
         Model(
             alias="whisper-large-v3",
+            family="whisper",
+            size="large-v3",
             repo="mlx-community/whisper-large-v3-mlx",
             backend="mlx-whisper",
             label="Whisper large-v3",
@@ -237,6 +310,8 @@ REGISTRY: dict[str, Model] = {
         ),
         Model(
             alias="whisper-large-v2",
+            family="whisper",
+            size="large-v2",
             repo="mlx-community/whisper-large-v2-mlx",
             backend="mlx-whisper",
             label="Whisper large-v2",
@@ -245,6 +320,8 @@ REGISTRY: dict[str, Model] = {
         ),
         Model(
             alias="whisper-medium",
+            family="whisper",
+            size="medium",
             repo="mlx-community/whisper-medium-mlx",
             backend="mlx-whisper",
             label="Whisper medium",
@@ -254,6 +331,8 @@ REGISTRY: dict[str, Model] = {
         ),
         Model(
             alias="whisper-small",
+            family="whisper",
+            size="small",
             repo="mlx-community/whisper-small-mlx",
             backend="mlx-whisper",
             label="Whisper small",
@@ -262,6 +341,8 @@ REGISTRY: dict[str, Model] = {
         ),
         Model(
             alias="whisper-base",
+            family="whisper",
+            size="base",
             repo="mlx-community/whisper-base-mlx",
             backend="mlx-whisper",
             label="Whisper base",
@@ -269,6 +350,8 @@ REGISTRY: dict[str, Model] = {
         ),
         Model(
             alias="whisper-tiny",
+            family="whisper",
+            size="tiny",
             repo="mlx-community/whisper-tiny-mlx",
             backend="mlx-whisper",
             label="Whisper tiny",
@@ -276,6 +359,7 @@ REGISTRY: dict[str, Model] = {
         ),
         Model(
             alias="kotoba",
+            family="kotoba",
             # The authors' own repo, converted to MLX on first use (convert.py).
             # v2.0 rather than v2.2 because, measured, they are the same ASR
             # model: all 539 tensors are identical in value (max absolute
@@ -304,6 +388,8 @@ REGISTRY: dict[str, Model] = {
         ),
         Model(
             alias="qwen3-asr",
+            family="qwen3-asr",
+            size="1.7B",
             repo="mlx-community/Qwen3-ASR-1.7B-8bit",
             backend="mlx-qwen3",
             label="Qwen3-ASR 1.7B (8-bit)",
@@ -338,11 +424,12 @@ REGISTRY: dict[str, Model] = {
             },
             notes="greedy, so reproducible. Does real language ID and reports "
                   "it. Timestamps are CHUNK boundaries only, so -f srt and "
-                  "-f vtt are refused; use txt or json. --quantization takes "
-                  "4bit..8bit or none",
+                  "-f vtt are refused; use txt or json",
         ),
         Model(
             alias="qwen3-asr-small",
+            family="qwen3-asr",
+            size="0.6B",
             repo="mlx-community/Qwen3-ASR-0.6B-8bit",
             backend="mlx-qwen3",
             label="Qwen3-ASR 0.6B (8-bit)",
@@ -365,13 +452,73 @@ REGISTRY: dict[str, Model] = {
                 "8bit": "mlx-community/Qwen3-ASR-0.6B-8bit",
                 "bf16": "mlx-community/Qwen3-ASR-0.6B-bf16",
             },
-            notes="the 0.6B sibling of qwen3-asr; same caveats, same refused "
-                  "output formats. The fastest engine measured here",
+            notes="the fastest engine measured in this project (32.8x), and "
+                  "7.1 points behind voxtral on Japanese. Same caveats as 1.7B",
         ),
     ]
 }
 
 DEFAULT_ALIAS = "voxtral"
+
+# Default size per multi-size family, and it is a measured choice rather than the
+# biggest or the newest.
+#
+#   whisper    `turbo` and not `large-v3`, which is the counterintuitive one. On this
+#              corpus large-v3 at library defaults scores 39.91% against turbo's
+#              24.97%, and with no-condition 17.36% against 15.91%. Turbo is both
+#              more accurate here and ~2x faster, so picking by size number would be
+#              wrong in both directions.
+#   qwen3-asr  `1.7B`, which beats 0.6B by 3.9 points on the 20-file corpus (19.33%
+#              against 23.27%). The 0.6B is the speed option, not the default.
+DEFAULT_SIZE = {"whisper": "turbo", "qwen3-asr": "1.7B"}
+
+# Display order per family: smallest/weakest first, so a list reads as a ladder.
+# Explicit rather than sorted, because neither alphabetical nor parameter count gives
+# Whisper's real ordering (`turbo` is a distilled large-v3, so it sorts last by
+# capability while sorting first alphabetically).
+SIZE_ORDER = {
+    "whisper": ["tiny", "base", "small", "medium", "large-v2", "large-v3", "turbo"],
+    "qwen3-asr": ["0.6B", "1.7B"],
+}
+
+
+def families() -> dict[str, list[Model]]:
+    """Family name -> its entries, in display order."""
+    out: dict[str, list[Model]] = {}
+    for m in REGISTRY.values():
+        out.setdefault(m.family, []).append(m)
+    for fam, entries in out.items():
+        order = SIZE_ORDER.get(fam)
+        if order:
+            entries.sort(key=lambda m: order.index(m.size)
+                         if m.size in order else len(order))
+    return out
+
+
+def sizes_for(family: str) -> list[str]:
+    """The sizes a family publishes, in display order. Empty for a single-size one."""
+    entries = families().get(family, [])
+    return [m.size for m in entries if m.size]
+
+
+def resolve_family(family: str, size: str | None = None) -> Model:
+    """Pick an entry by family and size. Raises UnknownSize on a bad size."""
+    entries = families()[family]
+    available = [m.size for m in entries if m.size]
+    if not size:
+        if len(entries) == 1:
+            return entries[0]
+        want = DEFAULT_SIZE[family]
+        return next(m for m in entries if m.size == want)
+    if not available:
+        # Single-size family: refused rather than ignored, so `--size large` on
+        # voxtral cannot look honoured.
+        raise UnknownSize(size, ["(none: this model has one size)"], family)
+    # Case-insensitive, since "1.7b" and "Large-V3" are reasonable to type.
+    by_lower = {m.size.lower(): m for m in entries if m.size}
+    if size.strip().lower() in by_lower:
+        return by_lower[size.strip().lower()]
+    raise UnknownSize(size, available, family)
 
 
 def infer_backend(repo: str) -> str:
@@ -395,16 +542,66 @@ def infer_backend(repo: str) -> str:
     return "voxtral"
 
 
-def resolve(name: str | None) -> Model:
-    """Return the Model for an alias or a raw repo id."""
+class UnknownModel(ValueError):
+    """`--model` named neither a family nor something that looks like a repo id.
+
+    Exists because the families replaced the old per-size names: someone typing
+    `whisper-turbo` (which worked up to v0.2.2) would otherwise have it treated as a
+    repo id, and the failure would arrive from huggingface_hub as a 404 rather than
+    from the CLI as "you meant --model whisper --size turbo".
+    """
+
+    def __init__(self, value, available, size_hint=""):
+        self.value, self.available = value, available
+        msg = (f"--model {value!r} is not a built-in model. "
+               f"Models: {', '.join(available)}.")
+        if size_hint:
+            msg += f" Did you mean {size_hint}?"
+        msg += " A Hugging Face repo id also works, but must contain a '/'."
+        super().__init__(msg)
+
+
+def _size_hint(name: str) -> str:
+    """Turn an old-style `family-size` name into the new two-flag form.
+
+    Only for the error message. The v0.1.0-v0.2.2 names were `whisper-turbo`,
+    `qwen3-asr-small` and so on, and those are exactly what a user or an old script
+    will type first.
+    """
+    for fam, entries in families().items():
+        if not name.startswith(f"{fam}-"):
+            continue
+        tail = name[len(fam) + 1:]
+        for m in entries:
+            if m.size and (m.size.lower() == tail.lower()
+                           # `qwen3-asr-small` was the 0.6B; "small" is not its size.
+                           or (tail == "small" and m.size == "0.6B")):
+                return f"--model {fam} --size {m.size}"
+        available = sizes_for(fam)
+        if not available:
+            # Single-size family, so the suffix was never valid: `--model kotoba` is
+            # the whole answer and suggesting a size flag would be wrong.
+            return f"--model {fam}"
+        return f"--model {fam} --size <one of: {', '.join(available)}>"
+    return ""
+
+
+def resolve(name: str | None, size: str | None = None) -> Model:
+    """Return the Model for a family (with optional size) or a raw repo id."""
     if not name:
-        return REGISTRY[DEFAULT_ALIAS]
-    if name in REGISTRY:
-        return REGISTRY[name]
-    # allow the full repo id of a registered model
+        return resolve_family(REGISTRY[DEFAULT_ALIAS].family, size)
+    fams = families()
+    if name in fams:
+        return resolve_family(name, size)
+    # allow the full repo id of a built-in model
     for m in REGISTRY.values():
         if m.repo == name:
             return m
+    # A bare word that is not a family is a mistake, not a repo id: every repo id has
+    # an owner prefix. Catching it here turns a 404 after a download attempt into a
+    # usage error that names the replacement.
+    if "/" not in name:
+        raise UnknownModel(name, list(fams), _size_hint(name))
     backend = infer_backend(name)
     # The two greedy backends. An unlisted repo on either one still gets the
     # `deterministic` flag right, because the CLI prints a "this engine samples"
@@ -424,6 +621,19 @@ def resolve(name: str | None) -> Model:
                  opts=opts,
                  no_speech_timestamps=(backend == "mlx-qwen3"),
                  notes="not a built-in model; defaults inferred from the repo id")
+
+
+def size_help() -> str:
+    """Per-family sizes, for `--help`. Derived, so it cannot drift from the registry."""
+    parts = []
+    for fam, entries in families().items():
+        available = [m.size for m in entries if m.size]
+        if not available:
+            continue
+        default = DEFAULT_SIZE.get(fam)
+        shown = [f"{s} (default)" if s == default else s for s in available]
+        parts.append(f"{fam}: {', '.join(shown)}")
+    return "; ".join(parts) if parts else "no family currently has multiple sizes"
 
 
 def quantization_help() -> str:
@@ -459,30 +669,47 @@ def _quant_sort_key(q: str):
 
 
 def describe_registry() -> str:
-    """Human-readable `--list-models` output."""
+    """Human-readable `--list-models` output, grouped by family.
+
+    Grouped rather than flat because the flat list had 11 entries for 4 actual
+    choices, which read as 11 unrelated models. The family is what `--model` takes;
+    everything indented under it is reachable with `--size` and `--quantization`.
+    """
     rows = []
-    width = max(len(a) for a in REGISTRY)
-    for alias, m in REGISTRY.items():
+    for fam, entries in families().items():
+        default = resolve_family(fam)
         flags = []
-        if m.deterministic:
+        if default.deterministic:
             flags.append("deterministic")
-        if m.languages != "multilingual":
-            flags.append(m.languages)
-        # A caveat that changes which command a user can run at all, so it belongs
-        # in the one-line summary rather than only in the notes below it.
-        if m.no_speech_timestamps:
+        if default.languages != "multilingual":
+            flags.append(default.languages)
+        # A caveat that changes which command a user can run at all, so it belongs in
+        # the family headline rather than only in the notes below it.
+        if default.no_speech_timestamps:
             flags.append("no srt/vtt")
         tag = ("  [" + ", ".join(flags) + "]") if flags else ""
-        rows.append(f"  {alias:<{width}}  {m.label}{tag}")
-        rows.append(f"  {'':<{width}}  {m.repo}")
-        if m.notes:
-            rows.append(f"  {'':<{width}}  {m.notes}")
-        # Listed per alias, since which precisions exist is a property of what the
-        # converters published for those weights and differs between aliases.
-        if m.quant_repos:
-            opts = sorted(m.quant_repos, key=_quant_sort_key)
-            default = next((q for q, r in m.quant_repos.items() if r == m.repo), None)
-            shown = ", ".join(f"{q} (default)" if q == default else q for q in opts)
-            rows.append(f"  {'':<{width}}  --quantization: {shown}")
+        rows.append(f"  {fam}{tag}")
+
+        available = [m.size for m in entries if m.size]
+        if available:
+            shown = ", ".join(f"{s} (default)" if s == DEFAULT_SIZE.get(fam) else s
+                              for s in available)
+            rows.append(f"      --size: {shown}")
+        # Per family, since which precisions exist is a property of what the
+        # converters published for those weights.
+        if default.quant_repos:
+            opts = sorted(default.quant_repos, key=_quant_sort_key)
+            dq = next((q for q, r in default.quant_repos.items()
+                       if r == default.repo), None)
+            rows.append("      --quantization: " + ", ".join(
+                f"{q} (default)" if q == dq else q for q in opts))
+        rows.append(f"      default weights: {default.repo}")
+        if default.notes:
+            rows.append(f"      {default.notes}")
+        # A size that carries its own caveat needs it visible, since picking that size
+        # is the only way to encounter it.
+        for m in entries:
+            if m.size and m.notes and m.notes != default.notes:
+                rows.append(f"      {m.size}: {m.notes}")
         rows.append("")
     return "\n".join(rows).rstrip()

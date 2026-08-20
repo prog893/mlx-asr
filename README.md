@@ -28,13 +28,13 @@ Python 3.12+, and [uv](https://docs.astral.sh/uv/).
 ```bash
 git clone https://github.com/prog893/mlx-asr && cd mlx-asr
 uv sync                                   # Voxtral only
-uv sync --extra whisper --extra eval      # + the whisper-* and kotoba engines
+uv sync --extra whisper --extra eval      # + the whisper and kotoba engines
 uv run mlx-asr audio.wav
 ```
 
 | extra | pulls | needed for |
 |---|---|---|
-| `whisper` | mlx-whisper, numba | the `whisper-*` aliases and `--model kotoba` |
+| `whisper` | mlx-whisper, numba | `--model whisper` and `--model kotoba` |
 | `vad` | onnxruntime | `--vad` |
 | `eval` | pykakasi, rapidfuzz | the `scripts/metrics/` scorers and benchmark scripts |
 | `dev` | pytest | the test suite |
@@ -56,7 +56,8 @@ mlx-asr talk.mp4 -f json                  # timestamps + metadata as JSON
 mlx-asr talk.mp4 -f all -o out/talk       # srt, vtt, txt and json together
 mlx-asr lecture.mp4 --fast -f vtt         # faster, slightly less accurate
 mlx-asr earnings.wav --prompt "EBITDA, ARR, Grafana"   # bias toward domain terms
-mlx-asr interview.m4a --model whisper-turbo --language ja
+mlx-asr interview.m4a --model whisper --language ja        # turbo by default
+mlx-asr interview.m4a --model whisper --size small --language ja
 mlx-asr --list-models
 ```
 
@@ -73,7 +74,9 @@ These work on every engine:
 
 | flag | default | what it does |
 |---|---|---|
-| `--model ALIAS_OR_REPO` | `voxtral` | which engine, by alias or Hugging Face repo id |
+| `--model NAME_OR_REPO` | `voxtral` | which model family, or a Hugging Face repo id |
+| `--size SIZE` | per family | which size within the family (`whisper`, `qwen3-asr`); errors on families with one |
+| `--quantization PRECISION` | per model | weight precision, where more than one build is published |
 | `-f, --output-format` | `srt` | `srt`, `vtt`, `txt`, `json`, or `all` |
 | `-o, --output PATH` | input stem | output path; with `-f all` it is a path stem |
 | `--stats-json PATH` | off | write timing, resolved config and machine info |
@@ -84,8 +87,8 @@ The rest belong to one engine. Pass one the current engine cannot use and it is 
 error, not a warning: nothing is silently ignored.
 
 ```console
-$ mlx-asr audio.wav --model whisper-turbo --max-batch 32 --fast
-error: --max-batch, --fast: not supported by --model whisper-turbo. These are
+$ mlx-asr audio.wav --model whisper --max-batch 32 --fast
+error: --max-batch, --fast: not supported by --model whisper. These are
 Voxtral-only, because the engines do not share a long-form algorithm. Drop the
 flag, or use the default --model voxtral.
 ```
@@ -106,14 +109,20 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 | `--model` | what it is |
 |---|---|
 | `voxtral` (default) | Mistral's 2026 realtime model. Takes a vocabulary prompt, decodes greedily so reruns on one machine are byte-identical, and has the steadiest timestamps here |
-| `whisper-*` | OpenAI's Whisper in seven sizes, `tiny` through `large-v3`. The best-understood option, and the most accurate on the test corpus |
+| `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **turbo**, which is both more accurate here than large-v3 and about 2x faster. The most accurate option on the test corpus |
 | `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, and Japanese only |
-| `qwen3-asr`, `qwen3-asr-small` | Alibaba's Qwen3-ASR, 1.7B and 0.6B. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
-| any HF repo id | the backend is inferred from the name |
+| `qwen3-asr` | Alibaba's Qwen3-ASR. `--size 1.7B` (default) or `0.6B`, the fastest engine measured here. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
+| any HF repo id | the backend is inferred from the name; `--size` and `--quantization` are refused, since the id already names the variant |
 
-The `whisper-*` and `qwen3-asr*` aliases do better when you set `--language`, and each
-gets the form it wants (a code for Whisper, an English name for Qwen) from whatever you
-type. Voxtral takes no language flag, and `kotoba` forces Japanese on its own.
+`--model` picks the family; `--size` and `--quantization` pick the variant inside it.
+They are not equally important, and that is measured: size spans 43 CER points across
+Whisper's range, while precision spans 0.43 across five Voxtral builds. So each family's
+default size is chosen on evidence, and precision defaults to the cheapest that loses
+nothing.
+
+`whisper` and `qwen3-asr` do better when you set `--language`, and each gets the form it
+wants (a code for Whisper, an English name for Qwen) from whatever you type. Voxtral takes
+no language flag, and `kotoba` forces Japanese on its own.
 
 What each model scored: [docs/MODELS.md](docs/MODELS.md).
 
@@ -132,4 +141,4 @@ follow one editor's conventions.
 ## License
 
 MIT, see [LICENSE](LICENSE). Model weights are not redistributed here and follow
-their own licenses; `--list-models` prints the repo id for every alias.
+their own licenses; `--list-models` prints the repo id for every model.

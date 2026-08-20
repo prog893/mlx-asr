@@ -162,6 +162,116 @@ def test_qwen3_repos_are_the_official_mlx_conversions():
     assert REGISTRY["qwen3-asr-small"].repo == "mlx-community/Qwen3-ASR-0.6B-8bit"
 
 
+# --- --model family / --size ----------------------------------------------
+#
+# The selection scheme is family on the first layer, size and precision on the second.
+# `whisper-turbo` and friends are no longer names a user types; they are internal
+# aliases. This deliberately breaks v0.1.0-v0.2.2 invocations, so the error has to name
+# the replacement rather than let the old name reach the hub as a repo id.
+
+def test_every_entry_declares_a_family():
+    from mlx_asr.models import families
+
+    for alias, m in REGISTRY.items():
+        assert m.family, alias
+    # Four families for eleven entries, which is the point of the grouping.
+    assert set(families()) == {"voxtral", "whisper", "kotoba", "qwen3-asr"}
+
+
+def test_sizes_are_declared_only_where_there_is_a_choice():
+    from mlx_asr.models import sizes_for
+
+    assert sizes_for("whisper") == ["tiny", "base", "small", "medium",
+                                    "large-v2", "large-v3", "turbo"]
+    assert sizes_for("qwen3-asr") == ["0.6B", "1.7B"]
+    # Single-size families report none, which is what makes --size refusable on them.
+    assert sizes_for("voxtral") == []
+    assert sizes_for("kotoba") == []
+
+
+def test_whisper_defaults_to_turbo_not_the_largest():
+    """The counterintuitive default, and it is measured.
+
+    Picking by size number would take large-v3, which on this corpus scores 39.91% at
+    library defaults against turbo's 24.97%, and 17.36% against 15.91% with
+    no-condition. Turbo is more accurate here AND ~2x faster.
+    """
+    assert resolve("whisper").repo == "mlx-community/whisper-large-v3-turbo"
+    assert resolve("whisper").size == "turbo"
+
+
+def test_qwen3_defaults_to_the_larger_size():
+    """The opposite case, also measured: 1.7B beats 0.6B by 3.9 points at n=20."""
+    assert resolve("qwen3-asr").size == "1.7B"
+
+
+def test_size_is_case_insensitive():
+    """"1.7b" and "Large-V3" are reasonable to type."""
+    assert resolve("qwen3-asr", "1.7b").size == "1.7B"
+    assert resolve("whisper", "LARGE-V3").size == "large-v3"
+    assert resolve("whisper", " turbo ").size == "turbo"
+
+
+def test_an_unavailable_size_names_what_exists():
+    from mlx_asr.models import UnknownSize
+
+    with pytest.raises(UnknownSize) as e:
+        resolve("whisper", "huge")
+    msg = str(e.value)
+    assert "tiny" in msg and "turbo" in msg
+
+
+def test_size_is_refused_on_a_single_size_family():
+    """Refused rather than ignored, so `--size large` on voxtral cannot look
+    honoured. Same rule as --quantization on a single-precision model."""
+    from mlx_asr.models import UnknownSize
+
+    for fam in ("voxtral", "kotoba"):
+        with pytest.raises(UnknownSize):
+            resolve(fam, "large")
+
+
+@pytest.mark.parametrize("old,expected", [
+    ("whisper-turbo", "--model whisper --size turbo"),
+    ("whisper-large-v3", "--model whisper --size large-v3"),
+    ("whisper-tiny", "--model whisper --size tiny"),
+    ("qwen3-asr-small", "--model qwen3-asr --size 0.6B"),
+])
+def test_the_old_per_size_names_name_their_replacement(old, expected):
+    """These worked up to v0.2.2, so they are exactly what an old script sends.
+
+    Caught here rather than passed to huggingface_hub, which would 404 without saying
+    what to type instead.
+    """
+    from mlx_asr.models import UnknownModel
+
+    with pytest.raises(UnknownModel) as e:
+        resolve(old)
+    assert expected in str(e.value), str(e.value)
+
+
+def test_a_bare_typo_is_a_usage_error_not_a_repo_id():
+    """Every repo id has an owner prefix, so a bare word cannot be one."""
+    from mlx_asr.models import UnknownModel
+
+    with pytest.raises(UnknownModel) as e:
+        resolve("wisper")
+    assert "voxtral, whisper, kotoba, qwen3-asr" in str(e.value)
+    # A real repo id still resolves, so the guard is on the shape and not a whitelist.
+    assert resolve("some/custom-model").repo == "some/custom-model"
+
+
+def test_a_single_size_family_typo_does_not_suggest_a_size_flag():
+    """`kotoba-v2` should point at `--model kotoba`, not at an empty size list."""
+    from mlx_asr.models import UnknownModel
+
+    with pytest.raises(UnknownModel) as e:
+        resolve("kotoba-v2")
+    msg = str(e.value)
+    assert "--model kotoba" in msg
+    assert "one of:" not in msg, msg
+
+
 # --- --quantization -------------------------------------------------------
 #
 # The flag is nothing but a lookup from (alias, precision) to a published repo id;
@@ -583,14 +693,29 @@ def test_an_unlisted_qwen3_repo_gets_the_qwen3_defaults():
     assert m.opts.get("condition_on_previous_text") is None
 
 
-def test_describe_registry_mentions_every_alias_and_its_caveats():
+def test_describe_registry_lists_every_family_size_and_caveat():
+    """`--list-models` is where a user picks, so everything reachable must appear.
+
+    Families rather than internal aliases: `whisper-turbo` is no longer something a
+    user types, so listing it would advertise a name the CLI rejects. What has to be
+    present is the family, every size within it, and the caveats.
+    """
+    from mlx_asr.models import families, sizes_for
+
     out = describe_registry()
-    for alias in REGISTRY:
-        assert alias in out
+    for fam in families():
+        assert fam in out, fam
+        for size in sizes_for(fam):
+            assert size in out, (fam, size)
+    # No internal alias should leak into user-facing output.
+    assert "whisper-turbo" not in out
+    assert "qwen3-asr-small" not in out
     # the caveats a user needs before trusting a number must be visible
     assert "deterministic" in out
     # the language restriction is a caveat a user must see before trusting output
     assert "ja" in out
-    # `--list-models` is where a user picks an engine, so a refused output format
-    # has to appear there rather than only as an error after they have chosen.
+    # a refused output format has to appear here rather than only as an error after
+    # the user has chosen
     assert "no srt/vtt" in out
+    # and both second-layer flags, since they are the only route to most variants
+    assert "--size:" in out and "--quantization:" in out

@@ -282,7 +282,7 @@ UNSUPPORTED_ON_WHISPER = [
 # was measured on Voxtral's decoder, not this one. `--chunk-seconds` is excluded
 # from the list because both of these engines honour it or refuse it by their own
 # rule (chunked drivers take it; sequential whisper does not).
-NON_VOXTRAL_ENGINES = ["whisper-turbo", "qwen3-asr"]
+NON_VOXTRAL_ENGINES = ["whisper", "qwen3-asr"]
 
 
 @pytest.mark.parametrize("alias", NON_VOXTRAL_ENGINES)
@@ -360,7 +360,7 @@ def test_untimed_formats_are_not_refused_on_qwen3(fmt, tmp_path):
 
 def test_subtitle_formats_still_work_on_the_timestamped_engines(tmp_path):
     """The mirror case: the refusal is a property of one engine, not of `-f srt`."""
-    for alias in ("voxtral", "whisper-turbo"):
+    for alias in ("voxtral", "whisper"):
         r = subprocess.run(
             CLI + [str(tmp_path / "nope.wav"), "--model", alias, "-f", "srt"],
             capture_output=True, text=True, cwd=ROOT)
@@ -442,7 +442,7 @@ def test_defaults_do_not_count_as_passed(tmp_path):
     """--delay-ms and --gain have non-None defaults; leaving them alone is not a
     request, so a whisper run with no flags must not trip the check."""
     r = subprocess.run(
-        CLI + [str(tmp_path / "nope.wav"), "--model", "whisper-turbo"],
+        CLI + [str(tmp_path / "nope.wav"), "--model", "whisper"],
         capture_output=True, text=True, cwd=ROOT)
     assert "not supported" not in r.stderr, r.stderr
 
@@ -459,6 +459,10 @@ PORTABLE_FLAGS = {
     # (which already names its own precision). Covered by its own tests below and in
     # test_models.py rather than by the whisper rejection list.
     "--quantization",
+    # Same shape as --quantization: refused per family rather than per engine, since
+    # whether it applies depends on how many sizes that family publishes. Covered by
+    # its own tests here and in test_models.py.
+    "--size",
 }
 
 
@@ -492,7 +496,7 @@ def test_quantization_is_refused_rather_than_ignored_everywhere_it_cannot_apply(
     """
     cases = [
         # (model, expected fragment)
-        ("whisper-turbo", "ships one precision"),
+        ("whisper", "ships one precision"),
         ("kotoba", "ships one precision"),
         ("mlx-community/Qwen3-ASR-1.7B-4bit", "only supported for the built-in models"),
     ]
@@ -700,7 +704,7 @@ def test_cli_accepts_every_spelling_of_a_language(form, tmp_path):
     treated "Japanese" and "jpn" as decoder prompt hints instead of language selections.
     """
     r = subprocess.run(
-        CLI + [str(tmp_path / "nope.wav"), "--model", "whisper-turbo",
+        CLI + [str(tmp_path / "nope.wav"), "--model", "whisper",
                "--language", form],
         capture_output=True, text=True, cwd=ROOT)
     assert r.returncode == 1, (form, r.returncode, r.stderr)
@@ -716,7 +720,7 @@ def test_cli_rejects_an_unknown_language_before_reading_the_audio(form, tmp_path
     invocation used by the unsupported-flag path.
     """
     r = subprocess.run(
-        CLI + [str(tmp_path / "nope.wav"), "--model", "whisper-turbo",
+        CLI + [str(tmp_path / "nope.wav"), "--model", "whisper",
                "--language", form],
         capture_output=True, text=True, cwd=ROOT)
     assert r.returncode == 2, (form, r.returncode, r.stdout, r.stderr)

@@ -13,7 +13,7 @@ throughput figures were taken while the host was busy with something else, and t
 concurrent decodes contend for the same GPU by construction.
 
     uv run python scripts/benchmarks/sweep_qwen3_chunk.py --corpus DIR --outdir DIR \\
-        [--windows 30 60 120 300] [--model qwen3-asr-small]
+        [--windows 30 60 120 300] [--model qwen3-asr]
 """
 
 import argparse
