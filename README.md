@@ -61,8 +61,9 @@ mlx-asr interview.m4a --model whisper --size small --language ja
 mlx-asr --list-models
 ```
 
-Input can be anything ffmpeg reads: any container, codec, sample rate, bit depth or
-channel count, including video files.
+Input is anything libavformat demuxes: wav, flac, mp3, aac/m4a, alac, opus, or the audio
+track of a video, at any sample rate or bit depth. It gets downmixed to mono and
+resampled to 16kHz before the model sees it. Details in [docs/AUDIO.md](docs/AUDIO.md).
 
 Default parameters are picked based on machine. If your chip and RAM are in
 [mlx_asr/profiles.json](mlx_asr/profiles.json), they come from measurements on that

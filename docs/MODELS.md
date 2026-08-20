@@ -1,157 +1,97 @@
 # Models and command schemas
 
-Every alias, every option it accepts, and whether the minimal command actually
-works. Each "works" cell was produced by running the command through the
-Homebrew-installed binary on an M4 16GB, not by reading the code.
+Every model, every variant it has, and every flag it accepts. `--model` picks a family;
+`--size` and `--quantization` pick the variant inside it.
 
-Everything here runs on MLX. Nothing installs or imports torch, and no path uses
-torch's MPS backend. Verified on the installed tree: `torch` is absent, and
-`transformers` is present only as a pure-Python tokenizer/config library, which
-prints `PyTorch was not found` on import and is never asked for a model.
+Everything runs on MLX. Nothing installs or imports torch, and no path uses torch's MPS
+backend: on the installed tree `torch` is absent, and `transformers` is present only as a
+pure-Python tokenizer and config library, which prints `PyTorch was not found` on import
+and is never asked for a model.
 
-## Input audio
-
-Nothing is constrained. Container, codec, sample rate, bit depth and channel count
-are whatever the file has, and FFmpeg's demuxers and `libswresample` do the
-conversion to the 16kHz mono float32 the mel front end needs.
-
-Verified end to end, each decoding to the correct duration:
-
-| input | rate | depth / channels |
-|---|---|---|
-| WAV (pcm_s16le, s24le, f32le, mulaw) | 8k, 16k, 96k | 16/24/32-bit, mono + stereo |
-| FLAC | 48k | 32-bit |
-| AAC / M4A, ALAC | 16k, 44.1k | mono + stereo |
-| MP3 | 22.05k | mono |
-| Opus | 48k | mono |
-| MP4 video | 16k | mono (audio stream extracted) |
-
-Audio is decoded straight into memory. Nothing is transcoded to disk and read back,
-so the only lossy step is whatever the source format already implies.
-
-Decoding goes through PyAV, which is FFmpeg's libav* libraries as a Python
-extension, so no subprocess is involved: no argv quoting, no pipe buffering, and
-failures arrive as exceptions instead of a parsed stderr tail. Output is
-bit-identical to the `ffmpeg` CLI on every format tested except Opus, which differs
-by 3e-06 peak. The CLI stays as a fallback if PyAV is missing.
-
-A video file with no audio track, a path that does not exist, or a file that is
-not audio each produce one line and exit 1, not a traceback.
+For what audio you can feed it, see [AUDIO.md](AUDIO.md). Short version: anything
+libavformat demuxes, at any sample rate.
 
 ## The models
 
-180s Japanese narration clip, plain CER against a complete verbatim reference
-(the one file in this project where plain CER is meaningful). `--language ja` for
-every engine that takes it. x-realtime includes model load, so it understates the
-larger models; treat it as "what you wait for", not a throughput benchmark.
+### `--model voxtral`
 
-| model | size | weights | long-form algorithm | works | CER | x-rt |
-|---|---|---|---|---|---|---|
-| `voxtral` **(default)** | | `mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit` | batched chunks, our decoder | yes | **11.76%** | 1.7x |
-| `whisper` | `turbo` **(default)** | `mlx-community/whisper-large-v3-turbo` | sequential 30s | yes | 13.67% | 15.1x |
-| `whisper` | `large-v3` | `mlx-community/whisper-large-v3-mlx` | sequential 30s | yes | 14.41% | 6.1x |
-| `whisper` | `large-v2` | `mlx-community/whisper-large-v2-mlx` | sequential 30s | yes | 13.45% | 4.0x |
-| `whisper` | `medium` | `mlx-community/whisper-medium-mlx` | sequential 30s | yes | 16.42% | 10.8x |
-| `whisper` | `small` | `mlx-community/whisper-small-mlx` | sequential 30s | yes | 24.47% | 21.7x |
-| `whisper` | `base` | `mlx-community/whisper-base-mlx` | sequential 30s | yes | 35.59% | 20.9x |
-| `whisper` | `tiny` | `mlx-community/whisper-tiny-mlx` | sequential 30s | yes | 32.10% | 51.4x |
-| `kotoba` | | `kotoba-tech/kotoba-whisper-v2.0` | chunked 10s windows (our driver) | yes | 22.67% | 9.8x |
-| `qwen3-asr` | `1.7B` **(default)** | `mlx-community/Qwen3-ASR-1.7B-8bit` | chunked 30s windows (our loop, upstream cut points) | yes, txt/json only | 19.70% | 19.6x |
-| `qwen3-asr` | `0.6B` | `mlx-community/Qwen3-ASR-0.6B-8bit` | chunked 30s windows | yes, txt/json only | 18.86% | 25.4x |
+| `--quantization` | weights | on disk | clip CER | x-rt |
+|---|---|---|---|---|
+| `4bit` **default** | [mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit) | 3.15GB | 11.76% | 1.7x |
+| `fp16` | [mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16) | 8.89GB | not run |  |
 
-Everything runs on MLX. The `weights` column is the default precision; `--quantization`
-reaches the others where they exist.
+### `--model whisper`
 
-Reproduce with `scripts/benchmarks/matrix_models.py`. How the metrics work and why the
-sample sizes constrain what you can read off them:
-[benchmarks/README.md](benchmarks/README.md).
+| `--size` | `--quantization` | weights | on disk | clip CER | x-rt |
+|---|---|---|---|---|---|
+| `tiny` | only one | [mlx-community/whisper-tiny-mlx](https://huggingface.co/mlx-community/whisper-tiny-mlx) | 0.07GB | 32.10% | 51.4x |
+| `base` | only one | [mlx-community/whisper-base-mlx](https://huggingface.co/mlx-community/whisper-base-mlx) | 0.14GB | 35.59% | 20.9x |
+| `small` | only one | [mlx-community/whisper-small-mlx](https://huggingface.co/mlx-community/whisper-small-mlx) | 0.48GB | 24.47% | 21.7x |
+| `medium` | only one | [mlx-community/whisper-medium-mlx](https://huggingface.co/mlx-community/whisper-medium-mlx) | 1.52GB | 16.42% | 10.8x |
+| `large-v2` | only one | [mlx-community/whisper-large-v2-mlx](https://huggingface.co/mlx-community/whisper-large-v2-mlx) | 3.08GB | 13.45% | 4.0x |
+| `large-v3` | only one | [mlx-community/whisper-large-v3-mlx](https://huggingface.co/mlx-community/whisper-large-v3-mlx) | 3.08GB | 14.41% | 6.1x |
+| `turbo` **default** | only one | [mlx-community/whisper-large-v3-turbo](https://huggingface.co/mlx-community/whisper-large-v3-turbo) | 1.61GB | 13.67% | 15.1x |
 
-Do not pick a model from that table. It is one clip in one language, and the
-20-file corpus in [docs/benchmarks/engines.md](benchmarks/engines.md) puts whisper turbo ahead of
-`voxtral` on accuracy, the reverse of what you see here. That is why the README
-quotes the corpus number instead. `whisper-tiny` scoring better than
-`whisper-base` is the same problem showing through: at n=1 that is noise, not a
-fact about model size. So is `qwen3-asr-small` beating `qwen3-asr` on this clip; on the
-20-file corpus the ordering reverses by 3.9 points.
+### `--model kotoba`
 
-The two `qwen3-asr` rows were produced with `-f txt`, since they refuse `srt`. Note the
-x-realtime column includes model load, which flatters small models: these two load in
-about 3s where Voxtral takes 14s on this machine, so most of the apparent gap here is
-startup, not throughput. The corpus figures exclude load.
+| `--quantization` | weights | on disk | clip CER | x-rt |
+|---|---|---|---|---|
+| only one | [kotoba-tech/kotoba-whisper-v2.0](https://huggingface.co/kotoba-tech/kotoba-whisper-v2.0) | 1.52GB | 22.67% | 9.8x |
 
-Voxtral's x-realtime looks bad because a 16GB M4 is the floor case for it. Its
-encoder is compute-bound, and the same code reaches 29.8x on an idle M2 Ultra 128GB over
-the 20-file corpus (see docs/benchmarks/engines.md).
+### `--model qwen3-asr`
 
-The `kotoba` alias is v2.0 and gains nothing from v2.2. Both hold the same ASR
-weights, identical in value across all 539 tensors (max absolute difference exactly
-0.0; the files differ only in container metadata and stored dtype), and v2.2's own
-model card describes it as v2.0 plus speaker diarization and punctuation. Those are
-separate post-processing models (`diarizers`, `punctuators`), not retrained weights,
-and both want torch.
+| `--size` | `--quantization` | weights | on disk | clip CER | x-rt |
+|---|---|---|---|---|---|
+| `0.6B` | `4bit` | [mlx-community/Qwen3-ASR-0.6B-4bit](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-4bit) | 0.71GB | not run |  |
+| `0.6B` | `5bit` | [mlx-community/Qwen3-ASR-0.6B-5bit](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-5bit) | 0.79GB | not run |  |
+| `0.6B` | `6bit` | [mlx-community/Qwen3-ASR-0.6B-6bit](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-6bit) | 0.86GB | not run |  |
+| `0.6B` | `8bit` **default** | [mlx-community/Qwen3-ASR-0.6B-8bit](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-8bit) | 1.01GB | 18.86% | 25.4x |
+| `0.6B` | `bf16` | [mlx-community/Qwen3-ASR-0.6B-bf16](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-bf16) | 1.57GB | not run |  |
+| `1.7B` **default** | `4bit` | [mlx-community/Qwen3-ASR-1.7B-4bit](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-4bit) | 1.61GB | not run |  |
+| `1.7B` **default** | `5bit` | [mlx-community/Qwen3-ASR-1.7B-5bit](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-5bit) | 1.82GB | not run |  |
+| `1.7B` **default** | `6bit` | [mlx-community/Qwen3-ASR-1.7B-6bit](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-6bit) | 2.04GB | not run |  |
+| `1.7B` **default** | `8bit` **default** | [mlx-community/Qwen3-ASR-1.7B-8bit](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-8bit) | 2.47GB | 19.70% | 19.6x |
+| `1.7B` **default** | `bf16` | [mlx-community/Qwen3-ASR-1.7B-bf16](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-bf16) | 4.08GB | not run |  |
 
-Its weights are converted to MLX the first time you use them, since the authors
-publish transformers format only. That takes a few seconds, needs no torch, and
-is cached under `~/.cache/huggingface/hub/mlx-asr-converted/`. See
+Tables are generated by `scripts/docs/gen_model_matrix.py`, which also checks every id
+against the Hugging Face API. `on disk` is the whole repo, weights plus tokenizer and
+configs, and is not peak GPU memory.
+
+`clip CER` is one 180s Japanese narration clip, plain CER against a complete verbatim
+reference, `--language ja` where the model takes one. It answers "does this load and
+roughly how fast", nothing more. x-realtime includes model load, which flatters the small
+models.
+
+**Do not pick a model from those numbers.** One clip in one language ranks
+`whisper-tiny` above `whisper-base` and the 0.6B Qwen above the 1.7B, and the 20-file
+corpus reverses both. The corpus figures are in
+[benchmarks/engines.md](benchmarks/engines.md) and
+[benchmarks/qwen3-asr.md](benchmarks/qwen3-asr.md).
+
+Two things the tables do not say. `kotoba` is v2.0 rather than v2.2 because the two hold
+identical ASR weights, all 539 tensors equal in value, and v2.2's extras (diarization,
+punctuation) are separate torch models. Its weights are transformers format, so they are
+converted to MLX on first use and cached under
+`~/.cache/huggingface/hub/mlx-asr-converted/`. See
 [Converting your own weights](#converting-your-own-weights).
 
-## Every combination, and what it resolves to
+Voxtral's 1.7x on that clip looks bad because a 16GB M4 is its floor case; its encoder is
+compute-bound, and the same code reaches 29.6x on an idle M2 Ultra over the corpus.
 
-`--model` picks the family; `--size` and `--quantization` pick the variant. This is the
-complete mapping, and it is **generated** from the registry rather than maintained by
-hand (`scripts/docs/gen_model_matrix.py`), which also verifies every id against the
-Hugging Face API. Sizes are as-published on disk, so they include the tokenizer and
-config alongside the weights.
-
-| `--model` | `--size` | `--quantization` | weights | on disk | Hugging Face |
-|---|---|---|---|---|---|
-| `voxtral` **(default)** | n/a | `4bit` | `mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit` | 3.15GB | [link](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit) |
-| `voxtral` | n/a | `fp16` | `mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16` | 8.89GB | [link](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16) |
-| `whisper` | `tiny` | n/a | `mlx-community/whisper-tiny-mlx` | 0.07GB | [link](https://huggingface.co/mlx-community/whisper-tiny-mlx) |
-| `whisper` | `base` | n/a | `mlx-community/whisper-base-mlx` | 0.14GB | [link](https://huggingface.co/mlx-community/whisper-base-mlx) |
-| `whisper` | `small` | n/a | `mlx-community/whisper-small-mlx` | 0.48GB | [link](https://huggingface.co/mlx-community/whisper-small-mlx) |
-| `whisper` | `medium` | n/a | `mlx-community/whisper-medium-mlx` | 1.52GB | [link](https://huggingface.co/mlx-community/whisper-medium-mlx) |
-| `whisper` | `large-v2` | n/a | `mlx-community/whisper-large-v2-mlx` | 3.08GB | [link](https://huggingface.co/mlx-community/whisper-large-v2-mlx) |
-| `whisper` | `large-v3` | n/a | `mlx-community/whisper-large-v3-mlx` | 3.08GB | [link](https://huggingface.co/mlx-community/whisper-large-v3-mlx) |
-| `whisper` **(default)** | `turbo` | n/a | `mlx-community/whisper-large-v3-turbo` | 1.61GB | [link](https://huggingface.co/mlx-community/whisper-large-v3-turbo) |
-| `kotoba` **(default)** | n/a | n/a | `kotoba-tech/kotoba-whisper-v2.0` | 1.52GB | [link](https://huggingface.co/kotoba-tech/kotoba-whisper-v2.0) |
-| `qwen3-asr` | `0.6B` | `4bit` | `mlx-community/Qwen3-ASR-0.6B-4bit` | 0.71GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-4bit) |
-| `qwen3-asr` | `0.6B` | `5bit` | `mlx-community/Qwen3-ASR-0.6B-5bit` | 0.79GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-5bit) |
-| `qwen3-asr` | `0.6B` | `6bit` | `mlx-community/Qwen3-ASR-0.6B-6bit` | 0.86GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-6bit) |
-| `qwen3-asr` | `0.6B` | `8bit` *(default)* | `mlx-community/Qwen3-ASR-0.6B-8bit` | 1.01GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-8bit) |
-| `qwen3-asr` | `0.6B` | `bf16` | `mlx-community/Qwen3-ASR-0.6B-bf16` | 1.57GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-bf16) |
-| `qwen3-asr` | `1.7B` | `4bit` | `mlx-community/Qwen3-ASR-1.7B-4bit` | 1.61GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-4bit) |
-| `qwen3-asr` | `1.7B` | `5bit` | `mlx-community/Qwen3-ASR-1.7B-5bit` | 1.82GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-5bit) |
-| `qwen3-asr` | `1.7B` | `6bit` | `mlx-community/Qwen3-ASR-1.7B-6bit` | 2.04GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-6bit) |
-| `qwen3-asr` **(default)** | `1.7B` | `8bit` *(default)* | `mlx-community/Qwen3-ASR-1.7B-8bit` | 2.47GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-8bit) |
-| `qwen3-asr` | `1.7B` | `bf16` | `mlx-community/Qwen3-ASR-1.7B-bf16` | 4.08GB | [link](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-bf16) |
-
-Everything is `mlx-community` except `kotoba`, which is the authors' own transformers
-build converted locally on first use. See
-[Why mlx-community](#why-mlx-community-and-not-unsloth-or-gguf) for why that is not just
-inertia.
-
-## Minimal command, per model
-
-Every one of these is the complete command. No other flag is required.
+## Minimal commands
 
 ```bash
-mlx-asr audio.wav                                    # voxtral, writes audio.srt
-mlx-asr audio.wav --model whisper --language ja       # turbo, the default size
-mlx-asr audio.wav --model whisper --size large-v3 --language ja
-mlx-asr audio.wav --model whisper --size large-v2 --language ja
-mlx-asr audio.wav --model whisper --size medium --language ja
+mlx-asr audio.wav                                          # voxtral, writes audio.srt
+mlx-asr audio.wav --model whisper --language ja             # turbo
 mlx-asr audio.wav --model whisper --size small --language ja
-mlx-asr audio.wav --model whisper --size base --language ja
-mlx-asr audio.wav --model whisper --size tiny --language ja
-mlx-asr audio.wav --model kotoba                     # forces ja on its own
-mlx-asr audio.wav --model qwen3-asr --language ja -f txt        # -f srt is an error
+mlx-asr audio.wav --model kotoba                           # forces ja itself
+mlx-asr audio.wav --model qwen3-asr --language ja -f txt
 mlx-asr audio.wav --model qwen3-asr --size 0.6B --language ja -f json
 ```
 
-The two `qwen3-asr` aliases are the only ones where `-f` is not free: they need `txt` or
-`json`, because the engine emits no timestamp finer than its own decode window. Asking for
-`srt`, `vtt` or `all` exits 2.
+`qwen3-asr` is the only family where `-f` is constrained: `txt` and `json` work, and
+`srt`, `vtt` or `all` exit 2, because it emits no timestamp finer than its own decode
+window.
 
 ### `--language` takes any spelling
 
@@ -194,9 +134,8 @@ reports the flag as ignored if you pass it.
 
 ## Model-specific options
 
-The engines do not share a long-form algorithm, so most flags apply to exactly one
-of them. **A flag the selected engine cannot honour is an error, not a warning**, and
-exits 2 without transcribing:
+The engines do not share a long-form algorithm, so most flags belong to exactly one.
+A flag the selected model cannot honour exits 2 without transcribing:
 
 ```console
 $ mlx-asr audio.wav --model kotoba --max-batch 8 --vad
@@ -205,10 +144,9 @@ because the engines do not share a long-form algorithm. Drop the flag, or use th
 default --model voxtral.
 ```
 
-Nothing is silently ignored. A flag that looks accepted and then does nothing produces
-output a user will read as having been produced with it, which is the same class of
-mistake as publishing a measurement from a config that was never applied. This project
-did exactly that once, with a subtitle-cue setting.
+Never a warning, because a flag that looks accepted and does nothing gives you output you
+will read as having been produced with it. This project published a break-F1 figure that
+way once, describing a cue config the CLI never applied.
 
 | flag | `voxtral` | `whisper` | `kotoba` | `qwen3-asr` |
 |---|---|---|---|---|
@@ -267,13 +205,13 @@ All verified working through the brew binary.
 
 ### whisper options
 
-Only `--language` beyond the global set. The registry also applies
+Only `--language` beyond the global set. Every whisper size also gets
 `condition_on_previous_text=False`, which is not exposed as a flag because
 enabling it is never right on long audio: it lets a repetition loop feed itself
 across 30s windows, worth up to 22.6 CER points.
 
 These engines **sample**, so repeat runs of one config differ. Confirmed directly
-rather than inferred: three `whisper-base` runs on identical audio and identical
+rather than inferred: three `--size base` runs on identical audio and identical
 flags produced three different files (33.69% and 35.59% CER on two of them), while
 two `voxtral` runs produced byte-identical output. If you need a reproducible
 transcript, or you are benchmarking anything, use `voxtral`.
@@ -368,7 +306,7 @@ publisher: convert locally with `mlx_audio.convert` (which is how the measured 8
 mxfp8 and nvfp4 Voxtral rows were produced) and pass the output directory to `--model`,
 or pass any MLX-format repo id directly.
 
-## Using weights that are not in the registry
+## Weights that are not built in
 
 `--model` takes any HF repo id, and the backend is inferred from the name:
 `voxtral` in the id routes to the Voxtral path, `qwen3-asr` to the Qwen3 loop,
@@ -377,7 +315,7 @@ layers and cannot carry state across sequential windows), `whisper` to the seque
 driver, and anything else to Voxtral. `qwen3-asr` is tested before the other two, so an
 id carrying both words (`Qwen3-ASR-1.7B-whisper-distilled`) reaches the loader that can
 read its config. An inferred Qwen3 entry gets the same 30s window and the same refused
-formats as a registry one, so `--model Qwen/Qwen3-ASR-1.7B` behaves like
+formats as a built-in one, so `--model Qwen/Qwen3-ASR-1.7B` behaves like
 `--model qwen3-asr`.
 
 ```bash

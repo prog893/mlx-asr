@@ -701,7 +701,7 @@ def test_the_docs_combination_table_covers_every_reachable_variant():
     (`scripts/docs/gen_model_matrix.py`).
     """
     doc = (Path(__file__).resolve().parents[1] / "docs" / "MODELS.md").read_text()
-    table = doc.split("## Every combination")[1].split("## ")[0]
+    table = doc.split("## The models")[1].split("\n## ")[0]
     for m in REGISTRY.values():
         repos = set(m.quant_repos.values()) | {m.repo}
         for repo in repos:
