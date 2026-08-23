@@ -13,12 +13,11 @@ engine in cli.py rather than approximated here, and the adapter labels its meta
 `cue_source: "chunk_boundaries"` so nothing downstream mistakes those times for
 the per-token ones the Voxtral path produces.
 
-Everything here is MLX. There was a `transformers` backend that ran kotoba-whisper
-through the authors' torch/MPS pipeline, kept as a correctness reference; it is
-gone, because the MLX chunked driver matched it to within a point at 1.4x the
-throughput (docs/benchmarks/engines.md) and keeping it meant a 2.5GB torch dependency for a path
-nobody should choose. Its numbers stay in docs/benchmarks/engines.md as the evidence that the MLX
-driver is right.
+Everything here runs on MLX, with one measured exception: `reazon-k2` runs the
+authors' ONNX files through sherpa-onnx on CPU, because that build is the most
+accurate open Japanese ASR on its authors' cited benchmarks and ONNX is what
+lets it run here without torch. Its throughput is therefore not comparable to
+the GPU rows.
 
 mlx-whisper is an optional import: a source install ships only the Voxtral path,
 so a user who never asks for Whisper never installs it. The Homebrew formula
@@ -29,6 +28,8 @@ installed rather than assuming pip.
 import shutil
 import sys
 from pathlib import Path
+
+SAMPLE_RATE_16K = 16000
 
 
 def _die(msg: str) -> None:
@@ -335,10 +336,288 @@ def transcribe_mlx_qwen3(audio_path: str, model, language=None, log=print,
                         **opts)
 
 
+def _refuse_non_japanese(language, alias):
+    """Hard error on a language request these weights cannot honour.
+
+    Both Japanese-only engines take NO language token at all: there is nothing to
+    forward, so accepting `--language en` and silently producing Japanese output
+    is exactly the honoured-looking-but-ignored failure this CLI refuses
+    everywhere else."""
+    if not language:
+        return
+    from .languages import to_iso
+
+    code = to_iso(language, alias)
+    if code != "ja":
+        _die(f"{alias} is a Japanese-only model and takes no language token; "
+             f"--language {language!r} (-> {code}) is refused rather than "
+             f"ignored. The weights transcribe Japanese only.")
+
+
+def parakeet_decode(loaded, audio, chunk_len: float, log=print,
+                    overlap_s: float = 2.0):
+    """Decode one already-loaded array through mlx-audio's Parakeet driver.
+
+    Returns (cues, full_text, meta). Separate from ``transcribe_mlx_parakeet``
+    for the same reason as ``qwen3_decode``: the benchmark has to measure exactly
+    the code the CLI runs, so the weights load once outside the timing loop and
+    every file goes through this function.
+
+    ``audio`` is a 16kHz mono float32 array (the same `load_audio_16k` contract
+    every other engine reads), wrapped in `mx.array` here. One audio front end
+    for every engine is what keeps a conversion difference out of CER.
+
+    Chunking is delegated to upstream `generate(chunk_duration=...)`, which cuts
+    fixed windows, merges them over the overlap, and returns token times already
+    offset. These ARE speech times (TDT predicts a duration per token), so unlike
+    Qwen3-ASR this engine is subtitle-capable and says so via
+    `cue_source: "token_times"`.
+
+    Nothing detects or forces a language: these weights have one output language.
+    `language_source: "single_language_model"` states that rather than borrowing
+    the vocabulary of engines that actually ran something.
+    """
+    import mlx.core as mx
+
+    duration = len(audio) / SAMPLE_RATE_16K
+    r = loaded.generate(mx.array(audio), chunk_duration=chunk_len,
+                        overlap_duration=overlap_s)
+    sentences = list(getattr(r, "sentences", []) or [])
+    cues = [(s.start, s.end, s.text.strip()) for s in sentences
+            if s.text.strip()]
+    text = "".join(c[2] for c in cues)
+
+    token_count = sum(len(s.tokens) for s in sentences)
+    span_end = max((c[1] for c in cues), default=0.0)
+    meta = {"segments": len(sentences),
+            "cue_source": "token_times",
+            "chunk_seconds": chunk_len,
+            "overlap_seconds": overlap_s,
+            "language_source": "single_language_model",
+            "token_count": token_count,
+            # Speech stops before the file ends whenever there is trailing
+            # silence, so this is provenance rather than truncation. Recorded so
+            # a near-zero value on long audio is visible without reopening JSON.
+            "last_token_end_s": round(span_end, 2)}
+    if not token_count and duration > 10:
+        log(f"[mlx-parakeet] WARNING: {duration:.0f}s of audio produced no "
+            f"tokens at all. That is a degenerate decode, not silence.")
+    return cues, text, meta
+
+
+def transcribe_mlx_parakeet(audio_path: str, model, language=None, log=print,
+                            **overrides):
+    """NVIDIA Parakeet (Japanese) through mlx-audio's own loader.
+
+    No new dependency: mlx-audio ships the FastConformer/TDT implementation and
+    dispatches on the repo name, so this is the same `load` call the Voxtral and
+    Qwen3 paths make. See ``parakeet_decode`` for the decode itself.
+    """
+    try:
+        from mlx_audio.stt.utils import load as load_model
+    except ImportError:      # pragma: no cover - mlx-audio is a hard dependency
+        _die("parakeet needs mlx-audio, which should already be installed")
+
+    _refuse_non_japanese(language, model.alias)
+
+    opts = dict(model.opts)
+    opts.update({k: v for k, v in overrides.items() if v is not None})
+    chunk_len = opts.pop("chunk_length_s", 120.0)
+    overlap_s = opts.pop("overlap_duration_s", 2.0)
+
+    m = load_model(model.repo)
+    from .audio import load_audio_16k
+
+    log(f"[{model.backend}] window {chunk_len:g}s, overlap {overlap_s:g}s")
+    return parakeet_decode(m, load_audio_16k(audio_path), chunk_len, log=log,
+                           overlap_s=overlap_s)
+
+
+# --- ReazonSpeech k2-v2 (sherpa-onnx) ----------------------------------------
+#
+# Zipformer transducer published as ONNX by the model's authors, run through
+# sherpa-onnx. This is the one engine here that is not MLX, and that is a
+# measured trade rather than an oversight: the k2 build is the most accurate
+# open Japanese ASR on the public benchmarks its authors cite (TEDxJP-10K 9.09
+# CER against 10.42 for their NeMo build), and ONNX is what makes it runnable
+# without torch or CUDA. It decodes greedily, so it is deterministic like
+# Voxtral; it runs on CPU, so its throughput is not comparable to the GPU rows.
+
+# Sentence-break pieces for grouping token timestamps into cues. These weights
+# emit NO punctuation (checked: a 558s file came back without a single 。), so
+# the length cap does most of the closing and MAX_CUE_CHARS is set to the same
+# 42 the Voxtral cue builder uses.
+_SENTENCE_ENDERS = "。！？!?"
+MAX_CUE_CHARS = 42
+# A gap this long between consecutive token times closes the cue: it is a pause
+# in the speech, and a subtitle holding across it is wrong about both sides.
+PAUSE_GAP_S = 1.5
+# Padding after the final token of a cue, which has no next-token start to end on.
+LAST_TOKEN_PAD_S = 0.5
+
+
+def reazon_k2_tokens_to_cues(times, tokens):
+    """Group sherpa-onnx per-token timestamps into subtitle-shaped cues.
+
+    sherpa-onnx returns parallel lists: a start time and a piece per token. A cue
+    closes on a sentence ender, on a pause longer than PAUSE_GAP_S, or when it
+    reaches MAX_CUE_CHARS, whichever comes first; with no punctuation emitted,
+    the cap is what normally fires. A cue ends on the NEXT token's start, except
+    across a pause, where it ends shortly after its own last token so neither
+    side claims the silence. The file-final cue gets LAST_TOKEN_PAD_S.
+
+    The ▁ word-boundary pieces are joined away: Japanese subtitles do not carry
+    spaces, and keeping them would inflate every length check.
+    """
+    cues = []
+    cur_toks: list[str] = []
+    cur_start = None
+
+    def close(end_time):
+        nonlocal cur_toks, cur_start
+        text = "".join(cur_toks).replace("▁", "").strip()
+        if text and cur_start is not None:
+            cues.append((cur_start, max(end_time, cur_start + 0.2), text))
+        cur_toks, cur_start = [], None
+
+    prev_t = None         # start time of the previous token
+    for i, (tok, t) in enumerate(zip(tokens, times)):
+        nxt = times[i + 1] if i + 1 < len(times) else None
+        # Consecutive token STARTS are what reveal a pause: these pieces are
+        # sub-syllabic, so a multi-second jump between them is silence.
+        if prev_t is not None and cur_toks and t - prev_t > PAUSE_GAP_S:
+            close(min(prev_t + LAST_TOKEN_PAD_S, t))
+        if cur_start is None:
+            cur_start = t
+        cur_toks.append(tok)
+        if tok in _SENTENCE_ENDERS or len("".join(cur_toks)) >= MAX_CUE_CHARS:
+            close(nxt if nxt is not None else t + LAST_TOKEN_PAD_S)
+        prev_t = t
+    if cur_toks:
+        close((prev_t if prev_t is not None else 0.0) + LAST_TOKEN_PAD_S)
+    return cues
+
+
+def reazon_k2_load(repo: str, precision: str = "int8") -> str:
+    """Download (or reuse) the authors' ONNX files; return the directory.
+
+    The repo ships fp32 and int8 builds side by side in one repo, so unlike every
+    other alias here precision selects FILES rather than repos, and there is
+    nothing to expose as `--quantization` over a single-repo lookup. fp32 is
+    the default and that is measured here, not inherited: on this corpus's
+    material int8 drops whole phrases mid-file (296 against 376 characters on
+    one 112s file), which contradicts the near-parity the authors' table shows
+    on read-speech benchmarks. Pass precision="int8" explicitly to trade that
+    accuracy away for a 4x-smaller download and ~1.5x the speed.
+    """
+    try:
+        from huggingface_hub import snapshot_download
+    except ImportError:      # pragma: no cover - hub is a transitive dependency
+        _die("reazon-k2 needs huggingface_hub to fetch the ONNX files")
+    suffix = ".int8" if precision == "int8" else ""
+    allow = [f"*{suffix}.onnx", "tokens.txt"]
+    path = snapshot_download(repo, allow_patterns=allow)
+    missing = [n for n in ("encoder", "decoder", "joiner")
+               if not list(Path(path).glob(f"{n}*{suffix}.onnx"))]
+    if missing:
+        _die(f"{repo} is missing {', '.join(missing)}{suffix}.onnx; the "
+             f"publishers may have renamed the files.")
+    return str(path)
+
+
+def reazon_k2_decode(recognizer, audio, chunk_len: float, log=print):
+    """Decode one loaded array window-by-window. Returns (cues, full_text, meta).
+
+    Separate from ``transcribe_reazon_k2`` so a benchmark can load once outside
+    its timing loop, same as every other engine here.
+
+    Windows come from `split_with_overlap`, the same energy-minima splitter the
+    Voxtral path uses, with no overlap: a transducer cannot merge overlapping
+    hypotheses honestly without alignment machinery this does not have, so seams
+    are cut at quiet points instead. Token timestamps arrive per window and are
+    offset back into file time before grouping.
+    """
+    from .audio import split_with_overlap
+
+    duration = len(audio) / SAMPLE_RATE_16K
+    windows = split_with_overlap(audio, target_s=chunk_len, overlap_s=0.0)
+    chunks = windows[0]
+    offsets = windows[1]
+
+    import numpy as np
+
+    all_times: list[float] = []
+    all_tokens: list[str] = []
+    empty_windows = 0
+    for chunk, offset in zip(chunks, offsets):
+        samples = np.asarray(chunk, dtype=np.float32)
+        stream = recognizer.create_stream()
+        stream.accept_waveform(SAMPLE_RATE_16K, samples)
+        recognizer.decode_stream(stream)
+        r = stream.result
+        toks = list(getattr(r, "tokens", []) or [])
+        if not toks:
+            empty_windows += 1
+            continue
+        all_tokens.extend(toks)
+        all_times.extend(float(t) + offset for t in
+                         getattr(r, "timestamps", []) or [])
+    if len(all_tokens) != len(all_times):
+        _die("sherpa-onnx returned mismatched token/time lists "
+             f"({len(all_tokens)} vs {len(all_times)}); refusing to guess")
+
+    cues = reazon_k2_tokens_to_cues(all_times, all_tokens)
+    text = "".join(c[2] for c in cues)
+    meta = {"segments": len(cues),
+            "cue_source": "token_times",
+            "chunk_seconds": chunk_len,
+            "windows": len(chunks),
+            "empty_windows": empty_windows,
+            "token_count": len(all_tokens),
+            "language_source": "single_language_model"}
+    if empty_windows:
+        log(f"[sherpa-onnx] {empty_windows} of {len(chunks)} windows produced "
+            f"no tokens")
+    return cues, text, meta
+
+
+def transcribe_reazon_k2(audio_path: str, model, language=None, log=print,
+                         **overrides):
+    """ReazonSpeech k2-v2 through sherpa-onnx. Returns (cues, full_text, meta)."""
+    try:
+        import sherpa_onnx
+    except ImportError:
+        _die(f"reazon-k2 needs sherpa-onnx: {_install_hint('reazon')}")
+
+    _refuse_non_japanese(language, model.alias)
+
+    opts = dict(model.opts)
+    opts.update({k: v for k, v in overrides.items() if v is not None})
+    chunk_len = opts.pop("chunk_length_s", 30.0)
+    precision = opts.pop("precision", "fp32")
+
+    weights_dir = reazon_k2_load(model.repo, precision)
+    suffix = ".int8" if precision == "int8" else ""
+    recognizer = sherpa_onnx.OfflineRecognizer.from_transducer(
+        encoder=str(Path(weights_dir) / f"encoder-epoch-99-avg-1{suffix}.onnx"),
+        decoder=str(Path(weights_dir) / f"decoder-epoch-99-avg-1{suffix}.onnx"),
+        joiner=str(Path(weights_dir) / f"joiner-epoch-99-avg-1{suffix}.onnx"),
+        tokens=str(Path(weights_dir) / "tokens.txt"),
+        num_threads=4,
+    )
+    log(f"[{model.backend}] {precision}, window {chunk_len:g}s, CPU decode")
+    from .audio import load_audio_16k
+
+    return reazon_k2_decode(recognizer, load_audio_16k(audio_path), chunk_len,
+                            log=log)
+
+
 DISPATCH = {
     "mlx-whisper": transcribe_mlx_whisper,
     "mlx-chunked": transcribe_mlx_chunked,
     "mlx-qwen3": transcribe_mlx_qwen3,
+    "mlx-parakeet": transcribe_mlx_parakeet,
+    "sherpa-onnx": transcribe_reazon_k2,
 }
 
 

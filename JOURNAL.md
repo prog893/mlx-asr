@@ -2303,3 +2303,64 @@ Shipped v0.2.0 through v0.3.0 during this. The review points worth keeping:
 A markdown bug shipped twice before being caught: the paragraph after each generated table
 was absorbed into the table, because the splice inserting the tables stripped the
 generator's trailing blank line. There is now a test.
+
+## 2026-08-23: the Japanese-specialized engines, and what they say about fine-tuning
+
+The question that started this session was whether to fine-tune Whisper on our own
+corpus, which is limited. The counter-hypothesis: before training anything, measure
+the engines that were trained on exactly this kind of material at industrial scale.
+Two candidates existed for Japanese conversational speech and neither was in the
+registry: NVIDIA's parakeet-tdt_ctc-0.6b-ja (FastConformer-TDT, MLX conversion
+published) and ReazonSpeech k2-v2 (Zipformer transducer, ONNX).
+
+### Integration notes worth keeping
+
+- parakeet needed no new dependency: mlx-audio 0.4.5 already ships a full Parakeet
+  implementation and dispatches on the repo name. Its `generate(chunk_duration=)`
+  does fixed-window chunking with an overlap merge internally, so the adapter is
+  thin.
+- reazon-k2 is the first non-MLX engine here. The decision chain: the NeMo build
+  needs torch; the k2 build is ONNX AND more accurate on its authors' own
+  benchmarks (TEDxJP-10K 9.09 vs 10.42 CER), so k2 via sherpa-onnx wins twice.
+  sherpa-onnx has no py3.14 wheel yet and its source build does not bundle
+  libonnxruntime; copying the dylib out of the `onnxruntime` wheel fixes it.
+- reazon-k2 CANNOT be decoded whole-file. A 112s stream returned 124 characters;
+  the weights are trained on short VAD segments and skip outside that
+  distribution, which is why the authors' recipe segments by VAD. All figures use
+  30s windows at energy minima, the same front end as the Voxtral rows.
+- parakeet's window direction is OPPOSITE to kotoba/qwen3: 60s windows LOSE
+  content against 120s (301 vs 380 chars on one file). Models trained to carry
+  state across windows degrade when denied it; models trained on short segments
+  degrade when given more than they saw. No universal chunking advice exists.
+
+### The int8 surprise
+
+Reazon's release table puts int8 within ~0.3 CER of fp32 on three benchmarks.
+Measured here it drops whole phrases mid-file: 296 against 376 characters on one
+112s recording, 36.93% against 30.45% corpus-wide. Read-speech benchmarks and
+conversational material disagree about what int8 costs. fp32 ships; a test guards
+the default. This is also a small warning about trusting publisher quantization
+tables measured on read speech.
+
+### Results
+
+17 JP files, 6.78h, coverage CER: parakeet c120 26.19% at 244.6x realtime
+(4.77GB peak GPU); reazon fp32 c30 30.45% at 51.6x on CPU; reazon int8 36.93%
+at 78.9x. Parakeet loses to turbo-nocond on 16 of 17 files (mean +9.8); its one
+win is the cleanest narration file. Full detail in docs/benchmarks/japanese-only.md.
+
+244.6x is a project record, 7x past qwen3-small's 32.8x. Machine caveat: 45GB of
+GPU memory parked by a resident agent throughout, load ~5 of 24 cores; both new
+engines are greedy so accuracy stands, throughput is a floor. Same treatment as
+the kept busy-flagged run of 2026-08-06.
+
+### What this says about the original question
+
+Parakeet-ja was trained on tens of thousands of hours of naturalistic Japanese,
+including spontaneous speech, which is precisely this corpus's material. It still
+loses to a generic multilingual Whisper checkpoint by 11.7 points. Domain match
+alone does not decide engine quality; long-form behaviour, code-switching
+handling and instruction breadth dominate on real recordings. Fine-tuning turbo
+on ~8h of our audio would be buying domain adaptation from a model that already
+wins BECAUSE of breadth, with the documented risks of losing exactly that
+breadth. The case for fine-tuning got weaker, not stronger.

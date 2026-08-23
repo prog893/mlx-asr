@@ -11,6 +11,8 @@ code. Full method and corpus per finding: [benchmarks/](benchmarks/).
 | `voxtral` as the model | 1.35-1.65x faster than whisper turbo, needs no language flag, and reruns byte-identically on one machine. Turbo is ~1.7 points more accurate on Japanese, so the default trades a little accuracy for speed and reproducibility ([engines.md](benchmarks/engines.md)) |
 | `whisper --size turbo` | ties `large-v3` on Japanese (14.68% against 14.55%, inside turbo's own ±0.27 rerun spread) at 2.1x the speed and 1.5GB less memory. Picking by size number would take large-v3 and pay for nothing |
 | `qwen3-asr --size 1.7B` | 3.9 points ahead of 0.6B at n=20 (19.33% against 23.27%). The 0.6B is the speed option: 32.8x, the fastest engine measured here |
+| `parakeet --chunk-seconds 120` | unswept optimum, pre-checked only: on one file 60s LOSES content against 120s (301 vs 380 chars) and 120s ties 300s, so it ships as a starting point with a sweep still open ([japanese-only.md](benchmarks/japanese-only.md)) |
+| `reazon --chunk-seconds 30` | the weights cannot decode whole files at all (a 112s stream returned 124 characters; they are trained on short VAD segments), so windows are mandatory; 30s matches the Voxtral rows so the comparison holds the front end constant. Not swept |
 
 ## Precision
 
@@ -22,6 +24,7 @@ points, inside the noise ([quantization.md](benchmarks/quantization.md)).
 |---|---|
 | `voxtral` 4bit | fp16 is a tie on the narration clip (0.07 points, CI [-0.33, +0.48]) at 1.6x the wall clock, and does not fit 16GB. **Open:** on the 20-file corpus fp16 measured 1.1 points *better* (15.12% against 16.21%), which needs a paired test before it means anything ([#2](https://github.com/prog893/mlx-asr/issues/2)) |
 | `qwen3-asr` 8bit | bf16 is a tie on the 1.7B (20.16% against 19.98%) at 1.36x the wall clock and 1.4x the memory, and 3 points *worse* on the 0.6B |
+| `reazon` fp32 | the publisher's own table says int8 is near-parity, but on conversational material int8 drops whole phrases mid-file: 36.93% against 30.45% corpus-wide, 296 vs 376 characters on one file. Read-speech benchmarks and real audio disagree; the corpus wins ([japanese-only.md](benchmarks/japanese-only.md)) |
 | `--kv-bits 8` | faster, and 39 of 40 scored regions identical to unquantized |
 
 4bit through 6bit on `qwen3-asr` have measured memory (see MODELS.md) but no accuracy

@@ -29,6 +29,14 @@ docs/benchmarks/engines.md):
                 timestamps are CHUNK boundaries, not speech boundaries, so
                 subtitle formats are refused rather than approximated (see
                 `no_speech_timestamps`).
+  parakeet      MLX (mlx-audio's Parakeet driver). NVIDIA's Japanese
+                FastConformer-TDT, trained on spontaneous speech. Greedy, so
+                deterministic. Token-level timestamps: subtitles work.
+  reazon-k2     NOT MLX: the authors' ONNX Zipformer through sherpa-onnx, on
+                CPU. The most accurate open Japanese ASR on its authors' cited
+                benchmarks, and ONNX is what makes it runnable without torch.
+                Greedy and deterministic; token-level timestamps. Its throughput
+                is not comparable to the GPU rows.
 
 Everything here runs on MLX. A `transformers` backend used to exist, running
 kotoba through the authors' torch/MPS pipeline as a correctness reference; the MLX
@@ -232,7 +240,8 @@ class Model:
         across 10-30s windows) and it is material-dependent, so it has to be
         reachable. The sequential `mlx-whisper` driver is excluded because its
         30s window is fixed by the model's positional encoding, not a choice."""
-        return self.backend in ("mlx-chunked", "mlx-qwen3")
+        return self.backend in ("mlx-chunked", "mlx-qwen3", "mlx-parakeet",
+                                "sherpa-onnx")
 
 
 REGISTRY: dict[str, Model] = {
@@ -455,6 +464,47 @@ REGISTRY: dict[str, Model] = {
             notes="the fastest engine measured in this project (32.8x), and "
                   "7.1 points behind voxtral on Japanese. Same caveats as 1.7B",
         ),
+        Model(
+            alias="parakeet",
+            family="parakeet",
+            repo="mlx-community/parakeet-tdt_ctc-0.6b-ja",
+            backend="mlx-parakeet",
+            label="NVIDIA Parakeet TDT-CTC 0.6B Japanese (MLX)",
+            languages="ja",
+            deterministic=True,
+            weights_gb=2.5,
+            # 120s windows with upstream's own 2s overlap merge. NOT yet a
+            # measured optimum: the window sweep has not been run for this
+            # engine, and unlike kotoba there is no evidence shorter is better.
+            # The value is a starting point chosen so a 90-minute file is ~45
+            # windows rather than one, which is what keeps TDT's Python decode
+            # loop from holding a whole-file graph. Sweep before quoting it as
+            # optimal.
+            opts={"chunk_length_s": 120.0},
+            notes="Japanese only. FastConformer-TDT, greedy so reproducible; "
+                  "token-level timestamps, so subtitles work. Trained on "
+                  "spontaneous Japanese speech (CSJ + ReazonSpeech-class data)",
+        ),
+        Model(
+            alias="reazon-k2",
+            family="reazon",
+            repo="reazon-research/reazonspeech-k2-v2",
+            backend="sherpa-onnx",
+            label="ReazonSpeech k2 v2 (Japanese Zipformer, ONNX)",
+            languages="ja",
+            deterministic=True,
+            weights_gb=0.78,
+            # The authors' own recipe segments by VAD; this ships energy-minima
+            # windows at the same length the Voxtral rows use, so the comparison
+            # holds the front end constant across engines. Not swept yet.
+            opts={"chunk_length_s": 30.0, "precision": "fp32"},
+            notes="Japanese only. The k2 build, not NeMo: more accurate on its "
+                  "authors' benchmarks (TEDxJP-10K 9.09 vs 10.42 CER) and ONNX "
+                  "rather than torch. Decodes on CPU through sherpa-onnx, so its "
+                  "throughput is NOT comparable to the GPU rows. fp32 over int8 "
+                  "is measured: int8 drops whole phrases on conversational "
+                  "audio. Needs `uv sync --extra reazon`",
+        ),
     ]
 }
 
@@ -533,6 +583,15 @@ def infer_backend(repo: str) -> str:
     # driver would fail on a config those loaders cannot read.
     if "qwen3-asr" in low or "qwen3_asr" in low:
         return "mlx-qwen3"
+    # Ahead of the whisper check: a parakeet id names a NeMo FastConformer
+    # architecture whose config neither Whisper loader can read.
+    if "parakeet" in low:
+        return "mlx-parakeet"
+    # The k2 build specifically. Other reazon ids (reazonspeech-nemo-v2, the
+    # espnet builds) are torch-framework weights that no backend here can read,
+    # so they are left to fail at load rather than routed somewhere wrong.
+    if "reazon" in low and "k2" in low:
+        return "sherpa-onnx"
     # distil derivatives keep few decoder layers and need the chunked driver;
     # the sequential one costs kotoba 68 points (docs/benchmarks/engines.md)
     if "kotoba" in low or "distil" in low:
@@ -606,7 +665,8 @@ def resolve(name: str | None, size: str | None = None) -> Model:
     # The two greedy backends. An unlisted repo on either one still gets the
     # `deterministic` flag right, because the CLI prints a "this engine samples"
     # caveat off it and a wrong caveat is worse than none.
-    deterministic = backend in ("voxtral", "mlx-qwen3")
+    deterministic = backend in ("voxtral", "mlx-qwen3", "mlx-parakeet",
+                                "sherpa-onnx")
     opts = {}
     if backend == "mlx-whisper":
         opts = {"condition_on_previous_text": False}
@@ -614,6 +674,12 @@ def resolve(name: str | None, size: str | None = None) -> Model:
         # Same as the registry entries: measured best on this corpus, against a
         # library default of 1200s at which a sub-20-minute file is one chunk and
         # one cue. See docs/benchmarks/qwen3-asr.md.
+        opts = {"chunk_length_s": 30.0}
+    elif backend == "mlx-parakeet":
+        # Same value and same caveat as the registry entry: unswept starting
+        # point, chosen to keep whole-file graphs from forming.
+        opts = {"chunk_length_s": 120.0}
+    elif backend == "sherpa-onnx":
         opts = {"chunk_length_s": 30.0}
     return Model(alias=name, repo=name, backend=backend,
                  label=name.split("/")[-1],
