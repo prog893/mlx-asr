@@ -12,7 +12,7 @@ reset per file, driven through the CLI at its shipped per-machine config.
     M2 Ultra 128GB (Mac14,14), 60 GPU cores, macOS 26.4.1, mlx 0.32.0
     20 cells x 20 files = 400 decodes, 8.2h wall, zero failures
     load average 0.24/core at launch, 0 swapouts/s, GPU otherwise idle
-    2026-08-24
+    2026-08-21
 
 One method for all of them, which is the point of publishing a column: cells that came
 from different bases cannot be compared to each other, and a reader who compares them

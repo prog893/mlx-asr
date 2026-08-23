@@ -34,7 +34,7 @@ HF = "https://huggingface.co"
 #
 # ONE method for every cell, which is the point: each is the max of
 # mx.get_peak_memory() (reset per file) over the whole 20-file corpus, run through the
-# CLI at its shipped config on an M2 Ultra. Re-measured 2026-08-24, 400 decodes, no
+# CLI at its shipped config on an M2 Ultra. Re-measured 2026-08-21, 400 decodes, no
 # failures. An earlier version of this table mixed three bases (corpus / one 93-minute
 # file / 3 files), which cannot be read down a column, which is the only reason to
 # publish a column. The re-run reproduced 19 of 20 cells within 0.02GB; only kotoba

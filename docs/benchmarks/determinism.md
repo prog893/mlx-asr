@@ -2,9 +2,15 @@
 
 **Conclusion first.** Voxtral is byte-identical across reruns **on one machine** and
 **not** across machines: the same audio, config and weight file give different output on
-an M4 16GB and an M2 Ultra 128GB. Whisper is not reproducible at all, because its temperature
-fallback samples, and `kotoba` inherits that ladder. So one Voxtral run is its score,
-reruns add no information, and a config comparison must stay on a single machine.
+an M4 16GB and an M2 Ultra 128GB. Whisper is not reliably reproducible, because its
+temperature fallback samples whenever a segment trips a threshold, and `kotoba` inherits
+that ladder. So one Voxtral run is its score, reruns add no information, and a config
+comparison must stay on a single machine.
+
+"Not reliably" rather than "not at all": a file that never trips fallback decodes greedily
+and does repeat exactly. On this corpus one file scored an identical 11.91% in all six
+runs. That is a property of the audio, not a guarantee the engine offers, so it cannot be
+relied on in advance.
 
 ## Why it matters before any number is quoted
 
@@ -136,8 +142,9 @@ project's own chunked driver, which makes it easy to assume the driver decides t
 sampling. It does not: the driver fixes `condition_on_previous_text=False` and leaves
 temperature alone.
 
-So of the four engines, `voxtral` and `qwen3-asr` reproduce on one machine and `whisper`
-and `kotoba` do not.
+So of the four engines, `voxtral` and `qwen3-asr` reproduce on one machine by
+construction, while `whisper` and `kotoba` reproduce only on audio that happens never to
+trip fallback, which is not knowable before the run.
 
 Two further observations:
 

@@ -71,7 +71,8 @@ the flags, and `--stats-json` writes it to a file. Treat the table as a guide to
 and your own run as the number.
 
 `voxtral` and `qwen3-asr` decode greedily and rerun byte-identically on one machine.
-`whisper` samples, and `kotoba` runs on Whisper's decoder so it samples too
+`whisper` samples whenever a segment trips its fallback thresholds, and `kotoba` runs on
+Whisper's decoder so it samples too, which makes neither safe to rerun for a comparison
 ([benchmarks/determinism.md](benchmarks/determinism.md)).
 
 Accuracy and throughput per model: [benchmarks/engines.md](benchmarks/engines.md) and

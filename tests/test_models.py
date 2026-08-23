@@ -719,25 +719,45 @@ def test_the_docs_peak_memory_column_matches_the_generator():
     because the repo-id assertions above pass regardless of what the numbers say. This
     checks the doc against the generator's PEAK dict, which is the single place those
     numbers are recorded.
+
+    Matched per ROW rather than as a set, because set membership passes if two rows swap
+    their values: kotoba reading 6.77GB and voxtral 2.38GB would satisfy "every generator
+    value appears somewhere".
     """
     import re
     import sys
 
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts" / "docs"))
-    from gen_model_matrix import PEAK
+    from gen_model_matrix import KOTOBA_FIRST_USE_PEAK, PEAK
 
-    doc = (Path(__file__).resolve().parents[1] / "docs" / "MODELS.md").read_text()
+    root = Path(__file__).resolve().parents[1]
+    doc = (root / "docs" / "MODELS.md").read_text()
     table = doc.split("## The models")[1].split("\n## ")[0]
-    for (alias, quant), peak in PEAK.items():
-        assert peak in table, (
-            f"{alias}/{quant} peak {peak} is in gen_model_matrix.PEAK but not in "
-            f"MODELS.md; regenerate the table")
 
-    # And nothing in the column was typed by hand into the doc alone.
-    in_doc = set(re.findall(r"\| ([\d.]+GB) \|$", table, re.M))
-    assert in_doc <= set(PEAK.values()), (
-        f"peak values in MODELS.md with no entry in gen_model_matrix.PEAK: "
-        f"{sorted(in_doc - set(PEAK.values()))}")
+    # repo id -> the peak printed on that row. The repo id is the one thing on a row that
+    # identifies which variant it is, since the size/quant cells repeat across families.
+    rows = dict(re.findall(r"huggingface\.co/([\w\-./]+)\)[^|]*\|[^|]*\|\s*([\d.]+GB)\s*\|",
+                           table))
+    assert rows, "no rows parsed out of the MODELS.md tables; did the format change?"
+
+    for (alias, quant), peak in PEAK.items():
+        model = REGISTRY[alias]
+        repo = model.quant_repos[quant] if quant else model.repo
+        assert repo in rows, f"{alias}/{quant} ({repo}) has no row in MODELS.md"
+        assert rows[repo] == peak, (
+            f"{alias}/{quant} ({repo}): MODELS.md says {rows[repo]}, "
+            f"gen_model_matrix.PEAK says {peak}")
+
+    # No row carries a peak the generator does not know about.
+    unknown = {r: p for r, p in rows.items() if p not in set(PEAK.values())}
+    assert not unknown, (
+        f"peak values in MODELS.md with no entry in gen_model_matrix.PEAK: {unknown}")
+
+    # kotoba's first-use figure is the reason this cell was wrong before, so the doc has
+    # to keep stating it: 2.38GB alone would understate a fresh machine by 0.65GB.
+    assert KOTOBA_FIRST_USE_PEAK in doc, (
+        f"MODELS.md no longer mentions the kotoba first-use peak "
+        f"({KOTOBA_FIRST_USE_PEAK}), which is what the published figure excludes")
 
 
 def test_describe_registry_lists_every_family_size_and_caveat():
