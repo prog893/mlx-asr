@@ -710,6 +710,36 @@ def test_the_docs_combination_table_covers_every_reachable_variant():
             assert f"huggingface.co/{repo}" in table, repo
 
 
+def test_the_docs_peak_memory_column_matches_the_generator():
+    """The peak-memory column is hand-measured data living in the generator, so the doc
+    and the generator can disagree silently.
+
+    They did: the table mixed three measurement bases while the prose claimed two, and
+    kotoba carried a figure that included the one-time MLX conversion. Nothing caught it,
+    because the repo-id assertions above pass regardless of what the numbers say. This
+    checks the doc against the generator's PEAK dict, which is the single place those
+    numbers are recorded.
+    """
+    import re
+    import sys
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts" / "docs"))
+    from gen_model_matrix import PEAK
+
+    doc = (Path(__file__).resolve().parents[1] / "docs" / "MODELS.md").read_text()
+    table = doc.split("## The models")[1].split("\n## ")[0]
+    for (alias, quant), peak in PEAK.items():
+        assert peak in table, (
+            f"{alias}/{quant} peak {peak} is in gen_model_matrix.PEAK but not in "
+            f"MODELS.md; regenerate the table")
+
+    # And nothing in the column was typed by hand into the doc alone.
+    in_doc = set(re.findall(r"\| ([\d.]+GB) \|$", table, re.M))
+    assert in_doc <= set(PEAK.values()), (
+        f"peak values in MODELS.md with no entry in gen_model_matrix.PEAK: "
+        f"{sorted(in_doc - set(PEAK.values()))}")
+
+
 def test_describe_registry_lists_every_family_size_and_caveat():
     """`--list-models` is where a user picks, so everything reachable must appear.
 

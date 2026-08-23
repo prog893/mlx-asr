@@ -27,44 +27,64 @@ from mlx_asr.models import (  # noqa: E402
 
 HF = "https://huggingface.co"
 
-# Peak GPU memory, GB, keyed by (internal alias, quantization). Measured on an M2 Ultra
-# over the 20-file corpus with mx.get_peak_memory(), reset per file.
+# Peak GPU memory, GB, keyed by (internal alias, quantization).
 #
 # Published instead of download size because the working set is what decides whether a
 # machine can run something; a 3GB download that peaks at 15GB does not fit 16GB.
+#
+# ONE method for every cell, which is the point: each is the max of
+# mx.get_peak_memory() (reset per file) over the whole 20-file corpus, run through the
+# CLI at its shipped config on an M2 Ultra. Re-measured 2026-08-24, 400 decodes, no
+# failures. An earlier version of this table mixed three bases (corpus / one 93-minute
+# file / 3 files), which cannot be read down a column, which is the only reason to
+# publish a column. The re-run reproduced 19 of 20 cells within 0.02GB; only kotoba
+# moved, and the note there says why.
 PEAK = {
-    # whisper, shipped config, 20 files. Notice these barely track the download: tiny
-    # downloads 0.07GB and peaks at 3.98, because the working set is dominated by the
-    # 30s mel window and decoder activations rather than by weights.
-    ("whisper-tiny", None): "3.98GB",
-    ("whisper-base", None): "4.07GB",
-    ("whisper-small", None): "4.37GB",
-    ("whisper-medium", None): "5.43GB",
-    ("whisper-large-v2", None): "6.97GB",
-    ("whisper-large-v3", None): "7.00GB",
-    ("whisper-turbo", None): "5.53GB",
-    # qwen3-asr at its default 8bit, 30s windows, 20 files.
-    ("qwen3-asr", "8bit"): "4.05GB",
-    ("qwen3-asr-small", "8bit"): "2.36GB",
-    ("qwen3-asr", "bf16"): "5.66GB",
-    ("qwen3-asr-small", "bf16"): "2.92GB",
-    # The intermediate rungs, from one 93-minute file rather than the corpus. Peak memory
-    # is set by the config and the longest window, not by file count: on every arm above
-    # that ran the full corpus, the max landed on the longest file.
+    # whisper. These barely track the download: tiny downloads 0.07GB and peaks at
+    # 3.99, because the working set is dominated by the 30s mel window and decoder
+    # activations rather than by weights.
+    ("whisper-tiny", None): "3.99GB",
+    ("whisper-base", None): "4.06GB",
+    ("whisper-small", None): "4.38GB",
+    ("whisper-medium", None): "5.44GB",
+    ("whisper-large-v2", None): "6.99GB",
+    ("whisper-large-v3", None): "6.99GB",
+    ("whisper-turbo", None): "5.52GB",
+    # qwen3-asr, 30s windows. large-v2 and large-v3 land on the same figure, as do
+    # several rungs here: the window and the weights set the working set, and the two
+    # checkpoints are the same size.
     ("qwen3-asr", "4bit"): "3.19GB",
     ("qwen3-asr", "5bit"): "3.40GB",
     ("qwen3-asr", "6bit"): "3.62GB",
+    ("qwen3-asr", "8bit"): "4.05GB",
+    ("qwen3-asr", "bf16"): "5.66GB",
     ("qwen3-asr-small", "4bit"): "2.06GB",
     ("qwen3-asr-small", "5bit"): "2.14GB",
     ("qwen3-asr-small", "6bit"): "2.21GB",
-    # voxtral, 20-file corpus at the shipped per-machine config (60s/B16 on the Ultra).
-    # Lower than the 9.36/15.28GB in quantization.md, which used the narration clip at a
-    # different chunk/batch pair; both are real, this one is comparable to the rows above.
+    ("qwen3-asr-small", "8bit"): "2.36GB",
+    ("qwen3-asr-small", "bf16"): "2.92GB",
+    # voxtral at the shipped per-machine config (60s/B16 on the Ultra). Lower than the
+    # 9.36/15.28GB in quantization.md, which used the narration clip at a different
+    # chunk/batch pair; both are real, this one is comparable to the rows above.
     ("voxtral", "4bit"): "6.77GB",
     ("voxtral", "fp16"): "12.98GB",
-    # kotoba, 3 longest corpus files through the CLI (the chunked driver, 10s windows).
-    ("kotoba", None): "3.03GB",
+    # kotoba is FLAT at 2.38GB across all 20 files, from a 1.9-minute clip to a
+    # 93-minute one, because its 10s window fixes the working set.
+    #
+    # This cell used to read 3.03GB, and that number was real but measured the wrong
+    # thing: it came from a run that ALSO performed the one-time transformers-to-MLX
+    # conversion, which mx.load()s the whole fp32 checkpoint and writes an fp16 copy,
+    # all through MLX and so all counted by get_peak_memory(). Reproduced deliberately
+    # by moving the conversion cache aside: 3.03GB on the converting run, 2.38GB on
+    # every run after. 2.38GB is what a user sees for all but the first decode, so it is
+    # what belongs in a table about whether a model fits.
+    ("kotoba", None): "2.38GB",
 }
+
+# What the first `--model kotoba` costs, before the conversion is cached. Separate from
+# PEAK because it is a one-off on a fresh machine rather than a property of decoding, and
+# folding it into the table would overstate the model by 0.65GB forever.
+KOTOBA_FIRST_USE_PEAK = "3.03GB"
 
 
 def hub_size_gb(repo: str) -> tuple[bool, float]:

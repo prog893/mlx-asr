@@ -3,8 +3,8 @@
 **Conclusion first.** Voxtral is byte-identical across reruns **on one machine** and
 **not** across machines: the same audio, config and weight file give different output on
 an M4 16GB and an M2 Ultra 128GB. Whisper is not reproducible at all, because its temperature
-fallback samples. So one Voxtral run is its score, reruns add no information, and a
-config comparison must stay on a single machine.
+fallback samples, and `kotoba` inherits that ladder. So one Voxtral run is its score,
+reruns add no information, and a config comparison must stay on a single machine.
 
 ## Why it matters before any number is quoted
 
@@ -123,6 +123,21 @@ different question ("would this hold on other audio").
 loses all 6 on three others; only one file flips. On one file it produced the identical
 11.91% in all six runs, i.e. that file never triggers fallback. So the aggregate is
 decided by which files dominate the length weighting, not by sampling luck.
+
+## kotoba inherits it
+
+`kotoba` runs on mlx-whisper's `transcribe` and does not override the sampling ladder, so
+it is not reproducible either. Five runs of one 112s clip on identical audio and flags gave
+five distinct transcripts, 401 to 409 characters, agreeing through the body and diverging
+at the tail.
+
+Worth stating explicitly because the model is a *distil* checkpoint reached through this
+project's own chunked driver, which makes it easy to assume the driver decides the
+sampling. It does not: the driver fixes `condition_on_previous_text=False` and leaves
+temperature alone.
+
+So of the four engines, `voxtral` and `qwen3-asr` reproduce on one machine and `whisper`
+and `kotoba` do not.
 
 Two further observations:
 

@@ -110,8 +110,8 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 | `--model` | what it is |
 |---|---|
 | `voxtral` (default) | Mistral's 2026 realtime model. Takes a vocabulary prompt, decodes greedily so reruns on one machine are byte-identical, and has the steadiest timestamps here |
-| `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **turbo**, which is both more accurate here than large-v3 and about 2x faster. The most accurate option on the test corpus |
-| `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, and Japanese only |
+| `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **turbo**, which ties large-v3 on accuracy at about 2x the speed. The most accurate engine on the test corpus, but it samples, so reruns differ |
+| `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, Japanese only, and samples like Whisper |
 | `qwen3-asr` | Alibaba's Qwen3-ASR. `--size 1.7B` (default) or `0.6B`, the fastest engine measured here. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
 | any HF repo id | the backend is inferred from the name; `--size` and `--quantization` are refused, since the id already names the variant |
 
@@ -127,9 +127,9 @@ no language flag, and `kotoba` forces Japanese on its own.
 
 `--list-models` prints the sizes and precisions each family accepts. The complete
 mapping from every `--model`/`--size`/`--quantization` combination to its Hugging Face
-repo id, with sizes on disk, is in
-[docs/MODELS.md](docs/MODELS.md#every-combination-and-what-it-resolves-to); it is
-generated from the registry, not hand-maintained.
+repo id, with download size and measured peak GPU memory, is in
+[docs/MODELS.md](docs/MODELS.md#the-models); it is generated from the registry, not
+hand-maintained.
 
 All weights are `mlx-community` MLX builds, except `kotoba` which converts the authors'
 own weights locally on first use. **unsloth and GGUF quants cannot be used here**: unsloth
@@ -137,9 +137,9 @@ publishes no Voxtral, only GGUF for Qwen3-ASR, and unquantized transformers weig
 Whisper, while GGUF is llama.cpp's format that MLX cannot load. That is a format
 constraint rather than a quality judgement, and it costs little, since quantization here
 buys memory rather than accuracy or speed
-([why](docs/MODELS.md#why-mlx-community-and-not-unsloth-or-gguf)).
+([why](docs/MODELS.md#formats-that-will-not-work)).
 
-What each model scored: [docs/MODELS.md](docs/MODELS.md).
+What each model scored: [docs/benchmarks/engines.md](docs/benchmarks/engines.md).
 
 ## Why the defaults are what they are
 

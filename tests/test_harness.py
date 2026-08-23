@@ -749,3 +749,59 @@ def test_markdown_tables_are_separated_from_following_prose():
             f"{doc.relative_to(ROOT)}: table row followed directly by prose, which "
             f"GitHub renders as extra rows. Add a blank line.\n"
             + "\n".join(f"  row: {r[:60]}\n  prose: {p[:60]}" for r, p in bad[:3]))
+
+
+def _docs():
+    return sorted((ROOT / "docs").rglob("*.md")) + [
+        ROOT / "README.md", ROOT / "RESULTS.md", ROOT / "CONTRIBUTING.md"]
+
+
+def _slug(heading: str) -> str:
+    """GitHub's anchor for a heading: lowercase, punctuation dropped, spaces to dashes."""
+    import re
+    text = re.sub(r"`|\*\*|\*", "", heading).strip().lower()
+    return re.sub(r"[^a-z0-9 _-]", "", text).replace(" ", "-")
+
+
+def test_cross_document_anchors_resolve():
+    """A `file.md#heading` link whose heading was renamed fails silently.
+
+    GitHub does not error on an unresolvable fragment; it just drops the reader at the
+    top of the file, so the link still looks like it works. This shipped twice: README
+    pointed at MODELS.md#every-combination-and-what-it-resolves-to and
+    #why-mlx-community-and-not-unsloth-or-gguf, both of which were renamed out of
+    existence during a doc split. Nothing in `git diff` or a local render shows it.
+    """
+    import re
+
+    anchors = {doc: {_slug(h) for h in re.findall(r"^#+ (.+)$",
+                                                  doc.read_text(encoding="utf-8"), re.M)}
+               for doc in _docs()}
+    broken = []
+    for doc in _docs():
+        for target, frag in re.findall(r"\]\((?!https?:)([^)#]*)#([a-z0-9_-]+)\)",
+                                       doc.read_text(encoding="utf-8")):
+            dest = doc if not target else (doc.parent / target).resolve()
+            if dest not in anchors:
+                broken.append(f"{doc.name} -> {target}#{frag} (no such doc)")
+            elif frag not in anchors[dest]:
+                broken.append(f"{doc.name} -> {target or doc.name}#{frag}")
+    assert not broken, ("anchor links that resolve to nothing:\n  "
+                        + "\n  ".join(broken))
+
+
+def test_relative_document_links_resolve():
+    """The same failure without a fragment, which at least 404s rather than misleading.
+
+    Cheap to check while the headings are already parsed, and it catches a doc moved
+    between docs/ and docs/benchmarks/.
+    """
+    import re
+
+    broken = []
+    for doc in _docs():
+        for target in re.findall(r"\]\((?!https?:|#)([^)#]+)\)",
+                                 doc.read_text(encoding="utf-8")):
+            if not (doc.parent / target).exists():
+                broken.append(f"{doc.relative_to(ROOT)} -> {target}")
+    assert not broken, "relative links to missing files:\n  " + "\n  ".join(broken)

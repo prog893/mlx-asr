@@ -30,6 +30,7 @@ that make plain CER meaningless.
 | [corpus.md](corpus.md) | what the test material is, in general terms, and how to build your own |
 | [metrics.md](metrics.md) | why coverage CER exists, which metric to trust, how to compare two configs |
 | [determinism.md](determinism.md) | what reproduces (one machine) and what does not (across machines, and Whisper at all) |
+| [peak-memory.md](peak-memory.md) | what each model costs in GPU memory, and why Whisper's figure depends on how long your audio is |
 
 ## Read this before quoting a number
 
