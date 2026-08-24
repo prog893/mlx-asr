@@ -193,9 +193,30 @@ M2 Ultra 128GB, 4-bit, kv8:
 | 60s, energy | **7.37%** | 7.11% | 21.0x |
 | 60s, VAD | 10.25% | 9.85% | 20.1x |
 
-VAD loses by 0.8-3.0 points in every pairing, and this is one of the few results here
-that clears significance: paired over 40 regions at 60s chunks, energy beats VAD by 3.00
-points, CI [+0.74, +5.93], winning 21 regions to 7 (sign test p=0.013).
+VAD loses by 0.8-3.0 points in every pairing on this clip, and it clears significance
+there: paired over 40 regions at 60s chunks, energy beats VAD by 3.00 points, CI [+0.74,
++5.93], winning 21 regions to 7 (sign test p=0.013).
+
+**On the corpus the margin mostly evaporates.** Run across all 20 files at the shipped
+config (2026-08-24, idle M2 Ultra), energy still leads but not resolvably:
+
+| | JP coverage CER | EN coverage WER | x realtime |
+|---|---|---|---|
+| energy (ships) | **16.21%** | **22.43%** | 19.8x |
+| VAD | 16.68% | 25.95% | 19.3x |
+
+    Japanese: +0.47 points, CI [-0.84, +2.04], VAD wins 9 of 17 files -> not resolvable
+    English:  +3.52 points, CI [+0.06, +5.62], VAD loses all 3 files -> resolved, but n=3
+
+So the honest reading is narrower than the clip suggested. The 3.00-point Japanese margin
+does not reproduce, and VAD wins slightly more Japanese files than it loses; the aggregate
+tips to energy on length weighting rather than on a consistent per-file advantage. The
+English arm resolves against VAD, but n=3 cannot carry much
+([metrics.md](metrics.md#the-english-bootstrap-is-n3-and-that-is-worse-than-it-sounds)).
+
+**Marginal, so it stays off.** Energy is never behind, VAD costs an `onnxruntime`
+dependency and a little speed, and a flag that changes nothing measurable should not be the
+default. What is no longer supported is the stronger claim that VAD cut points are worse.
 
 That is the opposite of what the VAD literature predicts, and the VAD cuts really are
 cleaner by the obvious measure: speech probability in the 1s *after* a cut is 0.316 for
@@ -250,8 +271,30 @@ On nvfp4 the deletions triple and the loss is concentrated rather than spread: o
 two-minute stretch lost 45% of its text after only 4.8s of silence was removed there, so
 this is not proportional information loss. The model appears to rely on pauses for its
 own segmentation, and the more aggressively quantized weights tolerate their removal
-much worse. The mechanism is a hypothesis, not a measurement. Off by default; if you
-want the speed, verify on your own audio and model first.
+much worse. The mechanism is a hypothesis, not a measurement.
+
+**On the corpus at the shipped 4-bit config it is slightly better, not worse** (2026-08-24,
+20 files, idle M2 Ultra):
+
+| | JP coverage CER | EN coverage WER | x realtime |
+|---|---|---|---|
+| off (ships) | 16.21% | 22.43% | 19.8x |
+| `--compact-silence` | **16.00%** | 22.43% | **20.5x** |
+
+    -0.21 points, CI [-0.70, +0.22], better on 6 of 8 files that moved -> not resolvable
+
+It removed 3-4% of audio on the spontaneous recordings, less than the 12% on the narration
+clip, and the win is concentrated in the three longest files (-2.19, -1.30, -0.59 points).
+One file went the other way by +1.04.
+
+So it is a tie on this material, and the earlier "helps some quantizations and badly hurts
+others" is a statement about **nvfp4 on one clip**, not about the flag.
+
+**Marginal, so it stays off**: a 0.21-point gain inside its own interval does not justify
+changing what every user gets. The nvfp4 collapse is the open question, since a 4-point loss
+would be decisive if it reproduced, and it is queued for the corpus
+([#6](https://github.com/prog893/mlx-asr/issues/6)). If that comes back a tie as well, this
+flag is free on 4-bit Japanese audio and the default is worth revisiting on the speed alone.
 
 ## What ships
 

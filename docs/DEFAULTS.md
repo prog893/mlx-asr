@@ -66,9 +66,9 @@ single window: one segment, and the batched path never engages.
 |---|---|
 | `--delay-ms 2400` | the largest accuracy lever here and it costs no speed: 25.62% at 480ms, 20.51% at 960ms, 16.44% at 2400ms. Also the model's maximum ([delay.md](benchmarks/delay.md)) |
 | `--gain auto` | quiet input costs ~3.8 points because the mel front end clamps at an absolute floor. `auto` boosts only below -6 dBFS peak, so it is byte-identical on healthy audio ([input-level.md](benchmarks/input-level.md)) |
-| `--vad` off | Silero cut points scored 0.8-3.0 points *worse* than energy minima, which is the opposite of what the VAD literature predicts. **Clip-only:** 40 paired regions of one recording, never run on the corpus |
+| `--vad` off | marginal, so off: energy leads by 0.47 points on the corpus, CI [-0.84, +2.04]. The clip's 3.00-point margin did not reproduce, and VAD also costs an `onnxruntime` dependency ([chunking.md](benchmarks/chunking.md)) |
 | `--prompt` empty | it biases register rather than recalling vocabulary (term counts move under 7%). An imperative there costs ~6 CER points because the decoder reads it as text it already emitted, and on English audio any prompt wrecks word spacing ([prompt.md](benchmarks/prompt.md)) |
-| `--compact-silence` off | helps some quantizations and badly hurts others; the mechanism is still a hypothesis |
+| `--compact-silence` off | marginal, so off: -0.21 points on the corpus at 4-bit, CI [-0.70, +0.22], for a small speed gain. It did cost 4 points on nvfp4 on one clip, which is being re-measured on the corpus ([#6](https://github.com/prog893/mlx-asr/issues/6)) |
 
 ## Whisper long-form stability
 
