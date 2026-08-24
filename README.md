@@ -115,11 +115,11 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 | `qwen3-asr` | Alibaba's Qwen3-ASR. `--size 1.7B` (default) or `0.6B`, the fastest engine measured here. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
 | any HF repo id | the backend is inferred from the name; `--size` and `--quantization` are refused, since the id already names the variant |
 
-`--model` picks the family; `--size` and `--quantization` pick the variant inside it.
-They are not equally important, and that is measured: size spans 43 CER points across
-Whisper's range, while precision spans about 1.3. So each family's default size is chosen
-on evidence, and precision defaults to 4-bit as a deliberate trade, since the precisions
-that beat it need either more time or more memory than a 16GB machine has.
+`--model` picks the family; `--size` and `--quantization` pick the variant inside it. Size
+matters far more than precision, by a wide margin, and both defaults are picked on
+measurement rather than on the largest number. Voxtral's 4-bit default is a deliberate
+trade: higher precisions do score better, but each needs more time or more memory than a
+16GB machine has.
 
 `whisper` and `qwen3-asr` do better when you set `--language`, and each gets the form it
 wants (a code for Whisper, an English name for Qwen) from whatever you type. Voxtral takes
@@ -147,11 +147,12 @@ Every default was measured, and several went against the obvious choice:
 findings are in [docs/benchmarks/](docs/benchmarks/), one document per lever, indexed by
 [RESULTS.md](RESULTS.md).
 
-The short version: transcription delay is the biggest lever and is free; batch size is not
-monotonic, so 2-8 is worse than 1; VAD cut points score worse than energy minima;
-precision costs accuracy monotonically and 4-bit is last of five, shipping anyway because
-the better ones need memory a 16GB machine lacks; and whisper defaults to turbo rather than
-large-v3 because it ties it on accuracy at twice the speed.
+The short version: transcription delay is the biggest lever and it is free; throughput is
+not monotonic in batch size, so the middle of the range is worse than one at a time; VAD
+cut points and dropping silence both turned out to change nothing measurable, so both stay
+off; higher precision does help Voxtral but costs more time or memory than a 16GB machine
+has; and whisper defaults to turbo rather than large-v3 because it ties it at twice the
+speed.
 
 ## License
 

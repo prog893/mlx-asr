@@ -32,10 +32,12 @@ used to argue the effect is small.
 ## Precision
 
 One default per model, chosen as the cheapest precision whose accuracy cost is worth its
-price. On Voxtral that cost is real and measured across the whole ladder: accuracy improves
-monotonically with bit width, and 4-bit is last of five
-([quantization.md](benchmarks/quantization.md)). It still ships, because the precisions that
-beat it need either time or memory a 16GB machine does not have.
+price. **Measured per model, not inherited between them:** on Voxtral the whole ladder is
+swept and accuracy improves monotonically with bit width, with 4-bit last of five
+([quantization.md](benchmarks/quantization.md)); on `qwen3-asr` only bf16 versus 8-bit has
+been compared, on 7 files, and its intermediate rungs are unmeasured. Assuming one model's
+precision behaviour carries to another is how the Voxtral conclusion came to be wrong for
+weeks.
 
 | default | why |
 |---|---|

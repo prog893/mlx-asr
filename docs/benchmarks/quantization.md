@@ -7,19 +7,25 @@ conversions with no quantized builds in use here, so it errors there. whisper.cp
 quantization is covered in [engines.md](engines.md), where it costs speed rather than
 accuracy.
 
-**Conclusion first.** Quantization does cost accuracy on this workload, monotonically in bit
-width, and 4-bit is the worst of the five precisions measured: **1.07 points behind 8-bit
-and 1.30 behind fp16** over the 20-file corpus, both significant. 4-bit still ships as the
-safe default, because 8-bit is not published in a loadable form and fp16 will not fit a 16GB
-machine. **If you have the memory, `--quantization fp16` is the accuracy option, and a
-locally converted 8-bit build matches it at 7.3GB and full speed.** `--kv-bits 8` is
-separately close to free and is on by default.
+**Conclusion first, and it is about Voxtral only.** On **Voxtral**, quantization costs
+accuracy monotonically in bit width, and 4-bit is the worst of the five precisions measured:
+**1.07 points behind 8-bit and 1.30 behind fp16** over the 20-file corpus, both significant.
+4-bit still ships as the safe default, because 8-bit is not published in a loadable form and
+fp16 will not fit a 16GB machine. **If you have the memory, `--quantization fp16` is the
+accuracy option, and a locally converted 8-bit build matches it at 7.3GB and full speed.**
+`--kv-bits 8` is separately close to free and is on by default.
 
-That replaces an earlier "quantization costs nothing measurable", which came from a single
-prepared-narration clip where the five precisions span 0.43 points and 4-bit ranks nominally
-best. Both measurements are sound on their own material and they disagree; the corpus one
-governs, because it is the material this project is tuned for. The clip's cost figures
-(wall clock, memory, decode steps/s) are unaffected and still stand.
+**`qwen3-asr` has its own ladder and it has not been swept this way.** Its default rests on
+one bf16-versus-8-bit comparison on 7 files ([qwen3-asr.md](qwen3-asr.md)), where bf16 was
++0.18 points on the 1.7B, and its 4bit/5bit/6bit rungs have no accuracy figure at all.
+Whether the Voxtral pattern holds there is **unknown**, and this document does not claim it
+does; the two models share nothing but a `--quantization` flag.
+
+The Voxtral result replaces an earlier "quantization costs nothing measurable", which came
+from a single prepared-narration clip where the five precisions span 0.43 points and 4-bit
+ranks nominally best. Both measurements are sound on their own material and they disagree;
+the corpus one governs, because it is the material this project is tuned for. The clip's
+cost figures (wall clock, memory, decode steps/s) are unaffected and still stand.
 
 ## The policy: one measured default per model, and `--quantization` to override it
 
@@ -115,9 +121,10 @@ M2 Ultra. Every arm through `run_corpus.py`, paired with `compare_engines.py`:
 | nvfp4 | 2.5GB | 16.07% | +0.27, CI [-0.47, +1.23] | 19.6x | **5.09GB** |
 | 4-bit (ships) | 2.9GB | 16.34% | | 18.5x | 6.77GB |
 
-The ordering is monotonic in bit width, which is what one would naively expect and what the
-clip sweep denied. Two comparisons clear significance against 4-bit (fp16 and 8-bit); mxfp8
-and nvfp4 land inside the resolution floor.
+The ordering is monotonic in bit width **on this model**, which is what one would naively
+expect and what the clip sweep denied. Two comparisons clear significance against 4-bit
+(fp16 and 8-bit); mxfp8 and nvfp4 land inside the resolution floor. Nothing here has been
+checked on `qwen3-asr`, whose ladder is separate and mostly unmeasured.
 
 **8-bit is the interesting result.** Against fp16 it is a tie (+0.23 points, CI [-0.12,
 +0.70]), so it captures the full accuracy of unquantized weights while running at 4-bit's
