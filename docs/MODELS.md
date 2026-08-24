@@ -198,7 +198,7 @@ alone, so it is pinned to `ja` and says so.
 | `--quantization` | `4bit` `fp16`/`none` | `4bit` | weight precision. Also sets the weight footprint used to size the batch |
 | `--kv-bits` | `4` `8` | `8` | quantize the KV cache |
 | `--no-kv-quant` | flag | off | disable KV quantization |
-| `--fast` | flag | off | halve the chunk, double the batch, add warm-up overlap. Declines when it would not help |
+| `--fast` | flag | off | halve the chunk, double the batch, add warm-up overlap. Any of those three set explicitly wins over it; see below |
 | `--overlap-seconds` | float | `0` | preceding audio prepended to each chunk as context, then discarded |
 | `--prompt` | text | none | text the decoder treats as already emitted, which biases vocabulary. Last ~31 tokens only, and ignored when overlap is active |
 | `--gain` | `auto` `none` `peak` `rms`, or dB | `auto` | input level. `auto` boosts quiet audio and leaves louder audio untouched |
@@ -208,6 +208,18 @@ alone, so it is pinned to `ja` and says so.
 | `--gap-seconds` | float | `1.2` | split a cue at a pause this long. The one cue knob worth sweeping |
 | `--max-chars` | int | `28` | split a cue at this many characters |
 | `--max-dur-seconds` | float | `7.0` | hard cap on cue duration |
+
+`--fast` is a shorthand for three levers, not a mode: it halves `--chunk-seconds`, doubles
+`--max-batch` and sets `--overlap-seconds 8`. **Anything you set yourself wins**, per lever
+and independently, so `--fast --chunk-seconds 45` keeps your 45s and still adds the overlap,
+and `--fast --overlap-seconds 0` takes the halved chunk with no overlap. The CLI prints which
+of the two decided each value.
+
+It is a flag rather than the default because the halving only pays when the shorter chunks
+still fit in one batch pass; on short audio it would add encoder work for nothing, so the CLI
+declines and says so. The overlap is the other reason: on its own it lost on the corpus, and
+it is bundled here only because `--fast` is an explicit request for the short-chunk regime
+where seams are dense ([benchmarks/chunking.md](benchmarks/chunking.md)).
 
 `--prompt` takes domain terms or a topic sentence in the audio's own language, not an
 instruction: an imperative there makes things worse, and on English audio any prompt wrecks

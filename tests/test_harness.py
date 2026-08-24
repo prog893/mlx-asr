@@ -91,6 +91,33 @@ def test_cli_exposes_the_cue_knobs_the_docs_tell_users_to_sweep():
         assert flag in r.stdout, flag
 
 
+def test_fast_does_not_claim_to_keep_the_profile_while_changing_overlap():
+    """`--fast` bundles three levers, and explicit flags beat it on each one.
+
+    The failure this guards: when `--chunk-seconds` or `--max-batch` was set alongside
+    `--fast`, the CLI printed "no benefit at this duration; keeping the profile config"
+    and then applied 8s of warm-up overlap anyway. Both halves were wrong. It was not a
+    duration problem (the user had simply pinned the levers), and the config was neither
+    kept nor the profile's. Overlap changes the transcript, so a log line saying nothing
+    happened is the same class of untruth as a flag that looks honoured and does nothing.
+    """
+    import inspect
+    import re
+
+    from mlx_asr import cli
+
+    src = inspect.getsource(cli)
+    # Only the comment explaining the fix may mention the superseded wording; no log()
+    # call may emit it.
+    emitted = re.findall(r'log\(\s*f?"([^"]*)"', src)
+    assert not [m for m in emitted if "keeping the profile config" in m], (
+        "the misleading --fast message is being logged again")
+    # And the explicit-flag branch has to exist, keyed on the two levers that trigger it.
+    assert "a.chunk_seconds or a.max_batch" in src, (
+        "the --fast branch no longer distinguishes 'you pinned these levers' from "
+        "'halving would not help at this duration'")
+
+
 def test_resolved_cue_config_reports_shipped_defaults_when_unset():
     """An empty override set must report what actually ships, not None."""
     from mlx_asr.cli import _resolved_cue_config

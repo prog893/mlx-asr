@@ -528,8 +528,16 @@ def main(argv=None):
         passes_new = -(-duration // (new_batch * new_chunk))
         if passes_new <= passes_now and new_chunk < chunk_s:
             chunk_s, batch = new_chunk, new_batch
+        # The message has to distinguish two very different reasons for not halving,
+        # because it used to say "keeping the profile config" while overlap was still
+        # applied below, which is not what the reader was told.
+        elif a.chunk_seconds or a.max_batch:
+            log(f"[fast] chunk/batch already set explicitly, so only the warm-up "
+                f"overlap is added; {chunk_s:g}s and batch {batch} are yours, not the "
+                f"profile's")
         else:
-            log("[fast] no benefit at this duration; keeping the profile config")
+            log("[fast] halving the chunk would not reduce the number of passes at "
+                "this duration, so chunk and batch are unchanged")
     kv_bits = None if a.no_kv_quant else (a.kv_bits or prof.get("kv_bits"))
     overlap_s = a.overlap_seconds
     if overlap_s is None:
