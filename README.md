@@ -116,10 +116,10 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 | any HF repo id | the backend is inferred from the name; `--size` and `--quantization` are refused, since the id already names the variant |
 
 `--model` picks the family; `--size` and `--quantization` pick the variant inside it. Size
-matters far more than precision, by a wide margin, and both defaults are picked on
-measurement rather than on the largest number. Voxtral's 4-bit default is a deliberate
-trade: higher precisions do score better, but each needs more time or more memory than a
-16GB machine has.
+matters far more than precision, and both defaults are picked on measurement rather than on
+the largest number. On Voxtral, higher precision does score better, so 4-bit ships as the
+option that is published and fits everywhere rather than as the most accurate one; see
+[docs/DEFAULTS.md](docs/DEFAULTS.md) if you have memory to spare.
 
 `whisper` and `qwen3-asr` do better when you set `--language`, and each gets the form it
 wants (a code for Whisper, an English name for Qwen) from whatever you type. Voxtral takes
@@ -150,9 +150,9 @@ findings are in [docs/benchmarks/](docs/benchmarks/), one document per lever, in
 The short version: transcription delay is the biggest lever and it is free; throughput is
 not monotonic in batch size, so the middle of the range is worse than one at a time; VAD
 cut points and dropping silence both turned out to change nothing measurable, so both stay
-off; higher precision does help Voxtral but costs more time or memory than a 16GB machine
-has; and whisper defaults to turbo rather than large-v3 because it ties it at twice the
-speed.
+off; higher precision does help Voxtral, so 4-bit is a distribution choice rather than the
+best-scoring one; and whisper defaults to turbo rather than large-v3 because it ties it at
+twice the speed.
 
 ## License
 
