@@ -235,17 +235,19 @@ def _run_other_backend(a, spec, log, t_start):
         hint = None
         # Qwen3-ASR is the one engine where --max-batch is refused for a reason
         # other than "the knob does not exist". It does: `generate(batch_size=)`
-        # batches whole chunks. But it is a no-op unless the audio produces more
-        # than one chunk, and the only batch-size guidance this project has
-        # ("never use 2-8") was measured on Voxtral's decoder, which shares
-        # nothing with this one. Refusing beats shipping a knob whose effect is
-        # unmeasured here and silently nothing at the default window.
+        # batches whole chunks. It is now refused because it was MEASURED and
+        # loses: 23.2x at batch 1 against 9.9x at batch 8 over the 20-file corpus,
+        # monotonic, with accuracy flat inside noise
+        # (docs/benchmarks/qwen3-batch.md). Batching whole chunks pads every group
+        # to its longest member and finishes at its slowest, neither of which the
+        # per-chunk path pays, and there is no weight read to amortize because each
+        # chunk's decode is already sequential over its own tokens.
         if spec.backend == "mlx-qwen3" and unsupported == ["--max-batch"]:
-            hint = (f"{spec.alias} batches whole chunks upstream, but only when the "
-                    f"audio yields more than one, and no batch size has been measured "
-                    f"for this decoder. Lower --chunk-seconds for more, shorter "
-                    f"windows. Tracking: "
-                    f"https://github.com/prog893/mlx-asr/issues/1")
+            hint = (f"{spec.alias} batches whole chunks upstream, and it was measured "
+                    f"to be SLOWER: 23.2x at batch 1 against 9.9x at batch 8 on the "
+                    f"20-file corpus, for no accuracy gain. Chunks in a batch are "
+                    f"padded to the longest and the batch ends with the slowest, so "
+                    f"one at a time wins. See docs/benchmarks/qwen3-batch.md")
         raise UnsupportedFlags(unsupported, spec.alias, hint)
     # Validated HERE rather than inside the backend, so a typo costs nothing. The audio
     # decode below reads the whole file, which on a 93-minute recording is not free, and

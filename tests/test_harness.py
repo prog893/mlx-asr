@@ -306,20 +306,26 @@ def test_voxtral_only_flags_error_on_other_engines(flag, alias, tmp_path):
 
 
 def test_max_batch_refusal_on_qwen3_says_why_rather_than_calling_it_absent(tmp_path):
-    """The reason has to be the real one.
+    """The reason has to be the real one, and the real one changed.
 
-    `batch_size` does exist upstream, so "this engine has no such knob" would be
-    false. It is refused because it does nothing at the default window and because
-    nothing about the right value has been measured for this decoder. A user told
-    the wrong reason cannot work out that lowering --chunk-seconds is the lever.
+    `batch_size` does exist upstream, so "this engine has no such knob" would be false.
+    It used to be refused as unmeasured; it is now refused because it WAS measured and
+    lost (23.2x at batch 1 against 9.9x at batch 8, docs/benchmarks/qwen3-batch.md). So
+    the message must carry the measurement rather than the old "nothing is known here",
+    and must not suggest lowering --chunk-seconds to make batching worthwhile, which the
+    sweep showed does not help.
     """
     r = subprocess.run(
         CLI + [str(tmp_path / "nope.wav"), "--model", "qwen3-asr", "-f", "txt",
                "--max-batch", "8"],
         capture_output=True, text=True, cwd=ROOT)
     assert r.returncode == 2, (r.returncode, r.stderr)
-    assert "--chunk-seconds" in r.stderr, r.stderr
+    # The finding, not a shrug: a number and where it came from.
+    assert "SLOWER" in r.stderr, r.stderr
+    assert "qwen3-batch.md" in r.stderr, r.stderr
     assert "Voxtral-only" not in r.stderr, r.stderr
+    # And not the superseded claim.
+    assert "has been measured" not in r.stderr.replace("was measured", ""), r.stderr
 
 
 @pytest.mark.parametrize("fmt", ["srt", "vtt", "all"])

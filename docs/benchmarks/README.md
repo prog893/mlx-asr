@@ -17,6 +17,7 @@ that make plain CER meaningless.
 | [engines.md](engines.md) | which model | Whisper turbo + no-condition is ~1.5 points more accurate; Voxtral is ~1.35x faster and reproducible, so it is the default. |
 | [qwen3-asr.md](qwen3-asr.md) | the Qwen3-ASR engine | Last on accuracy of the four engines; the 0.6B is the fastest here. Writes no subtitles (its timestamps are decode-window boundaries), and its library truncates long audio silently, which is why this project drives the chunk loop itself. |
 | [decode-throughput.md](decode-throughput.md) | batch size | Not monotonic. Never use batch 2-8. The only lever anyone can reproduce without audio. |
+| [qwen3-batch.md](qwen3-batch.md) | batch size on qwen3-asr | Batching whole chunks loses monotonically (2.3x slower by batch 8) for no accuracy gain, so `--max-batch` stays refused there. |
 | [input-level.md](input-level.md) | `--gain` | Quiet input silently costs ~3.8 points. `auto` fixes it and is a no-op otherwise. |
 | [prompt.md](prompt.md) | `--prompt` | Weak and unreliable, except that an *instruction* there costs 6-14 points. |
 | [quantization.md](quantization.md) | weight and KV precision | Costs nothing measurable. Use 4-bit with `--kv-bits 8`. |

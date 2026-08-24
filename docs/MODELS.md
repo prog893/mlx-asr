@@ -250,9 +250,11 @@ Three behaviours specific to this model:
 so `-f srt`, `-f vtt` and `-f all` exit 2 instead of writing a file whose cue times are
 fiction. `txt` and `json` work, and the JSON carries `cue_source: "chunk_boundaries"`.
 
-**`--max-batch` exits 2.** `batch_size` exists upstream but does nothing at the default
-window, and no value has been measured for this decoder
-([#1](https://github.com/prog893/mlx-asr/issues/1)).
+**`--max-batch` exits 2.** `batch_size` exists upstream, and it was measured to be slower:
+23.2x at batch 1 against 9.9x at batch 8 over the corpus, monotonic, with accuracy flat
+([benchmarks/qwen3-batch.md](benchmarks/qwen3-batch.md)). Batching whole chunks pads each
+group to its longest member and ends with its slowest, and there is no weight read to
+amortize, so one chunk at a time wins.
 
 **Repetition loops occur on some material** and are a property of the weights. Each is
 capped to one window and the CLI warns when it sees one. `mlx_asr` drives the chunk loop

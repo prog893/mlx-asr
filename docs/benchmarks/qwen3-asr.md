@@ -331,11 +331,9 @@ first-class `qwen3_asr` loader in its dispatch table since 0.3.1, so this is the
 the Voxtral path calls on a different repo id.
 
 `--max-batch` is refused, and it is the one refusal in this project whose reason is not "the
-knob does not exist". `generate(batch_size=)` does batch whole windows. It is refused because
-it is a no-op unless `--chunk-seconds` is low enough to produce more than one window, and
-because the only batch-size finding here (never use 2-8) was measured on Voxtral's decoder,
-which shares nothing with this one. The error message says exactly that and points at
-`--chunk-seconds`.
+knob does not exist". `generate(batch_size=)` does batch whole windows. It was refused as
+unmeasured at first; it has since been swept and it loses, monotonically and by a wide
+margin, so it stays refused on evidence: [qwen3-batch.md](qwen3-batch.md).
 
 ## What this does and does not settle
 
@@ -366,6 +364,6 @@ done.
 the decoding loop rather than to model size, so it should carry over, but that is an
 argument rather than a measurement.
 
-**Deliberately not open.** Batch size, because `--max-batch` is refused (see above), and
-`--repeat` beyond the determinism check, because greedy decoding makes further runs
-information-free.
+**Deliberately not open.** Batch size, now settled by measurement rather than left
+unexamined ([qwen3-batch.md](qwen3-batch.md)), and `--repeat` beyond the determinism check,
+because greedy decoding makes further runs information-free.
