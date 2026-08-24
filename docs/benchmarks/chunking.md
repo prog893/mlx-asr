@@ -257,8 +257,9 @@ one-for-one; on the reference clip it removed 12% of the audio. Timestamps are m
 back to the original timeline, and the resulting chunk cuts were measurably *cleaner*
 (no cut louder than -50dB, versus 3 cuts above -45dB without it).
 
-The accuracy result nevertheless splits by quantization, which is the one result in this
-project that does not transfer between machines:
+On the clip the accuracy result appeared to split by quantization. **That did not reproduce
+on the corpus** (see below), so the table is kept as the record of what was measured rather
+than as a finding:
 
 | config | CER baseline | CER compacted | deletions |
 |---|---|---|---|
@@ -267,11 +268,15 @@ project that does not transfer between machines:
 | M2 Ultra 128GB, 4bit affine, 60s/B16 | 7.23% | 8.23% | 103 -> 118 |
 | M2 Ultra 128GB, 4bit affine, 30s/B32 | 9.13% | 8.59% | 123 -> 109 |
 
-On nvfp4 the deletions triple and the loss is concentrated rather than spread: one
-two-minute stretch lost 45% of its text after only 4.8s of silence was removed there, so
-this is not proportional information loss. The model appears to rely on pauses for its
-own segmentation, and the more aggressively quantized weights tolerate their removal
-much worse. The mechanism is a hypothesis, not a measurement.
+On nvfp4 the deletions tripled and the loss was concentrated rather than spread: one
+two-minute stretch lost 45% of its text after only 4.8s of silence was removed there. The
+reading at the time was that the model leans on pauses for its own segmentation and that
+more aggressively quantized weights tolerate their removal worse.
+
+That reading is now **withdrawn**. The same nvfp4 comparison over the corpus is a tie, so
+whatever happened on this clip was specific to it. Recorded rather than deleted because the
+clip numbers are real and because a plausible mechanism story built on one recording is
+exactly the failure mode worth leaving visible.
 
 **On the corpus at the shipped 4-bit config it is slightly better, not worse** (2026-08-24,
 20 files, idle M2 Ultra):
@@ -287,14 +292,32 @@ It removed 3-4% of audio on the spontaneous recordings, less than the 12% on the
 clip, and the win is concentrated in the three longest files (-2.19, -1.30, -0.59 points).
 One file went the other way by +1.04.
 
-So it is a tie on this material, and the earlier "helps some quantizations and badly hurts
-others" is a statement about **nvfp4 on one clip**, not about the flag.
+### The quantization dependence does not survive the corpus either
 
-**Marginal, so it stays off**: a 0.21-point gain inside its own interval does not justify
-changing what every user gets. The nvfp4 collapse is the open question, since a 4-point loss
-would be decisive if it reproduced, and it is queued for the corpus
-([#6](https://github.com/prog893/mlx-asr/issues/6)). If that comes back a tie as well, this
-flag is free on 4-bit Japanese audio and the default is worth revisiting on the speed alone.
+That was the reason the flag ships off, so it was run on every precision available. All four
+are ties on accuracy and all four are faster:
+
+| precision | off | on | difference | x realtime |
+|---|---|---|---|---|
+| 4-bit (ships) | 16.21% | 16.00% | +0.21, CI [-0.70, +0.22] | 19.8x -> **20.5x** |
+| 8-bit | 15.27% | 15.30% | -0.03, CI [-0.63, +0.42] | 19.8x -> **20.4x** |
+| mxfp8 | 15.86% | 15.78% | +0.08, CI [-0.63, +0.65] | 19.4x -> **20.7x** |
+| nvfp4 | 16.07% | 16.05% | +0.02, CI [-0.97, +0.78] | 19.4x -> **20.2x** |
+
+**nvfp4 is the headline**, because that is the arm the 4-point loss came from. On the corpus
+it is +0.02 points and splits 4 files to 4. Nothing survives of the effect, so the
+quantization-dependence claim is **withdrawn**: it described one clip and one precision, and
+the mechanism story built on it (that quantized weights lean harder on pauses for
+segmentation) has no evidence behind it.
+
+**It stays off anyway, and this is the uncomfortable part.** Accuracy is a tie on all four
+precisions, so by the project's own rule (positive on, negative off, marginal off) the
+accuracy case does not move the default. What is left is a consistent 3-5% throughput gain,
+which is real but is a speed argument for a flag that silently discards audio. Removing
+input is a behaviour change users should opt into rather than inherit, so the flag keeps its
+current default and its documentation now says the cost is unmeasurable rather than
+quantization-dependent. Closes
+[#6](https://github.com/prog893/mlx-asr/issues/6).
 
 ## What ships
 

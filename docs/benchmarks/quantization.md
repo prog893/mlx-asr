@@ -262,6 +262,23 @@ points with CI [+0.00, +0.07], and **39 of 40 scored regions are identical**, wh
 the strongest form of "free" available from this method. On by default in both hardware
 profiles.
 
+**Confirmed on the corpus**, which this default had never been run against:
+
+| | JP coverage CER | x realtime |
+|---|---|---|
+| unquantized KV | 16.38% | 19.7x |
+| **kv8 (ships)** | 16.21% | 19.8x |
+| kv4 | 15.95% | 19.8x |
+
+    kv8 vs unquantized: -0.17 points, CI [-0.51, +0.12]  -> tie
+    kv8 vs kv4:         +0.27 points, CI [-0.51, +1.27]  -> tie
+
+All three tie, so quantizing the cache is free in the sense that matters, and kv8 keeps the
+default on its memory saving. kv4 is nominally best of the three, which is worth *not*
+over-reading: it is well inside the interval, and the same trap as 4-bit weights ranking
+nominally best on the narration clip. What kv4 does offer is a further halving of cache
+bytes, unmeasured for memory here.
+
 Implementation note: in mlx 0.32 this needs mlx-lm's
 `quantized_scaled_dot_product_attention`, because `QuantizedKVCache.update_and_fetch`
 returns triples that the dense `mx.fast.scaled_dot_product_attention` rejects.

@@ -17,9 +17,10 @@ default falls into one of three tiers.
 | **decided by cost** | swept on the corpus, but the arms tie on accuracy, so the default was chosen on speed, memory or dependencies | `voxtral --chunk-seconds`, `--max-batch`, `--overlap-seconds`, `--delay-ms`, `--gain`, `--vad`, `--compact-silence`, `--kv-bits` |
 | **not yet on the corpus** | one recording only, or not measured at all, so unverified on the material this project targets | `qwen3-asr` precision below 8bit, cue layout |
 
-That last tier is where surprises come from. `--vad`, `--compact-silence` and `--kv-bits` all
-sat there until the corpus shrank their margins to nothing, and Voxtral's precision default
-was outright reversed by moving off one clip. See
+That last tier is where surprises come from, and it has emptied out considerably. `--vad`,
+`--compact-silence` and `--kv-bits` all sat there until the corpus shrank their margins to
+nothing, and Voxtral's precision default was outright *reversed* by moving off one clip. Not
+one clip-only claim tested so far has survived intact. See
 [benchmarks/metrics.md](benchmarks/metrics.md) for why a null result on one clip cannot be
 used to argue an effect is small.
 
@@ -69,7 +70,7 @@ single window: one segment, and the batched path never engages.
 | `--gain auto` | quiet input silently loses detail, because the mel front end clamps at an absolute floor. `auto` boosts only quiet audio, so it is byte-identical on healthy input | [input-level.md](benchmarks/input-level.md) |
 | `--vad` off | a tie with energy cut points on the corpus, and it costs an `onnxruntime` dependency. The single-clip result that looked decisive did not reproduce | [chunking.md](benchmarks/chunking.md) |
 | `--prompt` empty | it biases register rather than recalling vocabulary, an instruction there actively hurts, and on English audio any prompt wrecks word spacing | [prompt.md](benchmarks/prompt.md) |
-| `--compact-silence` off | a tie on the corpus at the default precision, for a small speed gain. It did look harmful on one other precision on one clip, which is being re-measured ([#6](https://github.com/prog893/mlx-asr/issues/6)) | [chunking.md](benchmarks/chunking.md) |
+| `--compact-silence` off | a tie on accuracy at every precision tested, and slightly faster. Off because it discards audio, which should be opted into rather than inherited, not because it costs accuracy | [chunking.md](benchmarks/chunking.md) |
 
 ## Whisper long-form stability
 
