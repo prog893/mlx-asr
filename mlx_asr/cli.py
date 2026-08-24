@@ -367,10 +367,12 @@ def build_parser():
                         f"unquantized build that model publishes (bf16 or fp16). "
                         f"The defaults are measured: on qwen3-asr bf16 tied 8bit "
                         f"(20.16%% vs 19.98%%) at 1.36x the wall clock and 1.4x the "
-                        f"peak memory, and on voxtral fp16 tied 4bit at 1.6x the "
-                        f"wall clock and 15.3GB of peak memory against 9.4GB, so it "
-                        f"does not fit 16GB at all. Going BELOW each default is a "
-                        f"size choice and is unmeasured here. An unpublished value "
+                        f"peak memory. On voxtral fp16 is genuinely MORE accurate "
+                        f"(15.04%% vs 16.34%% over the 20-file corpus) but costs "
+                        f"1.65x the wall clock and peaks at 12.98GB, which does not "
+                        f"fit a 16GB machine, so 4bit ships as a deliberate trade. "
+                        f"Going BELOW each default is a size choice and is "
+                        f"unmeasured here. An unpublished value "
                         f"is an error naming what exists. "
                         f"See docs/benchmarks/quantization.md")
     p.add_argument("--max-batch", type=int, default=None,

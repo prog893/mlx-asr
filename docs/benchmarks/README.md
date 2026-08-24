@@ -20,7 +20,7 @@ that make plain CER meaningless.
 | [qwen3-batch.md](qwen3-batch.md) | batch size on qwen3-asr | Batching whole chunks loses monotonically (2.3x slower by batch 8) for no accuracy gain, so `--max-batch` stays refused there. |
 | [input-level.md](input-level.md) | `--gain` | Quiet input silently costs ~3.8 points. `auto` fixes it and is a no-op otherwise. |
 | [prompt.md](prompt.md) | `--prompt` | Weak and unreliable, except that an *instruction* there costs 6-14 points. |
-| [quantization.md](quantization.md) | weight and KV precision | Costs nothing measurable. Use 4-bit with `--kv-bits 8`. |
+| [quantization.md](quantization.md) | weight and KV precision | 4-bit costs ~1.3 CER points against fp16 on the corpus, and ships anyway because fp16 needs 1.65x the time and will not fit 16GB. `--kv-bits 8` is close to free. |
 | [timestamps.md](timestamps.md) | timestamp quality | Voxtral holds timing, Whisper places cues better. Different failure modes, reported separately. |
 | [cue-layout.md](cue-layout.md) | subtitle grouping | Two sweeps run, neither adopted, on purpose. Costs 5.4 break-F1 points. |
 

@@ -51,7 +51,7 @@ plain CER is meaningless on this editorial material.
 | batch size | Not monotonic. Never use 2-8. | [decode-throughput.md](docs/benchmarks/decode-throughput.md) |
 | input level | Quiet input silently costs ~3.8 points; `--gain auto` fixes it. | [input-level.md](docs/benchmarks/input-level.md) |
 | `--prompt` | Weak, except that an instruction there costs 6-14 points. | [prompt.md](docs/benchmarks/prompt.md) |
-| quantization | Costs nothing measurable. Use 4-bit, `--kv-bits 8`. | [quantization.md](docs/benchmarks/quantization.md) |
+| quantization | 4-bit costs ~1.3 points against fp16 on the corpus, and ships anyway (fp16 needs 1.65x the time and 16GB machines cannot load it). `--kv-bits 8` is close to free. | [quantization.md](docs/benchmarks/quantization.md) |
 | timestamps | Voxtral holds timing, Whisper places cues better. | [timestamps.md](docs/benchmarks/timestamps.md) |
 | cue grouping | Two sweeps run, neither adopted, deliberately. | [cue-layout.md](docs/benchmarks/cue-layout.md) |
 
@@ -135,6 +135,11 @@ are indistinguishable on this material, so the choice is purely throughput and b
 `profiles.json`. This was the strongest candidate for an effect that more audio might
 resolve, and more audio dissolved it instead.
 
-Deliberately not open: repeat runs of Voxtral on one machine (byte-identical, verified),
-and a quantization sweep across the corpus (the effects are 0.07-0.26 points against a
-3.2-point resolution at n=7, so it would produce noise).
+Deliberately not open: repeat runs of Voxtral on one machine (byte-identical, verified).
+
+A corpus-wide quantization sweep *was* skipped on the same reasoning, that the effects were
+0.07-0.26 points against a 3.2-point resolution. That reasoning was wrong for fp16 versus
+4-bit, which resolved cleanly at n=20 once measured (+1.30 points, CI [+0.59, +2.26]). The
+power estimate had extrapolated an effect size from a single narration clip where the pair
+happens to tie. The other precision pairs remain clip-only for the same discredited reason,
+so they are open rather than settled.

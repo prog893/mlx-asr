@@ -14,13 +14,15 @@ code. Full method and corpus per finding: [benchmarks/](benchmarks/).
 
 ## Precision
 
-One default per model, chosen as the cheapest precision that costs no measurable accuracy.
-Precision is not an accuracy lever on this workload: five Voxtral variants span 0.43 CER
-points, inside the noise ([quantization.md](benchmarks/quantization.md)).
+One default per model, chosen as the cheapest precision whose accuracy cost is worth its
+price. On Voxtral that cost is real and measured: fp16 beats 4-bit by 1.30 CER points on
+the 20-file corpus, 95% CI [+0.59, +2.26]
+([quantization.md](benchmarks/quantization.md)). 4-bit still ships, because fp16 cannot be
+bought on a 16GB machine at any accuracy.
 
 | default | why |
 |---|---|
-| `voxtral` 4bit | fp16 is a tie on the narration clip (0.07 points, CI [-0.33, +0.48]) at 1.6x the wall clock, and its 12.98GB peak exceeds a 16GB M4's 12.71GB GPU working set, so it does not run there at all ([peak-memory.md](benchmarks/peak-memory.md)). **Open:** on the 20-file corpus fp16 measured 1.1 points *better* (15.12% against 16.21%), which needs a paired test before it means anything ([#2](https://github.com/prog893/mlx-asr/issues/2)) |
+| `voxtral` 4bit | a deliberate 1.30-point trade, not a free lunch: fp16 scores 15.04% against 16.34% on the corpus (CI [+0.59, +2.26], 13 of 17 files) but costs 1.65x the wall clock, and its 12.98GB peak exceeds a 16GB M4's 12.71GB GPU working set, so it does not run there at all ([peak-memory.md](benchmarks/peak-memory.md)). Set `--quantization fp16` on a large-memory machine if accuracy matters more than time |
 | `qwen3-asr` 8bit | bf16 is a tie on the 1.7B (20.16% against 19.98%) at 1.36x the wall clock and 1.4x the memory, and 3 points *worse* on the 0.6B |
 | `--kv-bits 8` | faster, and 39 of 40 scored regions identical to unquantized |
 

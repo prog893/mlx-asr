@@ -276,12 +276,15 @@ REGISTRY: dict[str, Model] = {
                 "  python -m mlx_audio.convert --hf-path "
                 "mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16 \\\n"
                 "    --mlx-path ./voxtral-8bit --quantize --q-bits 8 --q-group-size 64\n"
-                "then pass --model ./voxtral-8bit. All five precisions scored within "
-                "0.43 CER points, so expect no accuracy change."
+                "then pass --model ./voxtral-8bit. The five precisions scored within "
+                "0.43 CER points on one narration clip, though fp16 beat 4bit by 1.30 "
+                "points over the 20-file corpus, so an intermediate build may sit "
+                "between them; none has been measured on the corpus."
             ),
             notes="fastest here; greedy so reproducible; no language token; "
-                  "best timestamp stability. fp16 is a tie on accuracy at 1.6x "
-                  "the cost, so 4bit is the default",
+                  "best timestamp stability. fp16 is 1.3 CER points better on the "
+                  "corpus but costs 1.65x the time and will not fit 16GB, so 4bit "
+                  "is the default",
         ),
         Model(
             alias="whisper-turbo",

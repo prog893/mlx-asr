@@ -117,9 +117,9 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 
 `--model` picks the family; `--size` and `--quantization` pick the variant inside it.
 They are not equally important, and that is measured: size spans 43 CER points across
-Whisper's range, while precision spans 0.43 across five Voxtral builds. So each family's
-default size is chosen on evidence, and precision defaults to the cheapest that loses
-nothing.
+Whisper's range, while precision spans about 1.3. So each family's default size is chosen
+on evidence, and precision defaults to 4-bit as a deliberate trade, since fp16 buys those
+1.3 points for 1.65x the time and more memory than a 16GB machine has.
 
 `whisper` and `qwen3-asr` do better when you set `--language`, and each gets the form it
 wants (a code for Whisper, an English name for Qwen) from whatever you type. Voxtral takes
@@ -135,8 +135,7 @@ All weights are `mlx-community` MLX builds, except `kotoba` which converts the a
 own weights locally on first use. **unsloth and GGUF quants cannot be used here**: unsloth
 publishes no Voxtral, only GGUF for Qwen3-ASR, and unquantized transformers weights for
 Whisper, while GGUF is llama.cpp's format that MLX cannot load. That is a format
-constraint rather than a quality judgement, and it costs little, since quantization here
-buys memory rather than accuracy or speed
+constraint rather than a quality judgement
 ([why](docs/MODELS.md#formats-that-will-not-work)).
 
 What each model scored: [docs/benchmarks/engines.md](docs/benchmarks/engines.md).
@@ -150,8 +149,9 @@ findings are in [docs/benchmarks/](docs/benchmarks/), one document per lever, in
 
 The short version: transcription delay is the biggest lever and is free; batch size is not
 monotonic, so 2-8 is worse than 1; VAD cut points score worse than energy minima;
-quantization costs nothing measurable; and whisper defaults to turbo rather than large-v3
-because it ties it on accuracy at twice the speed.
+4-bit costs about 1.3 CER points against fp16 and ships anyway, because fp16 does not fit
+16GB; and whisper defaults to turbo rather than large-v3 because it ties it on accuracy at
+twice the speed.
 
 ## License
 

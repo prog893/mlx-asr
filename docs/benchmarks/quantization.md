@@ -7,11 +7,17 @@ conversions with no quantized builds in use here, so it errors there. whisper.cp
 quantization is covered in [engines.md](engines.md), where it costs speed rather than
 accuracy.
 
-**Conclusion first.** Quantization costs nothing measurable in accuracy on this
-workload. fp16 through 4-bit span 0.43 CER points on 4205 reference characters, which is
-inside the noise, while fp16 costs 1.6x the wall clock and 15.3GB of peak memory against
-9.4GB. **Use 4-bit.** `--kv-bits 8` is separately close to free and is on by default.
-Do not read 4-bit landing nominally best as evidence that quantization helps.
+**Conclusion first.** Quantization costs about **1.3 CER points** on the 20-file corpus,
+where fp16 beats 4-bit significantly (95% CI [+0.59, +2.26]). **Use 4-bit anyway**: fp16
+costs 1.65x the wall clock and 1.9x the memory, and its 12.98GB peak does not fit a 16GB
+machine at all, so the accuracy is unbuyable for most users. `--kv-bits 8` is separately
+close to free and is on by default.
+
+That figure replaces an earlier "quantization costs nothing measurable", which came from a
+single prepared-narration clip where the same pair spans 0.43 points and is a tie. Both
+measurements are sound on their own material and they disagree; the corpus one governs,
+because it is the material this project is tuned for. Details and what remains unexplained
+are in the next section.
 
 ## The policy: one measured default per model, and `--quantization` to override it
 
@@ -20,9 +26,9 @@ and `--quantization` exposes the rest where the converters published more than o
 
 The default is picked by this rule, in this order:
 
-1. **Take the cheapest precision that costs no measurable accuracy.** Precision buys
-   nothing on this workload (the sweep below spans 0.43 CER points from fp16 to 4-bit,
-   inside the noise), so paying for it in time and memory is a bad trade.
+1. **Take the cheapest precision whose accuracy cost is worth its price.** On Voxtral that
+   cost is now measured at ~1.3 CER points, and 4-bit still wins the trade because fp16
+   needs 1.65x the time, 1.9x the memory, and more memory than a 16GB machine has.
 2. **Where only one build exists, ship that.** Nothing to choose.
 
 | model | default | other options | why that default |
@@ -77,15 +83,65 @@ no difference: bf16 and 8-bit produced near-identical repetition-loop counts (2/
 against 3/0/19/0/31 per file), so its loops are not a quantization artifact. See
 [qwen3-asr.md](qwen3-asr.md).
 
-## Corpus
+## fp16 versus 4-bit is resolved on the corpus, and fp16 wins
+
+**This overturns the conclusion below for that one pair.** Everything else on this page
+stands; read this section first.
+
+A paired bootstrap over the 20-file corpus, both arms produced in the same sweep on an idle
+M2 Ultra at one config:
+
+| | JP coverage CER | EN coverage WER | x realtime | peak GPU |
+|---|---|---|---|---|
+| 4-bit (ships) | 16.34% | 22.43% | 18.50x | 6.77GB |
+| **fp16** | **15.04%** | 21.64% | 11.24x | 12.98GB |
+
+    paired difference, 17 char-unit files, 70,419 reference chars
+      +1.30 points, 95% CI [+0.59, +2.26]
+      fp16 wins 13 of 17 files, sign test p = 0.049
+
+The CI excludes zero, so this is a real difference on this material rather than the tie the
+clip reported. It survives dropping the largest contributors one at a time and both
+together (+1.20, +1.03, +0.93; every CI still clear of zero), so it is not one outlier
+file.
+
+It is also not a metric artifact. fp16 is ahead on all three error types counted
+independently, and coverage excusal moves the wrong way to explain it:
+
+| | substitutions | deletions | insertions counted |
+|---|---|---|---|
+| 4-bit | 5,749 | 3,444 | 2,313 |
+| fp16 | **5,185** | **3,274** | **2,132** |
+
+Both material types in the corpus agree (spontaneous +1.58, published-video +0.73), so the
+disagreement with the clip result below is **not** explained by material alone.
+
+**What has not changed: 4-bit still ships.** fp16 costs 1.65x the wall clock and 1.9x the
+memory, and its 12.98GB peak does not fit a 16GB machine at all
+([peak-memory.md](peak-memory.md)), so the default cannot be fp16 for most users even
+though it is more accurate here. What changed is the *reason*: 4-bit is a deliberate
+accuracy-for-memory trade of about 1.3 points, not a free lunch.
+
+**Still open: why the clip and the corpus disagree.** The clip put the same pair at 0.07
+points, CI [-0.33, +0.48], on 40 paired regions. Both tests are sound on their own
+material, so something differs between prepared narration with a verbatim reference and
+this corpus that quantization interacts with. Untested candidates: chunk/batch config
+(the clip ran 60s/B16 fixed, the corpus at the per-machine profile), and reference style.
+Not resolvable without another corpus.
+
+## Corpus for the rest of this page
 
 The single 935s Japanese prepared-narration clip with a complete verbatim reference, so
-plain CER is meaningful. This lever is deliberately **not** measured on the multi-file
-corpus, for a reason worth stating: at n=7 the corpus resolves about 3.2 points, and
-these effects are 0.07-0.26 points. Detecting them would need roughly 1,000 files for
-8-bit versus 4-bit, ~15,000 for fp16 versus 4-bit, and ~180,000 for kv8. Running the
-sweep across the corpus would consume about 1.5h of GPU time to produce three numbers
-inside the noise floor.
+plain CER is meaningful. The remaining levers here are deliberately **not** measured on the
+multi-file corpus, for a reason worth stating: at n=7 the corpus resolves about 3.2 points,
+and these effects are 0.07-0.26 points. Detecting them would need roughly 1,000 files for
+8-bit versus 4-bit and ~180,000 for kv8. Running the sweep across the corpus would consume
+about 1.5h of GPU time to produce numbers inside the noise floor.
+
+That power calculation is what the fp16 result above breaks: it predicted ~15,000 files
+were needed for fp16 versus 4-bit, and 20 sufficed. So the calculation was extrapolating an
+effect size measured on the wrong material, which is a caution about the estimates for the
+other pairs too rather than a reason to trust them.
 
 The cross-machine check gives an independent read instead: the same config on an M4 16GB
 (nvfp4) and an M2 Ultra 128GB (4-bit affine) agreed to within ~1 point on 5 of 7 files. Note
@@ -126,8 +182,10 @@ rather than concentrated:
 | fp16 | 158 | 59 | 103 | 320 |
 | 4bit | 149 | 52 | 104 | 305 |
 
-Paired, fp16 versus 4-bit is 0.07 points with CI [-0.33, +0.48]. **Treat all five as
-tied.**
+Paired, fp16 versus 4-bit is 0.07 points with CI [-0.33, +0.48]. **On this clip, treat all
+five as tied.** That does not generalise: fp16 beats 4-bit by 1.30 points on the 20-file
+corpus, significantly, which is the section at the top of this page. The other four
+comparisons here have not been re-tested on the corpus and so remain clip-only results.
 
 What is *not* noise is the cost. Decode steps/s tracks weight bytes the way the
 bandwidth model predicts (14.5 for 8.9GB versus 26-27 for the 2.5-4.7GB variants), which
