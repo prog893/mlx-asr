@@ -69,7 +69,7 @@ so 300s looked free. At corpus scale it is not:
 | window | JP coverage CER | x realtime | peak GPU |
 |---|---|---|---|
 | **120s** | **26.19%** | 244.6x | 4.77GB |
-| 300s | 32.60% | 204.4x | 8.1GB |
+| 300s | 32.60% | 204.4x | 8.5GB |
 
 Paired over 17 files, 300s is +5.81 points worse on average and loses on 11,
 with the damage concentrated where windows are longest relative to speech

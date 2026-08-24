@@ -114,7 +114,7 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 | `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **turbo**, which is both more accurate here than large-v3 and about 2x faster. The most accurate option on the test corpus |
 | `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, and Japanese only |
 | `qwen3-asr` | Alibaba's Qwen3-ASR. `--size 1.7B` (default) or `0.6B`, the fastest engine measured here. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
-| `parakeet` | NVIDIA's Japanese FastConformer-TDT, through mlx-audio. Greedy, token-level timestamps so subtitles work. The fastest engine measured here (244x realtime) and the least accurate on this corpus |
+| `parakeet` | NVIDIA's Japanese FastConformer-TDT, through mlx-audio. Greedy, token-level timestamps so subtitles work. The fastest engine measured here (244x realtime), well behind the multilingual defaults on this corpus's Japanese |
 | `reazon` | ReazonSpeech k2-v2 (Japanese Zipformer), the authors' ONNX build via sherpa-onnx. Decodes on CPU; needs `uv sync --extra reazon`. Japanese only |
 | any HF repo id | the backend is inferred from the name; `--size` and `--quantization` are refused, since the id already names the variant |
 

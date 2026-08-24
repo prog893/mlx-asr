@@ -336,22 +336,38 @@ def transcribe_mlx_qwen3(audio_path: str, model, language=None, log=print,
                         **opts)
 
 
-def _refuse_non_japanese(language, alias):
+def _refuse_non_japanese(language, model):
     """Hard error on a language request these weights cannot honour.
 
-    Both Japanese-only engines take NO language token at all: there is nothing to
+    A Japanese-only engine takes NO language token at all: there is nothing to
     forward, so accepting `--language en` and silently producing Japanese output
     is exactly the honoured-looking-but-ignored failure this CLI refuses
-    everywhere else."""
-    if not language:
+    everywhere else.
+
+    Keyed on the DECLARED languages of the resolved entry, not the backend name:
+    `infer_backend` routes any repo id containing "parakeet" here, and several
+    such checkpoints (parakeet-tdt-0.6b-v2/v3) are English or multilingual. For
+    an undeclared raw repo the guard stays out of the way.
+    """
+    if not language or model.languages == "multilingual":
         return
     from .languages import to_iso
 
-    code = to_iso(language, alias)
+    code = to_iso(language, model.alias)
     if code != "ja":
-        _die(f"{alias} is a Japanese-only model and takes no language token; "
-             f"--language {language!r} (-> {code}) is refused rather than "
-             f"ignored. The weights transcribe Japanese only.")
+        _die(f"{model.alias} is a Japanese-only model and takes no language "
+             f"token; --language {language!r} (-> {code}) is refused rather "
+             f"than ignored. The weights transcribe Japanese only.")
+
+
+def _language_source(model) -> str:
+    """What the JSON may honestly claim about how language was chosen.
+
+    `single_language_model` for an entry that declares ja: nothing was forced or
+    detected, the weights have one output. `no_language_input` for a raw repo id,
+    where even that is not known and must not be implied."""
+    return ("single_language_model" if model.languages != "multilingual"
+            else "no_language_input")
 
 
 def parakeet_decode(loaded, audio, chunk_len: float, log=print,
@@ -418,7 +434,7 @@ def transcribe_mlx_parakeet(audio_path: str, model, language=None, log=print,
     except ImportError:      # pragma: no cover - mlx-audio is a hard dependency
         _die("parakeet needs mlx-audio, which should already be installed")
 
-    _refuse_non_japanese(language, model.alias)
+    _refuse_non_japanese(language, model)
 
     opts = dict(model.opts)
     opts.update({k: v for k, v in overrides.items() if v is not None})
@@ -429,8 +445,12 @@ def transcribe_mlx_parakeet(audio_path: str, model, language=None, log=print,
     from .audio import load_audio_16k
 
     log(f"[{model.backend}] window {chunk_len:g}s, overlap {overlap_s:g}s")
-    return parakeet_decode(m, load_audio_16k(audio_path), chunk_len, log=log,
-                           overlap_s=overlap_s)
+    cues, text, meta = parakeet_decode(m, load_audio_16k(audio_path), chunk_len,
+                                       log=log, overlap_s=overlap_s)
+    # The decode fn cannot know whether the entry declares its language, so the
+    # honest label is applied here where that fact lives.
+    meta["language_source"] = _language_source(model)
+    return cues, text, meta
 
 
 # --- ReazonSpeech k2-v2 (sherpa-onnx) ----------------------------------------
@@ -498,7 +518,10 @@ def reazon_k2_tokens_to_cues(times, tokens):
     return cues
 
 
-def reazon_k2_load(repo: str, precision: str = "int8") -> str:
+REAZON_PRECISIONS = ("fp32", "int8")
+
+
+def reazon_k2_load(repo: str, precision: str = "fp32") -> str:
     """Download (or reuse) the authors' ONNX files; return the directory.
 
     The repo ships fp32 and int8 builds side by side in one repo, so unlike every
@@ -509,7 +532,15 @@ def reazon_k2_load(repo: str, precision: str = "int8") -> str:
     one 112s file), which contradicts the near-parity the authors' table shows
     on read-speech benchmarks. Pass precision="int8" explicitly to trade that
     accuracy away for a 4x-smaller download and ~1.5x the speed.
+
+    Only the two published spellings are accepted, and an unrecognised value is
+    an error rather than a silent fallthrough to fp32: this function maps the
+    name onto FILE patterns, so "fp16" would quietly download fp32 files and
+    every log line after it would describe weights that are not on disk.
     """
+    if precision not in REAZON_PRECISIONS:
+        _die(f"reazon-k2 precision must be one of "
+             f"{', '.join(REAZON_PRECISIONS)}, got {precision!r}")
     try:
         from huggingface_hub import snapshot_download
     except ImportError:      # pragma: no cover - hub is a transitive dependency
@@ -589,7 +620,7 @@ def transcribe_reazon_k2(audio_path: str, model, language=None, log=print,
     except ImportError:
         _die(f"reazon-k2 needs sherpa-onnx: {_install_hint('reazon')}")
 
-    _refuse_non_japanese(language, model.alias)
+    _refuse_non_japanese(language, model)
 
     opts = dict(model.opts)
     opts.update({k: v for k, v in overrides.items() if v is not None})
@@ -608,8 +639,10 @@ def transcribe_reazon_k2(audio_path: str, model, language=None, log=print,
     log(f"[{model.backend}] {precision}, window {chunk_len:g}s, CPU decode")
     from .audio import load_audio_16k
 
-    return reazon_k2_decode(recognizer, load_audio_16k(audio_path), chunk_len,
-                            log=log)
+    cues, text, meta = reazon_k2_decode(recognizer, load_audio_16k(audio_path),
+                                        chunk_len, log=log)
+    meta["language_source"] = _language_source(model)
+    return cues, text, meta
 
 
 DISPATCH = {

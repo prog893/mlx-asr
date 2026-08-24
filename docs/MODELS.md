@@ -57,7 +57,7 @@ Japanese only. NVIDIA's FastConformer-TDT through mlx-audio's own driver.
 
 | `--quantization` | weights | download | peak GPU memory |
 |---|---|---|---|
-| - | [mlx-community/parakeet-tdt_ctc-0.6b-ja](https://huggingface.co/mlx-community/parakeet-tdt_ctc-0.6b-ja) | 2.49GB | not measured |
+| - | [mlx-community/parakeet-tdt_ctc-0.6b-ja](https://huggingface.co/mlx-community/parakeet-tdt_ctc-0.6b-ja) | 2.49GB | 4.77GB (17-file corpus) |
 
 ### `--model reazon`
 

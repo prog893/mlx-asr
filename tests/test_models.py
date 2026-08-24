@@ -850,3 +850,54 @@ def test_reazon_ships_fp32_not_int8():
     (296 against 376 characters on one 112s recording). The published benchmark
     and this corpus disagree; the default follows the corpus."""
     assert REGISTRY["reazon-k2"].opts.get("precision") == "fp32"
+
+
+def test_reazon_precision_is_validated_not_silently_mapped():
+    """precision selects FILE patterns, so an unknown spelling would quietly
+    download fp32 files while every log line claimed otherwise. Refused at the
+    loader, which is the single point all three call sites go through."""
+    import pytest
+
+    from mlx_asr.backends import reazon_k2_load
+
+    for bad in ("fp16", "8bit", "", "bf16"):
+        with pytest.raises(SystemExit):
+            reazon_k2_load("reazon-research/reazonspeech-k2-v2", bad)
+
+
+def test_reazon_loader_default_matches_the_shipped_precision():
+    """A bare reazon_k2_load(repo) call must fetch fp32: the shipped default is
+    measured (int8 drops whole phrases), and a signature that silently disagreed
+    with it would arm the bug above for any future caller."""
+    import inspect
+
+    from mlx_asr.backends import reazon_k2_load
+
+    assert inspect.signature(reazon_k2_load).parameters["precision"].default == "fp32"
+
+
+def test_language_guard_and_label_follow_declared_languages_not_backend_name():
+    """infer_backend routes ANY repo id containing 'parakeet' to mlx-parakeet,
+    including English/multilingual checkpoints (parakeet-tdt-0.6b-v3). The
+    ja-only refusal and the JSON language label therefore have to key on the
+    resolved entry's declared languages, or a raw multilingual repo gets
+    refused as Japanese-only while its metadata claims the opposite."""
+    import types
+
+    import pytest
+
+    from mlx_asr.backends import _language_source, _refuse_non_japanese
+
+    raw = types.SimpleNamespace(alias="some/parakeet-finetune",
+                                languages="multilingual")
+    # A non-Japanese request on a raw repo passes: nothing declares this model
+    # Japanese-only, so refusing it would be inventing a constraint.
+    assert _refuse_non_japanese("en", raw) is None
+    assert _language_source(raw) == "no_language_input"
+
+    ja = types.SimpleNamespace(alias="parakeet", languages="ja")
+    assert _refuse_non_japanese(None, ja) is None      # no request, no refusal
+    assert _refuse_non_japanese("ja_JP", ja) is None   # normalises to ja
+    assert _language_source(ja) == "single_language_model"
+    with pytest.raises(SystemExit):
+        _refuse_non_japanese("en", ja)

@@ -171,6 +171,7 @@ def main():
           f"{'covERR':>7} {'kana':>7} {'lenient':>8} {'seg':>4} {'win':>4}")
 
     rows = []
+    failed = []
     tot_wall = tot_dur = 0.0
     agg_ref = {"char": 0, "word": 0}
     agg_charged = {"char": 0.0, "word": 0.0}
@@ -188,7 +189,11 @@ def main():
         except Exception as e:                     # noqa: BLE001
             print(f"{stem:<26} FAILED {type(e).__name__}: {str(e)[:48]}",
                   flush=True)
-            rows.append({"file": stem, "error": f"{type(e).__name__}: {e}"[:200]})
+            # Kept OUT of `rows`: that list is what files_scored and the
+            # aggregate are computed from, and a failed decode contributed
+            # nothing to either.
+            failed.append({"file": stem,
+                           "error": f"{type(e).__name__}: {e}"[:200]})
             continue
         wall = time.perf_counter() - t0
 
@@ -244,8 +249,9 @@ def main():
         if a.json:
             _dump(a, spec, label, chunk_len, agg_ref, agg_charged, agg_kana_ref,
                   agg_kana_charged, agg_len_ref, agg_len_charged, rows, tot_dur,
-                  tot_wall, load_s, state, complete=False,
-                  expected=len(prepared), skipped=skipped)
+                  tot_wall, load_s, state,
+                  complete=(len(rows) == len(prepared) and not failed),
+                  expected=len(prepared), skipped=skipped, failed=failed)
 
     print()
     for u in ("char", "word"):
@@ -270,27 +276,36 @@ def main():
     if a.json:
         _dump(a, spec, label, chunk_len, agg_ref, agg_charged, agg_kana_ref,
               agg_kana_charged, agg_len_ref, agg_len_charged, rows, tot_dur,
-              tot_wall, load_s, state, complete=True, expected=len(prepared),
-              skipped=skipped, rss_gb=rss_gb)
+              tot_wall, load_s, state,
+              complete=(len(rows) == len(prepared) and not failed),
+              expected=len(prepared), skipped=skipped, rss_gb=rss_gb,
+              failed=failed)
         print(f"[saved] {a.json}")
     return 0
 
 
 def _dump(a, spec, label, chunk_len, agg_ref, agg_charged, kana_ref, kana_charged,
           len_ref, len_charged, rows, tot_dur, tot_wall, load_s, machine,
-          complete=False, expected=None, skipped=None, rss_gb=None):
+          complete=False, expected=None, skipped=None, rss_gb=None, failed=None):
     summary = {u: round(agg_charged[u] / agg_ref[u], 5)
                for u in ("char", "word") if agg_ref[u]}
     if kana_ref:
         summary["char_kana"] = round(kana_charged / kana_ref, 5)
     if len_ref:
         summary["char_lenient"] = round(len_charged / len_ref, 5)
-    with open(a.json, "w") as f:
+    # Atomic: truncate-in-place loses the last valid checkpoint if the process
+    # dies mid-write, which is exactly when the checkpoint matters.
+    import os
+    import tempfile
+    fd = tempfile.NamedTemporaryFile("w", dir=str(Path(a.json).parent),
+                                     delete=False, suffix=".tmp")
+    with fd as f:
         json.dump({"engine": "sherpa-onnx", "config": vars(a), "label": label,
                    "model": spec.repo, "chunk_seconds": chunk_len,
                    "complete": complete,
                    "machine": machine,
                    "files_scored": len(rows), "files_expected": expected,
+                   "files_failed": [f_["file"] for f_ in (failed or [])],
                    "skipped_files": skipped or [],
                    "aggregate": summary, "ref_units": agg_ref,
                    "kana_ref_chars": round(kana_ref), "lenient_ref_chars": len_ref,
@@ -299,6 +314,7 @@ def _dump(a, spec, label, chunk_len, agg_ref, agg_charged, kana_ref, kana_charge
                    "model_load_s": round(load_s, 1),
                    "cue_source": "token_times",
                    "results": rows}, f, indent=2, ensure_ascii=False)
+    os.replace(fd.name, a.json)
 
 
 if __name__ == "__main__":

@@ -15,13 +15,16 @@ re-measured 2026-08-19 after a reference-loading fix (see below):
 | whisper-turbo, no-condition | **14.49%** ±0.27 | **18.34%** ±0.69 | 18.0-22.0x |
 | qwen3-asr (1.7B) | 19.33% | 25.45% | 21.8x |
 | qwen3-asr-small (0.6B) | 23.27% | 24.26% | **32.8x** |
-| parakeet-ja | 26.19% | n/a, ja-only | **244.6x** |
-| reazon-k2 fp32 | 30.45% | n/a, ja-only | 51.6x, CPU |
+| parakeet-ja (17 JP files)* | 26.19% | n/a, ja-only | **244.6x*** |
+| reazon-k2 fp32 (17 JP files)* | 30.45% | n/a, ja-only | 51.6x*, CPU |
 
 The two Japanese-specialized engines were added on 2026-08-23 and change no
-default. Both sit far behind the multilingual engines on this material despite
-being trained on tens of thousands of hours of naturalistic Japanese; parakeet
-sets a project throughput record anyway, 7x past anything else measured. See
+default. Rows marked * differ from the rest of this table in two ways, both
+recorded in their result files: they cover the 17 Japanese files rather than all
+20 recordings (the weights are Japanese-only), and they ran while 45GB of GPU
+memory was parked by a resident agent, so their throughput figures are floors.
+Both decode greedily, so accuracy is unaffected by contention. Parakeet sets a
+project throughput record anyway, 7x past anything else measured. See
 [japanese-only.md](docs/benchmarks/japanese-only.md).
 
 Whisper is about 1.7 points more accurate on Japanese, and the result holds under all three

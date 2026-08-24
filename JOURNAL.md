@@ -2370,7 +2370,7 @@ breadth. The case for fine-tuning got weaker, not stronger.
 The 120s default for parakeet originally shipped on a one-file pre-check in which
 300s tied it exactly. Running the c300 arm over all 17 files to close that caveat
 reversed the result: 32.60% against 26.19%, +5.81 points paired, losing on 11 of
-17 files, with peak memory nearly doubling (8.1 against 4.77GB). The tie was the
+17 files, with peak memory nearly doubling (8.5 against 4.77GB). The tie was the
 documented corpus-size trap happening again in real time: a comparison that fits
 in one file's resolution is not a measurement. DEFAULTS.md and the registry
 comment now carry the n=17 figures.
