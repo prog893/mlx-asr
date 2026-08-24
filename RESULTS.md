@@ -51,7 +51,7 @@ plain CER is meaningless on this editorial material.
 | batch size | Not monotonic. Never use 2-8. | [decode-throughput.md](docs/benchmarks/decode-throughput.md) |
 | input level | Quiet input silently costs ~3.8 points; `--gain auto` fixes it. | [input-level.md](docs/benchmarks/input-level.md) |
 | `--prompt` | Weak, except that an instruction there costs 6-14 points. | [prompt.md](docs/benchmarks/prompt.md) |
-| quantization | 4-bit costs ~1.3 points against fp16 on the corpus, and ships anyway (fp16 needs 1.65x the time and 16GB machines cannot load it). `--kv-bits 8` is close to free. | [quantization.md](docs/benchmarks/quantization.md) |
+| quantization | Costs accuracy monotonically in bit width; 4-bit is last of five, 1.07 behind 8-bit and 1.30 behind fp16. Ships anyway (no loadable 8-bit build, and fp16 needs 16GB+). `--kv-bits 8` is close to free. | [quantization.md](docs/benchmarks/quantization.md) |
 | timestamps | Voxtral holds timing, Whisper places cues better. | [timestamps.md](docs/benchmarks/timestamps.md) |
 | cue grouping | Two sweeps run, neither adopted, deliberately. | [cue-layout.md](docs/benchmarks/cue-layout.md) |
 

@@ -4,6 +4,23 @@ Every default in [MODELS.md](MODELS.md) with the measurement behind it. Several 
 against the obvious choice, which is why they are written down rather than left in the
 code. Full method and corpus per finding: [benchmarks/](benchmarks/).
 
+## How much to trust each row
+
+The rows below do not rest on equal evidence, and the difference has bitten once already:
+`voxtral 4bit` was justified for weeks by a single-clip tie that the corpus later
+contradicted by 1.30 points. So each default falls into one of three tiers.
+
+| tier | what it means | rows |
+|---|---|---|
+| **corpus, resolved** | 20 files, paired bootstrap, CI excludes zero | model choice, `whisper --size`, `qwen3-asr --size`, `voxtral` precision, `qwen3-asr --chunk-seconds`, `--prompt` |
+| **corpus, unresolved** | 20 or 7 files, difference inside the resolution floor, so the default is a cost choice rather than an accuracy one | `voxtral --chunk-seconds`, `--max-batch`, `--overlap-seconds`, `qwen3-asr` precision, `--delay-ms`, `--gain` |
+| **clip only** | one recording, paired over regions; never run on the corpus | `--vad` off, `--kv-bits 8`, `--compact-silence` off |
+
+A clip-only row is not wrong, it is unverified on the material this project targets. Treat
+those three as the ones most likely to move, and see
+[benchmarks/metrics.md](benchmarks/metrics.md) on why a null result on one clip cannot be
+used to argue the effect is small.
+
 ## Model and size
 
 | default | why |
@@ -15,16 +32,16 @@ code. Full method and corpus per finding: [benchmarks/](benchmarks/).
 ## Precision
 
 One default per model, chosen as the cheapest precision whose accuracy cost is worth its
-price. On Voxtral that cost is real and measured: fp16 beats 4-bit by 1.30 CER points on
-the 20-file corpus, 95% CI [+0.59, +2.26]
-([quantization.md](benchmarks/quantization.md)). 4-bit still ships, because fp16 cannot be
-bought on a 16GB machine at any accuracy.
+price. On Voxtral that cost is real and measured across the whole ladder: accuracy improves
+monotonically with bit width, and 4-bit is last of five
+([quantization.md](benchmarks/quantization.md)). It still ships, because the precisions that
+beat it need either time or memory a 16GB machine does not have.
 
 | default | why |
 |---|---|
-| `voxtral` 4bit | a deliberate 1.30-point trade, not a free lunch: fp16 scores 15.04% against 16.34% on the corpus (CI [+0.59, +2.26], 13 of 17 files) but costs 1.65x the wall clock, and its 12.98GB peak exceeds a 16GB M4's 12.71GB GPU working set, so it does not run there at all ([peak-memory.md](benchmarks/peak-memory.md)). Set `--quantization fp16` on a large-memory machine if accuracy matters more than time |
+| `voxtral` 4bit | a deliberate accuracy trade, and 4bit is **last of five** on the corpus: 16.34% against 15.27% for 8bit (CI [+0.18, +2.16]) and 15.04% for fp16 (CI [+0.59, +2.26]). It ships because fp16's 12.98GB peak exceeds a 16GB M4's 12.71GB working set at 1.65x the wall clock, and no loadable 8bit build is published. Pass `--quantization fp16` on a large-memory machine, or convert 8bit locally to get fp16 accuracy at 7.3GB and full speed ([quantization.md](benchmarks/quantization.md)) |
 | `qwen3-asr` 8bit | bf16 is a tie on the 1.7B (20.16% against 19.98%) at 1.36x the wall clock and 1.4x the memory, and 3 points *worse* on the 0.6B |
-| `--kv-bits 8` | faster, and 39 of 40 scored regions identical to unquantized |
+| `--kv-bits 8` | faster, and 39 of 40 scored regions identical to unquantized. **Clip-only**, like the row above |
 
 4bit through 6bit on `qwen3-asr` have measured memory
 ([peak-memory.md](benchmarks/peak-memory.md)) but no accuracy figure, so going below 8bit
@@ -49,7 +66,7 @@ single window: one segment, and the batched path never engages.
 |---|---|
 | `--delay-ms 2400` | the largest accuracy lever here and it costs no speed: 25.62% at 480ms, 20.51% at 960ms, 16.44% at 2400ms. Also the model's maximum ([delay.md](benchmarks/delay.md)) |
 | `--gain auto` | quiet input costs ~3.8 points because the mel front end clamps at an absolute floor. `auto` boosts only below -6 dBFS peak, so it is byte-identical on healthy audio ([input-level.md](benchmarks/input-level.md)) |
-| `--vad` off | Silero cut points scored 0.8-3.0 points *worse* than energy minima, which is the opposite of what the VAD literature predicts |
+| `--vad` off | Silero cut points scored 0.8-3.0 points *worse* than energy minima, which is the opposite of what the VAD literature predicts. **Clip-only:** 40 paired regions of one recording, never run on the corpus |
 | `--prompt` empty | it biases register rather than recalling vocabulary (term counts move under 7%). An imperative there costs ~6 CER points because the decoder reads it as text it already emitted, and on English audio any prompt wrecks word spacing ([prompt.md](benchmarks/prompt.md)) |
 | `--compact-silence` off | helps some quantizations and badly hurts others; the mechanism is still a hypothesis |
 

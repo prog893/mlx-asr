@@ -7,17 +7,19 @@ conversions with no quantized builds in use here, so it errors there. whisper.cp
 quantization is covered in [engines.md](engines.md), where it costs speed rather than
 accuracy.
 
-**Conclusion first.** Quantization costs about **1.3 CER points** on the 20-file corpus,
-where fp16 beats 4-bit significantly (95% CI [+0.59, +2.26]). **Use 4-bit anyway**: fp16
-costs 1.65x the wall clock and 1.9x the memory, and its 12.98GB peak does not fit a 16GB
-machine at all, so the accuracy is unbuyable for most users. `--kv-bits 8` is separately
-close to free and is on by default.
+**Conclusion first.** Quantization does cost accuracy on this workload, monotonically in bit
+width, and 4-bit is the worst of the five precisions measured: **1.07 points behind 8-bit
+and 1.30 behind fp16** over the 20-file corpus, both significant. 4-bit still ships as the
+safe default, because 8-bit is not published in a loadable form and fp16 will not fit a 16GB
+machine. **If you have the memory, `--quantization fp16` is the accuracy option, and a
+locally converted 8-bit build matches it at 7.3GB and full speed.** `--kv-bits 8` is
+separately close to free and is on by default.
 
-That figure replaces an earlier "quantization costs nothing measurable", which came from a
-single prepared-narration clip where the same pair spans 0.43 points and is a tie. Both
-measurements are sound on their own material and they disagree; the corpus one governs,
-because it is the material this project is tuned for. Details and what remains unexplained
-are in the next section.
+That replaces an earlier "quantization costs nothing measurable", which came from a single
+prepared-narration clip where the five precisions span 0.43 points and 4-bit ranks nominally
+best. Both measurements are sound on their own material and they disagree; the corpus one
+governs, because it is the material this project is tuned for. The clip's cost figures
+(wall clock, memory, decode steps/s) are unaffected and still stand.
 
 ## The policy: one measured default per model, and `--quantization` to override it
 
@@ -27,8 +29,9 @@ and `--quantization` exposes the rest where the converters published more than o
 The default is picked by this rule, in this order:
 
 1. **Take the cheapest precision whose accuracy cost is worth its price.** On Voxtral that
-   cost is now measured at ~1.3 CER points, and 4-bit still wins the trade because fp16
-   needs 1.65x the time, 1.9x the memory, and more memory than a 16GB machine has.
+   cost is now measured: 4-bit gives up ~1.1 points against 8-bit and ~1.3 against fp16. It
+   still ships, because fp16 needs 1.65x the time and more memory than a 16GB machine has,
+   and no loadable 8-bit build is published.
 2. **Where only one build exists, ship that.** Nothing to choose.
 
 | model | default | other options | why that default |
@@ -69,13 +72,25 @@ so mlx-audio routes them to the non-realtime loader and dies in `post_load_hook`
 (re-verified 2026-08-20). Listing them would turn a usage error into a crash after a
 multi-gigabyte download.
 
-**A full ladder is not swept per model.** The sweep below answered the general question
-once (is quantization silently costing quality?) and the answer was no, by a margin far
-under what this corpus can resolve: at n=7 it resolves about 3.2 points, and 8-bit versus
-4-bit would need roughly 1,000 files. New models therefore inherit that conclusion, and a
-single bf16-versus-default check is run to confirm the default rather than a five-arm
-ladder. **4bit through 6bit on `qwen3-asr*` are exposed but unmeasured here**, which the
-`--help` text says.
+**A full ladder is not swept per model, and that policy is now on notice.** The clip sweep
+below answered the general question once (is quantization silently costing quality?) with
+"no", and every later model inherited that answer instead of being measured. The corpus
+result above shows the inheritance was unsound for at least one pair: fp16 versus 4-bit is
+a tie on the clip and a significant 1.30 points on the corpus.
+
+The mechanism of the mistake is worth naming, because it is not "the sample was small". It
+is that a **power calculation was fed an effect size measured on unrepresentative
+material**. The estimate said 8-bit versus 4-bit would need ~1,000 files and fp16 versus
+4-bit ~15,000, both derived from clip differences of 0.07-0.26 points. Twenty files
+resolved fp16 cleanly, so the input to that calculation was wrong by two orders of
+magnitude, and any other number it produced is equally untrustworthy. A power calculation
+inherits the validity of its effect size, and an effect size from one recording of prepared
+narration does not describe spontaneous multi-speaker audio.
+
+What that does *not* undermine: the cost figures (wall clock, memory, decode steps/s), which
+are properties of the weights and the hardware rather than of the audio, and which the
+corpus run reproduces. **4bit through 6bit on `qwen3-asr*` remain exposed but unmeasured**,
+which the `--help` text says.
 
 The one thing worth checking afresh on a new engine is not accuracy but **decoder
 degeneracy**, where the effect size is large rather than fractional. On Qwen3-ASR it made
@@ -83,51 +98,72 @@ no difference: bf16 and 8-bit produced near-identical repetition-loop counts (2/
 against 3/0/19/0/31 per file), so its loops are not a quantization artifact. See
 [qwen3-asr.md](qwen3-asr.md).
 
-## fp16 versus 4-bit is resolved on the corpus, and fp16 wins
+## The full ladder on the corpus, which overturns the clip result
 
-**This overturns the conclusion below for that one pair.** Everything else on this page
-stands; read this section first.
+**Precision does cost accuracy on this material, and 4-bit is the worst of the five.** Read
+this section first; the clip sweep further down is superseded on accuracy and still valid on
+cost.
 
-A paired bootstrap over the 20-file corpus, both arms produced in the same sweep on an idle
-M2 Ultra at one config:
+Five precisions, 20-file corpus, one config (60s chunks, batch 16, kv8, delay 2400ms), idle
+M2 Ultra. Every arm through `run_corpus.py`, paired with `compare_engines.py`:
 
-| | JP coverage CER | EN coverage WER | x realtime | peak GPU |
-|---|---|---|---|---|
-| 4-bit (ships) | 16.34% | 22.43% | 18.50x | 6.77GB |
-| **fp16** | **15.04%** | 21.64% | 11.24x | 12.98GB |
+| weights | on disk | JP coverage CER | vs 4-bit | x realtime | peak GPU |
+|---|---|---|---|---|---|
+| fp16 | 8.9GB | **15.04%** | +1.30, CI [+0.59, +2.26] | 11.2x | 12.98GB |
+| **8-bit** | 4.7GB | **15.27%** | +1.07, CI [+0.18, +2.16] | **19.8x** | 7.29GB |
+| mxfp8 | 4.6GB | 15.86% | +0.48, CI [-0.43, +1.45] | 19.4x | 7.14GB |
+| nvfp4 | 2.5GB | 16.07% | +0.27, CI [-0.47, +1.23] | 19.6x | **5.09GB** |
+| 4-bit (ships) | 2.9GB | 16.34% | | 18.5x | 6.77GB |
 
-    paired difference, 17 char-unit files, 70,419 reference chars
-      +1.30 points, 95% CI [+0.59, +2.26]
-      fp16 wins 13 of 17 files, sign test p = 0.049
+The ordering is monotonic in bit width, which is what one would naively expect and what the
+clip sweep denied. Two comparisons clear significance against 4-bit (fp16 and 8-bit); mxfp8
+and nvfp4 land inside the resolution floor.
 
-The CI excludes zero, so this is a real difference on this material rather than the tie the
-clip reported. It survives dropping the largest contributors one at a time and both
-together (+1.20, +1.03, +0.93; every CI still clear of zero), so it is not one outlier
-file.
+**8-bit is the interesting result.** Against fp16 it is a tie (+0.23 points, CI [-0.12,
++0.70]), so it captures the full accuracy of unquantized weights while running at 4-bit's
+speed (19.8x against 18.5x) and 7.29GB instead of 12.98GB. It also beats nvfp4 (+0.80, CI
+[+0.03, +1.66]).
 
-It is also not a metric artifact. fp16 is ahead on all three error types counted
-independently, and coverage excusal moves the wrong way to explain it:
+### Why this is not a metric artifact
+
+For the fp16/4-bit pair, fp16 leads on all three error types counted separately, and
+coverage excusal moves the wrong way to manufacture the result:
 
 | | substitutions | deletions | insertions counted |
 |---|---|---|---|
 | 4-bit | 5,749 | 3,444 | 2,313 |
 | fp16 | **5,185** | **3,274** | **2,132** |
 
-Both material types in the corpus agree (spontaneous +1.58, published-video +0.73), so the
-disagreement with the clip result below is **not** explained by material alone.
+The result also survives dropping the largest contributors one at a time and both together
+(+1.20, +1.03, +0.93; every CI still clear of zero), so it is not one outlier file. Both
+material types agree (spontaneous +1.58, published-video +0.73).
 
-**What has not changed: 4-bit still ships.** fp16 costs 1.65x the wall clock and 1.9x the
-memory, and its 12.98GB peak does not fit a 16GB machine at all
-([peak-memory.md](peak-memory.md)), so the default cannot be fp16 for most users even
-though it is more accurate here. What changed is the *reason*: 4-bit is a deliberate
-accuracy-for-memory trade of about 1.3 points, not a free lunch.
+### What ships, and why it is still 4-bit for now
 
-**Still open: why the clip and the corpus disagree.** The clip put the same pair at 0.07
-points, CI [-0.33, +0.48], on 40 paired regions. Both tests are sound on their own
-material, so something differs between prepared narration with a verbatim reference and
-this corpus that quantization interacts with. Untested candidates: chunk/batch config
-(the clip ran 60s/B16 fixed, the corpus at the per-machine profile), and reference style.
-Not resolvable without another corpus.
+Nothing changed yet, and the reason is deliberate. Two things need settling before moving a
+default that every user gets:
+
+- **8-bit is not on the hub in a loadable form.** The two repos that advertise it ship raw
+  Mistral `config.json` with no `model_type` and crash the loader (see below). Shipping
+  8-bit by default would mean either a local conversion step on first use or a new upload,
+  which is a distribution decision rather than a benchmark one.
+- **These are per-machine trades, not one ranking.** On a 16GB machine fp16 cannot load at
+  all and nvfp4's 5.09GB is the only comfortable option; on a 128GB machine 8-bit is
+  clearly right. A single global default cannot express that, which is what
+  `--quantization` is for.
+
+So 4-bit remains the default as the safe option, now documented as a ~1.1-point accuracy
+cost rather than as free. **If you have the memory, pass `--quantization fp16`, or convert
+8-bit locally and point `--model` at it.**
+
+### Still open: why the clip and the corpus disagree
+
+The clip put fp16 versus 4-bit at 0.07 points, CI [-0.33, +0.48], on 40 paired regions, and
+ranked 4-bit nominally best of five. The corpus reverses the ranking and resolves it. Both
+tests are sound on their own material. Material type alone does not explain it, since both
+kinds of corpus audio favour the higher precisions. Untested candidates: reference style
+(verbatim against editorial), and that a 935s single-speaker recording may simply not
+exercise whatever quantization degrades. Not resolvable without a second corpus.
 
 ## Corpus for the rest of this page
 
