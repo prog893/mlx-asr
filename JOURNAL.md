@@ -2364,3 +2364,19 @@ handling and instruction breadth dominate on real recordings. Fine-tuning turbo
 on ~8h of our audio would be buying domain adaptation from a model that already
 wins BECAUSE of breadth, with the documented risks of losing exactly that
 breadth. The case for fine-tuning got weaker, not stronger.
+
+### Same session, later: the parakeet window tie reversed at corpus scale, and determinism verified
+
+The 120s default for parakeet originally shipped on a one-file pre-check in which
+300s tied it exactly. Running the c300 arm over all 17 files to close that caveat
+reversed the result: 32.60% against 26.19%, +5.81 points paired, losing on 11 of
+17 files, with peak memory nearly doubling (8.1 against 4.77GB). The tie was the
+documented corpus-size trap happening again in real time: a comparison that fits
+in one file's resolution is not a measurement. DEFAULTS.md and the registry
+comment now carry the n=17 figures.
+
+Determinism for both new engines was also verified rather than inherited from
+the architecture: three decodes each through the exact CLI code path produce
+byte-identical text AND cues (parakeet on a 558s file, reazon fp32 likewise).
+That is what licenses quoting every single-run figure above as a score rather
+than a draw.

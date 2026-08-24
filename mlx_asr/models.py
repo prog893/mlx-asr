@@ -473,13 +473,12 @@ REGISTRY: dict[str, Model] = {
             languages="ja",
             deterministic=True,
             weights_gb=2.5,
-            # 120s windows with upstream's own 2s overlap merge. NOT yet a
-            # measured optimum: the window sweep has not been run for this
-            # engine, and unlike kotoba there is no evidence shorter is better.
-            # The value is a starting point chosen so a 90-minute file is ~45
-            # windows rather than one, which is what keeps TDT's Python decode
-            # loop from holding a whole-file graph. Sweep before quoting it as
-            # optimal.
+            # 120s windows with upstream's own 2s overlap merge, and measured:
+            # 26.19% coverage CER against 32.60% for 300s at n=17 (winning 11
+            # files paired, +5.81 mean), at lower memory too. 60s is not an
+            # option: it drops content outright (301 vs 380 characters on one
+            # file). A model trained to carry state across windows needs room
+            # to do so, but not unlimited room.
             opts={"chunk_length_s": 120.0},
             notes="Japanese only. FastConformer-TDT, greedy so reproducible; "
                   "token-level timestamps, so subtitles work. Trained on "

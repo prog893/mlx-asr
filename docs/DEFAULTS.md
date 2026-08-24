@@ -11,7 +11,7 @@ code. Full method and corpus per finding: [benchmarks/](benchmarks/).
 | `voxtral` as the model | 1.35-1.65x faster than whisper turbo, needs no language flag, and reruns byte-identically on one machine. Turbo is ~1.7 points more accurate on Japanese, so the default trades a little accuracy for speed and reproducibility ([engines.md](benchmarks/engines.md)) |
 | `whisper --size turbo` | ties `large-v3` on Japanese (14.68% against 14.55%, inside turbo's own ±0.27 rerun spread) at 2.1x the speed and 1.5GB less memory. Picking by size number would take large-v3 and pay for nothing |
 | `qwen3-asr --size 1.7B` | 3.9 points ahead of 0.6B at n=20 (19.33% against 23.27%). The 0.6B is the speed option: 32.8x, the fastest engine measured here |
-| `parakeet --chunk-seconds 120` | unswept optimum, pre-checked only: on one file 60s LOSES content against 120s (301 vs 380 chars) and 120s ties 300s, so it ships as a starting point with a sweep still open ([japanese-only.md](benchmarks/japanese-only.md)) |
+| `parakeet --chunk-seconds 120` | 26.19% against 32.60% for 300s at n=17, winning 11 files head-to-head (+5.81 mean), and cheaper on memory too (4.77 vs 8.1GB). The one-file pre-check had shown a tie, which reversed at corpus scale. 60s is excluded: it drops content outright (301 vs 380 chars on one file) ([japanese-only.md](benchmarks/japanese-only.md)) |
 | `reazon --chunk-seconds 30` | the weights cannot decode whole files at all (a 112s stream returned 124 characters; they are trained on short VAD segments), so windows are mandatory; 30s matches the Voxtral rows so the comparison holds the front end constant. Not swept |
 
 ## Precision

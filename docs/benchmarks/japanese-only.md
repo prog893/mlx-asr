@@ -33,7 +33,8 @@ the transcription being wrong.
 
 | arm | config | notes |
 |---|---|---|
-| `parakeet_c120` | `mlx-community/parakeet-tdt_ctc-0.6b-ja`, 120s windows, 2s overlap | window pre-checked on one file: 60s LOSES content (301 vs 380 chars), 120s ties 300s, so 120s ships |
+| `parakeet_c120` | `mlx-community/parakeet-tdt_ctc-0.6b-ja`, 120s windows, 2s overlap | the shipped window, and the measured winner (next section) |
+| `parakeet_c300` | same weights, 300s windows | run to test the one-file tie; it reversed sign |
 | `reazon fp32 c30` | authors' ONNX, fp32 encoder/decoder/joiner, 30s energy-minima windows | the shipped default |
 | `reazon int8 c30` | same, int8 files | measured to test the quantization |
 
@@ -59,6 +60,27 @@ the prepared-narration-style `rec-12`, and loses everywhere else by 1.2
 to 22.3 points (mean +9.8). Reazon wins the same file and two others but loses
 the rest by far more. The losses are not concentrated in one or two files that
 could be excluded as pathological: they are the shape of the whole corpus.
+
+## Experiment: parakeet's window length, settled at n=17
+
+On one file, 120s and 300s tied (380 characters each) while 60s lost content,
+so 300s looked free. At corpus scale it is not:
+
+| window | JP coverage CER | x realtime | peak GPU |
+|---|---|---|---|
+| **120s** | **26.19%** | 244.6x | 4.77GB |
+| 300s | 32.60% | 204.4x | 8.1GB |
+
+Paired over 17 files, 300s is +5.81 points worse on average and loses on 11,
+with the damage concentrated where windows are longest relative to speech
+density (one file goes 32.6% to 50.3%). The one-file tie was the corpus-size
+trap this project has documented before: several single-clip findings here
+reversed sign when a real corpus arrived ([corpus.md](corpus.md)). 60s was not
+swept at corpus scale because it demonstrably drops content on even one file.
+
+Determinism of both new engines was verified rather than assumed after this:
+three decodes each through the CLI code path give byte-identical text AND cues,
+so every single-run figure above is a score rather than a draw.
 
 ## Three findings worth keeping
 
