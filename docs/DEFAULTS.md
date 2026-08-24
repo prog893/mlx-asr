@@ -15,7 +15,7 @@ default falls into one of three tiers.
 |---|---|---|
 | **decided by accuracy** | swept on the multi-file corpus, and the winner beat the alternatives by more than the corpus can confuse | model choice, `whisper --size`, `qwen3-asr --size`, `voxtral` precision, `qwen3-asr --chunk-seconds`, `--prompt` |
 | **decided by cost** | swept on the corpus, but the arms tie on accuracy, so the default was chosen on speed, memory or dependencies | `voxtral --chunk-seconds`, `--max-batch`, `--overlap-seconds`, `--delay-ms`, `--gain`, `--vad`, `--compact-silence`, `--kv-bits` |
-| **not yet on the corpus** | one recording only, or not measured at all, so unverified on the material this project targets | `qwen3-asr` precision below 8bit, cue layout |
+| **not yet on the corpus** | one recording only, or not measured at all, so unverified on the material this project targets | cue layout, which needs a second reference set that does not exist |
 
 That last tier is where surprises come from, and it has emptied out considerably. `--vad`,
 `--compact-silence` and `--kv-bits` all sat there until the corpus shrank their margins to
@@ -42,7 +42,7 @@ weeks.
 | default | why | detail |
 |---|---|---|
 | `voxtral` 4bit | **not the most accurate option, deliberately.** Accuracy improves with bit width and 4bit is last of the five measured, but fp16 will not fit a 16GB machine and no loadable 8bit build is published, so 4bit is what works everywhere. If you have the memory, pass `--quantization fp16`, or convert 8bit locally to get fp16's accuracy at roughly half its memory | [quantization.md](benchmarks/quantization.md) |
-| `qwen3-asr` 8bit | bf16 ties it on the larger size and is worse on the smaller one, while costing more time and memory on both | [qwen3-asr.md](benchmarks/qwen3-asr.md) |
+| `qwen3-asr` 8bit | the full ladder is now swept on both sizes, and they disagree: the `1.7B` ties across every precision, while the `0.6B` is sharply sensitive and 8bit wins each comparison outright. One default suits both, and on the `1.7B` a lower rung is a free speed option | [qwen3-asr.md](benchmarks/qwen3-asr.md) |
 | `--kv-bits 8` | a tie with unquantized on the corpus, and faster, so the speed is free | [quantization.md](benchmarks/quantization.md) |
 
 `qwen3-asr`'s ladder below 8bit is exposed but has no accuracy figure at all, so going lower

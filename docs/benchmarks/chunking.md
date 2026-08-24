@@ -319,12 +319,34 @@ current default and its documentation now says the cost is unmeasurable rather t
 quantization-dependent. Closes
 [#6](https://github.com/prog893/mlx-asr/issues/6).
 
+## Experiment: `--fast` as a whole
+
+The flag changes three things at once (halve the chunk, double the batch, add 8s warm-up
+overlap), and only its components had been measured. That is not enough to predict the
+combination: overlap on its own won on a clip and then **reversed sign** on the corpus, so
+the parts do not license the whole. Measured as one config, 20 files, idle M2 Ultra:
+
+| | JP coverage CER | x realtime |
+|---|---|---|
+| shipped default (60s / B16 / no overlap) | 16.21% | 19.8x |
+| `--fast` (30s / B32 / 8s overlap) | 16.79% | **23.5x** |
+
+    +0.58 points, CI [-1.14, +2.18], 9 files to 7 -> not resolvable
+
+**So `--fast` buys 19% throughput for no measurable accuracy cost.** The flag is sound, and
+the three components together behave better than the overlap component alone suggested.
+
+One correction follows: the README described `--fast` as "faster, slightly less accurate",
+which was inferred from the clip rather than measured. The corpus cannot resolve any accuracy
+difference, so the honest description is that it trades a little accuracy *risk* for speed:
+the point estimate is worse, the interval spans zero, and the direction is unproven.
+
 ## What ships
 
 - Chunk length and overlap come from `mlx_asr/profiles.json` per machine, 60s and 0s on
   both benchmarked machines.
-- `--fast` halves the chunk and enables 8s overlap, since that is the regime where
-  overlap earns its cost back.
+- `--fast` halves the chunk, doubles the batch and enables 8s overlap, which measures as a
+  19% speedup with no resolvable accuracy cost.
 - Energy-based cut points, with `--vad` available as an opt-in.
 - `--compact-silence` off.
 

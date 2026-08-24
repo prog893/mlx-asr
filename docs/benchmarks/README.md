@@ -13,9 +13,9 @@ that make plain CER meaningless.
 | document | lever | conclusion in one line |
 |---|---|---|
 | [delay.md](delay.md) | transcription delay | `2400` is worth 9 points and is free. The strongest result here. |
-| [chunking.md](chunking.md) | chunk length, overlap, cut points | 30s vs 60s is indistinguishable at n=20, so it is a throughput choice. Overlap helps at short chunks on one clip but reversed on a corpus. Energy cuts beat VAD. |
+| [chunking.md](chunking.md) | chunk length, overlap, cut points, `--fast` | 30s vs 60s is indistinguishable at n=20, so it is a throughput choice. Overlap helps at short chunks on one clip but reversed on a corpus. VAD cut points and dropping silence both tie with the defaults. `--fast` is a 19% speedup with no resolvable accuracy cost. |
 | [engines.md](engines.md) | which model | Whisper turbo + no-condition is ~1.5 points more accurate; Voxtral is ~1.35x faster and reproducible, so it is the default. |
-| [qwen3-asr.md](qwen3-asr.md) | the Qwen3-ASR engine | Last on accuracy of the four engines; the 0.6B is the fastest here. Writes no subtitles (its timestamps are decode-window boundaries), and its library truncates long audio silently, which is why this project drives the chunk loop itself. |
+| [qwen3-asr.md](qwen3-asr.md) | the Qwen3-ASR engine | Last on accuracy of the four engines; the 0.6B is the fastest here. Writes no subtitles (its timestamps are decode-window boundaries), and its library truncates long audio silently, which is why this project drives the chunk loop itself. Precision sensitivity differs by SIZE: the 1.7B ties across the whole ladder, the 0.6B does not. |
 | [decode-throughput.md](decode-throughput.md) | batch size | Not monotonic. Never use batch 2-8. The only lever anyone can reproduce without audio. |
 | [qwen3-batch.md](qwen3-batch.md) | batch size on qwen3-asr | Batching whole chunks loses monotonically (2.3x slower by batch 8) for no accuracy gain, so `--max-batch` stays refused there. |
 | [input-level.md](input-level.md) | `--gain` | Quiet input silently costs ~3.8 points. `auto` fixes it and is a no-op otherwise. |
