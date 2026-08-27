@@ -1,14 +1,14 @@
 class MlxAsr < Formula
   include Language::Python::Virtualenv
 
-  desc "Batch speech-to-text on Apple Silicon: Voxtral, Whisper, kotoba, Qwen3-ASR"
+  desc "Batch speech-to-text on Apple Silicon: Voxtral, Whisper, Parakeet, ReazonSpeech, kotoba, Qwen3-ASR"
   homepage "https://github.com/prog893/mlx-asr"
   # No `version` line: Homebrew scans it from the tag, and declaring both is
   # flagged as redundant. Note the tag must be written out rather than
   # interpolated as "v#{version}", since style autocorrect sorts `url` above
   # `version`, at which point the interpolation resolves to a bare "v" and the
   # clone fails with "Remote branch v not found in upstream origin".
-  url "https://github.com/prog893/mlx-asr.git", tag: "v0.3.0"
+  url "https://github.com/prog893/mlx-asr.git", tag: "v0.4.0"
   license "MIT"
 
   # A git URL with a tag rather than a release tarball, matching the other
@@ -61,8 +61,8 @@ class MlxAsr < Formula
   end
 
   resource "av" do
-    url "https://files.pythonhosted.org/packages/77/b3/2576a44b4f39c7462ced4c17fec04c756f7b0f3c5cb940d124173e417d6a/av-18.0.0-cp311-abi3-macosx_14_0_arm64.whl"
-    sha256 "35274c20d2ad3b4774fe632bcef2e34af79858ddf899352339cc3babbc13a484"
+    url "https://files.pythonhosted.org/packages/3f/c9/37a619297492256b77d5ed906e7d8166c10a26ed251dccf1ae03ab19bff6/av-18.1.0-cp311-abi3-macosx_14_0_arm64.whl"
+    sha256 "b30a4e8d934558e19602b68998a4d9ac9f250fa0dacef216f7e8e40153b13316"
   end
 
   resource "certifi" do
@@ -76,18 +76,18 @@ class MlxAsr < Formula
   end
 
   resource "charset-normalizer" do
-    url "https://files.pythonhosted.org/packages/98/2b/f97f1c193fb855c345d678f5077d6926034db0722df74c8f057020e05a25/charset_normalizer-3.4.9-py3-none-any.whl"
-    sha256 "68e5f26a1ad57ded6d1cfb85331d1c1a195314756471d97758c48498bb4dcdf5"
+    url "https://files.pythonhosted.org/packages/cc/61/d01fc49b8dea277640b55a9e15960dbca9fdc8c9fde18e572d39c59f4019/charset_normalizer-3.5.1-py3-none-any.whl"
+    sha256 "6df0ec430f9a831772c23ca5a224cba36517a58a84bb32c32bb59a9fa67c47f6"
   end
 
   resource "click" do
-    url "https://files.pythonhosted.org/packages/fb/e2/79c688af8b210d232694e31e59da9f6ec747bae31c3f5946e4e9b98860d5/click-8.4.2-py3-none-any.whl"
-    sha256 "e6f9f66136c816745b9d65817da91d61d957fb16e02e4dcd0552553c5a197b76"
+    url "https://files.pythonhosted.org/packages/58/50/6c0d534c5f134586a8e1ba4e330569e32f057e33372ae556463212fb4cd3/click-8.5.0-py3-none-any.whl"
+    sha256 "255bc9599cf7748b4b1a446ccc735421bd08a2ae529a8b88597d3de5664ee360"
   end
 
   resource "filelock" do
-    url "https://files.pythonhosted.org/packages/c1/e8/72f8cef9fdfeffe06213fe8508039396ee48daa0e3259457ed766173bfd6/filelock-3.32.2-py3-none-any.whl"
-    sha256 "87dd94cf281e586d135fa51132b8e3d9a598b316e90377a288663c9321036c82"
+    url "https://files.pythonhosted.org/packages/01/a4/9b63d595d748e3aff8812b65eacc1a2c4bd90b7c2012e08e72373b4835eb/filelock-3.32.4-py3-none-any.whl"
+    sha256 "22e58ca3b1ae3b98993b762d7338367ae64fe50252bf78d59da3bfebcdf1cedd"
   end
 
   resource "flatbuffers" do
@@ -121,13 +121,13 @@ class MlxAsr < Formula
   end
 
   resource "huggingface-hub" do
-    url "https://files.pythonhosted.org/packages/97/bb/63a644c75b545f3ff394b822e9bd1c4a9586489c618b77a4d8a44a33a23b/huggingface_hub-1.26.0-py3-none-any.whl"
-    sha256 "e8cca670caa5d8dfa7e45bf45e86b466698198cd8150c021bcdb4a86b9252364"
+    url "https://files.pythonhosted.org/packages/4e/a5/47c2ea9b228ccbcba8467e9a64823146e8ebbad29855e591d8f5eedcc9c7/huggingface_hub-1.29.0-py3-none-any.whl"
+    sha256 "b00f7782afc14db4bc6572763810a635bdfbab8623d957bfb553bd18e03852cd"
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/1e/5e/d4e9f1a599fb8e573b7b87160658329fbf28d19eac2718f51fc3def3aa5a/idna-3.18-py3-none-any.whl"
-    sha256 "7f952cbe720b688055e3f87de14f5c3e5fdaa8bc3928985c4077ca689de849a2"
+    url "https://files.pythonhosted.org/packages/57/b0/0e52c878c53f245edd3a11020f20979b3f490f245af532c7cae3027754b5/idna-3.19-py3-none-any.whl"
+    sha256 "815e7be7a7806d54abb586dc943addc79e8b2ee16915059658cbeff4b1b43bf4"
   end
 
   resource "jinja2" do
@@ -151,8 +151,8 @@ class MlxAsr < Formula
   end
 
   resource "llvmlite" do
-    url "https://files.pythonhosted.org/packages/9c/23/fe9316d14626b42c73ef0b502e724705a6ee9450afe53759c0a99c37c2d7/llvmlite-0.48.0-cp313-cp313-macosx_12_0_arm64.whl"
-    sha256 "a83a99ef0c05b4ccddf9b6218ed9fe84b653a0caf7c1d9dbe148d6d16c67f518"
+    url "https://files.pythonhosted.org/packages/7d/85/0b536a3c59f2636d9dd51dda832b6c1d0ffec37608429dedf128664918f1/llvmlite-0.49.0-cp313-cp313-macosx_12_0_arm64.whl"
+    sha256 "039fa4054a06f537fb39248d4472284ca96be311a142ec09e69f95630ab469cc"
   end
 
   resource "markdown-it-py" do
@@ -176,13 +176,13 @@ class MlxAsr < Formula
   end
 
   resource "mlx" do
-    url "https://files.pythonhosted.org/packages/4c/a8/7bc999ce5d09dfac8961dcda4ed47e173fca2857492f34599b237380f20d/mlx-0.32.0-cp313-cp313-macosx_26_0_arm64.whl"
-    sha256 "4192a2d02014a13a6a1030bf13dfb4e4fe05ec3ffa47678ee37da29111e25cb1"
+    url "https://files.pythonhosted.org/packages/38/96/9db8e27f384d83d3816ec7392c7a2b375979c14509d7f345d1fa3d05cac8/mlx-0.32.2-cp313-cp313-macosx_26_0_arm64.whl"
+    sha256 "df8c75e509de868fca148dfeb38d92ce956eed386569c87caeb72bd16d2d6962"
   end
 
   resource "mlx-audio" do
-    url "https://files.pythonhosted.org/packages/3f/be/42234a5891b3d6d5078434d657cfcda6c5cce31117cb19fc9915422cc306/mlx_audio-0.4.7-py3-none-any.whl"
-    sha256 "e7580e5ee740ca182e93b764d778b8c834d4e07bf91835cbaaafef196e2e058c"
+    url "https://files.pythonhosted.org/packages/5d/76/b2c80758d610f507beb9fd89690e0a43c0028d222738a37b722ba7ff44eb/mlx_audio-0.5.0-py3-none-any.whl"
+    sha256 "90f4619186708a2cd4df9824d2ef3d2e427707264414fb604a3ca9dc499cc820"
   end
 
   resource "mlx-lm" do
@@ -191,8 +191,8 @@ class MlxAsr < Formula
   end
 
   resource "mlx-metal" do
-    url "https://files.pythonhosted.org/packages/dc/59/65d32520175379df33f107749193aa94ea9db069167a36a1a100ff689f62/mlx_metal-0.32.0-py3-none-macosx_26_0_arm64.whl"
-    sha256 "3af76a498d84804f66119800499f9d143d7dffb0878a0dd0d7c2846e58565fd7"
+    url "https://files.pythonhosted.org/packages/dd/cd/4e50bf325100e7165e13d025f264362bf0009196269f9eaf87f2c6e738a2/mlx_metal-0.32.2-py3-none-macosx_26_0_arm64.whl"
+    sha256 "e6abeac9ac5265830c9c1541b6f96e9be37a85c2446763a46ad466c63a3837ab"
   end
 
   resource "mlx-whisper" do
@@ -216,8 +216,8 @@ class MlxAsr < Formula
   end
 
   resource "numba" do
-    url "https://files.pythonhosted.org/packages/03/52/176c02d005c5c5143cde10a85bbcdcb6236d9e34c3aac089380e0506cd1d/numba-0.66.0-cp313-cp313-macosx_12_0_arm64.whl"
-    sha256 "380b2556a2019ccd1e956ae77dd257eaa39403f7520768b626d44b755112785e"
+    url "https://files.pythonhosted.org/packages/49/dd/bd9fe772f6c84597b76cac229b3f2890f01a2c64fd70e48ceaae10dd65cb/numba-0.67.0-cp313-cp313-macosx_12_0_arm64.whl"
+    sha256 "77e1c7173fee57a0d84e006c7e70346689d6cb3e7db503489bae58646b4eff7b"
   end
 
   resource "numpy" do
@@ -226,13 +226,13 @@ class MlxAsr < Formula
   end
 
   resource "onnxruntime" do
-    url "https://files.pythonhosted.org/packages/9c/12/3807e2b17d9eb71d3cb78ed2ba76869b05c637c9b9d6112e636098b0c97a/onnxruntime-1.28.0-cp313-cp313-macosx_14_0_arm64.whl"
-    sha256 "31410f544674f534c2f27348af52ef81682ca9c8719154bf4d48f0ef23823b1e"
+    url "https://files.pythonhosted.org/packages/41/f8/d375facf60edaf41f5732f9f689c98a800fcc52df5cf6ddfb406703eb5a1/onnxruntime-1.29.0-cp313-cp313-macosx_14_0_arm64.whl"
+    sha256 "be0f8ed688cfb1d4d5765a137193b7bfab0c8ea214eed99260b380bb525a3a7f"
   end
 
   resource "packaging" do
-    url "https://files.pythonhosted.org/packages/df/b2/87e62e8c3e2f4b32e5fe99e0b86d576da1312593b39f47d8ceef365e95ed/packaging-26.2-py3-none-any.whl"
-    sha256 "5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e"
+    url "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl"
+    sha256 "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
   end
 
   resource "pillow" do
@@ -241,8 +241,8 @@ class MlxAsr < Formula
   end
 
   resource "protobuf" do
-    url "https://files.pythonhosted.org/packages/19/c7/5f7c636ec43e0c545e28d1f1db71990108306f7bdcb89f069ba97e428e7f/protobuf-7.35.1-py3-none-any.whl"
-    sha256 "4bc97768d8fe4ad6743c8a19403e314511ed9f6d13205b687e52421c023ac1b9"
+    url "https://files.pythonhosted.org/packages/01/c3/629999e78d46c1115c11886d51c6bd68c17ce4a944f1ea3e153a91316a33/protobuf-7.36.0-py3-none-any.whl"
+    sha256 "53374d53fc29a67f7dbbf0ade47d7526a0f0137bf0f9c90e48d8a60790ef748c"
   end
 
   resource "pycountry" do
@@ -271,8 +271,8 @@ class MlxAsr < Formula
   end
 
   resource "pygments" do
-    url "https://files.pythonhosted.org/packages/f4/7e/a72dd26f3b0f4f2bf1dd8923c85f7ceb43172af56d63c7383eb62b332364/pygments-2.20.0-py3-none-any.whl"
-    sha256 "81a9e26dd42fd28a23a2d169d86d7ac03b46e2f8b59ed4698fb4785f946d0176"
+    url "https://files.pythonhosted.org/packages/71/46/17f022dd3e953bf20a04a028a21ec746d942f8d2af30fa0f124fa0e6a684/pygments-2.21.0-py3-none-any.whl"
+    sha256 "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9"
   end
 
   resource "pyyaml" do
@@ -316,8 +316,8 @@ class MlxAsr < Formula
   end
 
   resource "scipy" do
-    url "https://files.pythonhosted.org/packages/d3/0f/10ffa0b697a572f4e0d48b92a88895d366422f019f723e7e14a84c050dac/scipy-1.18.0-cp313-cp313-macosx_14_0_arm64.whl"
-    sha256 "68363b7eaacd8b5dd426df56d782cc156468ac79a127a1b87ca597d6e2e82197"
+    url "https://files.pythonhosted.org/packages/9a/d7/21d890274f75ea37a8209d5519e72da3da90302e3b9fb8397a0918386a62/scipy-1.18.1-cp313-cp313-macosx_14_0_arm64.whl"
+    sha256 "ea324d9dd34c38bfb9bec8ca4d1b407db97dbb74029f566b8e322b1b6fe56fe6"
   end
 
   resource "sentencepiece" do
@@ -330,19 +330,29 @@ class MlxAsr < Formula
     sha256 "7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686"
   end
 
+  resource "sherpa-onnx" do
+    url "https://files.pythonhosted.org/packages/fc/04/552c85d7f0b6ba1a1008da0568054d5c834c644f26057a24baf92dcdf876/sherpa_onnx-1.13.6-cp313-cp313-macosx_11_0_arm64.whl"
+    sha256 "cdb0f9fcaae89f8acd1ee9ce5fe89e77be3aa240cdedab3f48aa7b19800d8b72"
+  end
+
+  resource "sherpa-onnx-core" do
+    url "https://files.pythonhosted.org/packages/06/ee/dbbc6718e263e4961106e057c187875e00485ca8030a6bca0d9682807d30/sherpa_onnx_core-1.13.6-py3-none-macosx_11_0_arm64.whl"
+    sha256 "2a413121dd0ee2e53c45def3ea4e8f0e968a6ac74f8cfd288bed3ae2cc815c33"
+  end
+
   resource "sympy" do
     url "https://files.pythonhosted.org/packages/a2/09/77d55d46fd61b4a135c444fc97158ef34a095e5681d0a6c10b75bf356191/sympy-1.14.0-py3-none-any.whl"
     sha256 "e091cc3e99d2141a0ba2847328f5479b05d94a6635cb96148ccb3f34671bd8f5"
   end
 
   resource "tiktoken" do
-    url "https://files.pythonhosted.org/packages/53/61/c68e123b6d753e3fc2751e9b18e732c9d8bf1e1926762e736eee935d931c/tiktoken-0.13.0-cp313-cp313-macosx_11_0_arm64.whl"
-    sha256 "8fe806a50664e83a6ffd56cbd1e4f5dcc6cd32a3e7538f70dc38b1a271384545"
+    url "https://files.pythonhosted.org/packages/ad/5f/6448cfe278c3664ba9ec5b5ac08344341f7dc3d42888476e215a14eda2be/tiktoken-0.14.0-cp313-cp313-macosx_11_0_arm64.whl"
+    sha256 "cbe2cc3bba939bcdaf103e03df9d5039d33887080b315624be28ec69059e5f94"
   end
 
   resource "tokenizers" do
-    url "https://files.pythonhosted.org/packages/2e/47/174dca0502ef88b28f1c9e06b73ce33500eedfac7a7692108aec220464e7/tokenizers-0.22.2-cp39-abi3-macosx_11_0_arm64.whl"
-    sha256 "1e418a55456beedca4621dbab65a318981467a2b188e982a23e117f115ce5001"
+    url "https://files.pythonhosted.org/packages/e2/6a/068ed9f6e444c9d7e9d55ce134181325700f3d7f30410721bdc8f848d727/tokenizers-0.23.1-cp310-abi3-macosx_11_0_arm64.whl"
+    sha256 "e0948bbb1ac1d7cdfc9fb6d62c596e3b7550036ad60ecd654a66ad273326324e"
   end
 
   resource "tqdm" do
@@ -351,8 +361,8 @@ class MlxAsr < Formula
   end
 
   resource "transformers" do
-    url "https://files.pythonhosted.org/packages/6f/67/8d85ca2323233ae3c0365a659c4e52ee1f587b440e4bc577e7d8e4416d0f/transformers-5.14.1-py3-none-any.whl"
-    sha256 "9db974c4079ede2d1a3ea7ca5a240df33f2cc26fc2b36ba64c5f2a4f43b6e725"
+    url "https://files.pythonhosted.org/packages/0d/4d/ee3728674c0bbc637bb4af88ccf0be697f92e4e90b55f5dc110c44d61b61/transformers-5.16.1-py3-none-any.whl"
+    sha256 "2f2d5b98a5ad3718713653734298fa620754ed683702a635ebb587df3ed29c7e"
   end
 
   resource "typer" do
@@ -366,8 +376,8 @@ class MlxAsr < Formula
   end
 
   resource "typing-inspection" do
-    url "https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl"
-    sha256 "4ed1cacbdc298c220f1bd249ed5287caa16f34d44ef4e9c3d0cbad5b521545e7"
+    url "https://files.pythonhosted.org/packages/67/81/4add07e5172b7ac40d8ed5ff580409a7801a4fe26d529bdd915401dabfbe/typing_inspection-0.4.4-py3-none-any.whl"
+    sha256 "65b8397ba37ccbce054456aaccddfc91e6e3083c92824df348d96ca832f3f147"
   end
 
   resource "urllib3" do
@@ -451,6 +461,8 @@ class MlxAsr < Formula
     assert_match "voxtral", shell_output("#{bin}/mlx-asr --list-models")
     assert_match "kotoba", shell_output("#{bin}/mlx-asr --list-models")
     assert_match "qwen3-asr", shell_output("#{bin}/mlx-asr --list-models")
+    assert_match "parakeet", shell_output("#{bin}/mlx-asr --list-models")
+    assert_match "reazon", shell_output("#{bin}/mlx-asr --list-models")
 
     # An engine that cannot honour a flag or a format must exit 2 rather than
     # produce output the user reads as having been made with it. Both checks run
