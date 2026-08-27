@@ -15,6 +15,17 @@ re-measured 2026-08-19 after a reference-loading fix (see below):
 | whisper-turbo, no-condition | **14.49%** ±0.27 | **18.34%** ±0.69 | 18.0-22.0x |
 | qwen3-asr (1.7B) | 19.33% | 25.45% | 21.8x |
 | qwen3-asr-small (0.6B) | 23.27% | 24.26% | **32.8x** |
+| parakeet-ja (17 JP files)* | 26.19% | n/a, ja-only | **244.6x*** |
+| reazon-k2 fp32 (17 JP files)* | 30.45% | n/a, ja-only | 51.6x*, CPU |
+
+The two Japanese-specialized engines were added on 2026-08-23 and change no
+default. Rows marked * differ from the rest of this table in two ways, both
+recorded in their result files: they cover the 17 Japanese files rather than all
+20 recordings (the weights are Japanese-only), and they ran while 45GB of GPU
+memory was parked by a resident agent, so their throughput figures are floors.
+Both decode greedily, so accuracy is unaffected by contention. Parakeet sets a
+project throughput record anyway, 7x past anything else measured. See
+[japanese-only.md](docs/benchmarks/japanese-only.md).
 
 Whisper is about 1.7 points more accurate on Japanese, and the result holds under all three
 tests this project has: 3/3 repeat runs beat the baseline, the run-distribution interval
@@ -46,6 +57,7 @@ plain CER is meaningless on this editorial material.
 |---|---|---|
 | transcription delay | `2400` is worth 9 points and free. The strongest result here. | [delay.md](docs/benchmarks/delay.md) |
 | Qwen3-ASR | Neither alias beats an existing default on accuracy; the 0.6B is the fastest engine here. Writes no subtitles. 30s window, measured. | [qwen3-asr.md](docs/benchmarks/qwen3-asr.md) |
+| Japanese-specialized engines | parakeet 26.19% at a record 244.6x; reazon-k2 fp32 30.45% on CPU. Domain-matched training does not beat Whisper's breadth here; int8 is NOT near-parity for reazon on conversational audio. | [japanese-only.md](docs/benchmarks/japanese-only.md) |
 | chunking | 30s vs 60s is not resolvable on the corpus (+0.10, CI [-1.89, +2.03]), so choose on speed. Overlap helps only where seams are dense. Energy cuts beat VAD. | [chunking.md](docs/benchmarks/chunking.md) |
 | engine choice | Whisper turbo + no-condition is more accurate; Voxtral is faster and reproducible. | [engines.md](docs/benchmarks/engines.md) |
 | batch size | Not monotonic. Never use 2-8. | [decode-throughput.md](docs/benchmarks/decode-throughput.md) |
@@ -58,7 +70,6 @@ plain CER is meaningless on this editorial material.
 Supporting: [corpus.md](docs/benchmarks/corpus.md) (what the material is, how to build
 your own), [metrics.md](docs/benchmarks/metrics.md) (which number to trust),
 [determinism.md](docs/benchmarks/determinism.md) (what reproduces and what does not).
-
 [JOURNAL.md](JOURNAL.md) is the chronological log the findings were distilled from,
 including the runs that produced nothing and the conclusions that were later withdrawn.
 Read it for history, not for current numbers.

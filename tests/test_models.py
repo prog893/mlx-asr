@@ -33,13 +33,15 @@ def test_default_is_registered_and_deterministic():
     assert m.deterministic
 
 
-BACKENDS = ("voxtral", "mlx-whisper", "mlx-chunked", "mlx-qwen3")
+BACKENDS = ("voxtral", "mlx-whisper", "mlx-chunked", "mlx-qwen3",
+            "mlx-parakeet", "sherpa-onnx")
 
 # The greedy backends. Voxtral decodes with argmax and no temperature ladder;
-# Qwen3-ASR's `temperature=0.0` becomes `mx.argmax` for the same reason. Whisper's
-# temperature fallback samples, so it is not on this list and its repeat runs
-# spread ~0.5 CER points.
-GREEDY_BACKENDS = ("voxtral", "mlx-qwen3")
+# Qwen3-ASR's `temperature=0.0` becomes `mx.argmax` for the same reason;
+# parakeet's TDT and reazon-k2's transducer have no sampling path at all.
+# Whisper's temperature fallback samples, so it is not on this list and its
+# repeat runs spread ~0.5 CER points.
+GREEDY_BACKENDS = ("voxtral", "mlx-qwen3", "mlx-parakeet", "sherpa-onnx")
 
 
 def test_every_entry_is_self_consistent():
@@ -113,6 +115,9 @@ def test_voxtral_needs_no_language_but_whisper_does():
     # its autodetect path reassigns `language` inside the chunk loop upstream and
     # leaves a `language X<asr_text>` prefix in every chunk after the first.
     assert REGISTRY["qwen3-asr"].needs_language is True
+    # The two Japanese-only engines take no language token at all, like voxtral.
+    assert REGISTRY["parakeet"].needs_language is False
+    assert REGISTRY["reazon-k2"].needs_language is False
 
 
 @pytest.mark.parametrize("alias", ["qwen3-asr", "qwen3-asr-small"])
@@ -174,8 +179,10 @@ def test_every_entry_declares_a_family():
 
     for alias, m in REGISTRY.items():
         assert m.family, alias
-    # Four families for eleven entries, which is the point of the grouping.
-    assert set(families()) == {"voxtral", "whisper", "kotoba", "qwen3-asr"}
+    # Six families: the four long-standing ones plus the two Japanese-only
+    # engines added 2026-08.
+    assert set(families()) == {"voxtral", "whisper", "kotoba", "qwen3-asr",
+                               "parakeet", "reazon"}
 
 
 def test_sizes_are_declared_only_where_there_is_a_choice():
@@ -256,7 +263,7 @@ def test_a_bare_typo_is_a_usage_error_not_a_repo_id():
 
     with pytest.raises(UnknownModel) as e:
         resolve("wisper")
-    assert "voxtral, whisper, kotoba, qwen3-asr" in str(e.value)
+    assert "voxtral, whisper, kotoba, qwen3-asr, parakeet, reazon" in str(e.value)
     # A real repo id still resolves, so the guard is on the shape and not a whitelist.
     assert resolve("some/custom-model").repo == "some/custom-model"
 
@@ -639,6 +646,8 @@ def test_only_the_chunked_drivers_take_a_window_length():
     """
     assert REGISTRY["kotoba"].chunked_long_form is True
     assert REGISTRY["qwen3-asr"].chunked_long_form is True
+    assert REGISTRY["parakeet"].chunked_long_form is True
+    assert REGISTRY["reazon-k2"].chunked_long_form is True
     assert REGISTRY["whisper-turbo"].chunked_long_form is False
     assert REGISTRY["voxtral"].chunked_long_form is False
 
@@ -736,3 +745,159 @@ def test_describe_registry_lists_every_family_size_and_caveat():
     assert "no srt/vtt" in out
     # and both second-layer flags, since they are the only route to most variants
     assert "--size:" in out and "--quantization:" in out
+
+
+# --- parakeet / reazon-k2 ---------------------------------------------------
+
+def test_parakeet_entry_is_ja_only_and_subtitle_capable():
+    """TDT predicts a duration per token, so its cues are real speech times and
+    subtitles must stay allowed; and the weights have one output language."""
+    m = REGISTRY["parakeet"]
+    assert m.backend == "mlx-parakeet"
+    assert m.languages == "ja"
+    assert m.deterministic is True
+    assert m.no_speech_timestamps is False
+    assert m.repo.startswith("mlx-community/parakeet")
+
+
+def test_reazon_k2_entry_names_the_authors_onnx_build():
+    """The k2 build rather than NeMo is measured (better on its authors' own
+    benchmarks) and loadable here (ONNX, no torch). The repo id pins both
+    properties; pointing this alias at reazonspeech-nemo-v2 would break on load
+    AND lose the accuracy argument."""
+    m = REGISTRY["reazon-k2"]
+    assert m.repo == "reazon-research/reazonspeech-k2-v2"
+    assert m.backend == "sherpa-onnx"
+    assert m.languages == "ja"
+    assert m.deterministic is True
+    assert m.no_speech_timestamps is False
+
+
+@pytest.mark.parametrize("repo,backend", [
+    ("nvidia/parakeet-tdt_ctc-0.6b-ja", "mlx-parakeet"),
+    ("some/parakeet-finetune", "mlx-parakeet"),
+    ("reazon-research/reazonspeech-k2-v2", "sherpa-onnx"),
+])
+def test_infer_backend_routes_the_new_architectures(repo, backend):
+    assert infer_backend(repo) == backend
+
+
+def test_a_non_k2_reazon_repo_is_NOT_routed_to_sherpa():
+    """reazonspeech-nemo-v2 is torch-framework weights that sherpa-onnx cannot
+    read. Leaving it unrouted makes it fail at load; routing it here would fail
+    with a message about missing ONNX files that would send someone hunting for
+    a conversion that does not exist."""
+    assert infer_backend("reazon-research/reazonspeech-nemo-v2") != "sherpa-onnx"
+
+
+def test_reazon_cue_grouping_breaks_on_sentence_enders_and_pauses():
+    from mlx_asr.backends import reazon_k2_tokens_to_cues
+
+    # Three sentences separated by 。, then one pause gap mid-sentence.
+    tokens = ["これ", "は", "テスト", "。", "次", "の", "文", "。",
+              "長い", "間", "を", "お", "い", "て", "続く", "。"]
+    times = [0.0, 0.1, 0.2, 0.3,
+             0.5, 0.6, 0.7, 0.8,
+             1.0, 1.1, 5.0, 5.1, 5.2, 5.3, 5.4, 5.5]   # 3.9s gap before を
+    cues = reazon_k2_tokens_to_cues(times, tokens)
+    texts = [c[2] for c in cues]
+    assert texts[0] == "これはテスト。"
+    assert texts[1] == "次の文。"
+    # The pause closes the third sentence's opening into its own cue.
+    assert any("長い間" in t for t in texts)
+    assert any("続く。" in t for t in texts)
+
+
+def test_reazon_cue_grouping_caps_length_at_clause_breaks_only():
+    from mlx_asr.backends import MAX_CUE_CHARS, reazon_k2_tokens_to_cues
+
+    pieces = ["あ", "、"] * 30          # 60 chars of comma-separated clauses
+    times = [i * 0.1 for i in range(60)]
+    cues = reazon_k2_tokens_to_cues(times, pieces)
+    # No cue may hold everything: the cap fires even though nothing but the cap
+    # can fire (these weights emit no punctuation in practice).
+    assert len(cues) >= 2
+    joined = "".join(c[2] for c in cues)
+    assert joined.replace("▁", "") == "あ、" * 30
+    assert all(len(t) < MAX_CUE_CHARS + 4 for _, _, t in cues)
+
+
+def test_reazon_cue_grouping_closes_on_a_pause():
+    from mlx_asr.backends import reazon_k2_tokens_to_cues
+
+    tokens = ["前", "半", "後", "半"]
+    times = [0.0, 0.2, 4.0, 4.2]        # 3.8s gap between 半 and 後
+    cues = reazon_k2_tokens_to_cues(times, tokens)
+    assert len(cues) == 2
+    assert cues[0][2] == "前半" and cues[1][2] == "後半"
+    # The first cue ends shortly after its own last token (pad), not on a guess
+    # that reaches into the silence or the next cue's speech.
+    assert abs(cues[0][1] - 0.7) < 1e-6
+
+
+def test_new_engines_declare_window_defaults():
+    """Both take --chunk-seconds via chunked_long_form, so the CLI reports their
+    registry default alongside an override; a missing default prints a fabricated
+    number there."""
+    assert REGISTRY["parakeet"].opts.get("chunk_length_s")
+    assert REGISTRY["reazon-k2"].opts.get("chunk_length_s")
+
+
+def test_reazon_ships_fp32_not_int8():
+    """Regression guard on a measured default, and the interesting kind: the
+    authors' own table says int8 is near-parity on JSUT/CommonVoice/TEDxJP, but
+    on this corpus's conversational material int8 drops whole phrases mid-file
+    (296 against 376 characters on one 112s recording). The published benchmark
+    and this corpus disagree; the default follows the corpus."""
+    assert REGISTRY["reazon-k2"].opts.get("precision") == "fp32"
+
+
+def test_reazon_precision_is_validated_not_silently_mapped():
+    """precision selects FILE patterns, so an unknown spelling would quietly
+    download fp32 files while every log line claimed otherwise. Refused at the
+    loader, which is the single point all three call sites go through."""
+    import pytest
+
+    from mlx_asr.backends import reazon_k2_load
+
+    for bad in ("fp16", "8bit", "", "bf16"):
+        with pytest.raises(SystemExit):
+            reazon_k2_load("reazon-research/reazonspeech-k2-v2", bad)
+
+
+def test_reazon_loader_default_matches_the_shipped_precision():
+    """A bare reazon_k2_load(repo) call must fetch fp32: the shipped default is
+    measured (int8 drops whole phrases), and a signature that silently disagreed
+    with it would arm the bug above for any future caller."""
+    import inspect
+
+    from mlx_asr.backends import reazon_k2_load
+
+    assert inspect.signature(reazon_k2_load).parameters["precision"].default == "fp32"
+
+
+def test_language_guard_and_label_follow_declared_languages_not_backend_name():
+    """infer_backend routes ANY repo id containing 'parakeet' to mlx-parakeet,
+    including English/multilingual checkpoints (parakeet-tdt-0.6b-v3). The
+    ja-only refusal and the JSON language label therefore have to key on the
+    resolved entry's declared languages, or a raw multilingual repo gets
+    refused as Japanese-only while its metadata claims the opposite."""
+    import types
+
+    import pytest
+
+    from mlx_asr.backends import _language_source, _refuse_non_japanese
+
+    raw = types.SimpleNamespace(alias="some/parakeet-finetune",
+                                languages="multilingual")
+    # A non-Japanese request on a raw repo passes: nothing declares this model
+    # Japanese-only, so refusing it would be inventing a constraint.
+    assert _refuse_non_japanese("en", raw) is None
+    assert _language_source(raw) == "no_language_input"
+
+    ja = types.SimpleNamespace(alias="parakeet", languages="ja")
+    assert _refuse_non_japanese(None, ja) is None      # no request, no refusal
+    assert _refuse_non_japanese("ja_JP", ja) is None   # normalises to ja
+    assert _language_source(ja) == "single_language_model"
+    with pytest.raises(SystemExit):
+        _refuse_non_japanese("en", ja)

@@ -35,6 +35,7 @@ uv run mlx-asr audio.wav
 | extra | pulls | needed for |
 |---|---|---|
 | `whisper` | mlx-whisper, numba | `--model whisper` and `--model kotoba` |
+| `reazon` | sherpa-onnx | `--model reazon`. Note: on Python 3.14 there is no prebuilt wheel yet, and the source build does not bundle libonnxruntime; copy it from the `onnxruntime` wheel into `sherpa_onnx/lib/libonnxruntime.dylib` if the import fails |
 | `vad` | onnxruntime | `--vad` |
 | `eval` | pykakasi, rapidfuzz | the `scripts/metrics/` scorers and benchmark scripts |
 | `dev` | pytest | the test suite |
@@ -113,6 +114,8 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 | `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **turbo**, which is both more accurate here than large-v3 and about 2x faster. The most accurate option on the test corpus |
 | `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, and Japanese only |
 | `qwen3-asr` | Alibaba's Qwen3-ASR. `--size 1.7B` (default) or `0.6B`, the fastest engine measured here. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
+| `parakeet` | NVIDIA's Japanese FastConformer-TDT, through mlx-audio. Greedy, token-level timestamps so subtitles work. The fastest engine measured here (244x realtime), well behind the multilingual defaults on this corpus's Japanese |
+| `reazon` | ReazonSpeech k2-v2 (Japanese Zipformer), the authors' ONNX build via sherpa-onnx. Decodes on CPU; needs `uv sync --extra reazon`. Japanese only |
 | any HF repo id | the backend is inferred from the name; `--size` and `--quantization` are refused, since the id already names the variant |
 
 `--model` picks the family; `--size` and `--quantization` pick the variant inside it.
@@ -123,7 +126,8 @@ nothing.
 
 `whisper` and `qwen3-asr` do better when you set `--language`, and each gets the form it
 wants (a code for Whisper, an English name for Qwen) from whatever you type. Voxtral takes
-no language flag, and `kotoba` forces Japanese on its own.
+no language flag, and the Japanese-only engines (`kotoba`, `parakeet`, `reazon`) refuse
+`--language` values other than Japanese rather than silently ignoring them.
 
 `--list-models` prints the sizes and precisions each family accepts. The complete
 mapping from every `--model`/`--size`/`--quantization` combination to its Hugging Face
