@@ -326,18 +326,28 @@ overlap). Only its components had been measured separately, which is not enough 
 combination: overlap on its own won on a clip and then reversed sign on the corpus. Measured
 as one config, and then decomposed, 20 files, idle M2 Ultra:
 
-| config | JP coverage CER | x realtime |
-|---|---|---|
-| 60s / B16 / no overlap (the old default) | 16.21% | 19.8x |
-| 30s / B32 / 8s overlap (what `--fast` did) | 16.79% | 23.5x |
-| **30s / B32 / no overlap** | **16.22%** | **28.9x** |
+| config | JP coverage CER | x realtime | isolates |
+|---|---|---|---|
+| 60s / B16 / ov0 (the old default) | 16.21% | 19.8x | |
+| 30s / B32 / ov8 (what `--fast` did) | 16.79% | 23.5x | the bundle |
+| 30s / B16 / ov0 | 16.28% | 19.7x | chunk alone |
+| 60s / B32 / ov0 | 16.25% | 24.9x | batch alone |
+| 60s / B16 / ov8 | 16.32% | 17.7x | overlap alone |
+| **30s / B32 / ov0** | **16.22%** | **28.9x** | chunk + batch |
 
-    30s/B32 against the old default: -0.01 points, CI [-1.96, +1.87] -> a tie
+Every arm is a tie on accuracy against the default (largest difference 0.11 points, every
+CI spanning zero), so this is entirely a throughput result.
 
-So the bundle was **holding back its own speedup**: dropping the overlap it added is worth
-another 5.4x, and recovers the 0.58 CER points the overlap cost. The right config on this
-machine is 30s/B32 with no overlap, which is **46% faster than the previous default at
-identical accuracy**.
+Two things fall out, and the second corrects the obvious reading:
+
+- **The bundle was holding back its own speedup.** Dropping the 8s overlap is worth another
+  5.4x on top, and recovers the 0.58 CER points the overlap had cost. Overlap measured alone
+  is the only arm *slower* than the default (17.7x against 19.8x), which is what a flag that
+  decodes extra audio should be expected to do.
+- **The batch is doing the work, not the chunk length.** Halving the chunk alone changes
+  nothing (19.7x against 19.8x); doubling the batch alone gets 24.9x, most of the total. The
+  two together reach 28.9x, so shorter chunks help only once the batch is wide enough to hold
+  them in one pass. A flag called `--fast` bundling both obscured which half mattered.
 
 ### And the sign reverses on a low-core GPU
 
@@ -370,7 +380,7 @@ above refutes.
 - Chunk length, batch and overlap come from `mlx_asr/profiles.json` per machine: 30s/B32 on
   the M2 Ultra, 60s/B16 on the M4, overlap 0 on both.
 - No composite flag. Every lever here is set independently, defaulting to this machine's
-  profile, because the right chunk length reverses sign across hardware.
+  profile, because the right chunk/batch pair reverses sign across hardware.
 - Energy-based cut points, with `--vad` available as an opt-in.
 - `--compact-silence` off.
 
