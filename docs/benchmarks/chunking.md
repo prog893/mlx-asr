@@ -333,20 +333,40 @@ the parts do not license the whole. Measured as one config, 20 files, idle M2 Ul
 
     +0.58 points, CI [-1.14, +2.18], 9 files to 7 -> not resolvable
 
-**So `--fast` buys 19% throughput for no measurable accuracy cost.** The flag is sound, and
-the three components together behave better than the overlap component alone suggested.
+**On this machine `--fast` buys 19% throughput for no measurable accuracy cost.** The
+accuracy half generalises (30s and 60s are indistinguishable on the corpus, and the three
+components together behave better than the overlap component alone suggested). The speed half
+does **not**.
 
-One correction follows: the README described `--fast` as "faster, slightly less accurate",
-which was inferred from the clip rather than measured. The corpus cannot resolve any accuracy
-difference, so the honest description is that it trades a little accuracy *risk* for speed:
-the point estimate is worse, the interval spans zero, and the direction is unproven.
+### The speedup is hardware-dependent, and reverses on a low-core GPU
+
+Same flag, same clip, the two benchmarked machines:
+
+| machine | GPU cores | default | `--fast` |
+|---|---|---|---|
+| M2 Ultra 128GB | 60 | 19.8x | **23.5x** |
+| M4 16GB | 10 | 1.9-2.0x | **1.5-1.9x** |
+
+Halving the chunk doubles the chunk count, and each chunk pays fixed encoder cost. With 60
+cores that encoder work is cheap and the decode saving dominates; with 10 cores the encoder
+is already 36% of wall clock and compute-bound, so the extra passes cost more than the
+shorter rows save. `profiles.json` has carried a note to this effect since the M4 was
+profiled: "on a low-core GPU the compute-bound encoder makes short chunks a net loss on
+throughput".
+
+So a flag named `--fast` is measurably slower on a 16GB MacBook. Any figure quoted for it
+belongs to the machine it was measured on, which is why the numbers above name theirs.
+
+The earlier README wording, "faster, slightly less accurate", was wrong in both halves: the
+accuracy cost is unresolvable, and the speed gain is not universal.
 
 ## What ships
 
 - Chunk length and overlap come from `mlx_asr/profiles.json` per machine, 60s and 0s on
   both benchmarked machines.
-- `--fast` halves the chunk, doubles the batch and enables 8s overlap, which measures as a
-  19% speedup with no resolvable accuracy cost.
+- `--fast` halves the chunk, doubles the batch and enables 8s overlap. Accuracy-neutral on
+  the corpus, and 19% faster on a 60-core GPU but **slower** on a 10-core one, so it is a
+  flag rather than a default.
 - Energy-based cut points, with `--vad` available as an opt-in.
 - `--compact-silence` off.
 

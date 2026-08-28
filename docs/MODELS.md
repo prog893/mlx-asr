@@ -215,11 +215,13 @@ and independently, so `--fast --chunk-seconds 45` keeps your 45s and still adds 
 and `--fast --overlap-seconds 0` takes the halved chunk with no overlap. The CLI prints which
 of the two decided each value.
 
-It is a flag rather than the default because the halving only pays when the shorter chunks
-still fit in one batch pass; on short audio it would add encoder work for nothing, so the CLI
-declines and says so. The overlap is the other reason: on its own it lost on the corpus, and
-it is bundled here only because `--fast` is an explicit request for the short-chunk regime
-where seams are dense ([benchmarks/chunking.md](benchmarks/chunking.md)).
+It is a flag rather than a default because **it is not faster on every machine.** Shorter
+chunks mean more of them, and each pays fixed encoder cost; on a 60-core GPU that is cheap
+and the shorter decode rows win, while on a 10-core GPU the encoder is already the bottleneck
+and the flag comes out slower. Measured both ways, so the name oversells it on small
+hardware ([benchmarks/chunking.md](benchmarks/chunking.md)). Per-machine values live in
+`mlx_asr/profiles.json`, which is the right home for a lever whose sign depends on the
+hardware.
 
 `--prompt` takes domain terms or a topic sentence in the audio's own language, not an
 instruction: an imperative there makes things worse, and on English audio any prompt wrecks
