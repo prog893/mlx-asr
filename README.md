@@ -55,7 +55,6 @@ The Homebrew formula lives in [scripts/homebrew/](scripts/homebrew/).
 mlx-asr interview.m4a                     # writes interview.srt next to it
 mlx-asr talk.mp4 -f json                  # timestamps + metadata as JSON
 mlx-asr talk.mp4 -f all -o out/talk       # srt, vtt, txt and json together
-mlx-asr lecture.mp4 --fast -f vtt         # shorter chunks: faster on a many-core GPU only
 mlx-asr earnings.wav --prompt "EBITDA, ARR, Grafana"   # bias toward domain terms
 mlx-asr interview.m4a --model whisper --language ja        # turbo by default
 mlx-asr interview.m4a --model whisper --size small --language ja
@@ -89,8 +88,8 @@ The rest belong to one engine. Pass one the current engine cannot use and it is 
 error, not a warning: nothing is silently ignored.
 
 ```console
-$ mlx-asr audio.wav --model whisper --max-batch 32 --fast
-error: --max-batch, --fast: not supported by --model whisper. These are
+$ mlx-asr audio.wav --model whisper --max-batch 32 --vad
+error: --max-batch, --vad: not supported by --model whisper-turbo. These are
 Voxtral-only, because the engines do not share a long-form algorithm. Drop the
 flag, or use the default --model voxtral.
 ```

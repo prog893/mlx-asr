@@ -216,7 +216,7 @@ def _run_other_backend(a, spec, log, t_start):
         ("--chunk-seconds", None if spec.chunked_long_form else a.chunk_seconds),
         ("--overlap-seconds", a.overlap_seconds), ("--kv-bits", a.kv_bits),
         ("--prompt", a.prompt), ("--vad", a.vad),
-        ("--compact-silence", a.compact_silence), ("--fast", a.fast),
+        ("--compact-silence", a.compact_silence),
         ("--no-kv-quant", a.no_kv_quant),
         ("--delay-ms", a.delay_ms if a.delay_ms != 2400 else None),
         ("--gain", a.gain if a.gain != "auto" else None),
@@ -387,16 +387,12 @@ def build_parser():
                         "no measured accuracy cost)")
     p.add_argument("--no-kv-quant", action="store_true",
                    help="disable the profile's KV quantization")
-    p.add_argument("--fast", action="store_true",
-                   help="halve the chunk length, double the batch, and add "
-                        "warm-up overlap to pay back the extra chunk seams. "
-                        "Declines automatically when it would not help")
     p.add_argument("--overlap-seconds", type=float, default=None,
                    help="prepend this much preceding audio to each chunk as "
                         "warm-up context and discard its transcript, to recover "
                         "accuracy lost at chunk seams. Helped on one clip and not on a "
-                        "corpus, so it is off unless --fast asks for short chunks "
-                        "(default: from profile). See docs/benchmarks/chunking.md")
+                        "corpus, so the profile ships 0 (default: from profile). "
+                        "See docs/benchmarks/chunking.md")
     p.add_argument("--gain", default="auto",
                    help="input level. 'auto' (default) boosts only audio quieter "
                         "than -6 dBFS peak, up to -1 dBFS, and leaves anything "
@@ -514,43 +510,18 @@ def main(argv=None):
     info = machine_info()
     prof = resolve_profile(info, weights_gb=spec.weights_gb,
                            chunk_seconds=a.chunk_seconds)
+    # Three independent levers, each resolved the same way: your value if you gave one,
+    # otherwise this machine's profile. There is deliberately no composite flag bundling
+    # them. A `--fast` used to exist and it was a mistake: the chunk/batch trade it
+    # encoded is FASTER on a 60-core GPU and SLOWER on a 10-core one, because the extra
+    # encoder passes that shorter chunks add are cheap on the former and are already the
+    # bottleneck on the latter (docs/benchmarks/chunking.md). A single flag cannot carry a
+    # value whose sign depends on the hardware; profiles.json can, and does.
     batch = a.max_batch or prof["batch"]
     chunk_s = a.chunk_seconds or prof["chunk_seconds"]
-    if a.fast:
-        # Decode wall clock is set by the LONGEST row in each batch, so halving
-        # the chunk length halves decode only if the batch can still hold every
-        # chunk in one pass. Encoder cost, by contrast, grows with chunk count
-        # (it is compute-bound, see docs/benchmarks/decode-throughput.md), so this trade is only
-        # worth taking when the shorter chunks still fit.
-        new_chunk = max(15.0, chunk_s / 2) if not a.chunk_seconds else chunk_s
-        new_batch = batch * 2 if not a.max_batch else batch
-        passes_now = -(-duration // (batch * chunk_s))
-        passes_new = -(-duration // (new_batch * new_chunk))
-        if passes_new <= passes_now and new_chunk < chunk_s:
-            chunk_s, batch = new_chunk, new_batch
-        # The message has to distinguish two very different reasons for not halving,
-        # because it used to say "keeping the profile config" while overlap was still
-        # applied below, which is not what the reader was told.
-        elif a.chunk_seconds or a.max_batch:
-            log(f"[fast] chunk/batch already set explicitly, so only the warm-up "
-                f"overlap is added; {chunk_s:g}s and batch {batch} are yours, not the "
-                f"profile's")
-        else:
-            log("[fast] halving the chunk would not reduce the number of passes at "
-                "this duration, so chunk and batch are unchanged")
     kv_bits = None if a.no_kv_quant else (a.kv_bits or prof.get("kv_bits"))
-    overlap_s = a.overlap_seconds
-    if overlap_s is None:
-        overlap_s = prof.get("overlap_seconds", 0.0)
-        # Overlap pays only where seams are dense. At the profile's long chunks a
-        # paired test finds no benefit (60s: -0.69 points, CI [-1.47, +0.07]),
-        # while at 30s it won +1.80 points, CI [+0.62, +3.20], on a single clip.
-        # That win did NOT reproduce on the 20-file corpus (-1.47, CI [-4.33,
-        # +2.36], sign reversed), which is why overlap is tied to --fast rather
-        # than defaulted on: --fast is an explicit request for the short-chunk
-        # regime the single-clip result describes. See docs/benchmarks/chunking.md.
-        if a.fast and chunk_s < prof["chunk_seconds"]:
-            overlap_s = max(overlap_s, 8.0)
+    overlap_s = (a.overlap_seconds if a.overlap_seconds is not None
+                 else prof.get("overlap_seconds", 0.0))
     if a.vad:
         try:
             from .vad import split_at_vad_with_overlap

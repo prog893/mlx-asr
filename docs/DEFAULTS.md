@@ -56,9 +56,9 @@ there is a memory choice made blind. Its memory cost is measured
 
 | default | why | detail |
 |---|---|---|
-| `voxtral --chunk-seconds` per machine | 30s and 60s tie on accuracy, so this is purely a throughput choice and belongs to the hardware profile | [chunking.md](benchmarks/chunking.md) |
+| `voxtral --chunk-seconds` per machine | 30s and 60s tie on accuracy, so this is purely a throughput choice, and the right value **reverses across hardware**: 30s is 46% faster on a 60-core GPU and slower on a 10-core one. Exactly what a per-machine profile is for | [chunking.md](benchmarks/chunking.md) |
 | `voxtral --max-batch` per machine | throughput is not monotonic in batch size, so the profile avoids the middle of the range entirely | [decode-throughput.md](benchmarks/decode-throughput.md) |
-| `voxtral --overlap-seconds 0` | won on one clip at short chunks, then reversed sign on the corpus. Tied to `--fast` rather than defaulted on | [chunking.md](benchmarks/chunking.md) |
+| `voxtral --overlap-seconds 0` | won on one clip at short chunks, then reversed sign on the corpus, where it cost both speed and accuracy. Zero on every profile | [chunking.md](benchmarks/chunking.md) |
 | `kotoba --chunk-seconds 10` | this model's largest lever, and 10s clearly won on spontaneous Japanese. Material-dependent, so sweep it on your own audio | [engines.md](benchmarks/engines.md) |
 | `qwen3-asr --chunk-seconds 30` | unusually, shorter is better on accuracy, speed and memory at once, because a longer window gives a repetition loop a bigger token budget to burn. 15s ties 30s, so this is a plateau rather than a boundary | [qwen3-asr.md](benchmarks/qwen3-asr.md) |
 

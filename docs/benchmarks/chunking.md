@@ -1,6 +1,6 @@
 # Lever: how the audio is cut into chunks
 
-**Voxtral only** for `--overlap-seconds`, `--vad`, `--compact-silence` and `--fast`;
+**Voxtral only** for `--overlap-seconds`, `--vad` and `--compact-silence`;
 `--chunk-seconds` also applies to `kotoba`, where it sets the independent-window length.
 The `whisper-*` driver's 30s window is fixed by the model's positional encoding. Passing a
 flag to an engine that cannot honour it is an error, not a warning.
@@ -170,10 +170,10 @@ stretches of non-reference material, so a warm-up window often carries content t
 reference cut; and the seam-error enrichment above was measured on dense narration and
 may not hold for conversational audio with frequent long pauses.
 
-So overlap is tied to `--fast`, which halves the chunk length and therefore creates the
-dense-seam condition where it measurably helps. It is not a universal default. This is
-the clearest case in the project of a significant single-clip result that did not
-generalize.
+So overlap ships at zero on every profile. It was for a while bundled into a `--fast` flag,
+on the theory that halving the chunk creates the dense-seam condition where the clip result
+applies; that turned out to be wrong twice over, and the direct measurement is below. This is
+the clearest case in the project of a significant single-clip result that did not generalize.
 
 ## Experiment: where to cut, energy versus VAD
 
@@ -319,54 +319,58 @@ current default and its documentation now says the cost is unmeasurable rather t
 quantization-dependent. Closes
 [#6](https://github.com/prog893/mlx-asr/issues/6).
 
-## Experiment: `--fast` as a whole
+## Experiment: the composite flag that used to bundle these, and why it is gone
 
-The flag changes three things at once (halve the chunk, double the batch, add 8s warm-up
-overlap), and only its components had been measured. That is not enough to predict the
-combination: overlap on its own won on a clip and then **reversed sign** on the corpus, so
-the parts do not license the whole. Measured as one config, 20 files, idle M2 Ultra:
+`--fast` set three levers at once (halve the chunk, double the batch, add 8s warm-up
+overlap). Only its components had been measured separately, which is not enough to predict a
+combination: overlap on its own won on a clip and then reversed sign on the corpus. Measured
+as one config, and then decomposed, 20 files, idle M2 Ultra:
 
-| | JP coverage CER | x realtime |
+| config | JP coverage CER | x realtime |
 |---|---|---|
-| shipped default (60s / B16 / no overlap) | 16.21% | 19.8x |
-| `--fast` (30s / B32 / 8s overlap) | 16.79% | **23.5x** |
+| 60s / B16 / no overlap (the old default) | 16.21% | 19.8x |
+| 30s / B32 / 8s overlap (what `--fast` did) | 16.79% | 23.5x |
+| **30s / B32 / no overlap** | **16.22%** | **28.9x** |
 
-    +0.58 points, CI [-1.14, +2.18], 9 files to 7 -> not resolvable
+    30s/B32 against the old default: -0.01 points, CI [-1.96, +1.87] -> a tie
 
-**On this machine `--fast` buys 19% throughput for no measurable accuracy cost.** The
-accuracy half generalises (30s and 60s are indistinguishable on the corpus, and the three
-components together behave better than the overlap component alone suggested). The speed half
-does **not**.
+So the bundle was **holding back its own speedup**: dropping the overlap it added is worth
+another 5.4x, and recovers the 0.58 CER points the overlap cost. The right config on this
+machine is 30s/B32 with no overlap, which is **46% faster than the previous default at
+identical accuracy**.
 
-### The speedup is hardware-dependent, and reverses on a low-core GPU
+### And the sign reverses on a low-core GPU
 
-Same flag, same clip, the two benchmarked machines:
+Same change, the two benchmarked machines:
 
-| machine | GPU cores | default | `--fast` |
+| machine | GPU cores | 60s / B16 | 30s / B32 |
 |---|---|---|---|
-| M2 Ultra 128GB | 60 | 19.8x | **23.5x** |
+| M2 Ultra 128GB | 60 | 19.8x | **28.9x** |
 | M4 16GB | 10 | 1.9-2.0x | **1.5-1.9x** |
 
 Halving the chunk doubles the chunk count, and each chunk pays fixed encoder cost. With 60
 cores that encoder work is cheap and the decode saving dominates; with 10 cores the encoder
 is already 36% of wall clock and compute-bound, so the extra passes cost more than the
 shorter rows save. `profiles.json` has carried a note to this effect since the M4 was
-profiled: "on a low-core GPU the compute-bound encoder makes short chunks a net loss on
-throughput".
+profiled.
 
-So a flag named `--fast` is measurably slower on a 16GB MacBook. Any figure quoted for it
-belongs to the machine it was measured on, which is why the numbers above name theirs.
+**That is why the flag was removed rather than turned on.** A flag has one value; this lever
+has two right answers, one per machine, and `profiles.json` already had a field for it. The
+Ultra profile now ships 30s/B32 and the M4 keeps 60s/B16, so each machine gets its measured
+best with nothing to remember. No composite flag replaced it: every lever it touched is set
+independently, defaulting per machine.
 
-The earlier README wording, "faster, slightly less accurate", was wrong in both halves: the
-accuracy cost is unresolvable, and the speed gain is not universal.
+Two claims died with it. The README said "faster, slightly less accurate", which was wrong in
+both halves (the accuracy cost is unresolvable, and the speed gain is not universal), and this
+document said the bundled overlap was justified by the short-chunk regime, which the third row
+above refutes.
 
 ## What ships
 
-- Chunk length and overlap come from `mlx_asr/profiles.json` per machine, 60s and 0s on
-  both benchmarked machines.
-- `--fast` halves the chunk, doubles the batch and enables 8s overlap. Accuracy-neutral on
-  the corpus, and 19% faster on a 60-core GPU but **slower** on a 10-core one, so it is a
-  flag rather than a default.
+- Chunk length, batch and overlap come from `mlx_asr/profiles.json` per machine: 30s/B32 on
+  the M2 Ultra, 60s/B16 on the M4, overlap 0 on both.
+- No composite flag. Every lever here is set independently, defaulting to this machine's
+  profile, because the right chunk length reverses sign across hardware.
 - Energy-based cut points, with `--vad` available as an opt-in.
 - `--compact-silence` off.
 

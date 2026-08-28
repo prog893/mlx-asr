@@ -155,7 +155,6 @@ default --model voxtral.
 | `--delay-ms` | yes | - | - | - |
 | `--max-batch` | yes | - | - | - |
 | `--kv-bits` / `--no-kv-quant` | yes | - | - | - |
-| `--fast` | yes | - | - | - |
 | `--overlap-seconds` | yes | - | - | - |
 | `--prompt` | yes | - | - | - |
 | `--vad` | yes | - | - | - |
@@ -217,7 +216,6 @@ alone, so it is pinned to `ja` and says so.
 | `--quantization` | `4bit` `fp16`/`none` | `4bit` | weight precision. Also sets the weight footprint used to size the batch |
 | `--kv-bits` | `4` `8` | `8` | quantize the KV cache |
 | `--no-kv-quant` | flag | off | disable KV quantization |
-| `--fast` | flag | off | halve the chunk, double the batch, add warm-up overlap. Any of those three set explicitly wins over it; see below |
 | `--overlap-seconds` | float | `0` | preceding audio prepended to each chunk as context, then discarded |
 | `--prompt` | text | none | text the decoder treats as already emitted, which biases vocabulary. Last ~31 tokens only, and ignored when overlap is active |
 | `--gain` | `auto` `none` `peak` `rms`, or dB | `auto` | input level. `auto` boosts quiet audio and leaves louder audio untouched |
@@ -228,19 +226,18 @@ alone, so it is pinned to `ja` and says so.
 | `--max-chars` | int | `28` | split a cue at this many characters |
 | `--max-dur-seconds` | float | `7.0` | hard cap on cue duration |
 
-`--fast` is a shorthand for three levers, not a mode: it halves `--chunk-seconds`, doubles
-`--max-batch` and sets `--overlap-seconds 8`. **Anything you set yourself wins**, per lever
-and independently, so `--fast --chunk-seconds 45` keeps your 45s and still adds the overlap,
-and `--fast --overlap-seconds 0` takes the halved chunk with no overlap. The CLI prints which
-of the two decided each value.
+`--chunk-seconds`, `--max-batch`, `--overlap-seconds` and `--kv-bits` each default to a value
+measured **for your machine**, from `mlx_asr/profiles.json`, and each is overridden
+independently. There is no flag that sets several at once, deliberately: a `--fast` used to,
+and it was removed because the trade it encoded reverses across hardware. Shorter chunks mean
+more of them and each pays fixed encoder cost, which is cheap on a 60-core GPU (measured 46%
+faster there) and is already the bottleneck on a 10-core one (measured slower). A flag cannot
+hold a value whose sign depends on the machine; a profile can
+([benchmarks/chunking.md](benchmarks/chunking.md)).
 
-It is a flag rather than a default because **it is not faster on every machine.** Shorter
-chunks mean more of them, and each pays fixed encoder cost; on a 60-core GPU that is cheap
-and the shorter decode rows win, while on a 10-core GPU the encoder is already the bottleneck
-and the flag comes out slower. Measured both ways, so the name oversells it on small
-hardware ([benchmarks/chunking.md](benchmarks/chunking.md)). Per-machine values live in
-`mlx_asr/profiles.json`, which is the right home for a lever whose sign depends on the
-hardware.
+If your chip is not in `profiles.json` the values are derived from GPU cores and memory
+instead, and the CLI says `derived` rather than `profile` so you know which you got.
+Contributing a measured profile is in [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 `--prompt` takes domain terms or a topic sentence in the audio's own language, not an
 instruction: an imperative there makes things worse, and on English audio any prompt wrecks

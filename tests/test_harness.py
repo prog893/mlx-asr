@@ -91,31 +91,30 @@ def test_cli_exposes_the_cue_knobs_the_docs_tell_users_to_sweep():
         assert flag in r.stdout, flag
 
 
-def test_fast_does_not_claim_to_keep_the_profile_while_changing_overlap():
-    """`--fast` bundles three levers, and explicit flags beat it on each one.
+def test_no_composite_flag_bundles_the_per_machine_levers(tmp_path):
+    """Chunk, batch, overlap and kv are per-machine values, so no flag may bundle them.
 
-    The failure this guards: when `--chunk-seconds` or `--max-batch` was set alongside
-    `--fast`, the CLI printed "no benefit at this duration; keeping the profile config"
-    and then applied 8s of warm-up overlap anyway. Both halves were wrong. It was not a
-    duration problem (the user had simply pinned the levers), and the config was neither
-    kept nor the profile's. Overlap changes the transcript, so a log line saying nothing
-    happened is the same class of untruth as a flag that looks honoured and does nothing.
+    `--fast` used to set three of them at once and it was removed, because the trade it
+    encoded has a hardware-dependent SIGN: shorter chunks are faster on a 60-core GPU and
+    slower on a 10-core one, since the extra encoder passes they add are cheap on the
+    former and already the bottleneck on the latter. One flag cannot express a value that
+    reverses across machines; `profiles.json` can, and it already has a field for each
+    lever.
+
+    This guards the shape of the interface rather than one flag name: a new composite
+    would reintroduce the same category error under a different word.
     """
-    import inspect
-    import re
+    r = subprocess.run(CLI + ["--help"], capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode == 0, r.stderr
+    for composite in ("--fast", "--slow", "--turbo", "--quality", "--preset"):
+        assert composite not in r.stdout, (
+            f"{composite} bundles levers whose right value is per-machine; put them in "
+            f"mlx_asr/profiles.json instead")
 
-    from mlx_asr import cli
-
-    src = inspect.getsource(cli)
-    # Only the comment explaining the fix may mention the superseded wording; no log()
-    # call may emit it.
-    emitted = re.findall(r'log\(\s*f?"([^"]*)"', src)
-    assert not [m for m in emitted if "keeping the profile config" in m], (
-        "the misleading --fast message is being logged again")
-    # And the explicit-flag branch has to exist, keyed on the two levers that trigger it.
-    assert "a.chunk_seconds or a.max_batch" in src, (
-        "the --fast branch no longer distinguishes 'you pinned these levers' from "
-        "'halving would not help at this duration'")
+    # And the removed one must be a hard error, not silently swallowed.
+    r = subprocess.run(CLI + [str(tmp_path / "nope.wav"), "--fast"],
+                       capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode != 0 and "unrecognized arguments: --fast" in r.stderr, r.stderr
 
 
 def test_resolved_cue_config_reports_shipped_defaults_when_unset():
@@ -295,7 +294,7 @@ def test_repeat_distribution_refuses_when_every_run_is_incomplete(tmp_path):
 
 
 UNSUPPORTED_ON_WHISPER = [
-    "--prompt=x", "--max-batch=8", "--vad", "--compact-silence", "--fast",
+    "--prompt=x", "--max-batch=8", "--vad", "--compact-silence",
     "--overlap-seconds=4", "--kv-bits=8", "--no-kv-quant", "--delay-ms=960",
     "--gain=peak", "--peak-dbfs=-3", "--rms-dbfs=-20",
     "--gap-seconds=0.7", "--max-chars=32", "--max-dur-seconds=5",
