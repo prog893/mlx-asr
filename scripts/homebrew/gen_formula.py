@@ -114,7 +114,7 @@ def wheel_for(name, version, py="cp313"):
 
 
 def main():
-    pins = resolved_versions(["whisper", "vad"])
+    pins = resolved_versions(["whisper", "vad", "reazon"])
     blocks, skipped, missing = [], [], []
     for name in sorted(pins):
         if name in BREWED or name in SKIP or name.startswith(SKIP_PREFIXES):

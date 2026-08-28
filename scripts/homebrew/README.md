@@ -16,7 +16,7 @@ dependency tree cannot be built that way.
   and `hf-xet` need Rust.
 
 A personal tap can install wheels, so it does. The trade is that the formula
-pins 66 exact wheel URLs and has to be regenerated when a dependency moves.
+pins 69 exact wheel URLs and has to be regenerated when a dependency moves.
 
 ## Regenerating the resource list
 

@@ -1,7 +1,7 @@
 [project]
 name = "mlx-asr"
 version = "0.1.0"
-description = "Fast multi-model batch ASR on Apple Silicon (Voxtral, Whisper, kotoba-whisper)"
+description = "Fast multi-model batch ASR on Apple Silicon (Voxtral, Whisper, kotoba-whisper, Qwen3-ASR, Parakeet, ReazonSpeech-k2)"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -47,7 +47,6 @@ eval = [
 ]
 # The whisper-* aliases and the mlx-chunked driver used by --model kotoba, plus
 # scripts/benchmarks/run_whisper.py.
-#
 # The numpy cap is load-bearing, not tidying. mlx-whisper needs numba (a hard
 # import in its word-timestamp path), and numba caps numpy: 0.66.0 wants
 # numpy<2.5. Without the cap a resolver takes the newest numpy and then
@@ -65,6 +64,13 @@ whisper = [
     "mlx-whisper>=0.4.3",
     "numpy<2.5",
     "rapidfuzz>=3.14.5",
+]
+# The reazon-k2 alias: sherpa-onnx runs the authors' ONNX files on CPU.
+# Deliberately optional and deliberately NOT torch: the whole reason this engine
+# is the k2 build rather than the NeMo one is that ONNX needs no 2.5GB torch
+# install to transcribe.
+reazon = [
+    "sherpa-onnx>=1.11",
 ]
 dev = [
     "pytest>=9.1.1",

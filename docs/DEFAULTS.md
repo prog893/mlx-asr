@@ -31,6 +31,8 @@ used to argue an effect is small.
 | `voxtral` as the model | faster than whisper turbo, needs no language flag, and reruns byte-identically on one machine. Turbo is slightly more accurate on Japanese, so this trades a little accuracy for speed and reproducibility | [engines.md](benchmarks/engines.md) |
 | `whisper --size turbo` | ties `large-v3` on Japanese at roughly twice the speed and less memory, so picking by size number would pay for nothing | [engines.md](benchmarks/engines.md) |
 | `qwen3-asr --size 1.7B` | clearly ahead of `0.6B` on accuracy. The `0.6B` is the speed option, and the fastest engine measured here | [qwen3-asr.md](benchmarks/qwen3-asr.md) |
+| `parakeet --chunk-seconds 120` | clearly ahead of 300s on the corpus, and cheaper on memory. A one-file pre-check had shown a tie, which reversed at corpus scale. 60s is excluded because it drops content outright | [japanese-only.md](benchmarks/japanese-only.md) |
+| `reazon --chunk-seconds 30` | not a sweep: the weights cannot decode a whole file at all (they are trained on short VAD segments), so windows are mandatory, and 30s matches the Voxtral rows to hold the front end constant | [japanese-only.md](benchmarks/japanese-only.md) |
 
 ## Precision
 
@@ -43,6 +45,7 @@ weeks.
 |---|---|---|
 | `voxtral` 4bit | **not the most accurate option, deliberately.** Accuracy improves with bit width and 4bit is last of the five measured, but fp16 will not fit a 16GB machine and no loadable 8bit build is published, so 4bit is what works everywhere. If you have the memory, pass `--quantization fp16`, or convert 8bit locally to get fp16's accuracy at roughly half its memory | [quantization.md](benchmarks/quantization.md) |
 | `qwen3-asr` 8bit | the full ladder is now swept on both sizes, and they disagree: the `1.7B` ties across every precision, while the `0.6B` is sharply sensitive and 8bit wins each comparison outright. One default suits both, and on the `1.7B` a lower rung is a free speed option | [qwen3-asr.md](benchmarks/qwen3-asr.md) |
+| `reazon` fp32 | the publisher's table says int8 is near-parity, but on conversational material int8 drops whole phrases mid-file. Read-speech benchmarks and real audio disagree, and the corpus wins | [japanese-only.md](benchmarks/japanese-only.md) |
 | `--kv-bits 8` | a tie with unquantized on the corpus, and faster, so the speed is free | [quantization.md](benchmarks/quantization.md) |
 
 `qwen3-asr`'s ladder below 8bit is exposed but has no accuracy figure at all, so going lower

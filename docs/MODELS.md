@@ -8,7 +8,8 @@ measurement behind each one, is in [DEFAULTS.md](DEFAULTS.md).
 Supports everything libavformat can read, which is nearly every audio format and the audio
 track of a video: [AUDIO.md](AUDIO.md).
 
-MLX only. No path imports torch or uses its MPS backend, and there is no CUDA or CPU
+MLX for everything except `reazon-k2`, which runs the authors' ONNX files through
+sherpa-onnx on CPU. No path imports torch or uses its MPS backend, and there is no CUDA
 fallback, so this runs on Apple Silicon or not at all.
 
 ## The models
@@ -53,6 +54,24 @@ fallback, so this runs on Apple Silicon or not at all.
 | `1.7B` | `8bit` **default** | [mlx-community/Qwen3-ASR-1.7B-8bit](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-8bit) | 2.47GB | 4.05GB |
 | `1.7B` | `bf16` | [mlx-community/Qwen3-ASR-1.7B-bf16](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-bf16) | 4.08GB | 5.66GB |
 
+### `--model parakeet`
+
+Japanese only. NVIDIA's FastConformer-TDT through mlx-audio's own driver.
+
+| `--quantization` | weights | download | peak GPU memory |
+|---|---|---|---|
+| - | [mlx-community/parakeet-tdt_ctc-0.6b-ja](https://huggingface.co/mlx-community/parakeet-tdt_ctc-0.6b-ja) | 2.49GB | 4.77GB (17-file corpus) |
+
+### `--model reazon`
+
+Japanese only. ReazonSpeech k2-v2, the authors' ONNX build, decoded on CPU
+through sherpa-onnx (`uv sync --extra reazon`). Not an MLX engine: its throughput
+is not comparable to the GPU rows.
+
+| `--quantization` | weights | download | peak GPU memory |
+|---|---|---|---|
+| - | [reazon-research/reazonspeech-k2-v2](https://huggingface.co/reazon-research/reazonspeech-k2-v2) | 0.78GB (0.16GB used) | n/a, CPU |
+
 The data for these tables comes from `scripts/docs/gen_model_matrix.py`, which reads the
 registry and checks every id against the Hugging Face API. `download` covers the whole
 repo, weights plus tokenizer and configs.
@@ -70,10 +89,10 @@ Every run also prints its own peak, since the figure moves with the machine, the
 the flags, and `--stats-json` writes it to a file. Treat the table as a guide to what fits
 and your own run as the number.
 
-`voxtral` and `qwen3-asr` decode greedily and rerun byte-identically on one machine.
-`whisper` samples whenever a segment trips its fallback thresholds, and `kotoba` runs on
-Whisper's decoder so it samples too, which makes neither safe to rerun for a comparison
-([benchmarks/determinism.md](benchmarks/determinism.md)).
+`voxtral`, `qwen3-asr`, `parakeet` and `reazon` decode greedily and rerun byte-identically
+on one machine. `whisper` samples whenever a segment trips its fallback thresholds, and
+`kotoba` runs on Whisper's decoder so it samples too, which makes neither safe to rerun for
+a comparison ([benchmarks/determinism.md](benchmarks/determinism.md)).
 
 Accuracy and throughput per model: [benchmarks/engines.md](benchmarks/engines.md) and
 [benchmarks/qwen3-asr.md](benchmarks/qwen3-asr.md), which describe the corpus and method
