@@ -1,6 +1,6 @@
 # Lever: how the audio is cut into chunks
 
-**Voxtral only** for `--overlap-seconds`, `--vad`, `--compact-silence` and `--fast`;
+**Voxtral only** for `--overlap-seconds`, `--vad` and `--compact-silence`;
 `--chunk-seconds` also applies to `kotoba`, where it sets the independent-window length.
 The `whisper-*` driver's 30s window is fixed by the model's positional encoding. Passing a
 flag to an engine that cannot honour it is an error, not a warning.
@@ -170,10 +170,10 @@ stretches of non-reference material, so a warm-up window often carries content t
 reference cut; and the seam-error enrichment above was measured on dense narration and
 may not hold for conversational audio with frequent long pauses.
 
-So overlap is tied to `--fast`, which halves the chunk length and therefore creates the
-dense-seam condition where it measurably helps. It is not a universal default. This is
-the clearest case in the project of a significant single-clip result that did not
-generalize.
+So overlap ships at zero on every profile. It was for a while bundled into a `--fast` flag,
+on the theory that halving the chunk creates the dense-seam condition where the clip result
+applies; that turned out to be wrong twice over, and the direct measurement is below. This is
+the clearest case in the project of a significant single-clip result that did not generalize.
 
 ## Experiment: where to cut, energy versus VAD
 
@@ -193,9 +193,30 @@ M2 Ultra 128GB, 4-bit, kv8:
 | 60s, energy | **7.37%** | 7.11% | 21.0x |
 | 60s, VAD | 10.25% | 9.85% | 20.1x |
 
-VAD loses by 0.8-3.0 points in every pairing, and this is one of the few results here
-that clears significance: paired over 40 regions at 60s chunks, energy beats VAD by 3.00
-points, CI [+0.74, +5.93], winning 21 regions to 7 (sign test p=0.013).
+VAD loses by 0.8-3.0 points in every pairing on this clip, and it clears significance
+there: paired over 40 regions at 60s chunks, energy beats VAD by 3.00 points, CI [+0.74,
++5.93], winning 21 regions to 7 (sign test p=0.013).
+
+**On the corpus the margin mostly evaporates.** Run across all 20 files at the shipped
+config (2026-08-24, idle M2 Ultra), energy still leads but not resolvably:
+
+| | JP coverage CER | EN coverage WER | x realtime |
+|---|---|---|---|
+| energy (ships) | **16.21%** | **22.43%** | 19.8x |
+| VAD | 16.68% | 25.95% | 19.3x |
+
+    Japanese: +0.47 points, CI [-0.84, +2.04], VAD wins 9 of 17 files -> not resolvable
+    English:  +3.52 points, CI [+0.06, +5.62], VAD loses all 3 files -> resolved, but n=3
+
+So the honest reading is narrower than the clip suggested. The 3.00-point Japanese margin
+does not reproduce, and VAD wins slightly more Japanese files than it loses; the aggregate
+tips to energy on length weighting rather than on a consistent per-file advantage. The
+English arm resolves against VAD, but n=3 cannot carry much
+([metrics.md](metrics.md#the-english-bootstrap-is-n3-and-that-is-worse-than-it-sounds)).
+
+**Marginal, so it stays off.** Energy is never behind, VAD costs an `onnxruntime`
+dependency and a little speed, and a flag that changes nothing measurable should not be the
+default. What is no longer supported is the stronger claim that VAD cut points are worse.
 
 That is the opposite of what the VAD literature predicts, and the VAD cuts really are
 cleaner by the obvious measure: speech probability in the 1s *after* a cut is 0.316 for
@@ -236,8 +257,9 @@ one-for-one; on the reference clip it removed 12% of the audio. Timestamps are m
 back to the original timeline, and the resulting chunk cuts were measurably *cleaner*
 (no cut louder than -50dB, versus 3 cuts above -45dB without it).
 
-The accuracy result nevertheless splits by quantization, which is the one result in this
-project that does not transfer between machines:
+On the clip the accuracy result appeared to split by quantization. **That did not reproduce
+on the corpus** (see below), so the table is kept as the record of what was measured rather
+than as a finding:
 
 | config | CER baseline | CER compacted | deletions |
 |---|---|---|---|
@@ -246,19 +268,119 @@ project that does not transfer between machines:
 | M2 Ultra 128GB, 4bit affine, 60s/B16 | 7.23% | 8.23% | 103 -> 118 |
 | M2 Ultra 128GB, 4bit affine, 30s/B32 | 9.13% | 8.59% | 123 -> 109 |
 
-On nvfp4 the deletions triple and the loss is concentrated rather than spread: one
-two-minute stretch lost 45% of its text after only 4.8s of silence was removed there, so
-this is not proportional information loss. The model appears to rely on pauses for its
-own segmentation, and the more aggressively quantized weights tolerate their removal
-much worse. The mechanism is a hypothesis, not a measurement. Off by default; if you
-want the speed, verify on your own audio and model first.
+On nvfp4 the deletions tripled and the loss was concentrated rather than spread: one
+two-minute stretch lost 45% of its text after only 4.8s of silence was removed there. The
+reading at the time was that the model leans on pauses for its own segmentation and that
+more aggressively quantized weights tolerate their removal worse.
+
+That reading is now **withdrawn**. The same nvfp4 comparison over the corpus is a tie, so
+whatever happened on this clip was specific to it. Recorded rather than deleted because the
+clip numbers are real and because a plausible mechanism story built on one recording is
+exactly the failure mode worth leaving visible.
+
+**On the corpus at the shipped 4-bit config it is slightly better, not worse** (2026-08-24,
+20 files, idle M2 Ultra):
+
+| | JP coverage CER | EN coverage WER | x realtime |
+|---|---|---|---|
+| off (ships) | 16.21% | 22.43% | 19.8x |
+| `--compact-silence` | **16.00%** | 22.43% | **20.5x** |
+
+    -0.21 points, CI [-0.70, +0.22], better on 6 of 8 files that moved -> not resolvable
+
+It removed 3-4% of audio on the spontaneous recordings, less than the 12% on the narration
+clip, and the win is concentrated in the three longest files (-2.19, -1.30, -0.59 points).
+One file went the other way by +1.04.
+
+### The quantization dependence does not survive the corpus either
+
+That was the reason the flag ships off, so it was run on every precision available. All four
+are ties on accuracy and all four are faster:
+
+| precision | off | on | difference | x realtime |
+|---|---|---|---|---|
+| 4-bit (ships) | 16.21% | 16.00% | +0.21, CI [-0.70, +0.22] | 19.8x -> **20.5x** |
+| 8-bit | 15.27% | 15.30% | -0.03, CI [-0.63, +0.42] | 19.8x -> **20.4x** |
+| mxfp8 | 15.86% | 15.78% | +0.08, CI [-0.63, +0.65] | 19.4x -> **20.7x** |
+| nvfp4 | 16.07% | 16.05% | +0.02, CI [-0.97, +0.78] | 19.4x -> **20.2x** |
+
+**nvfp4 is the headline**, because that is the arm the 4-point loss came from. On the corpus
+it is +0.02 points and splits 4 files to 4. Nothing survives of the effect, so the
+quantization-dependence claim is **withdrawn**: it described one clip and one precision, and
+the mechanism story built on it (that quantized weights lean harder on pauses for
+segmentation) has no evidence behind it.
+
+**It stays off anyway, and this is the uncomfortable part.** Accuracy is a tie on all four
+precisions, so by the project's own rule (positive on, negative off, marginal off) the
+accuracy case does not move the default. What is left is a consistent 3-5% throughput gain,
+which is real but is a speed argument for a flag that silently discards audio. Removing
+input is a behaviour change users should opt into rather than inherit, so the flag keeps its
+current default and its documentation now says the cost is unmeasurable rather than
+quantization-dependent. Closes
+[#6](https://github.com/prog893/mlx-asr/issues/6).
+
+## Experiment: the composite flag that used to bundle these, and why it is gone
+
+`--fast` set three levers at once (halve the chunk, double the batch, add 8s warm-up
+overlap). Only its components had been measured separately, which is not enough to predict a
+combination: overlap on its own won on a clip and then reversed sign on the corpus. Measured
+as one config, and then decomposed, 20 files, idle M2 Ultra:
+
+| config | JP coverage CER | x realtime | isolates |
+|---|---|---|---|
+| 60s / B16 / ov0 (the old default) | 16.21% | 19.8x | |
+| 30s / B32 / ov8 (what `--fast` did) | 16.79% | 23.5x | the bundle |
+| 30s / B16 / ov0 | 16.28% | 19.7x | chunk alone |
+| 60s / B32 / ov0 | 16.25% | 24.9x | batch alone |
+| 60s / B16 / ov8 | 16.32% | 17.7x | overlap alone |
+| **30s / B32 / ov0** | **16.22%** | **28.9x** | chunk + batch |
+
+Every arm is a tie on accuracy against the default (largest difference 0.11 points, every
+CI spanning zero), so this is entirely a throughput result.
+
+Two things fall out, and the second corrects the obvious reading:
+
+- **The bundle was holding back its own speedup.** Dropping the 8s overlap is worth another
+  5.4x on top, and recovers the 0.58 CER points the overlap had cost. Overlap measured alone
+  is the only arm *slower* than the default (17.7x against 19.8x), which is what a flag that
+  decodes extra audio should be expected to do.
+- **The batch is doing the work, not the chunk length.** Halving the chunk alone changes
+  nothing (19.7x against 19.8x); doubling the batch alone gets 24.9x, most of the total. The
+  two together reach 28.9x, so shorter chunks help only once the batch is wide enough to hold
+  them in one pass. A flag called `--fast` bundling both obscured which half mattered.
+
+### And the sign reverses on a low-core GPU
+
+Same change, the two benchmarked machines:
+
+| machine | GPU cores | 60s / B16 | 30s / B32 |
+|---|---|---|---|
+| M2 Ultra 128GB | 60 | 19.8x | **28.9x** |
+| M4 16GB | 10 | 1.9-2.0x | **1.5-1.9x** |
+
+Halving the chunk doubles the chunk count, and each chunk pays fixed encoder cost. With 60
+cores that encoder work is cheap and the decode saving dominates; with 10 cores the encoder
+is already 36% of wall clock and compute-bound, so the extra passes cost more than the
+shorter rows save. `profiles.json` has carried a note to this effect since the M4 was
+profiled.
+
+**That is why the flag was removed rather than turned on.** A flag has one value; this lever
+has two right answers, one per machine, and `profiles.json` already had a field for it. The
+Ultra profile now ships 30s/B32 and the M4 keeps 60s/B16, so each machine gets its measured
+best with nothing to remember. No composite flag replaced it: every lever it touched is set
+independently, defaulting per machine.
+
+Two claims died with it. The README said "faster, slightly less accurate", which was wrong in
+both halves (the accuracy cost is unresolvable, and the speed gain is not universal), and this
+document said the bundled overlap was justified by the short-chunk regime, which the third row
+above refutes.
 
 ## What ships
 
-- Chunk length and overlap come from `mlx_asr/profiles.json` per machine, 60s and 0s on
-  both benchmarked machines.
-- `--fast` halves the chunk and enables 8s overlap, since that is the regime where
-  overlap earns its cost back.
+- Chunk length, batch and overlap come from `mlx_asr/profiles.json` per machine: 30s/B32 on
+  the M2 Ultra, 60s/B16 on the M4, overlap 0 on both.
+- No composite flag. Every lever here is set independently, defaulting to this machine's
+  profile, because the right chunk/batch pair reverses sign across hardware.
 - Energy-based cut points, with `--vad` available as an opt-in.
 - `--compact-silence` off.
 

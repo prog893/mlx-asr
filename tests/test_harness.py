@@ -91,6 +91,32 @@ def test_cli_exposes_the_cue_knobs_the_docs_tell_users_to_sweep():
         assert flag in r.stdout, flag
 
 
+def test_no_composite_flag_bundles_the_per_machine_levers(tmp_path):
+    """Chunk, batch, overlap and kv are per-machine values, so no flag may bundle them.
+
+    `--fast` used to set three of them at once and it was removed, because the trade it
+    encoded has a hardware-dependent SIGN: shorter chunks are faster on a 60-core GPU and
+    slower on a 10-core one, since the extra encoder passes they add are cheap on the
+    former and already the bottleneck on the latter. One flag cannot express a value that
+    reverses across machines; `profiles.json` can, and it already has a field for each
+    lever.
+
+    This guards the shape of the interface rather than one flag name: a new composite
+    would reintroduce the same category error under a different word.
+    """
+    r = subprocess.run(CLI + ["--help"], capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode == 0, r.stderr
+    for composite in ("--fast", "--slow", "--turbo", "--quality", "--preset"):
+        assert composite not in r.stdout, (
+            f"{composite} bundles levers whose right value is per-machine; put them in "
+            f"mlx_asr/profiles.json instead")
+
+    # And the removed one must be a hard error, not silently swallowed.
+    r = subprocess.run(CLI + [str(tmp_path / "nope.wav"), "--fast"],
+                       capture_output=True, text=True, cwd=ROOT)
+    assert r.returncode != 0 and "unrecognized arguments: --fast" in r.stderr, r.stderr
+
+
 def test_resolved_cue_config_reports_shipped_defaults_when_unset():
     """An empty override set must report what actually ships, not None."""
     from mlx_asr.cli import _resolved_cue_config
@@ -268,7 +294,7 @@ def test_repeat_distribution_refuses_when_every_run_is_incomplete(tmp_path):
 
 
 UNSUPPORTED_ON_WHISPER = [
-    "--prompt=x", "--max-batch=8", "--vad", "--compact-silence", "--fast",
+    "--prompt=x", "--max-batch=8", "--vad", "--compact-silence",
     "--overlap-seconds=4", "--kv-bits=8", "--no-kv-quant", "--delay-ms=960",
     "--gain=peak", "--peak-dbfs=-3", "--rms-dbfs=-20",
     "--gap-seconds=0.7", "--max-chars=32", "--max-dur-seconds=5",
@@ -306,20 +332,26 @@ def test_voxtral_only_flags_error_on_other_engines(flag, alias, tmp_path):
 
 
 def test_max_batch_refusal_on_qwen3_says_why_rather_than_calling_it_absent(tmp_path):
-    """The reason has to be the real one.
+    """The reason has to be the real one, and the real one changed.
 
-    `batch_size` does exist upstream, so "this engine has no such knob" would be
-    false. It is refused because it does nothing at the default window and because
-    nothing about the right value has been measured for this decoder. A user told
-    the wrong reason cannot work out that lowering --chunk-seconds is the lever.
+    `batch_size` does exist upstream, so "this engine has no such knob" would be false.
+    It used to be refused as unmeasured; it is now refused because it WAS measured and
+    lost (23.2x at batch 1 against 9.9x at batch 8, docs/benchmarks/qwen3-batch.md). So
+    the message must carry the measurement rather than the old "nothing is known here",
+    and must not suggest lowering --chunk-seconds to make batching worthwhile, which the
+    sweep showed does not help.
     """
     r = subprocess.run(
         CLI + [str(tmp_path / "nope.wav"), "--model", "qwen3-asr", "-f", "txt",
                "--max-batch", "8"],
         capture_output=True, text=True, cwd=ROOT)
     assert r.returncode == 2, (r.returncode, r.stderr)
-    assert "--chunk-seconds" in r.stderr, r.stderr
+    # The finding, not a shrug: a number and where it came from.
+    assert "SLOWER" in r.stderr, r.stderr
+    assert "qwen3-batch.md" in r.stderr, r.stderr
     assert "Voxtral-only" not in r.stderr, r.stderr
+    # And not the superseded claim.
+    assert "has been measured" not in r.stderr.replace("was measured", ""), r.stderr
 
 
 @pytest.mark.parametrize("fmt", ["srt", "vtt", "all"])
@@ -749,3 +781,59 @@ def test_markdown_tables_are_separated_from_following_prose():
             f"{doc.relative_to(ROOT)}: table row followed directly by prose, which "
             f"GitHub renders as extra rows. Add a blank line.\n"
             + "\n".join(f"  row: {r[:60]}\n  prose: {p[:60]}" for r, p in bad[:3]))
+
+
+def _docs():
+    return sorted((ROOT / "docs").rglob("*.md")) + [
+        ROOT / "README.md", ROOT / "RESULTS.md", ROOT / "CONTRIBUTING.md"]
+
+
+def _slug(heading: str) -> str:
+    """GitHub's anchor for a heading: lowercase, punctuation dropped, spaces to dashes."""
+    import re
+    text = re.sub(r"`|\*\*|\*", "", heading).strip().lower()
+    return re.sub(r"[^a-z0-9 _-]", "", text).replace(" ", "-")
+
+
+def test_cross_document_anchors_resolve():
+    """A `file.md#heading` link whose heading was renamed fails silently.
+
+    GitHub does not error on an unresolvable fragment; it just drops the reader at the
+    top of the file, so the link still looks like it works. This shipped twice: README
+    pointed at MODELS.md#every-combination-and-what-it-resolves-to and
+    #why-mlx-community-and-not-unsloth-or-gguf, both of which were renamed out of
+    existence during a doc split. Nothing in `git diff` or a local render shows it.
+    """
+    import re
+
+    anchors = {doc: {_slug(h) for h in re.findall(r"^#+ (.+)$",
+                                                  doc.read_text(encoding="utf-8"), re.M)}
+               for doc in _docs()}
+    broken = []
+    for doc in _docs():
+        for target, frag in re.findall(r"\]\((?!https?:)([^)#]*)#([a-z0-9_-]+)\)",
+                                       doc.read_text(encoding="utf-8")):
+            dest = doc if not target else (doc.parent / target).resolve()
+            if dest not in anchors:
+                broken.append(f"{doc.name} -> {target}#{frag} (no such doc)")
+            elif frag not in anchors[dest]:
+                broken.append(f"{doc.name} -> {target or doc.name}#{frag}")
+    assert not broken, ("anchor links that resolve to nothing:\n  "
+                        + "\n  ".join(broken))
+
+
+def test_relative_document_links_resolve():
+    """The same failure without a fragment, which at least 404s rather than misleading.
+
+    Cheap to check while the headings are already parsed, and it catches a doc moved
+    between docs/ and docs/benchmarks/.
+    """
+    import re
+
+    broken = []
+    for doc in _docs():
+        for target in re.findall(r"\]\((?!https?:|#)([^)#]+)\)",
+                                 doc.read_text(encoding="utf-8")):
+            if not (doc.parent / target).exists():
+                broken.append(f"{doc.relative_to(ROOT)} -> {target}")
+    assert not broken, "relative links to missing files:\n  " + "\n  ".join(broken)

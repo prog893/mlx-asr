@@ -220,6 +220,26 @@ reading "not resolvable" as "small".
 That gap between the two is why several single-clip results in this project reversed on a
 corpus. A significant paired result on one clip means "real on this clip", not "real".
 
+### Never size a corpus experiment from a single-clip effect size
+
+The reverse mistake is the expensive one, and this project made it. A clip result was used
+as the input to a power calculation, which then said the corpus experiment was not worth
+running:
+
+    clip: fp16 vs 4-bit = 0.07 points  ->  "needs ~15,000 files to resolve"
+    corpus: fp16 vs 4-bit = 1.30 points, CI [+0.59, +2.26], resolved at n=20
+
+Off by roughly three orders of magnitude, and the conclusion it licensed ("precision costs
+nothing measurable") shipped in seven places for weeks
+([quantization.md](quantization.md)).
+
+The error is not sampling noise; it is that a power calculation inherits the validity of
+whatever effect size it is given. A clip that shows no effect yields an arbitrarily large
+sample-size estimate, and that estimate then forbids the very experiment that would reveal
+the effect. **A null on one clip is not evidence of a small effect, so it cannot justify
+skipping a corpus run.** If a lever is cheap enough to sweep, sweep it; if it is not, record
+it as unmeasured rather than as too-small-to-matter.
+
 ### The English bootstrap is n=3, and that is worse than it sounds
 
 A bootstrap resamples files with replacement, so the number of *distinct* resamples it can

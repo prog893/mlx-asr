@@ -13,13 +13,14 @@ that make plain CER meaningless.
 | document | lever | conclusion in one line |
 |---|---|---|
 | [delay.md](delay.md) | transcription delay | `2400` is worth 9 points and is free. The strongest result here. |
-| [chunking.md](chunking.md) | chunk length, overlap, cut points | 30s vs 60s is indistinguishable at n=20, so it is a throughput choice. Overlap helps at short chunks on one clip but reversed on a corpus. Energy cuts beat VAD. |
+| [chunking.md](chunking.md) | chunk length, overlap, cut points | 30s vs 60s is indistinguishable at n=20, so it is a throughput choice. Overlap helps at short chunks on one clip but reversed on a corpus. VAD cut points and dropping silence both tie with the defaults. Throughput comes from the BATCH rather than the chunk length, and the right pair reverses across hardware (46% faster on a 60-core GPU, slower on a 10-core one), so both live in the per-machine profile and the composite `--fast` flag was removed. |
 | [engines.md](engines.md) | which model | Whisper turbo + no-condition is ~1.5 points more accurate; Voxtral is ~1.35x faster and reproducible, so it is the default. |
-| [qwen3-asr.md](qwen3-asr.md) | the Qwen3-ASR engine | Last on accuracy of the four engines; the 0.6B is the fastest here. Writes no subtitles (its timestamps are decode-window boundaries), and its library truncates long audio silently, which is why this project drives the chunk loop itself. |
+| [qwen3-asr.md](qwen3-asr.md) | the Qwen3-ASR engine | Last on accuracy of the four engines; the 0.6B is the fastest here. Writes no subtitles (its timestamps are decode-window boundaries), and its library truncates long audio silently, which is why this project drives the chunk loop itself. Precision sensitivity differs by SIZE: the 1.7B ties across the whole ladder, the 0.6B does not. |
 | [decode-throughput.md](decode-throughput.md) | batch size | Not monotonic. Never use batch 2-8. The only lever anyone can reproduce without audio. |
+| [qwen3-batch.md](qwen3-batch.md) | batch size on qwen3-asr | Batching whole chunks loses monotonically (2.3x slower by batch 8) for no accuracy gain, so `--max-batch` stays refused there. |
 | [input-level.md](input-level.md) | `--gain` | Quiet input silently costs ~3.8 points. `auto` fixes it and is a no-op otherwise. |
 | [prompt.md](prompt.md) | `--prompt` | Weak and unreliable, except that an *instruction* there costs 6-14 points. |
-| [quantization.md](quantization.md) | weight and KV precision | Costs nothing measurable. Use 4-bit with `--kv-bits 8`. |
+| [quantization.md](quantization.md) | weight and KV precision | **Voxtral:** costs accuracy monotonically in bit width, reversing the earlier single-clip tie. 4-bit is last of five, 1.07 behind 8-bit and 1.30 behind fp16; 8-bit matches fp16 at 7.3GB and full speed. **`qwen3-asr`: not swept**, one 7-file bf16 check only. `--kv-bits 8` is close to free. |
 | [timestamps.md](timestamps.md) | timestamp quality | Voxtral holds timing, Whisper places cues better. Different failure modes, reported separately. |
 | [cue-layout.md](cue-layout.md) | subtitle grouping | Two sweeps run, neither adopted, on purpose. Costs 5.4 break-F1 points. |
 
@@ -30,6 +31,7 @@ that make plain CER meaningless.
 | [corpus.md](corpus.md) | what the test material is, in general terms, and how to build your own |
 | [metrics.md](metrics.md) | why coverage CER exists, which metric to trust, how to compare two configs |
 | [determinism.md](determinism.md) | what reproduces (one machine) and what does not (across machines, and Whisper at all) |
+| [peak-memory.md](peak-memory.md) | what each model costs in GPU memory, and why Whisper's figure depends on how long your audio is |
 
 ## Read this before quoting a number
 

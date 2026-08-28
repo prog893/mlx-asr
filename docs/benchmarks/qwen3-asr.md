@@ -282,10 +282,45 @@ One nuance recorded rather than hidden: bf16 wins the 1.7B's *kana* CER (20.95% 
 score is not better. That is the same pattern fp16 showed on Voxtral, and it is also
 inside the noise band.
 
-**4bit through 6bit are exposed via `--quantization` but not measured here.** Going below
-8-bit is a size choice (4bit is 1.61GB against bf16's 4.08GB) that this corpus cannot
-adjudicate on accuracy, so the flag documents them as unmeasured rather than implying a
-ranking.
+### The full ladder on the corpus, and the two sizes disagree completely
+
+Every rung, both sizes, 20 files, one harness, idle M2 Ultra. This closes the gap where the
+lower rungs shipped exposed with no accuracy figure at all.
+
+| size | quant | JP coverage CER | paired against 8bit | x realtime | peak |
+|---|---|---|---|---|---|
+| 1.7B | 4bit | 20.06% | -0.73, CI [-1.76, +0.31] | **26.3x** | **3.19GB** |
+| 1.7B | 5bit | 19.19% | +0.15, CI [-0.37, +0.78] | 23.3x | 3.40GB |
+| 1.7B | 6bit | 19.45% | -0.11, CI [-0.53, +0.29] | 24.2x | 3.62GB |
+| 1.7B | **8bit (ships)** | 19.33% | | 21.9x | 4.05GB |
+| 1.7B | bf16 | 19.40% | -0.07, CI [-0.23, +0.10] | 16.2x | 5.66GB |
+| 0.6B | 4bit | 30.29% | **-7.02**, CI [-8.82, -5.30] | 26.9x | **2.06GB** |
+| 0.6B | 5bit | 24.84% | **-1.57**, CI [-2.16, -1.06] | 32.0x | 2.14GB |
+| 0.6B | 6bit | 25.01% | **-1.74**, CI [-2.94, -0.86] | 33.5x | 2.21GB |
+| 0.6B | **8bit (ships)** | 23.27% | | 31.9x | 2.36GB |
+| 0.6B | bf16 | 23.03% | -0.51, CI [-1.01, +0.13] | 30.3x | 2.92GB |
+
+**The 1.7B does not care about precision.** All five rungs tie, 4bit against bf16 included,
+across a 2.5x range in weight bytes. So on that size 4bit is a genuinely free 20% throughput
+gain and 0.86GB saving over the shipped default.
+
+**The 0.6B cares intensely.** 8bit beats every lower rung with the interval clear of zero,
+and 4bit by **7 points**. Same architecture, same corpus, same harness, same window.
+
+That split is the point. Precision sensitivity here is a property of the *checkpoint*, not
+of the architecture or the workload, so it cannot be read off one model and applied to
+another. Voxtral's ladder is monotonic with 4bit last
+([quantization.md](quantization.md)); the 1.7B here is flat; the 0.6B is steep. Three
+ladders, three shapes.
+
+**Neither default changes.** The 0.6B's is now proven correct rather than assumed. The
+1.7B's is a tie with three cheaper rungs, and by this project's rule a tie does not move a
+default, so 4bit is documented as the speed option rather than promoted. The intermediate
+rungs are no longer "a memory choice made blind".
+
+Both sizes are now adjudicated on accuracy, so `--quantization` no longer offers rungs whose
+cost is unknown. What remains unmeasured is whether these figures hold on material unlike
+this corpus, which is true of everything here.
 
 ### Quantization does not cause the repetition loops
 
@@ -331,11 +366,9 @@ first-class `qwen3_asr` loader in its dispatch table since 0.3.1, so this is the
 the Voxtral path calls on a different repo id.
 
 `--max-batch` is refused, and it is the one refusal in this project whose reason is not "the
-knob does not exist". `generate(batch_size=)` does batch whole windows. It is refused because
-it is a no-op unless `--chunk-seconds` is low enough to produce more than one window, and
-because the only batch-size finding here (never use 2-8) was measured on Voxtral's decoder,
-which shares nothing with this one. The error message says exactly that and points at
-`--chunk-seconds`.
+knob does not exist". `generate(batch_size=)` does batch whole windows. It was refused as
+unmeasured at first; it has since been swept and it loses, monotonically and by a wide
+margin, so it stays refused on evidence: [qwen3-batch.md](qwen3-batch.md).
 
 ## What this does and does not settle
 
@@ -366,6 +399,6 @@ done.
 the decoding loop rather than to model size, so it should carry over, but that is an
 argument rather than a measurement.
 
-**Deliberately not open.** Batch size, because `--max-batch` is refused (see above), and
-`--repeat` beyond the determinism check, because greedy decoding makes further runs
-information-free.
+**Deliberately not open.** Batch size, now settled by measurement rather than left
+unexamined ([qwen3-batch.md](qwen3-batch.md)), and `--repeat` beyond the determinism check,
+because greedy decoding makes further runs information-free.
