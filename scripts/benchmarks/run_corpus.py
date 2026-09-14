@@ -43,7 +43,8 @@ from mlx_audio.stt.utils import load as load_model
 
 from benchmarks.machine_state import machine_state, warn_if_busy
 from metrics.eval_coverage import load_reference, score_pair
-from mlx_asr.audio import SAMPLE_RATE, load_audio_16k, split_with_overlap
+from mlx_asr.audio import (SAMPLE_RATE, compact_silence, load_audio_16k,
+                           split_with_overlap)
 from mlx_asr.decode import transcribe_batch
 from mlx_asr.text import transcript_text
 
@@ -98,6 +99,16 @@ def main():
     p.add_argument("--min-cut-words", type=int, default=6,
                    help="same threshold for the word-unit path")
     p.add_argument("--limit", type=int, help="only the N shortest files")
+    # Both of these shipped their defaults on a single-clip result and were never run
+    # across the corpus, which is exactly the gap that let the precision conclusion
+    # stand wrong for weeks (docs/benchmarks/metrics.md). Exposed here so the corpus
+    # can settle them.
+    p.add_argument("--vad", action="store_true",
+                   help="place chunk boundaries with Silero VAD instead of energy "
+                        "minima. Default-off on a 40-region single-clip result")
+    p.add_argument("--compact-silence", action="store_true",
+                   help="drop long pauses before decode and remap timestamps back. "
+                        "Default-off, and its single-clip result varied by quantization")
     p.add_argument("--prompt", default="",
                    help="vocabulary/topic bias applied to every file; also used to "
                         "test that an INSTRUCTION here is harmful")
@@ -163,7 +174,22 @@ def main():
         mx.reset_peak_memory()
         audio = load_audio_16k(str(wav))
         dur = len(audio) / SAMPLE_RATE
-        chunks, offsets, warmup = split_with_overlap(
+        if a.compact_silence:
+            before = len(audio)
+            # The timestamp remap is discarded on purpose: this script scores TEXT.
+            # Note `dur` was taken ABOVE, from the original audio, so x-realtime still
+            # measures throughput against what a user handed over; crediting the
+            # shortened length would report a speedup for having less to transcribe.
+            audio, _ = compact_silence(audio)
+            print(f"  [silence] {before / SAMPLE_RATE:.0f}s -> "
+                  f"{len(audio) / SAMPLE_RATE:.0f}s")
+        # Imported lazily: the VAD path needs onnxruntime (the `vad` extra), and an
+        # arm that does not use it should not require the dependency.
+        if a.vad:
+            from mlx_asr.vad import split_at_vad_with_overlap as split
+        else:
+            split = split_with_overlap
+        chunks, offsets, warmup = split(
             audio, target_s=a.chunk_seconds, overlap_s=a.overlap_seconds
         )
         t0 = time.perf_counter()

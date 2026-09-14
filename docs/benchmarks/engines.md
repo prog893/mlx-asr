@@ -44,7 +44,9 @@ are kept below the new ones because the gap between them is the finding.
 
 20 files, 7.95h, idle M2 Ultra, `--no-condition` on `small` and larger (which is what
 ships) and library defaults on `tiny` and `base` (also what ships). Peak GPU memory from
-`mx.get_peak_memory()`, reset per file.
+`mx.get_peak_memory()`, reset per file. An independent re-run reproduced every peak here
+within 0.02GB and found that Whisper's figure grows with audio length rather than being a
+property of the size ([peak-memory.md](peak-memory.md)).
 
 | size | JP coverage CER | EN coverage WER | x realtime | peak GPU | old table, library defaults |
 |---|---|---|---|---|---|

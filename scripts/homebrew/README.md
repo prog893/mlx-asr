@@ -85,7 +85,7 @@ passes. Exercised through the installed binary, not a source checkout:
 - all four output formats, `-f all` writing a 4-file set under a path stem
 - `--vad`, confirming onnxruntime is bundled and that its cuts differ from the
   energy-based ones rather than silently falling back
-- `--fast`, `--compact-silence` (timestamps land back on the original timeline),
+- `--compact-silence` (timestamps land back on the original timeline),
   `--prompt`, `--stats-json`, `--quiet` (stdout byte-empty; the remaining progress
   bars are huggingface_hub writing to stderr)
 - an `.m4a` input, which is the ffmpeg fallback path, since the formula ships no

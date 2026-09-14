@@ -55,7 +55,6 @@ The Homebrew formula lives in [scripts/homebrew/](scripts/homebrew/).
 mlx-asr interview.m4a                     # writes interview.srt next to it
 mlx-asr talk.mp4 -f json                  # timestamps + metadata as JSON
 mlx-asr talk.mp4 -f all -o out/talk       # srt, vtt, txt and json together
-mlx-asr lecture.mp4 --fast -f vtt         # faster, slightly less accurate
 mlx-asr earnings.wav --prompt "EBITDA, ARR, Grafana"   # bias toward domain terms
 mlx-asr interview.m4a --model whisper --language ja        # turbo by default
 mlx-asr interview.m4a --model whisper --size small --language ja
@@ -89,8 +88,8 @@ The rest belong to one engine. Pass one the current engine cannot use and it is 
 error, not a warning: nothing is silently ignored.
 
 ```console
-$ mlx-asr audio.wav --model whisper --max-batch 32 --fast
-error: --max-batch, --fast: not supported by --model whisper. These are
+$ mlx-asr audio.wav --model whisper --max-batch 32 --vad
+error: --max-batch, --vad: not supported by --model whisper-turbo. These are
 Voxtral-only, because the engines do not share a long-form algorithm. Drop the
 flag, or use the default --model voxtral.
 ```
@@ -111,18 +110,18 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 | `--model` | what it is |
 |---|---|
 | `voxtral` (default) | Mistral's 2026 realtime model. Takes a vocabulary prompt, decodes greedily so reruns on one machine are byte-identical, and has the steadiest timestamps here |
-| `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **turbo**, which is both more accurate here than large-v3 and about 2x faster. The most accurate option on the test corpus |
-| `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, and Japanese only |
+| `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **turbo**, which ties large-v3 on accuracy at about 2x the speed. The most accurate engine on the test corpus, but it samples, so reruns differ |
+| `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, Japanese only, and samples like Whisper |
 | `qwen3-asr` | Alibaba's Qwen3-ASR. `--size 1.7B` (default) or `0.6B`, the fastest engine measured here. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
 | `parakeet` | NVIDIA's Japanese FastConformer-TDT, through mlx-audio. Greedy, token-level timestamps so subtitles work. The fastest engine measured here (244x realtime), well behind the multilingual defaults on this corpus's Japanese |
 | `reazon` | ReazonSpeech k2-v2 (Japanese Zipformer), the authors' ONNX build via sherpa-onnx. Decodes on CPU; needs `uv sync --extra reazon`. Japanese only |
 | any HF repo id | the backend is inferred from the name; `--size` and `--quantization` are refused, since the id already names the variant |
 
-`--model` picks the family; `--size` and `--quantization` pick the variant inside it.
-They are not equally important, and that is measured: size spans 43 CER points across
-Whisper's range, while precision spans 0.43 across five Voxtral builds. So each family's
-default size is chosen on evidence, and precision defaults to the cheapest that loses
-nothing.
+`--model` picks the family; `--size` and `--quantization` pick the variant inside it. Size
+matters far more than precision, and both defaults are picked on measurement rather than on
+the largest number. On Voxtral, higher precision does score better, so 4-bit ships as the
+option that is published and fits everywhere rather than as the most accurate one; see
+[docs/DEFAULTS.md](docs/DEFAULTS.md) if you have memory to spare.
 
 `whisper` and `qwen3-asr` do better when you set `--language`, and each gets the form it
 wants (a code for Whisper, an English name for Qwen) from whatever you type. Voxtral takes
@@ -131,19 +130,18 @@ no language flag, and the Japanese-only engines (`kotoba`, `parakeet`, `reazon`)
 
 `--list-models` prints the sizes and precisions each family accepts. The complete
 mapping from every `--model`/`--size`/`--quantization` combination to its Hugging Face
-repo id, with sizes on disk, is in
-[docs/MODELS.md](docs/MODELS.md#every-combination-and-what-it-resolves-to); it is
-generated from the registry, not hand-maintained.
+repo id, with download size and measured peak GPU memory, is in
+[docs/MODELS.md](docs/MODELS.md#the-models); it is generated from the registry, not
+hand-maintained.
 
 All weights are `mlx-community` MLX builds, except `kotoba` which converts the authors'
 own weights locally on first use. **unsloth and GGUF quants cannot be used here**: unsloth
 publishes no Voxtral, only GGUF for Qwen3-ASR, and unquantized transformers weights for
 Whisper, while GGUF is llama.cpp's format that MLX cannot load. That is a format
-constraint rather than a quality judgement, and it costs little, since quantization here
-buys memory rather than accuracy or speed
-([why](docs/MODELS.md#why-mlx-community-and-not-unsloth-or-gguf)).
+constraint rather than a quality judgement
+([why](docs/MODELS.md#formats-that-will-not-work)).
 
-What each model scored: [docs/MODELS.md](docs/MODELS.md).
+What each model scored: [docs/benchmarks/engines.md](docs/benchmarks/engines.md).
 
 ## Why the defaults are what they are
 
@@ -152,10 +150,12 @@ Every default was measured, and several went against the obvious choice:
 findings are in [docs/benchmarks/](docs/benchmarks/), one document per lever, indexed by
 [RESULTS.md](RESULTS.md).
 
-The short version: transcription delay is the biggest lever and is free; batch size is not
-monotonic, so 2-8 is worse than 1; VAD cut points score worse than energy minima;
-quantization costs nothing measurable; and whisper defaults to turbo rather than large-v3
-because it ties it on accuracy at twice the speed.
+The short version: transcription delay is the biggest lever and it is free; throughput is
+not monotonic in batch size, so the middle of the range is worse than one at a time; VAD
+cut points and dropping silence both turned out to change nothing measurable, so both stay
+off; higher precision does help Voxtral, so 4-bit is a distribution choice rather than the
+best-scoring one; and whisper defaults to turbo rather than large-v3 because it ties it at
+twice the speed.
 
 ## License
 
