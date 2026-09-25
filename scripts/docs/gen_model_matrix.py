@@ -20,6 +20,7 @@ import urllib.request
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2]))
 
 from mlx_asr.models import (  # noqa: E402
+    CONVERT_SEP,
     DEFAULT_SIZE,
     _quant_sort_key,
     families,
@@ -79,6 +80,16 @@ PEAK = {
     # every run after. 2.38GB is what a user sees for all but the first decode, so it is
     # what belongs in a table about whether a model fits.
     ("kotoba", None): "2.38GB",
+    # voxtral-v1, 30s windows, one window at a time. Same basis (max over the 20 files,
+    # load included) from run_qwen3.py, which resets the counter before the load as the
+    # CLI does before run(); the one file measured both ways read 10.91GB in each.
+    # Flat across the corpus, like qwen3-asr, because the window fixes the working set.
+    ("voxtral-v1-3b", "4bit"): "5.25GB",
+    ("voxtral-v1-3b", "8bit"): "7.28GB",
+    ("voxtral-v1-3b", "bf16"): "10.91GB",
+    ("voxtral-v1-24b", "4bit"): "16.27GB",
+    ("voxtral-v1-24b", "8bit"): "27.92GB",
+    ("voxtral-v1-24b", "bf16"): "50.08GB",
 }
 
 # What the first `--model kotoba` costs, before the conversion is cached. Separate from
@@ -88,7 +99,12 @@ KOTOBA_FIRST_USE_PEAK = "3.03GB"
 
 
 def hub_size_gb(repo: str) -> tuple[bool, float]:
-    """(exists, total repo size in GB) from the hub API."""
+    """(exists, total repo size in GB) from the hub API.
+
+    Skips `consolidated*` files, which the voxtral-v1 loader never downloads (the
+    mistralai repos carry a second, Mistral-native copy of every weight), so the figure
+    is what a user actually fetches.
+    """
     try:
         with urllib.request.urlopen(
                 f"{HF}/api/models/{repo}?blobs=true", timeout=30) as r:
@@ -97,7 +113,8 @@ def hub_size_gb(repo: str) -> tuple[bool, float]:
         return False, 0.0
     except Exception:
         return True, 0.0          # network trouble is not a missing repo
-    return True, sum(s.get("size") or 0 for s in d.get("siblings", [])) / 1e9
+    return True, sum(s.get("size") or 0 for s in d.get("siblings", [])
+                     if not s["rfilename"].startswith("consolidated")) / 1e9
 
 
 def main():
@@ -121,7 +138,10 @@ def main():
                       if m.quant_repos else [None])
             for q in quants:
                 repo = m.quant_repos[q] if q else m.repo
-                exists, gb = (True, 0.0) if a.offline else hub_size_gb(repo)
+                # `source:precision` is converted on first use from `source`, so the
+                # link and the download are the source's.
+                source = repo.split(CONVERT_SEP)[0]
+                exists, gb = (True, 0.0) if a.offline else hub_size_gb(source)
                 if not exists:
                     missing.append(repo)
                 cells = []
@@ -134,7 +154,10 @@ def main():
                 cells.append((f"`{q}`" + (" **default**" if repo == m.repo else ""))
                              if q else "-")
                 # The repo id is the link, so there is no separate link column.
-                cells.append(f"[{repo}]({HF}/{repo})")
+                if source != repo:
+                    cells.append(f"[{source}]({HF}/{source}), converted on first use")
+                else:
+                    cells.append(f"[{repo}]({HF}/{repo})")
                 cells.append(f"{gb:.2f}GB" if gb else "?")
                 # Measured working set, which is what limits a machine. Only exists for
                 # variants that have been run; the rest say so rather than borrowing a

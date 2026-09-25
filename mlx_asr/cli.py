@@ -4,7 +4,7 @@
     mlx-asr audio.wav --model whisper-turbo
     mlx-asr --list-models
 
-One CLI over four engines, because on measured evidence no single one wins
+One CLI over seven engines, because on measured evidence no single one wins
 everything (docs/benchmarks/engines.md):
 
     voxtral        fastest, deterministic, best timestamp stability, no language
@@ -17,6 +17,10 @@ everything (docs/benchmarks/engines.md):
     qwen3-asr      deterministic and does real language ID, but emits no
                    timestamp finer than its own chunk boundaries, so `-f srt`
                    and `-f vtt` are refused on it: txt and json only.
+    voxtral-v1     the first Voxtral generation (Mini 3B, Small 24B). Text
+                   only, like qwen3-asr, so the same formats are refused.
+    parakeet,      Japanese-only. parakeet on MLX; reazon on CPU through
+    reazon         sherpa-onnx.
 
 Defaults per model come from `models.py`; defaults per machine come from
 `hardware.py`, which uses measured profiles where a machine has been benchmarked
@@ -24,7 +28,7 @@ and a formula elsewhere. Batch size is not a fixed constant because throughput i
 not monotonic in it: on a 16GB M4, B=2..8 is *slower* per step than B=1 (see
 docs/benchmarks/decode-throughput.md), so "bigger batch is better" lands in the worst regime.
 
-The flags are mostly NOT portable across the four engines, because the engines do
+The flags are mostly NOT portable across the engines, because the engines do
 not share a long-form algorithm. **An unsupported flag is a hard error** (exit 2),
 never a warning and never silently dropped: a flag that looks accepted and then
 does nothing yields output the user reads as having been produced with it, which is

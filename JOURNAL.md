@@ -2380,3 +2380,70 @@ the architecture: three decodes each through the exact CLI code path produce
 byte-identical text AND cues (parakeet on a 558s file, reazon fp32 likewise).
 That is what licenses quoting every single-run figure above as a score rather
 than a draw.
+
+## 2026-09-24/25: Voxtral v1 (Mini 3B, Small 24B), built and measured
+
+Voxtral Transcribe 2 (Feb 2026) is two models: Voxtral Mini Transcribe V2, API only,
+and Voxtral Realtime, the open-weight 4B this project already ships as `voxtral`. The
+first generation, Mini 3B and Small 24B (2507), is Apache 2.0 on `mistralai/`, and is
+now `--model voxtral-v1 --size 3B|24B`. It changes no default.
+
+### Integration: three quiet failures in the upstream path
+
+mlx-audio 0.4.5 carries a v1 loader, but its `generate` could not be used as is:
+
+- its prompt goes through transformers' `VoxtralProcessor.apply_transcription_request`,
+  which only returns torch tensors, and mistral_common's `Audio` asserts soundfile.
+  Neither is a dependency (the Homebrew formula has no torch). The prompt is now built
+  from mistral_common's pure pieces and pinned against `encode_transcription` by a test.
+- `max_tokens` defaults to 128 per call: a whole file would come back as its first
+  minute, the Qwen3-ASR bug again. The window loop and per-window budget are shared
+  with qwen3-asr now (`backends._window_meta`).
+- the authors' repos carry `consolidated.safetensors` (Mistral-native keys) beside the
+  HF shards, and mlx-audio's loader prefers the consolidated file. Only the shards are
+  downloaded now, which also halves the 24B download to 48.5GB.
+
+Parity with the upstream path, run in a throwaway overlay with torch/soundfile/librosa:
+identical prompt ids, feature difference exactly 0.0, identical text on 7 of 7 windows,
+including a looping one. So every loop below belongs to the weights.
+
+### Results (20 files, 30s windows)
+
+| config | JP | EN | x rt | peak |
+|---|---|---|---|---|
+| 3B 4bit | 44.54% | 18.08% | 14.0x | 5.25GB |
+| 3B 8bit (ships) | 36.52% | 17.86% | 12.9x | 7.28GB |
+| 3B bf16 | 37.16% | 17.77% | 10.0x | 10.91GB |
+| 24B 4bit | 28.14% | 17.89% | 4.3x | 16.27GB |
+| 24B 8bit (ships) | 27.56% | 16.86% | 3.1x | 27.92GB |
+| 24B bf16 | 27.10% | 16.86% | 2.4x | 50.08GB |
+
+Window sweep on the 3B (7 files, JP/EN): 15s 45.81/22.47, 30s 44.27/21.70, 60s
+45.97/20.72, 120s 57.54/21.17. 300s was stopped once the trend was clear. The model card
+lists eight languages and not Japanese; loops appear in 10-16 of the 17 Japanese files
+at every size and precision, and in no English file.
+
+3B at 4bit is the one resolved precision loss: +8.01 on Japanese against 8bit, CI
+[+4.77, +11.73], 16 of 17 files. Same shape as qwen3-asr 0.6B, so small models are where
+4bit costs here.
+
+### Autodetect looks better and is not
+
+Omitting `lang:` improved Japanese coverage CER by 1.10 and English by 1.42. On Japanese
+that is an artifact: 24.7% of the output characters were Latin script against 0.7%
+forced, whole windows emitted as English or Turkish (some translated), concentrated in
+the close-mic interview files, whose side conversations the references omit. Coverage
+CER excuses text absent from the reference, so a wrong-language window is nearly free on
+it. English outputs contained no other script, so that gain looks real, on three files.
+The docs tell users to pass `--language`.
+
+### Host conditions, and what did not run
+
+The Ultra now hosts other GPU clients permanently, loading models at unpredictable
+times, plus the user's desktop work. Per the user, throughput is measured under those conditions rather than
+voided. Disk was the binding constraint (down to 12GB free at one point): every cache was
+deleted after its run, and the 24B 8bit build came from `convert_drop_source.py`, which
+runs mlx-audio's conversion calls but deletes the shards before saving, verified
+bit-identical to a normal conversion on the 3B (1190 tensors, config identical).
+Determinism: 3B 7/7 byte-identical. The 24B check was stopped when a re-download would
+not fit; it shares the decode path with the 3B.

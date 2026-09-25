@@ -17,6 +17,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from mlx_asr.models import (
+    CONVERT_SEP,
     DEFAULT_ALIAS,
     REGISTRY,
     describe_registry,
@@ -33,7 +34,7 @@ def test_default_is_registered_and_deterministic():
     assert m.deterministic
 
 
-BACKENDS = ("voxtral", "mlx-whisper", "mlx-chunked", "mlx-qwen3",
+BACKENDS = ("voxtral", "mlx-voxtral-v1", "mlx-whisper", "mlx-chunked", "mlx-qwen3",
             "mlx-parakeet", "sherpa-onnx")
 
 # The greedy backends. Voxtral decodes with argmax and no temperature ladder;
@@ -41,7 +42,7 @@ BACKENDS = ("voxtral", "mlx-whisper", "mlx-chunked", "mlx-qwen3",
 # parakeet's TDT and reazon-k2's transducer have no sampling path at all.
 # Whisper's temperature fallback samples, so it is not on this list and its
 # repeat runs spread ~0.5 CER points.
-GREEDY_BACKENDS = ("voxtral", "mlx-qwen3", "mlx-parakeet", "sherpa-onnx")
+GREEDY_BACKENDS = ("voxtral", "mlx-voxtral-v1", "mlx-qwen3", "mlx-parakeet", "sherpa-onnx")
 
 
 def test_every_entry_is_self_consistent():
@@ -181,7 +182,7 @@ def test_every_entry_declares_a_family():
         assert m.family, alias
     # Six families: the four long-standing ones plus the two Japanese-only
     # engines added 2026-08.
-    assert set(families()) == {"voxtral", "whisper", "kotoba", "qwen3-asr",
+    assert set(families()) == {"voxtral", "voxtral-v1", "whisper", "kotoba", "qwen3-asr",
                                "parakeet", "reazon"}
 
 
@@ -263,7 +264,7 @@ def test_a_bare_typo_is_a_usage_error_not_a_repo_id():
 
     with pytest.raises(UnknownModel) as e:
         resolve("wisper")
-    assert "voxtral, whisper, kotoba, qwen3-asr, parakeet, reazon" in str(e.value)
+    assert "voxtral, voxtral-v1, whisper, kotoba, qwen3-asr, parakeet, reazon" in str(e.value)
     # A real repo id still resolves, so the guard is on the shape and not a whitelist.
     assert resolve("some/custom-model").repo == "some/custom-model"
 
@@ -702,6 +703,33 @@ def test_an_unlisted_qwen3_repo_gets_the_qwen3_defaults():
     assert m.opts.get("condition_on_previous_text") is None
 
 
+def _table_rows(table: str) -> dict:
+    """(family, size, quant) -> {"weights", "peak"} for every row of the MODELS.md tables.
+
+    `size` is "" in a single-size family's table, which has no `--size` column, and
+    `quant` is "-" where the family publishes one precision.
+    """
+    import re
+
+    rows, family, multi = {}, None, False
+    for line in table.splitlines():
+        m = re.match(r"### `--model ([\w\-]+)`", line)
+        if m:
+            family = m.group(1)
+            continue
+        if not line.startswith("| ") or line.startswith("|---") or family is None:
+            continue
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if cells[0] in ("`--size`", "`--quantization`"):
+            multi = cells[0] == "`--size`"
+            continue
+        size = re.sub(r"[`*]|default", "", cells[0]).strip() if multi else ""
+        quant = re.sub(r"[`*]|default", "", cells[1 if multi else 0]).strip()
+        weights = cells[2 if multi else 1]
+        rows[(family, size, quant)] = {"weights": weights, "peak": cells[-1]}
+    return rows
+
+
 def test_the_docs_combination_table_covers_every_reachable_variant():
     """docs/MODELS.md lists every model/size/quant -> repo mapping, and it must not go
     stale: a generated table that has drifted is worse than no table, because it reads
@@ -711,12 +739,15 @@ def test_the_docs_combination_table_covers_every_reachable_variant():
     """
     doc = (Path(__file__).resolve().parents[1] / "docs" / "MODELS.md").read_text()
     table = doc.split("## The models")[1].split("\n## ")[0]
+    rows = _table_rows(table)
     for m in REGISTRY.values():
-        repos = set(m.quant_repos.values()) | {m.repo}
-        for repo in repos:
-            assert repo in table, f"{repo} missing from the MODELS.md table"
-            # Each row must carry a working hub link, since that is the point of it.
-            assert f"huggingface.co/{repo}" in table, repo
+        for quant, repo in (m.quant_repos.items() or [(None, m.repo)]):
+            key = (m.family, m.size, quant or "-")
+            assert key in rows, f"{key} ({repo}) missing from the MODELS.md table"
+            # Each row must carry a working hub link, since that is the point of it. A
+            # build converted on first use links to the repo it is converted from.
+            source = repo.split(CONVERT_SEP)[0]
+            assert f"huggingface.co/{source})" in rows[key]["weights"], (key, repo)
 
 
 def test_the_docs_peak_memory_column_matches_the_generator():
@@ -743,18 +774,19 @@ def test_the_docs_peak_memory_column_matches_the_generator():
     doc = (root / "docs" / "MODELS.md").read_text()
     table = doc.split("## The models")[1].split("\n## ")[0]
 
-    # repo id -> the peak printed on that row. The repo id is the one thing on a row that
-    # identifies which variant it is, since the size/quant cells repeat across families.
-    rows = dict(re.findall(r"huggingface\.co/([\w\-./]+)\)[^|]*\|[^|]*\|\s*([\d.]+GB)\s*\|",
-                           table))
+    # (family, size, quant) -> the peak printed on that row. Keyed by the row's own
+    # cells under its family heading: a repo id no longer identifies a row, because the
+    # builds converted on first use all link to the one repo they come from.
+    rows = {k: r["peak"] for k, r in _table_rows(table).items()
+            if re.fullmatch(r"[\d.]+GB", r["peak"])}
     assert rows, "no rows parsed out of the MODELS.md tables; did the format change?"
 
     for (alias, quant), peak in PEAK.items():
         model = REGISTRY[alias]
-        repo = model.quant_repos[quant] if quant else model.repo
-        assert repo in rows, f"{alias}/{quant} ({repo}) has no row in MODELS.md"
-        assert rows[repo] == peak, (
-            f"{alias}/{quant} ({repo}): MODELS.md says {rows[repo]}, "
+        key = (model.family, model.size, quant or "-")
+        assert key in rows, f"{alias}/{quant} {key} has no row in MODELS.md"
+        assert rows[key] == peak, (
+            f"{alias}/{quant} {key}: MODELS.md says {rows[key]}, "
             f"gen_model_matrix.PEAK says {peak}")
 
     # No row carries a peak the generator does not know about.

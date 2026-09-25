@@ -1,7 +1,7 @@
 [project]
 name = "mlx-asr"
 version = "0.1.0"
-description = "Fast multi-model batch ASR on Apple Silicon (Voxtral, Whisper, kotoba-whisper, Qwen3-ASR, Parakeet, ReazonSpeech-k2)"
+description = "Fast multi-model batch ASR on Apple Silicon (Voxtral Realtime, Voxtral v1, Whisper, kotoba-whisper, Qwen3-ASR, Parakeet, ReazonSpeech-k2)"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]

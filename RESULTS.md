@@ -12,11 +12,21 @@ re-measured 2026-08-19 after a reference-loading fix (see below):
 | engine | JP coverage CER | EN coverage WER | x realtime |
 |---|---|---|---|
 | voxtral (default) | 16.22% | 21.50% | 29.6x |
-| whisper-turbo, no-condition | **14.49%** ±0.27 | **18.34%** ±0.69 | 18.0-22.0x |
+| whisper-turbo, no-condition | **14.49%** ±0.27 | 18.34% ±0.69 | 18.0-22.0x |
 | qwen3-asr (1.7B) | 19.33% | 25.45% | 21.8x |
 | qwen3-asr-small (0.6B) | 23.27% | 24.26% | **32.8x** |
+| voxtral-v1 3B (8bit) | 36.52% | 17.86% | 12.9x |
+| voxtral-v1 24B (8bit) | 27.56% | **16.86%** | 3.1x |
 | parakeet-ja (17 JP files)* | 26.19% | n/a, ja-only | **244.6x*** |
 | reazon-k2 fp32 (17 JP files)* | 30.45% | n/a, ja-only | 51.6x*, CPU |
+
+The two voxtral-v1 rows (Mistral's first-generation Voxtral, Mini 3B and Small 24B, 2507)
+were added on 2026-09-25 and change no default. Japanese is not among the eight
+languages their card lists, and it shows: both are behind every other multilingual engine
+on Japanese, largely through repetition loops. The 24B's English figure is the lowest in
+the table, on three files. Both write no subtitles. Their throughput was measured with other
+GPU clients resident on the host between runs. See
+[voxtral-v1.md](docs/benchmarks/voxtral-v1.md).
 
 The two Japanese-specialized engines were added on 2026-08-23 and change no
 default. Rows marked * differ from the rest of this table in two ways, both
@@ -57,6 +67,7 @@ plain CER is meaningless on this editorial material.
 |---|---|---|
 | transcription delay | `2400` is worth 9 points and free. The strongest result here. | [delay.md](docs/benchmarks/delay.md) |
 | Qwen3-ASR | Neither alias beats an existing default on accuracy; the 0.6B is the fastest engine here. Writes no subtitles. 30s window, measured. | [qwen3-asr.md](docs/benchmarks/qwen3-asr.md) |
+| Voxtral v1 | 3B and 24B added, no default changed. Weak on Japanese (outside the card's languages); the 24B is the best English row measured. 8bit ships on both; 3B at 4bit loses 8 points. Pass `--language`: detection sends Japanese windows out in other languages. | [voxtral-v1.md](docs/benchmarks/voxtral-v1.md) |
 | Japanese-specialized engines | parakeet 26.19% at a record 244.6x; reazon-k2 fp32 30.45% on CPU. Domain-matched training does not beat Whisper's breadth here; int8 is NOT near-parity for reazon on conversational audio. | [japanese-only.md](docs/benchmarks/japanese-only.md) |
 | chunking | 30s vs 60s is not resolvable on the corpus (+0.10, CI [-1.89, +2.03]), so choose on speed. Overlap helps only where seams are dense. Energy cuts beat VAD. | [chunking.md](docs/benchmarks/chunking.md) |
 | engine choice | Whisper turbo + no-condition is more accurate; Voxtral is faster and reproducible. | [engines.md](docs/benchmarks/engines.md) |

@@ -13,8 +13,8 @@ default falls into one of three tiers.
 
 | tier | what it means | rows |
 |---|---|---|
-| **decided by accuracy** | swept on the multi-file corpus, and the winner beat the alternatives by more than the corpus can confuse | model choice, `whisper --size`, `qwen3-asr --size`, `voxtral` precision, `qwen3-asr --chunk-seconds`, `--prompt` |
-| **decided by cost** | swept on the corpus, but the arms tie on accuracy, so the default was chosen on speed, memory or dependencies | `voxtral --chunk-seconds`, `--max-batch`, `--overlap-seconds`, `--delay-ms`, `--gain`, `--vad`, `--compact-silence`, `--kv-bits` |
+| **decided by accuracy** | swept on the multi-file corpus, and the winner beat the alternatives by more than the corpus can confuse | model choice, `whisper --size`, `qwen3-asr --size`, `voxtral` precision, `qwen3-asr --chunk-seconds`, `voxtral-v1 --chunk-seconds`, `--prompt` |
+| **decided by cost** | swept on the corpus, but the arms tie on accuracy, so the default was chosen on speed, memory or dependencies | `voxtral-v1` precision, `voxtral --chunk-seconds`, `--max-batch`, `--overlap-seconds`, `--delay-ms`, `--gain`, `--vad`, `--compact-silence`, `--kv-bits` |
 | **not yet on the corpus** | one recording only, or not measured at all, so unverified on the material this project targets | cue layout, which needs a second reference set that does not exist |
 
 That last tier is where surprises come from, and it has emptied out considerably. `--vad`,
@@ -31,6 +31,7 @@ used to argue an effect is small.
 | `voxtral` as the model | faster than whisper turbo, needs no language flag, and reruns byte-identically on one machine. Turbo is slightly more accurate on Japanese, so this trades a little accuracy for speed and reproducibility | [engines.md](benchmarks/engines.md) |
 | `whisper --size turbo` | ties `large-v3` on Japanese at roughly twice the speed and less memory, so picking by size number would pay for nothing | [engines.md](benchmarks/engines.md) |
 | `qwen3-asr --size 1.7B` | clearly ahead of `0.6B` on accuracy. The `0.6B` is the speed option, and the fastest engine measured here | [qwen3-asr.md](benchmarks/qwen3-asr.md) |
+| `voxtral-v1 --size 3B` | **not the more accurate size, deliberately.** 24B is 9.4 points better on Japanese and a point on English, but it peaks at 16-50GB and runs at 2-4x, while the 3B at 8bit fits a 16GB Mac's GPU working set. Pass `--size 24B` on a large-memory machine | [voxtral-v1.md](benchmarks/voxtral-v1.md) |
 | `parakeet --chunk-seconds 120` | clearly ahead of 300s on the corpus, and cheaper on memory. A one-file pre-check had shown a tie, which reversed at corpus scale. 60s is excluded because it drops content outright | [japanese-only.md](benchmarks/japanese-only.md) |
 | `reazon --chunk-seconds 30` | not a sweep: the weights cannot decode a whole file at all (they are trained on short VAD segments), so windows are mandatory, and 30s matches the Voxtral rows to hold the front end constant | [japanese-only.md](benchmarks/japanese-only.md) |
 
@@ -45,6 +46,8 @@ weeks.
 |---|---|---|
 | `voxtral` 4bit | **not the most accurate option, deliberately.** Accuracy improves with bit width and 4bit is last of the five measured, but fp16 will not fit a 16GB machine and no loadable 8bit build is published, so 4bit is what works everywhere. If you have the memory, pass `--quantization fp16`, or convert 8bit locally to get fp16's accuracy at roughly half its memory | [quantization.md](benchmarks/quantization.md) |
 | `qwen3-asr` 8bit | the full ladder is now swept on both sizes, and they disagree: the `1.7B` ties across every precision, while the `0.6B` is sharply sensitive and 8bit wins each comparison outright. One default suits both, and on the `1.7B` a lower rung is a free speed option | [qwen3-asr.md](benchmarks/qwen3-asr.md) |
+| `voxtral-v1 --size 3B` 8bit | ties bf16 on both languages at two thirds of the memory. 4bit is not near-parity on this size: it loses 8 points on Japanese, on 16 of 17 files | [voxtral-v1.md](benchmarks/voxtral-v1.md) |
+| `voxtral-v1 --size 24B` 8bit | ties bf16 on English and is within the corpus's resolution on Japanese, at 28GB of peak memory against 50GB. bf16 is ahead on most Japanese files by small margins, so take it if the memory is free. 4bit costs a point on English | [voxtral-v1.md](benchmarks/voxtral-v1.md) |
 | `reazon` fp32 | the publisher's table says int8 is near-parity, but on conversational material int8 drops whole phrases mid-file. Read-speech benchmarks and real audio disagree, and the corpus wins | [japanese-only.md](benchmarks/japanese-only.md) |
 | `--kv-bits 8` | a tie with unquantized on the corpus, and faster, so the speed is free | [quantization.md](benchmarks/quantization.md) |
 
@@ -60,6 +63,7 @@ there is a memory choice made blind. Its memory cost is measured
 | ...and the batch is the half that matters | throughput is also not monotonic in batch size, so the profile avoids the middle of the range entirely rather than interpolating | [decode-throughput.md](benchmarks/decode-throughput.md) |
 | `voxtral --overlap-seconds 0` | won on one clip at short chunks, then reversed sign on the corpus, where it cost both speed and accuracy. Zero on every profile | [chunking.md](benchmarks/chunking.md) |
 | `kotoba --chunk-seconds 10` | this model's largest lever, and 10s clearly won on spontaneous Japanese. Material-dependent, so sweep it on your own audio | [engines.md](benchmarks/engines.md) |
+| `voxtral-v1 --chunk-seconds 30` | best on Japanese, and Japanese collapses above 60s for the same reason as on qwen3-asr. English prefers 60s by about a point on two files, which does not pay for it | [voxtral-v1.md](benchmarks/voxtral-v1.md) |
 | `qwen3-asr --chunk-seconds 30` | unusually, shorter is better on accuracy, speed and memory at once, because a longer window gives a repetition loop a bigger token budget to burn. 15s ties 30s, so this is a plateau rather than a boundary | [qwen3-asr.md](benchmarks/qwen3-asr.md) |
 
 The library default for `qwen3-asr` is 1200s, so anything shorter than 20 minutes becomes a

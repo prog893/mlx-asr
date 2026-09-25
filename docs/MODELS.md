@@ -21,6 +21,17 @@ fallback, so this runs on Apple Silicon or not at all.
 | `4bit` **default** | [mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit) | 3.15GB | 6.77GB |
 | `fp16` | [mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16) | 8.89GB | 12.98GB |
 
+### `--model voxtral-v1`
+
+| `--size` | `--quantization` | weights | download | peak GPU memory |
+|---|---|---|---|---|
+| `3B` **default** | `4bit` | [mistralai/Voxtral-Mini-3B-2507](https://huggingface.co/mistralai/Voxtral-Mini-3B-2507), converted on first use | 9.37GB | 5.25GB |
+| `3B` | `8bit` **default** | [mistralai/Voxtral-Mini-3B-2507](https://huggingface.co/mistralai/Voxtral-Mini-3B-2507), converted on first use | 9.37GB | 7.28GB |
+| `3B` | `bf16` | [mistralai/Voxtral-Mini-3B-2507](https://huggingface.co/mistralai/Voxtral-Mini-3B-2507) | 9.37GB | 10.91GB |
+| `24B` | `4bit` | [mistralai/Voxtral-Small-24B-2507](https://huggingface.co/mistralai/Voxtral-Small-24B-2507), converted on first use | 48.54GB | 16.27GB |
+| `24B` | `8bit` **default** | [mistralai/Voxtral-Small-24B-2507](https://huggingface.co/mistralai/Voxtral-Small-24B-2507), converted on first use | 48.54GB | 27.92GB |
+| `24B` | `bf16` | [mistralai/Voxtral-Small-24B-2507](https://huggingface.co/mistralai/Voxtral-Small-24B-2507) | 48.54GB | 50.08GB |
+
 ### `--model whisper`
 
 | `--size` | `--quantization` | weights | download | peak GPU memory |
@@ -89,13 +100,14 @@ Every run also prints its own peak, since the figure moves with the machine, the
 the flags, and `--stats-json` writes it to a file. Treat the table as a guide to what fits
 and your own run as the number.
 
-`voxtral`, `qwen3-asr`, `parakeet` and `reazon` decode greedily and rerun byte-identically
+`voxtral`, `voxtral-v1`, `qwen3-asr`, `parakeet` and `reazon` decode greedily and rerun byte-identically
 on one machine. `whisper` samples whenever a segment trips its fallback thresholds, and
 `kotoba` runs on Whisper's decoder so it samples too, which makes neither safe to rerun for
 a comparison ([benchmarks/determinism.md](benchmarks/determinism.md)).
 
-Accuracy and throughput per model: [benchmarks/engines.md](benchmarks/engines.md) and
-[benchmarks/qwen3-asr.md](benchmarks/qwen3-asr.md), which describe the corpus and method
+Accuracy and throughput per model: [benchmarks/engines.md](benchmarks/engines.md),
+[benchmarks/qwen3-asr.md](benchmarks/qwen3-asr.md) and
+[benchmarks/voxtral-v1.md](benchmarks/voxtral-v1.md), which describe the corpus and method
 each figure came from.
 
 The `kotoba` alias points at v2.0 because v2.2 holds identical ASR weights (all 539
@@ -104,6 +116,11 @@ ships in transformers format, so it converts to MLX on first use and caches unde
 `~/.cache/huggingface/hub/mlx-asr-converted/`. That first run peaks at 3.03GB rather than
 2.38GB, because the conversion loads the whole checkpoint; every run after is the table
 figure.
+
+`voxtral-v1` comes from the authors' own repos. `bf16` loads their weights as published;
+`8bit` and `4bit` are quantized from them on first use and cached in the same directory,
+so the first run of a precision downloads the bf16 weights (9.37GB for 3B, 48.54GB for
+24B) and converts once. The audio encoder stays bf16 at every precision.
 
 ## Minimal commands
 
@@ -114,6 +131,8 @@ mlx-asr audio.wav --model whisper --size small --language ja
 mlx-asr audio.wav --model kotoba                             # forces ja itself
 mlx-asr audio.wav --model qwen3-asr --language ja -f txt
 mlx-asr audio.wav --model qwen3-asr --size 0.6B --language ja -f json
+mlx-asr audio.wav --model voxtral-v1 --language en -f txt      # 3B, 8bit
+mlx-asr audio.wav --model voxtral-v1 --size 24B --language en -f txt
 ```
 
 ## Global flags
@@ -124,7 +143,7 @@ The only flags every model accepts.
 |---|---|---|---|
 | `--model` | family name or HF repo id | `voxtral` | a repo id gets its backend inferred from the name |
 | `--list-models` | flag | off | prints each model with its sizes, precisions and caveats, then exits |
-| `-f, --output-format` | `srt` `vtt` `txt` `json` `all` | `srt` | `all` writes one file per format. `srt`, `vtt` and `all` exit 2 on `qwen3-asr` |
+| `-f, --output-format` | `srt` `vtt` `txt` `json` `all` | `srt` | `all` writes one file per format. `srt`, `vtt` and `all` exit 2 on `qwen3-asr` and `voxtral-v1` |
 | `-o, --output` | path | input stem + extension | with `-f all` this is a path **stem**, not a directory; parent dirs are created |
 | `--quiet` | flag | off | silences stdout entirely. Download progress bars still appear: those are huggingface_hub writing to stderr |
 | `--stats-json` | path | none | timing, peak memory, resolved config, and machine info |
@@ -145,26 +164,26 @@ default --model voxtral.
 
 `-` means the flag exits 2 on that model.
 
-| flag | `voxtral` | `whisper` | `kotoba` | `qwen3-asr` |
-|---|---|---|---|---|
-| `--size` | - | `tiny` `base` `small` `medium` `large-v2` `large-v3` `turbo` | - | `0.6B` `1.7B` |
-| `--quantization` | `4bit` `fp16` | - | - | `4bit` `5bit` `6bit` `8bit` `bf16` |
-| `--language` | - | yes | forced `ja` | yes |
-| `--chunk-seconds` | yes | - | yes | yes |
-| `-f srt` / `vtt` / `all` | yes | yes | yes | - |
-| `--delay-ms` | yes | - | - | - |
-| `--max-batch` | yes | - | - | - |
-| `--kv-bits` / `--no-kv-quant` | yes | - | - | - |
-| `--overlap-seconds` | yes | - | - | - |
-| `--prompt` | yes | - | - | - |
-| `--vad` | yes | - | - | - |
-| `--compact-silence` | yes | - | - | - |
-| `--gain` / `--peak-dbfs` / `--rms-dbfs` | yes | - | - | - |
-| `--gap-seconds` / `--max-chars` / `--max-dur-seconds` | yes | - | - | - |
+| flag | `voxtral` | `voxtral-v1` | `whisper` | `kotoba` | `qwen3-asr` |
+|---|---|---|---|---|---|
+| `--size` | - | `3B` `24B` | `tiny` `base` `small` `medium` `large-v2` `large-v3` `turbo` | - | `0.6B` `1.7B` |
+| `--quantization` | `4bit` `fp16` | `4bit` `8bit` `bf16` | - | - | `4bit` `5bit` `6bit` `8bit` `bf16` |
+| `--language` | - | yes | yes | forced `ja` | yes |
+| `--chunk-seconds` | yes | yes | - | yes | yes |
+| `-f srt` / `vtt` / `all` | yes | - | yes | yes | - |
+| `--delay-ms` | yes | - | - | - | - |
+| `--max-batch` | yes | - | - | - | - |
+| `--kv-bits` / `--no-kv-quant` | yes | - | - | - | - |
+| `--overlap-seconds` | yes | - | - | - | - |
+| `--prompt` | yes | - | - | - | - |
+| `--vad` | yes | - | - | - | - |
+| `--compact-silence` | yes | - | - | - | - |
+| `--gain` / `--peak-dbfs` / `--rms-dbfs` | yes | - | - | - | - |
+| `--gap-seconds` / `--max-chars` / `--max-dur-seconds` | yes | - | - | - | - |
 
 `--chunk-seconds` means something different on each engine that takes it: Voxtral's chunk
-is a batched decode unit, while kotoba and qwen3-asr use it as an independent window
-length. Whisper refuses it, since its 30s window is fixed by the model's positional
+is a batched decode unit, while kotoba, qwen3-asr and voxtral-v1 use it as an independent
+window length. Whisper refuses it, since its 30s window is fixed by the model's positional
 encoding.
 
 `--delay-ms`, `--gain`, `--peak-dbfs` and `--rms-dbfs` ship with working values rather
@@ -176,6 +195,10 @@ them.
 Set it whenever the engine takes one. **Whisper's autodetect reads only the first 30
 seconds, and on this project's material it returned Russian for Japanese audio and cost 25
 CER points.** `qwen3-asr` does not autodetect at all: omitting the flag forces English.
+`voxtral-v1` detects the language when the flag is omitted, and on Japanese that sends
+whole windows out in English or Turkish instead
+([benchmarks/voxtral-v1.md](benchmarks/voxtral-v1.md#experiment-leaving-the-language-to-the-model)),
+so pass it.
 
 Any spelling works on any model that takes one. These are all Japanese:
 

@@ -1,11 +1,12 @@
 # mlx-asr
 
-One CLI over four speech-to-text engines on Apple Silicon. Point it at a file, get
+One CLI over seven speech-to-text engines on Apple Silicon. Point it at a file, get
 a subtitle file. Runs locally, with sensible defaults per machine.
 
 The tuning and measurement here are aimed at **Japanese**: the defaults were chosen
 against Japanese audio, the accuracy work uses character-level metrics suited to a
-script with no word boundaries, and one engine (`kotoba`) is Japanese-only. English is
+script with no word boundaries, and three engines (`kotoba`, `parakeet`, `reazon`) are
+Japanese-only. English is
 measured and works; other languages are inherited from the upstream models and
 untested here. See [docs/benchmarks/](docs/benchmarks/).
 
@@ -110,6 +111,7 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 | `--model` | what it is |
 |---|---|
 | `voxtral` (default) | Mistral's 2026 realtime model. Takes a vocabulary prompt, decodes greedily so reruns on one machine are byte-identical, and has the steadiest timestamps here |
+| `voxtral-v1` | Mistral's first-generation Voxtral (2025). `--size 3B` (default) or `24B`, the latter for large-memory Macs. At 24B, the lowest English error measured here (on three files); weak on Japanese, which its card does not claim. Greedy. **Writes no subtitles**, like `qwen3-asr` |
 | `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **turbo**, which ties large-v3 on accuracy at about 2x the speed. The most accurate engine on the test corpus, but it samples, so reruns differ |
 | `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, Japanese only, and samples like Whisper |
 | `qwen3-asr` | Alibaba's Qwen3-ASR. `--size 1.7B` (default) or `0.6B`, the fastest engine measured here. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
@@ -123,8 +125,8 @@ the largest number. On Voxtral, higher precision does score better, so 4-bit shi
 option that is published and fits everywhere rather than as the most accurate one; see
 [docs/DEFAULTS.md](docs/DEFAULTS.md) if you have memory to spare.
 
-`whisper` and `qwen3-asr` do better when you set `--language`, and each gets the form it
-wants (a code for Whisper, an English name for Qwen) from whatever you type. Voxtral takes
+`whisper`, `qwen3-asr` and `voxtral-v1` do better when you set `--language`, and each gets the form it
+wants (a code for Whisper and Voxtral v1, an English name for Qwen) from whatever you type. Voxtral takes
 no language flag, and the Japanese-only engines (`kotoba`, `parakeet`, `reazon`) refuse
 `--language` values other than Japanese rather than silently ignoring them.
 
@@ -134,8 +136,9 @@ repo id, with download size and measured peak GPU memory, is in
 [docs/MODELS.md](docs/MODELS.md#the-models); it is generated from the registry, not
 hand-maintained.
 
-All weights are `mlx-community` MLX builds, except `kotoba` which converts the authors'
-own weights locally on first use. **unsloth and GGUF quants cannot be used here**: unsloth
+All weights are `mlx-community` MLX builds, except `kotoba` and `voxtral-v1`, which use the
+authors' own weights and convert them locally on first use, and `reazon`, which runs the
+authors' ONNX files. **unsloth and GGUF quants cannot be used here**: unsloth
 publishes no Voxtral, only GGUF for Qwen3-ASR, and unquantized transformers weights for
 Whisper, while GGUF is llama.cpp's format that MLX cannot load. That is a format
 constraint rather than a quality judgement
