@@ -2445,5 +2445,8 @@ voided. Disk was the binding constraint (down to 12GB free at one point): every 
 deleted after its run, and the 24B 8bit build came from `convert_drop_source.py`, which
 runs mlx-audio's conversion calls but deletes the shards before saving, verified
 bit-identical to a normal conversion on the 3B (1190 tensors, config identical).
-Determinism: 3B 7/7 byte-identical. The 24B check was stopped when a re-download would
-not fit; it shares the decode path with the 3B.
+Determinism: 3B at 8bit 7/7 byte-identical. The 24B check was first stopped when a
+re-download would not fit; rerun the next morning after clearing every cache, with its
+4bit build made by `convert_drop_source.py` so disk peaked at the shards: 7/7 identical.
+
+The parity probe needed torch, so it was run once in a throwaway overlay and not kept.

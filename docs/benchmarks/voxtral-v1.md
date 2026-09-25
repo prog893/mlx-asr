@@ -178,9 +178,9 @@ and all 1190 tensors and the config were bit-identical.
 
 ## Determinism
 
-The 7 shortest files, decoded twice by the 3B at 8bit: 7/7 byte-identical, as greedy
-decoding predicts. The same check on the 24B was not run: the host ran out of disk for the
-re-download. It shares every line of the decode path with the 3B.
+The 7 shortest files, each decoded twice: 7/7 byte-identical for the 3B at 8bit and 7/7
+for the 24B at 4bit, as greedy decoding predicts. So one run per configuration is its
+score.
 
 ## What it does not do
 
