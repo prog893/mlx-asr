@@ -359,15 +359,16 @@ def build_parser():
                         "Ignored when --overlap-seconds is active. "
                         "See docs/benchmarks/prompt.md")
     p.add_argument("--chunk-seconds", type=float, default=None,
-                   help="chunk/window length. Voxtral: default from the hardware "
-                        "profile, and a throughput knob rather than an accuracy one. "
-                        "kotoba: the window length, and its biggest lever by far; it is "
-                        "material-dependent, so sweep it on your own audio. qwen3-asr: "
-                        "the window length too, defaulted to 30s here rather than the "
-                        "library's 1200s, at which any file under 20 minutes is a "
-                        "single window. Ignored by "
-                        "the whisper-* models, whose 30s window is fixed. "
-                        "See docs/benchmarks/chunking.md")
+                   help="chunk/window length. voxtral (Realtime): default from the "
+                        "hardware profile, and a throughput knob rather than an "
+                        "accuracy one. kotoba: the window length, and its biggest lever "
+                        "by far; it is material-dependent, so sweep it on your own "
+                        "audio. qwen3-asr: the window length too, defaulted to 30s here "
+                        "rather than the library's 1200s, at which any file under 20 "
+                        "minutes is a single window. voxtral-v1: the window length, "
+                        "default 30s, and an accuracy lever on Japanese, which "
+                        "degrades above 60s. Refused by whisper, whose 30s window is "
+                        "fixed. See docs/benchmarks/chunking.md")
     p.add_argument("--quantization", default=None, metavar="PRECISION",
                    help=f"weight precision, where the alias publishes a choice. "
                         f"Per model: {quantization_help()}. 'none' means whichever "
