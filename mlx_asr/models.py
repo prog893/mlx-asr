@@ -366,7 +366,7 @@ REGISTRY: dict[str, Model] = {
                 "bf16": "mistralai/Voxtral-Small-24B-2507",
             },
             quant_weights_gb={"4bit": 14.7, "8bit": 26.4, "bf16": 48.5},
-            notes="9.4 points ahead of 3B on Japanese and a point on English, at 3.1x "
+            notes="9.0 points ahead of 3B on Japanese and a point on English, at 3.1x "
                   "realtime and 28GB of peak memory. Its first run downloads 48.5GB "
                   "of bf16 weights to convert from",
         ),

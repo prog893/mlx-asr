@@ -336,8 +336,11 @@ def build_parser():
                         "Whisper autodetects when omitted, which misfires on "
                         "mixed-language audio; qwen3-asr is forced to English when "
                         "omitted, because its own autodetect corrupts multi-chunk "
-                        "text upstream. Voxtral takes no language token and "
-                        "rejects this flag. An unrecognised value is an error")
+                        "text upstream. voxtral-v1 detects when omitted, which "
+                        "on Japanese sends whole windows out in other languages, "
+                        "so pass it there. Voxtral Realtime (voxtral) takes no "
+                        "language token and rejects this flag. An unrecognised "
+                        "value is an error")
     p.add_argument("-f", "--output-format", default="srt",
                    choices=[*WRITERS.keys(), "all"],
                    help="srt/vtt/txt/json, or all. srt and vtt are an ERROR on "
