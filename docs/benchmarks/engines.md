@@ -150,6 +150,12 @@ with the same scorers: 19.33% JP / 25.45% EN at 21.8x for the 1.7B, 23.27% / 24.
 verdict here; the 0.6B is the fastest engine this project has measured. It gets one run
 each, being greedy, and it writes no subtitles. See [qwen3-asr.md](qwen3-asr.md).
 
+Voxtral v1 (Mini 3B and Small 24B, 2507) was added on 2026-09-25, same 20 files, same
+scorers: 36.52% JP / 17.86% EN at 12.9x for the 3B at 8bit, 27.56% / 16.86% at 3.1x for
+the 24B at 8bit. Japanese is outside its card's eight languages and it is behind every
+other multilingual row there; the 24B's English is the lowest measured, on three files. It
+writes no subtitles. See [voxtral-v1.md](voxtral-v1.md).
+
 ### The generalization test, finally run
 
 The interval above answers "does this hold on a rerun", which is what

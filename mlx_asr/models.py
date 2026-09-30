@@ -73,6 +73,16 @@ the two-flag replacement, rather than being forwarded to the hub as a repo id.
 
 from dataclasses import dataclass, field
 
+# A repo value of `<source>:<precision>` names a build converted on first use from the
+# authors' weights rather than a published repo. A colon cannot occur in a Hugging Face
+# repo id, so the two cannot collide. Only the voxtral-v1 backend reads these.
+CONVERT_SEP = ":"
+
+
+def converted_id(source: str, precision: str) -> str:
+    """The registry value for `source` at `precision`, converted on first use."""
+    return f"{source}{CONVERT_SEP}{precision}"
+
 
 class UnknownSize(ValueError):
     """The requested size is not one this family publishes.
@@ -134,7 +144,7 @@ class Model:
 
     alias: str
     repo: str
-    backend: str                  # voxtral | mlx-whisper | mlx-chunked | mlx-qwen3
+    backend: str                  # voxtral | mlx-voxtral-v1 | mlx-whisper | ...
     label: str
     # The two halves of what a user selects. `family` is the `--model` value and
     # `size` the `--size` value; a single-size family leaves `size` empty and refuses
@@ -240,8 +250,8 @@ class Model:
         across 10-30s windows) and it is material-dependent, so it has to be
         reachable. The sequential `mlx-whisper` driver is excluded because its
         30s window is fixed by the model's positional encoding, not a choice."""
-        return self.backend in ("mlx-chunked", "mlx-qwen3", "mlx-parakeet",
-                                "sherpa-onnx")
+        return self.backend in ("mlx-chunked", "mlx-qwen3", "mlx-voxtral-v1",
+                                "mlx-parakeet", "sherpa-onnx")
 
 
 REGISTRY: dict[str, Model] = {
@@ -294,6 +304,71 @@ REGISTRY: dict[str, Model] = {
                   "best timestamp stability. 4bit is LAST of five precisions on "
                   "accuracy and ships anyway, since fp16 needs 13GB and no loadable "
                   "8bit build is published; convert one locally if you have the RAM",
+        ),
+        Model(
+            alias="voxtral-v1-3b",
+            family="voxtral-v1",
+            size="3B",
+            repo=converted_id("mistralai/Voxtral-Mini-3B-2507", "8bit"),
+            backend="mlx-voxtral-v1",
+            label="Voxtral Mini 3B 2507 (8-bit)",
+            deterministic=True,
+            weights_gb=5.6,
+            # 30s, measured on the 7-file subset at 15/30/60/120s. Japanese is best at
+            # 30s and collapses above 60s (44.27 / 45.97 / 57.54%), for the same reason
+            # as on qwen3-asr: a longer window gives a repetition loop a bigger budget.
+            # English prefers 60s by about a point (20.72 vs 21.70%, two files), which
+            # is not worth the Japanese cost. See docs/benchmarks/voxtral-v1.md.
+            opts={"chunk_length_s": 30.0},
+            no_speech_timestamps=True,
+            # The authors publish bf16 only. bf16 loads from their shards directly;
+            # the others are converted once on first use (voxtral_v1.weights_dir).
+            #
+            # 8bit is the default, measured on the 20-file corpus: it ties bf16
+            # (36.52 vs 37.16% Japanese, 17.86 vs 17.77% English, neither resolvable)
+            # at 7.28GB of peak memory against 10.91GB. 4bit is NOT near-parity here:
+            # +8.01 points on Japanese against 8bit, CI [+4.77, +11.73], 16 of 17
+            # files worse, so it is offered for memory-bound machines only.
+            quant_repos={
+                "4bit": converted_id("mistralai/Voxtral-Mini-3B-2507", "4bit"),
+                "8bit": converted_id("mistralai/Voxtral-Mini-3B-2507", "8bit"),
+                "bf16": "mistralai/Voxtral-Mini-3B-2507",
+            },
+            quant_weights_gb={"4bit": 3.55, "8bit": 5.57, "bf16": 9.37},
+            notes="first-generation Voxtral (2025-07). Text only, so -f srt and "
+                  "-f vtt are refused. Its card lists 8 languages (en es fr pt hi de "
+                  "nl it) and Japanese is not one: on Japanese it falls into "
+                  "repetition loops in most long files. Quantized builds are "
+                  "converted from the authors' weights on first use",
+        ),
+        Model(
+            alias="voxtral-v1-24b",
+            family="voxtral-v1",
+            size="24B",
+            repo=converted_id("mistralai/Voxtral-Small-24B-2507", "8bit"),
+            backend="mlx-voxtral-v1",
+            label="Voxtral Small 24B 2507 (8-bit)",
+            deterministic=True,
+            weights_gb=26.4,
+            # Same 30s as the 3B. The sweep ran on the 3B; the mechanism (a longer
+            # window gives a repetition loop a bigger budget) is a property of the
+            # window loop, and this size loops on the same files. Not separately swept.
+            opts={"chunk_length_s": 30.0},
+            no_speech_timestamps=True,
+            # 8bit is the default, measured on the 20-file corpus. Against bf16 it is
+            # +0.46 on Japanese, CI [-0.25, +1.56], and an exact tie on English, at
+            # 27.92GB of peak memory against 50.08GB. bf16 is ahead on 13 of 16 Japanese
+            # files by small margins, so it is the choice when the memory is there.
+            # 4bit costs a point on English (-1.03 in 8bit's favour, CI excludes zero).
+            quant_repos={
+                "4bit": converted_id("mistralai/Voxtral-Small-24B-2507", "4bit"),
+                "8bit": converted_id("mistralai/Voxtral-Small-24B-2507", "8bit"),
+                "bf16": "mistralai/Voxtral-Small-24B-2507",
+            },
+            quant_weights_gb={"4bit": 14.7, "8bit": 26.4, "bf16": 48.5},
+            notes="9.0 points ahead of 3B on Japanese and a point on English, at 3.1x "
+                  "realtime and 28GB of peak memory. Its first run downloads 48.5GB "
+                  "of bf16 weights to convert from",
         ),
         Model(
             alias="whisper-turbo",
@@ -522,7 +597,7 @@ DEFAULT_ALIAS = "voxtral"
 #              wrong in both directions.
 #   qwen3-asr  `1.7B`, which beats 0.6B by 3.9 points on the 20-file corpus (19.33%
 #              against 23.27%). The 0.6B is the speed option, not the default.
-DEFAULT_SIZE = {"whisper": "turbo", "qwen3-asr": "1.7B"}
+DEFAULT_SIZE = {"whisper": "turbo", "qwen3-asr": "1.7B", "voxtral-v1": "3B"}
 
 # Display order per family: smallest/weakest first, so a list reads as a ladder.
 # Explicit rather than sorted, because neither alphabetical nor parameter count gives
@@ -531,6 +606,7 @@ DEFAULT_SIZE = {"whisper": "turbo", "qwen3-asr": "1.7B"}
 SIZE_ORDER = {
     "whisper": ["tiny", "base", "small", "medium", "large-v2", "large-v3", "turbo"],
     "qwen3-asr": ["0.6B", "1.7B"],
+    "voxtral-v1": ["3B", "24B"],
 }
 
 
@@ -573,11 +649,40 @@ def resolve_family(family: str, size: str | None = None) -> Model:
     raise UnknownSize(size, available, family)
 
 
+def _voxtral_generation(repo: str) -> str:
+    """Which Voxtral backend a repo id or local directory needs.
+
+    The two generations are different architectures, and the name alone is not reliable
+    for a local directory (the documented `./voxtral-8bit` conversion is a Realtime
+    build), so a local `config.json` decides when there is one: `voxtral_realtime`
+    versus `voxtral`. A hub id falls back to the release tag: the v1 models are the
+    2507 release, Mini 3B and Small 24B.
+    """
+    import json
+    from pathlib import Path
+
+    cfg = Path(repo) / "config.json"
+    if cfg.is_file():
+        try:
+            model_type = json.loads(cfg.read_text()).get("model_type", "")
+        except (OSError, ValueError):
+            model_type = ""
+        if model_type == "voxtral":
+            return "mlx-voxtral-v1"
+        if model_type == "voxtral_realtime":
+            return "voxtral"
+    low = repo.lower()
+    if "realtime" not in low and ("2507" in low or "mini-3b" in low
+                                  or "small-24b" in low):
+        return "mlx-voxtral-v1"
+    return "voxtral"
+
+
 def infer_backend(repo: str) -> str:
     """Guess a backend for a raw HF repo id the registry does not list."""
     low = repo.lower()
     if "voxtral" in low:
-        return "voxtral"
+        return _voxtral_generation(repo)
     # Ahead of both the distil and whisper checks. These two name an *architecture*,
     # so they are stronger evidence than the generic words "distil" and "whisper",
     # which a derivative id can carry alongside them
@@ -667,8 +772,8 @@ def resolve(name: str | None, size: str | None = None) -> Model:
     # The two greedy backends. An unlisted repo on either one still gets the
     # `deterministic` flag right, because the CLI prints a "this engine samples"
     # caveat off it and a wrong caveat is worse than none.
-    deterministic = backend in ("voxtral", "mlx-qwen3", "mlx-parakeet",
-                                "sherpa-onnx")
+    deterministic = backend in ("voxtral", "mlx-voxtral-v1", "mlx-qwen3",
+                                "mlx-parakeet", "sherpa-onnx")
     opts = {}
     if backend == "mlx-whisper":
         opts = {"condition_on_previous_text": False}
@@ -676,6 +781,8 @@ def resolve(name: str | None, size: str | None = None) -> Model:
         # Same as the registry entries: measured best on this corpus, against a
         # library default of 1200s at which a sub-20-minute file is one chunk and
         # one cue. See docs/benchmarks/qwen3-asr.md.
+        opts = {"chunk_length_s": 30.0}
+    elif backend == "mlx-voxtral-v1":
         opts = {"chunk_length_s": 30.0}
     elif backend == "mlx-parakeet":
         # Same value and same caveat as the registry entry: unswept starting
@@ -687,7 +794,7 @@ def resolve(name: str | None, size: str | None = None) -> Model:
                  label=name.split("/")[-1],
                  deterministic=deterministic,
                  opts=opts,
-                 no_speech_timestamps=(backend == "mlx-qwen3"),
+                 no_speech_timestamps=backend in ("mlx-qwen3", "mlx-voxtral-v1"),
                  notes="not a built-in model; defaults inferred from the repo id")
 
 

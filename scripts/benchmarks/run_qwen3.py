@@ -1,4 +1,9 @@
-"""Evaluate Qwen3-ASR across a corpus, scored by the same functions as every other row.
+"""Evaluate Qwen3-ASR or Voxtral v1 across a corpus, scored like every other row.
+
+Both engines are windowed text-only decoders driven by the same loop in
+`mlx_asr/backends.py` (same splitter, same per-window budget, same health checks), so one
+runner serves both and a difference between their rows is a difference between engines.
+`--model voxtral-v1 --size 24B --quantization 4bit` selects exactly what the CLI would.
 
 The point is comparability, not tuning. Every number here comes from
 `eval_coverage.py`, on the same 16kHz mono audio `run_corpus.py` and `run_whisper.py`
@@ -51,7 +56,8 @@ from benchmarks.machine_state import machine_state, warn_if_busy
 from metrics.eval_coverage import is_space_delimited, load_reference, score_pair
 from metrics.eval_coverage_kana import coverage_kana, coverage_lenient
 from mlx_asr.audio import SAMPLE_RATE, load_audio_16k
-from mlx_asr.backends import qwen3_decode, qwen3_language
+from mlx_asr.backends import (qwen3_decode, qwen3_language, voxtral_v1_decode,
+                               voxtral_v1_language)
 from mlx_asr.models import resolve as resolve_model
 
 AUDIO_EXT = {".wav", ".WAV", ".m4a", ".mp3", ".flac", ".mp4", ".mov"}
@@ -89,7 +95,12 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--corpus", required=True)
     p.add_argument("--model", default="qwen3-asr",
-                   help="registry alias or HF repo id of a Qwen3-ASR build")
+                   help="family (qwen3-asr, voxtral-v1) or HF repo id")
+    p.add_argument("--size", default=None, help="as the CLI's --size")
+    p.add_argument("--quantization", default=None, help="as the CLI's --quantization")
+    p.add_argument("--language-mode", choices=("forced", "auto"), default="forced",
+                   help="voxtral-v1 only: 'auto' omits the lang: prefix so the model "
+                        "detects the language itself. Qwen3-ASR is always forced")
     p.add_argument("--chunk-seconds", type=float, default=None,
                    help="decode window. Default: the registry's (30s, measured best "
                         "on this corpus), NOT the library's 1200s, at which a "
@@ -112,12 +123,21 @@ def main():
                         "waiting for the host to go quiet before giving up")
     a = p.parse_args()
 
-    spec = resolve_model(a.model)
-    if spec.backend != "mlx-qwen3":
+    spec = resolve_model(a.model, a.size)
+    if a.quantization:
+        from dataclasses import replace
+        spec = replace(spec, repo=spec.repo_for(a.quantization),
+                       label=f"{spec.label.rsplit(' (', 1)[0]} ({a.quantization})")
+    if spec.backend not in ("mlx-qwen3", "mlx-voxtral-v1"):
         print(f"--model {a.model} resolves to backend {spec.backend}, not "
-              f"mlx-qwen3. Use run_corpus.py (voxtral) or run_whisper.py.",
+              f"mlx-qwen3 or mlx-voxtral-v1. Use run_corpus.py (voxtral) or "
+              f"run_whisper.py.", file=sys.stderr)
+        return 2
+    if a.language_mode == "auto" and spec.backend != "mlx-voxtral-v1":
+        print("--language-mode auto is voxtral-v1 only (see qwen3_language)",
               file=sys.stderr)
         return 2
+    is_v1 = spec.backend == "mlx-voxtral-v1"
     chunk_len = a.chunk_seconds or spec.opts.get("chunk_length_s", 30.0)
 
     corpus = Path(a.corpus).expanduser()
@@ -143,7 +163,8 @@ def main():
     if a.limit:
         prepared = prepared[: a.limit]
 
-    label = a.label or f"{spec.alias}_c{chunk_len:.0f}"
+    label = a.label or (f"{spec.alias}_{a.quantization or 'default'}_c{chunk_len:.0f}"
+                        + ("_auto" if a.language_mode == "auto" else ""))
     total_audio = sum(r[3] for r in prepared)
     # Read before the weights load, so any GPU memory reported belongs to another
     # process. Recorded in the JSON too: an x-realtime figure without the machine's
@@ -177,9 +198,24 @@ def main():
         print(f"host went idle (load {state['load_1min']}, "
               f"{state['gpu_in_use_gb']}GB GPU)")
 
+    # A cold cache means a download and, for a quantized voxtral-v1 build, a one-time
+    # conversion. Both happen here, outside the measured window: the conversion runs
+    # through MLX, so get_peak_memory() would count it, and it is not what a user sees
+    # after the first run (the kotoba 3.03GB lesson in docs/benchmarks/peak-memory.md).
+    if is_v1:
+        from mlx_asr import voxtral_v1
+        voxtral_v1.weights_dir(spec.repo)
+    # Reset before the load, as the CLI does before `run()`, so that the published cell
+    # (max of this and every file's decode peak) is the figure a CLI-per-file sweep with
+    # --stats-json reports. See docs/benchmarks/peak-memory.md.
+    mx.reset_peak_memory()
     t_load = time.perf_counter()
-    model = load_model(spec.repo)
+    if is_v1:
+        model = voxtral_v1.load(spec.repo)
+    else:
+        model = load_model(spec.repo)
     load_s = time.perf_counter() - t_load
+    load_peak_gb = mx.get_peak_memory() / 1e9
     print(f"loaded in {load_s:.1f}s\n")
 
     print(f"{'file':<26} {'u':>1} {'dur':>6} {'ref':>6} {'x rt':>6} {'cov':>6} "
@@ -201,8 +237,12 @@ def main():
         # Per file from the reference script, by the same function that picks the
         # scoring unit, so a language-detection failure is never scored as an ASR
         # error and the two choices cannot disagree.
-        lang = qwen3_language(model, spec, "en" if ref_is_en else "ja",
-                             log=lambda *x: None)
+        if is_v1:
+            lang = (None if a.language_mode == "auto"
+                    else voxtral_v1_language("en" if ref_is_en else "ja"))
+        else:
+            lang = qwen3_language(model, spec, "en" if ref_is_en else "ja",
+                                 log=lambda *x: None)
 
         mx.reset_peak_memory()
         texts, walls = [], []
@@ -210,8 +250,9 @@ def main():
         for _ in range(a.repeat):
             t0 = time.perf_counter()
             try:
-                _, text, meta = qwen3_decode(model, audio, lang, chunk_len,
-                                             log=lambda *x: None)
+                decode = voxtral_v1_decode if is_v1 else qwen3_decode
+                _, text, meta = decode(model, audio, lang, chunk_len,
+                                       log=lambda *x: None)
             except Exception as e:                     # noqa: BLE001
                 failed = f"{type(e).__name__}: {e}"[:200]
                 break
@@ -259,8 +300,8 @@ def main():
         row = {"file": stem, "duration_s": round(dur, 1), "unit": unit,
                "x_realtime": round(dur / wall, 1),
                "requested_language": lang,
-               # "forced", never "detected": this engine's autodetect is unusable
-               # through this library, so nothing here detected a language.
+               # "forced", never "detected": Qwen3's autodetect is unusable through
+               # this library. Voxtral v1 in auto mode records "model".
                "language_source": meta["language_source"],
                "segments": meta["segments"],
                "cue_source": meta["cue_source"],
@@ -306,7 +347,8 @@ def main():
         if a.json:   # write incrementally; these runs are long enough to interrupt
             _dump(a, spec, label, chunk_len, agg_ref, agg_charged, agg_kana_ref,
                   agg_kana_charged, agg_len_ref, agg_len_charged, rows, tot_dur,
-                  tot_wall, load_s, state, complete=False, expected=len(prepared))
+                  tot_wall, load_s, state, complete=False, expected=len(prepared),
+                  load_peak_gb=load_peak_gb)
 
     print()
     for unit in ("char", "word"):
@@ -344,14 +386,15 @@ def main():
     if a.json:
         _dump(a, spec, label, chunk_len, agg_ref, agg_charged, agg_kana_ref,
               agg_kana_charged, agg_len_ref, agg_len_charged, rows, tot_dur,
-              tot_wall, load_s, state, complete=True, expected=len(prepared))
+              tot_wall, load_s, state, complete=True, expected=len(prepared),
+              load_peak_gb=load_peak_gb)
         print(f"[saved] {a.json}")
     return 0
 
 
 def _dump(a, spec, label, chunk_len, agg_ref, agg_charged, kana_ref, kana_charged,
           len_ref, len_charged, rows, tot_dur, tot_wall, load_s, machine,
-          complete=False, expected=None):
+          complete=False, expected=None, load_peak_gb=None):
     """Write the results JSON.
 
     Called after every file, so an in-progress file on disk looks exactly like a
@@ -368,7 +411,7 @@ def _dump(a, spec, label, chunk_len, agg_ref, agg_charged, kana_ref, kana_charge
         summary["char_lenient"] = round(len_charged / len_ref, 5)
     peaks = [r["peak_memory_gb"] for r in rows if "peak_memory_gb" in r]
     with open(a.json, "w") as f:
-        json.dump({"engine": "mlx-qwen3", "config": vars(a), "label": label,
+        json.dump({"engine": spec.backend, "config": vars(a), "label": label,
                    "model": spec.repo, "chunk_seconds": chunk_len,
                    "complete": complete,
                    "machine": machine,
@@ -376,7 +419,10 @@ def _dump(a, spec, label, chunk_len, agg_ref, agg_charged, kana_ref, kana_charge
                    "aggregate": summary, "ref_units": agg_ref,
                    "kana_ref_chars": round(kana_ref), "lenient_ref_chars": len_ref,
                    "x_realtime": round(tot_dur / max(tot_wall, 1e-9), 2),
-                   "peak_memory_gb": round(max(peaks), 2) if peaks else None,
+                   "peak_memory_gb": round(max(peaks + [load_peak_gb or 0]), 2)
+                                     if peaks else None,
+                   "load_peak_memory_gb": (round(load_peak_gb, 2)
+                                           if load_peak_gb is not None else None),
                    # Anything reading `aggregate` has to be able to see that some
                    # files did not finish; the number looks perfectly ordinary.
                    "truncated_files": [r["file"] for r in rows

@@ -4,7 +4,7 @@
     mlx-asr audio.wav --model whisper-turbo
     mlx-asr --list-models
 
-One CLI over four engines, because on measured evidence no single one wins
+One CLI over seven engines, because on measured evidence no single one wins
 everything (docs/benchmarks/engines.md):
 
     voxtral        fastest, deterministic, best timestamp stability, no language
@@ -17,6 +17,10 @@ everything (docs/benchmarks/engines.md):
     qwen3-asr      deterministic and does real language ID, but emits no
                    timestamp finer than its own chunk boundaries, so `-f srt`
                    and `-f vtt` are refused on it: txt and json only.
+    voxtral-v1     the first Voxtral generation (Mini 3B, Small 24B). Text
+                   only, like qwen3-asr, so the same formats are refused.
+    parakeet,      Japanese-only. parakeet on MLX; reazon on CPU through
+    reazon         sherpa-onnx.
 
 Defaults per model come from `models.py`; defaults per machine come from
 `hardware.py`, which uses measured profiles where a machine has been benchmarked
@@ -24,7 +28,7 @@ and a formula elsewhere. Batch size is not a fixed constant because throughput i
 not monotonic in it: on a 16GB M4, B=2..8 is *slower* per step than B=1 (see
 docs/benchmarks/decode-throughput.md), so "bigger batch is better" lands in the worst regime.
 
-The flags are mostly NOT portable across the four engines, because the engines do
+The flags are mostly NOT portable across the engines, because the engines do
 not share a long-form algorithm. **An unsupported flag is a hard error** (exit 2),
 never a warning and never silently dropped: a flag that looks accepted and then
 does nothing yields output the user reads as having been produced with it, which is
@@ -332,8 +336,11 @@ def build_parser():
                         "Whisper autodetects when omitted, which misfires on "
                         "mixed-language audio; qwen3-asr is forced to English when "
                         "omitted, because its own autodetect corrupts multi-chunk "
-                        "text upstream. Voxtral takes no language token and "
-                        "rejects this flag. An unrecognised value is an error")
+                        "text upstream. voxtral-v1 detects when omitted, which "
+                        "on Japanese sends whole windows out in other languages, "
+                        "so pass it there. Voxtral Realtime (voxtral) takes no "
+                        "language token and rejects this flag. An unrecognised "
+                        "value is an error")
     p.add_argument("-f", "--output-format", default="srt",
                    choices=[*WRITERS.keys(), "all"],
                    help="srt/vtt/txt/json, or all. srt and vtt are an ERROR on "
@@ -352,15 +359,16 @@ def build_parser():
                         "Ignored when --overlap-seconds is active. "
                         "See docs/benchmarks/prompt.md")
     p.add_argument("--chunk-seconds", type=float, default=None,
-                   help="chunk/window length. Voxtral: default from the hardware "
-                        "profile, and a throughput knob rather than an accuracy one. "
-                        "kotoba: the window length, and its biggest lever by far; it is "
-                        "material-dependent, so sweep it on your own audio. qwen3-asr: "
-                        "the window length too, defaulted to 30s here rather than the "
-                        "library's 1200s, at which any file under 20 minutes is a "
-                        "single window. Ignored by "
-                        "the whisper-* models, whose 30s window is fixed. "
-                        "See docs/benchmarks/chunking.md")
+                   help="chunk/window length. voxtral (Realtime): default from the "
+                        "hardware profile, and a throughput knob rather than an "
+                        "accuracy one. kotoba: the window length, and its biggest lever "
+                        "by far; it is material-dependent, so sweep it on your own "
+                        "audio. qwen3-asr: the window length too, defaulted to 30s here "
+                        "rather than the library's 1200s, at which any file under 20 "
+                        "minutes is a single window. voxtral-v1: the window length, "
+                        "default 30s, and an accuracy lever on Japanese, which "
+                        "degrades above 60s. Refused by whisper, whose 30s window is "
+                        "fixed. See docs/benchmarks/chunking.md")
     p.add_argument("--quantization", default=None, metavar="PRECISION",
                    help=f"weight precision, where the alias publishes a choice. "
                         f"Per model: {quantization_help()}. 'none' means whichever "

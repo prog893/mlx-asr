@@ -24,6 +24,12 @@ claimed two. The re-run reproduced **19 of 20 cells within 0.02GB**, so the earl
 were right about the models and wrong about their provenance. Only kotoba moved, for the
 reason below.
 
+The six `voxtral-v1` cells were added on 2026-09-25 from the engine's corpus runs
+(`run_qwen3.py`) rather than a CLI-per-file sweep. The basis is the same: the counter is
+reset before the model loads, as the CLI does before `run()`, and the cell is the maximum
+over the 20 files. The one file measured both ways read 10.91GB in each. Like qwen3-asr its
+peak is flat across the corpus, because a fixed window fixes the working set.
+
 ## What the number is sensitive to
 
 **Audio length, on the Whisper family.** Its peak grows monotonically with duration and

@@ -212,6 +212,55 @@ def _split_for_qwen3(audio, chunk_len: float):
                 for i in range(0, max(len(audio), 1), step)]
 
 
+def _window_meta(segments, duration, language, chunk_len, per_chunk, backend,
+                 log=print, language_source="forced") -> dict:
+    """Decode-health meta for a windowed engine, with the two loud warnings.
+
+    Shared by every backend that drives its own window loop, so a truncated file or a
+    repetition loop is reported the same way whichever engine produced it.
+    """
+    covered = max((s["end"] for s in segments), default=0.0)
+    audio_coverage = covered / duration if duration else 1.0
+    runaway = [s for s in segments
+               if (s["end"] - s["start"]) > 0
+               and len(s["text"]) / (s["end"] - s["start"]) > RUNAWAY_CHARS_PER_S]
+
+    # NOT `detected_language`, which the whisper backend sets. On Qwen3-ASR nothing
+    # detected anything, the language was forced (see qwen3_language for why
+    # autodetect is unusable), and a JSON field saying "detected_language":
+    # "Japanese" on a run that never ran detection is the same class of quiet untruth
+    # as a flag that looks honoured and does nothing. Voxtral v1 without --language
+    # detects inside the model and reports no result, so it records "model" rather
+    # than a language it cannot name.
+    meta = {"language_source": language_source,
+            "requested_language": language,
+            "segments": len(segments),
+            # The load-bearing caveat: these cues are windows, not speech.
+            "cue_source": "chunk_boundaries",
+            "chunk_seconds": chunk_len,
+            "max_tokens_per_chunk": per_chunk or "scaled per window",
+            "audio_coverage": round(audio_coverage, 4),
+            "runaway_segments": len(runaway),
+            "empty_segments": sum(1 for s in segments if not s["text"])}
+
+    # Loud, because the output file looks complete either way. A short transcript is
+    # not distinguishable from quiet audio without this line.
+    if audio_coverage < 0.99:
+        log(f"[{backend}] WARNING: segments span only {covered:.0f}s of "
+            f"{duration:.0f}s ({audio_coverage:.0%}); the rest of the file is "
+            f"MISSING from this output.")
+    if runaway:
+        worst = max(runaway,
+                    key=lambda s: len(s["text"]) / max(s["end"] - s["start"], 1e-9))
+        log(f"[{backend}] WARNING: {len(runaway)} of {len(segments)} windows look "
+            f"like repetition loops (worst: "
+            f"{len(worst['text']) / (worst['end'] - worst['start']):.0f} chars/s at "
+            f"{worst['start']:.0f}s, against 6-9 for real speech). That text is not "
+            f"a transcript of the audio. Each is capped to its own window now, so the "
+            f"rest of the file is unaffected.")
+    return meta
+
+
 def qwen3_decode(loaded, audio, language: str, chunk_len: float, log=print, **opts):
     """Decode one already-loaded array. Returns (cues, full_text, meta).
 
@@ -263,44 +312,9 @@ def qwen3_decode(loaded, audio, language: str, chunk_len: float, log=print, **op
         segments.append({"start": offset, "end": offset + chunk_dur,
                          "text": text, "language": language})
 
+    meta = _window_meta(segments, duration, language, chunk_len, per_chunk,
+                        "mlx-qwen3", log)
     cues = [(s["start"], s["end"], s["text"]) for s in segments if s["text"]]
-    covered = max((s["end"] for s in segments), default=0.0)
-    audio_coverage = covered / duration if duration else 1.0
-    runaway = [s for s in segments
-               if (s["end"] - s["start"]) > 0
-               and len(s["text"]) / (s["end"] - s["start"]) > RUNAWAY_CHARS_PER_S]
-
-    # NOT `detected_language`, which the whisper backend sets and which would be a
-    # false claim here: nothing detected anything, the language was forced (see
-    # qwen3_language for why autodetect is unusable). A JSON field saying
-    # "detected_language": "Japanese" on a run that never ran detection is the same
-    # class of quiet untruth as a flag that looks honoured and does nothing.
-    meta = {"language_source": "forced",
-            "requested_language": language,
-            "segments": len(segments),
-            # The load-bearing caveat: these cues are windows, not speech.
-            "cue_source": "chunk_boundaries",
-            "chunk_seconds": chunk_len,
-            "max_tokens_per_chunk": per_chunk or "scaled per window",
-            "audio_coverage": round(audio_coverage, 4),
-            "runaway_segments": len(runaway),
-            "empty_segments": sum(1 for s in segments if not s["text"])}
-
-    # Loud, because the output file looks complete either way. A short transcript is
-    # not distinguishable from quiet audio without this line.
-    if audio_coverage < 0.99:
-        log(f"[mlx-qwen3] WARNING: segments span only {covered:.0f}s of "
-            f"{duration:.0f}s ({audio_coverage:.0%}); the rest of the file is "
-            f"MISSING from this output.")
-    if runaway:
-        worst = max(runaway,
-                    key=lambda s: len(s["text"]) / max(s["end"] - s["start"], 1e-9))
-        log(f"[mlx-qwen3] WARNING: {len(runaway)} of {len(segments)} windows look "
-            f"like repetition loops (worst: "
-            f"{len(worst['text']) / (worst['end'] - worst['start']):.0f} chars/s at "
-            f"{worst['start']:.0f}s, against 6-9 for real speech). That text is not "
-            f"a transcript of the audio. Each is capped to its own window now, so the "
-            f"rest of the file is unaffected.")
     # Space-joined, matching upstream's own `" ".join(all_texts)`, so the text a user
     # gets is the same shape as before this loop moved here.
     return cues, " ".join(t for t in texts if t), meta
@@ -334,6 +348,71 @@ def transcribe_mlx_qwen3(audio_path: str, model, language=None, log=print,
     log(f"[{model.backend}] language={lang}, window {chunk_len:g}s")
     return qwen3_decode(m, load_audio_16k(audio_path), lang, chunk_len, log=log,
                         **opts)
+
+
+def voxtral_v1_language(language=None) -> str | None:
+    """The ISO 639-1 code for Voxtral v1's `lang:xx` prompt, or None to let it detect.
+
+    Unlike Qwen3-ASR, leaving it out is safe here: without a `lang:` prefix the model
+    detects the language itself, inside one window, and the prompt carries nothing that
+    can leak into the text. It is still worth passing, since the authors' card says the
+    prefix improves adherence.
+    """
+    if not language:
+        return None
+    from .languages import to_iso
+    return to_iso(language, "voxtral-v1")
+
+
+def voxtral_v1_decode(loaded, audio, language: str | None, chunk_len: float,
+                      log=print, max_tokens=None):
+    """Decode one already-loaded array through Voxtral v1. Returns (cues, text, meta).
+
+    The same shape as ``qwen3_decode`` and for the same reasons: the benchmark calls
+    this exact function on weights it loaded once, and the window loop is here so that
+    the token budget is per window (see ``TOKENS_PER_SECOND``; upstream's default is 128
+    tokens per call, about a minute of speech). The cut points come from the same
+    low-energy splitter, so a window-length comparison between the two engines is a
+    comparison of the engines rather than of two splitters.
+
+    Cue times are window boundaries, as on Qwen3-ASR: the weights emit text only.
+    """
+    from . import voxtral_v1
+
+    duration = len(audio) / 16000
+    segments, texts = [], []
+    for chunk, offset in _split_for_qwen3(audio, chunk_len):
+        chunk_dur = len(chunk) / 16000
+        budget = max_tokens or max(MIN_CHUNK_MAX_TOKENS,
+                                   int(chunk_dur * TOKENS_PER_SECOND))
+        text = voxtral_v1.transcribe_window(loaded, chunk, language, budget)
+        texts.append(text)
+        segments.append({"start": offset, "end": offset + chunk_dur,
+                         "text": text, "language": language})
+
+    meta = _window_meta(segments, duration, language, chunk_len, max_tokens,
+                        "mlx-voxtral-v1", log,
+                        language_source="forced" if language else "model")
+    cues = [(s["start"], s["end"], s["text"]) for s in segments if s["text"]]
+    return cues, " ".join(t for t in texts if t), meta
+
+
+def transcribe_mlx_voxtral_v1(audio_path: str, model, language=None, log=print,
+                              **overrides):
+    """Voxtral Mini 3B / Small 24B (2507). Returns (cues, full_text, meta)."""
+    from . import voxtral_v1
+    from .audio import load_audio_16k
+
+    opts = dict(model.opts)
+    opts.update({k: v for k, v in overrides.items() if v is not None})
+    chunk_len = opts.pop("chunk_length_s", 30.0)
+
+    loaded = voxtral_v1.load(model.repo, log=log)
+    lang = voxtral_v1_language(language)
+    log(f"[{model.backend}] language={lang or 'detected by the model'}, "
+        f"window {chunk_len:g}s")
+    return voxtral_v1_decode(loaded, load_audio_16k(audio_path), lang, chunk_len,
+                             log=log)
 
 
 def _refuse_non_japanese(language, model):
@@ -649,6 +728,7 @@ DISPATCH = {
     "mlx-whisper": transcribe_mlx_whisper,
     "mlx-chunked": transcribe_mlx_chunked,
     "mlx-qwen3": transcribe_mlx_qwen3,
+    "mlx-voxtral-v1": transcribe_mlx_voxtral_v1,
     "mlx-parakeet": transcribe_mlx_parakeet,
     "sherpa-onnx": transcribe_reazon_k2,
 }
