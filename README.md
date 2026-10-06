@@ -90,7 +90,7 @@ error, not a warning: nothing is silently ignored.
 
 ```console
 $ mlx-asr audio.wav --model whisper --max-batch 32 --vad
-error: --max-batch, --vad: not supported by --model whisper-turbo. These are
+error: --max-batch, --vad: not supported by --model whisper-large-v3. These are
 Voxtral-only, because the engines do not share a long-form algorithm. Drop the
 flag, or use the default --model voxtral.
 ```

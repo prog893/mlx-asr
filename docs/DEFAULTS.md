@@ -9,12 +9,13 @@ them, so that there is one place per finding to keep correct.
 
 The rows below do not rest on equal evidence, and the difference has bitten: `voxtral 4bit`
 was justified for weeks by a single-clip tie that the corpus later contradicted. So each
-default falls into one of three tiers.
+default falls into one of four tiers.
 
 | tier | what it means | rows |
 |---|---|---|
-| **decided by accuracy** | swept on the multi-file corpus, and the winner beat the alternatives by more than the corpus can confuse | model choice, `whisper --size`, `qwen3-asr --size`, `voxtral` precision, `qwen3-asr --chunk-seconds`, `voxtral-v1 --chunk-seconds`, `--prompt` |
+| **decided by accuracy** | swept on the multi-file corpus, and the winner beat the alternatives by more than the corpus can confuse | model choice, `qwen3-asr --size`, `voxtral` precision, `qwen3-asr --chunk-seconds`, `voxtral-v1 --chunk-seconds`, `--prompt` |
 | **decided by cost** | swept on the corpus, but the arms tie on accuracy, so the default was chosen on speed, memory or dependencies | `voxtral-v1` precision, `voxtral --chunk-seconds`, `--max-batch`, `--overlap-seconds`, `--delay-ms`, `--gain`, `--vad`, `--compact-silence`, `--kv-bits` |
+| **decided by caution** | swept on the corpus and tied, but the cheaper arm gives up capacity the corpus is too small to clear, so the default takes the larger one | `whisper --size` |
 | **not yet on the corpus** | one recording only, or not measured at all, so unverified on the material this project targets | cue layout, which needs a second reference set that does not exist |
 
 That last tier is where surprises come from, and it has emptied out considerably. `--vad`,

@@ -1,8 +1,10 @@
 # Lever: which engine
 
-**Conclusion first.** Whisper large-v3-turbo with `condition_on_previous_text=False` is
-the most accurate option on this corpus, by about 1.7 points on Japanese, resolved by every
-test available here including a bootstrap over files. Voxtral is 1.35-1.65x faster, needs
+**Conclusion first.** Whisper with `condition_on_previous_text=False` is the most accurate
+engine on this corpus, about 1.7 points ahead of Voxtral on Japanese, resolved by every test
+available here including a bootstrap over files. That comparison was run with
+large-v3-turbo; `large-v3`, the shipped default since 2026-10-06, ties turbo on the same
+corpus, so the verdict is about the engine rather than about one size. Voxtral is 1.35-1.65x faster, needs
 no language hint, needs no long-form-stability flag, and is reproducible on a given
 machine, which is why it is the default. No "fastest on Apple Silicon" claim survives
 measurement.
