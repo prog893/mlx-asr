@@ -9,12 +9,13 @@ them, so that there is one place per finding to keep correct.
 
 The rows below do not rest on equal evidence, and the difference has bitten: `voxtral 4bit`
 was justified for weeks by a single-clip tie that the corpus later contradicted. So each
-default falls into one of three tiers.
+default falls into one of four tiers.
 
 | tier | what it means | rows |
 |---|---|---|
-| **decided by accuracy** | swept on the multi-file corpus, and the winner beat the alternatives by more than the corpus can confuse | model choice, `whisper --size`, `qwen3-asr --size`, `voxtral` precision, `qwen3-asr --chunk-seconds`, `voxtral-v1 --chunk-seconds`, `--prompt` |
+| **decided by accuracy** | swept on the multi-file corpus, and the winner beat the alternatives by more than the corpus can confuse | model choice, `qwen3-asr --size`, `voxtral` precision, `qwen3-asr --chunk-seconds`, `voxtral-v1 --chunk-seconds`, `--prompt` |
 | **decided by cost** | swept on the corpus, but the arms tie on accuracy, so the default was chosen on speed, memory or dependencies | `voxtral-v1` precision, `voxtral --chunk-seconds`, `--max-batch`, `--overlap-seconds`, `--delay-ms`, `--gain`, `--vad`, `--compact-silence`, `--kv-bits` |
+| **decided by caution** | swept on the corpus and tied, but the cheaper arm gives up capacity the corpus is too small to clear, so the default takes the larger one | `whisper --size` |
 | **not yet on the corpus** | one recording only, or not measured at all, so unverified on the material this project targets | cue layout, which needs a second reference set that does not exist |
 
 That last tier is where surprises come from, and it has emptied out considerably. `--vad`,
@@ -29,7 +30,7 @@ used to argue an effect is small.
 | default | why | detail |
 |---|---|---|
 | `voxtral` as the model | faster than whisper turbo, needs no language flag, and reruns byte-identically on one machine. Turbo is slightly more accurate on Japanese, so this trades a little accuracy for speed and reproducibility | [engines.md](benchmarks/engines.md) |
-| `whisper --size turbo` | ties `large-v3` on Japanese at roughly twice the speed and less memory, so picking by size number would pay for nothing | [engines.md](benchmarks/engines.md) |
+| `whisper --size large-v3` | **a tie broken toward capacity, deliberately.** It ties `turbo` on both languages at the shipped config, so the corpus cannot choose; with only 20 files from a few sources, the full 32-layer decoder is the safer bet on audio the corpus does not cover. `turbo` is the speed option: 2.1x faster and 1.5GB less memory | [engines.md](benchmarks/engines.md) |
 | `qwen3-asr --size 1.7B` | clearly ahead of `0.6B` on accuracy. The `0.6B` is the speed option, and the fastest engine measured here | [qwen3-asr.md](benchmarks/qwen3-asr.md) |
 | `voxtral-v1 --size 3B` | **not the more accurate size, deliberately.** 24B at 8bit is 9.0 points better on Japanese and a point on English, but it peaks at 16-50GB and runs at 2-4x, while the 3B at 8bit fits a 16GB Mac's GPU working set. Pass `--size 24B` on a large-memory machine | [voxtral-v1.md](benchmarks/voxtral-v1.md) |
 | `parakeet --chunk-seconds 120` | clearly ahead of 300s on the corpus, and cheaper on memory. A one-file pre-check had shown a tie, which reversed at corpus scale. 60s is excluded because it drops content outright | [japanese-only.md](benchmarks/japanese-only.md) |

@@ -1,8 +1,10 @@
 # Lever: which engine
 
-**Conclusion first.** Whisper large-v3-turbo with `condition_on_previous_text=False` is
-the most accurate option on this corpus, by about 1.7 points on Japanese, resolved by every
-test available here including a bootstrap over files. Voxtral is 1.35-1.65x faster, needs
+**Conclusion first.** Whisper with `condition_on_previous_text=False` is the most accurate
+engine on this corpus, about 1.7 points ahead of Voxtral on Japanese, resolved by every test
+available here including a bootstrap over files. That comparison was run with
+large-v3-turbo; `large-v3`, the shipped default since 2026-10-06, ties turbo on the same
+corpus, so the verdict is about the engine rather than about one size. Voxtral is 1.35-1.65x faster, needs
 no language hint, needs no long-form-stability flag, and is reproducible on a given
 machine, which is why it is the default. No "fastest on Apple Silicon" claim survives
 measurement.
@@ -55,16 +57,19 @@ property of the size ([peak-memory.md](peak-memory.md)).
 | `small` | 21.33% | 22.68% | 20.1x | 4.37GB | 28.61% |
 | `medium` | 21.63% | 18.23% | 21.4x | 5.43GB | 28.93% |
 | `large-v2` | 17.87% | 17.68% | 14.4x | 6.97GB | 25.02% |
-| `large-v3` | **14.55%** | 18.26% | 11.4x | 7.00GB | 39.91% |
-| `turbo` **(ships)** | 14.68% | **18.31%** | 23.7x | 5.53GB | 24.97% |
+| `large-v3` **(ships)** | **14.55%** | 18.26% | 11.4x | 7.00GB | 39.91% |
+| `turbo` | 14.68% | 18.31% | 23.7x | 5.53GB | 24.97% |
 
 Three things follow.
 
-**`turbo` remains the right default**, and now for a clearer reason than before: it ties
-`large-v3` on Japanese (14.68% against 14.55%, well inside the ±0.27 that repeat runs of
-turbo spread) while running **2.1x faster** and using 1.5GB less memory. The earlier
-7-file table appeared to show turbo winning outright on accuracy; at n=20 with both at
-their shipped config the honest statement is that they are tied and turbo is cheaper.
+**`turbo` and `large-v3` tie**: 14.68% against 14.55% on Japanese, well inside the ±0.27
+that repeat runs of turbo spread, and 18.31% against 18.26% on English. The earlier 7-file
+table appeared to show turbo winning outright; at n=20 with both at their shipped config
+the honest statement is that the corpus cannot separate them. Turbo is **2.1x faster** and
+uses 1.5GB less memory. The default was turbo on that basis until 2026-10-06, and is now
+**`large-v3`**: a tie on 20 files from a few sources is not evidence that turbo's 4-layer
+decoder holds up on material the corpus does not cover, so the tie is broken toward
+capacity, and turbo stays available as the speed option.
 
 **`large-v3` was the worst-served by the old measurement.** 39.91% at library defaults
 against 14.55% shipped, a 25-point artifact of cross-window repetition loops that

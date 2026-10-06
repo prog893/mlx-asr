@@ -324,8 +324,8 @@ def build_parser():
                         f"--size and --quantization")
     p.add_argument("--size", default=None,
                    help=f"which size within the family. {size_help()}. Defaults are "
-                        f"measured, not the largest: whisper defaults to turbo, which "
-                        f"beats large-v3 here by 1.5 points AND runs ~2x faster. "
+                        f"measured: whisper defaults to large-v3, which ties turbo "
+                        f"on our corpus; turbo is the 2x faster option. "
                         f"Refused on a family that has one size")
     p.add_argument("--list-models", action="store_true",
                    help="list the built-in models with their caveats and exit")

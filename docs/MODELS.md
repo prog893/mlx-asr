@@ -41,8 +41,8 @@ fallback, so this runs on Apple Silicon or not at all.
 | `small` | - | [mlx-community/whisper-small-mlx](https://huggingface.co/mlx-community/whisper-small-mlx) | 0.48GB | 4.38GB |
 | `medium` | - | [mlx-community/whisper-medium-mlx](https://huggingface.co/mlx-community/whisper-medium-mlx) | 1.52GB | 5.44GB |
 | `large-v2` | - | [mlx-community/whisper-large-v2-mlx](https://huggingface.co/mlx-community/whisper-large-v2-mlx) | 3.08GB | 6.99GB |
-| `large-v3` | - | [mlx-community/whisper-large-v3-mlx](https://huggingface.co/mlx-community/whisper-large-v3-mlx) | 3.08GB | 6.99GB |
-| `turbo` **default** | - | [mlx-community/whisper-large-v3-turbo](https://huggingface.co/mlx-community/whisper-large-v3-turbo) | 1.61GB | 5.52GB |
+| `large-v3` **default** | - | [mlx-community/whisper-large-v3-mlx](https://huggingface.co/mlx-community/whisper-large-v3-mlx) | 3.08GB | 6.99GB |
+| `turbo` | - | [mlx-community/whisper-large-v3-turbo](https://huggingface.co/mlx-community/whisper-large-v3-turbo) | 1.61GB | 5.52GB |
 
 ### `--model kotoba`
 
@@ -126,7 +126,7 @@ so the first run of a precision downloads the bf16 weights (9.37GB for 3B, 48.54
 
 ```bash
 mlx-asr audio.wav                                            # voxtral, writes audio.srt
-mlx-asr audio.wav --model whisper --language ja              # turbo
+mlx-asr audio.wav --model whisper --language ja              # large-v3
 mlx-asr audio.wav --model whisper --size small --language ja
 mlx-asr audio.wav --model kotoba                             # forces ja itself
 mlx-asr audio.wav --model qwen3-asr --language ja -f txt
@@ -270,7 +270,7 @@ word spacing ([benchmarks/prompt.md](benchmarks/prompt.md)).
 
 | flag | values | default | effect |
 |---|---|---|---|
-| `--size` | see matrix | `turbo` | which checkpoint |
+| `--size` | see matrix | `large-v3` | which checkpoint |
 | `--language` | any spelling | autodetect | set it; see above |
 
 `condition_on_previous_text=False` is applied to `small` and larger and is not a flag,
