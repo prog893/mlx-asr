@@ -30,7 +30,7 @@ Down and to the right is better: lower error, more speed. Filled points fit a 16
 | [qwen3-batch.md](qwen3-batch.md) | batch size on qwen3-asr | Batching whole chunks loses monotonically (2.3x slower by batch 8) for no accuracy gain, so `--max-batch` stays refused there. |
 | [input-level.md](input-level.md) | `--gain` | Quiet input silently costs ~3.8 points. `auto` fixes it and is a no-op otherwise. |
 | [prompt.md](prompt.md) | `--prompt` | Weak and unreliable, except that an *instruction* there costs 6-14 points. |
-| [quantization.md](quantization.md) | weight and KV precision | **Voxtral:** costs accuracy monotonically in bit width, reversing the earlier single-clip tie. 4-bit is last of five, 1.07 behind 8-bit and 1.30 behind fp16; 8-bit matches fp16 at 7.3GB and full speed. **`qwen3-asr`: not swept**, one 7-file bf16 check only. `--kv-bits 8` is close to free. |
+| [quantization.md](quantization.md) | weight and KV precision | **Voxtral:** costs accuracy monotonically in bit width, reversing the earlier single-clip tie. 4-bit is last of five, 1.07 behind 8-bit and 1.30 behind fp16; 8-bit matches fp16 at 7.3GB and full speed. **`qwen3-asr`:** swept on the corpus; flat on the 1.7B, 4bit costs 7 points on the 0.6B. `--kv-bits 8` is close to free. |
 | [timestamps.md](timestamps.md) | timestamp quality | Voxtral holds timing, Whisper places cues better. Different failure modes, reported separately. |
 | [cue-layout.md](cue-layout.md) | subtitle grouping | Two sweeps run, neither adopted, on purpose. Costs 5.4 break-F1 points. |
 

@@ -15,11 +15,10 @@ fp16 will not fit a 16GB machine. **If you have the memory, `--quantization fp16
 accuracy option, and a locally converted 8-bit build matches it at 7.3GB and full speed.**
 `--kv-bits 8` is separately close to free and is on by default.
 
-**`qwen3-asr` has its own ladder and it has not been swept this way.** Its default rests on
-one bf16-versus-8-bit comparison on 7 files ([qwen3-asr.md](qwen3-asr.md)), where bf16 was
-+0.18 points on the 1.7B, and its 4bit/5bit/6bit rungs have no accuracy figure at all.
-Whether the Voxtral pattern holds there is **unknown**, and this document does not claim it
-does; the two models share nothing but a `--quantization` flag.
+**`qwen3-asr` has its own ladder, swept on the same 20 files, and it does not follow the
+Voxtral pattern** ([qwen3-asr.md](qwen3-asr.md)). On the 1.7B every rung ties 8bit. On the
+0.6B, 4bit is 7.02 points worse, CI [-8.82, -5.30], and 5bit/6bit 1.57 and 1.74. The two models
+share nothing but a `--quantization` flag, so neither ladder says anything about the other.
 
 The Voxtral result replaces an earlier "quantization costs nothing measurable", which came
 from a single prepared-narration clip where the five precisions span 0.43 points and 4-bit
@@ -95,8 +94,8 @@ narration does not describe spontaneous multi-speaker audio.
 
 What that does *not* undermine: the cost figures (wall clock, memory, decode steps/s), which
 are properties of the weights and the hardware rather than of the audio, and which the
-corpus run reproduces. **4bit through 6bit on `qwen3-asr*` remain exposed but unmeasured**,
-which the `--help` text says.
+corpus run reproduces. The `qwen3-asr` rungs have since been measured on the corpus too; see
+[qwen3-asr.md](qwen3-asr.md).
 
 The one thing worth checking afresh on a new engine is not accuracy but **decoder
 degeneracy**, where the effect size is large rather than fractional. On Qwen3-ASR it made
@@ -129,7 +128,7 @@ M2 Ultra. Every arm through `run_corpus.py`, paired with `compare_engines.py`:
 The ordering is monotonic in bit width **on this model**, which is what one would naively
 expect and what the clip sweep denied. Two comparisons clear significance against 4-bit
 (fp16 and 8-bit); mxfp8 and nvfp4 land inside the resolution floor. Nothing here has been
-checked on `qwen3-asr`, whose ladder is separate and mostly unmeasured.
+carried over to `qwen3-asr`, whose ladder is measured separately and behaves differently.
 
 **8-bit is the interesting result.** Against fp16 it is a tie (+0.23 points, CI [-0.12,
 +0.70]), so it captures the full accuracy of unquantized weights while running at 4-bit's

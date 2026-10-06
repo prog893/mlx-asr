@@ -87,7 +87,6 @@ _PICKER_OFFSETS = {
 
 def picker(t):
     fig, (ax_jp, ax_en) = _grid(t, 1, 2, 10.0, 4.4)
-    fits_any = False
     for ax, key, idx, title in ((ax_jp, "jp", 1, "Japanese: 17 files"),
                                 (ax_en, "en", 2, "English: 3 files only")):
         for row in cd.PICKER:
@@ -95,12 +94,15 @@ def picker(t):
             if value is None:
                 continue
             x, y = cd.num(speed), cd.pct(value)
-            fits = peak is None or cd.num(peak) <= cd.M16_WORKING_SET_GB
-            fits_any |= fits
-            ax.scatter([x], [y], s=70, zorder=4, linewidths=2,
-                       facecolors=t["s1"] if fits else t["surface"],
-                       edgecolors=t["s1"] if not fits else t["surface"])
-            if not fits:   # the ring alone is too thin to read as a mark
+            if peak is None:
+                # A CPU engine has no GPU peak, so it is neither a measured fit nor a
+                # measured miss; its own marker says so rather than borrowing "fits".
+                ax.scatter([x], [y], s=70, zorder=4, marker="D", facecolors="none",
+                           edgecolors=t["s1"], linewidths=2)
+            elif cd.num(peak) <= cd.M16_WORKING_SET_GB:
+                ax.scatter([x], [y], s=70, zorder=4, facecolors=t["s1"],
+                           edgecolors=t["surface"], linewidths=2)
+            else:
                 ax.scatter([x], [y], s=70, zorder=4, facecolors="none",
                            edgecolors=t["s1"], linewidths=2)
             label = name + (f" ({note})" if note else "")
@@ -123,8 +125,11 @@ def picker(t):
     h_fit = ax_jp.scatter([], [], s=70, facecolors=t["s1"], edgecolors=t["surface"])
     h_big = ax_jp.scatter([], [], s=70, facecolors="none", edgecolors=t["s1"],
                           linewidths=2)
-    ax_jp.legend([h_fit, h_big], ["fits a 16GB Mac (peak under 12.7GB)",
-                                  "needs more memory"],
+    h_cpu = ax_jp.scatter([], [], s=70, marker="D", facecolors="none",
+                          edgecolors=t["s1"], linewidths=2)
+    ax_jp.legend([h_fit, h_big, h_cpu], ["fits a 16GB Mac (GPU peak under 12.7GB)",
+                                         "needs more GPU memory",
+                                         "runs on the CPU, no GPU peak"],
                  frameon=False, labelcolor=t["ink2"], fontsize=8.5, loc="lower left")
     _caption(fig, t, "M2 Ultra. Speeds marked floor or shared GPU were measured with "
                      "other GPU work resident; CPU runs on the CPU. Each shipped default "
@@ -271,11 +276,14 @@ CHARTS = {"picker": picker, "whisper-sizes": whisper_sizes, "windows": windows,
           "precision": precision, "batch": batch, "delay": delay, "gain": gain}
 
 
+def render_all(out: Path = OUT) -> list[Path]:
+    return [save(fn(theme), out, name, mode)
+            for name, fn in CHARTS.items() for mode, theme in THEMES.items()]
+
+
 def main():
-    for name, fn in CHARTS.items():
-        for mode, theme in THEMES.items():
-            path = save(fn(theme), OUT, name, mode)
-            print(path.relative_to(OUT.parents[2]))
+    for path in render_all():
+        print(path.relative_to(OUT.parents[2]))
     return 0
 
 

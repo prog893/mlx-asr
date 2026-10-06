@@ -57,9 +57,12 @@ weeks.
 | `reazon` fp32 | the publisher's table says int8 is near-parity, but on conversational material int8 drops whole phrases mid-file. Read-speech benchmarks and real audio disagree, and the corpus wins | [japanese-only.md](benchmarks/japanese-only.md) |
 | `--kv-bits 8` | a tie with unquantized on the corpus, and faster, so the speed is free | [quantization.md](benchmarks/quantization.md) |
 
-`qwen3-asr`'s ladder below 8bit is exposed but has no accuracy figure at all, so going lower
-there is a memory choice made blind. Its memory cost is measured
-([peak-memory.md](benchmarks/peak-memory.md)).
+Going below a default is measured on every model that offers it, and the sizes disagree.
+On `qwen3-asr 1.7B` every rung ties, so 4bit is a free speed and memory option there. On
+`qwen3-asr 0.6B` 4bit costs 7 points and 5bit/6bit 1.6 to 1.7, and on `voxtral-v1 3B` 4bit
+costs 8 points ([qwen3-asr.md](benchmarks/qwen3-asr.md),
+[voxtral-v1.md](benchmarks/voxtral-v1.md)). Small models are where low precision costs
+here, so do not carry one model's ladder over to another.
 
 ## Chunking and windows
 
