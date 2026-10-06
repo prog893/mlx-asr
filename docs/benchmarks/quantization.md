@@ -121,6 +121,11 @@ M2 Ultra. Every arm through `run_corpus.py`, paired with `compare_engines.py`:
 | nvfp4 | 2.5GB | 16.07% | +0.27, CI [-0.47, +1.23] | 19.6x | **5.09GB** |
 | 4-bit (ships) | 2.9GB | 16.34% | | 18.5x | 6.77GB |
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/precision-dark.svg">
+  <img alt="Japanese CER by precision for each model, with peak memory per precision, shipped precision ringed" src="img/precision-light.svg">
+</picture>
+
 The ordering is monotonic in bit width **on this model**, which is what one would naively
 expect and what the clip sweep denied. Two comparisons clear significance against 4-bit
 (fp16 and 8-bit); mxfp8 and nvfp4 land inside the resolution floor. Nothing here has been

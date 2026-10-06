@@ -8,6 +8,15 @@ Read [metrics.md](metrics.md) and [corpus.md](corpus.md) before quoting any figu
 metrics here are unusual for a reason, and most of the material has editorial references
 that make plain CER meaningless.
 
+## Picking a model
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/picker-dark.svg">
+  <img alt="Error against speed for every engine as shipped, Japanese and English panels; filled points fit a 16GB Mac" src="img/picker-light.svg">
+</picture>
+
+Down and to the right is better: lower error, more speed. Filled points fit a 16GB Mac; the hollow one needs a large-memory machine. The two panels disagree, so pick on the language you transcribe: on Japanese the Whisper sizes and Voxtral lead, on English the voxtral-v1 models do, though English rests on three files. A label marked floor, shared GPU or CPU has a speed measured under different conditions from the rest; [engines.md](engines.md) and [MODELS.md](../MODELS.md) carry the numbers behind every point.
+
 ## The levers, largest effect first
 
 | document | lever | conclusion in one line |
@@ -169,6 +178,15 @@ uv run python scripts/benchmarks/plot_evidence.py sensitivity --hyp-dir DIR \
 `paired` is the one to reach for first: it shows whether an aggregate is broad agreement
 or two files pulling against each other, which the point estimate cannot distinguish and
 which decides whether more audio would help.
+
+The charts embedded in these documents are drawn from the published tables, not from
+result files: `scripts/docs/chart_data.py` holds the figures with the document each came
+from, and `tests/test_charts.py` fails if a figure no longer appears in its document.
+After changing a table, update the figure there and regenerate:
+
+```bash
+uv run --extra eval python scripts/docs/gen_charts.py
+```
 
 Decode throughput, **no audio needed**, and the basis of the contributed-profile flow:
 

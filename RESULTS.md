@@ -20,6 +20,11 @@ re-measured 2026-08-19 after a reference-loading fix (see below):
 | parakeet-ja (17 JP files)* | 26.19% | n/a, ja-only | **244.6x*** |
 | reazon-k2 fp32 (17 JP files)* | 30.45% | n/a, ja-only | 51.6x*, CPU |
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/benchmarks/img/picker-dark.svg">
+  <img alt="Error against speed for every engine as shipped, Japanese and English panels; filled points fit a 16GB Mac" src="docs/benchmarks/img/picker-light.svg">
+</picture>
+
 The two voxtral-v1 rows (Mistral's first-generation Voxtral, Mini 3B and Small 24B, 2507)
 were added on 2026-09-25 and change no default. Japanese is not among the eight
 languages their card lists, and it shows: both are behind every other multilingual engine

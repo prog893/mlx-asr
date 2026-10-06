@@ -60,6 +60,11 @@ property of the size ([peak-memory.md](peak-memory.md)).
 | `large-v3` **(ships)** | **14.55%** | 18.26% | 11.4x | 7.00GB | 39.91% |
 | `turbo` | 14.68% | 18.31% | 23.7x | 5.53GB | 24.97% |
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/whisper-sizes-dark.svg">
+  <img alt="Japanese CER and English WER by Whisper size; large-v3 and turbo tie, large-v3 ships" src="img/whisper-sizes-light.svg">
+</picture>
+
 Three things follow.
 
 **`turbo` and `large-v3` tie**: 14.68% against 14.55% on Japanese, well inside the ±0.27

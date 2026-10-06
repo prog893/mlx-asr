@@ -37,6 +37,11 @@ at 30s chunks, batch 32, kv8. `scripts/benchmarks/run_corpus.py`, M2 Ultra 128GB
 | 960ms | 20.51% | 30.36% | 30.7x |
 | **2400ms** | **16.44%** | **26.55%** | 28.9x |
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/delay-dark.svg">
+  <img alt="Error by transcription delay, 2400ms ships" src="img/delay-light.svg">
+</picture>
+
 Monotonic in both languages, and flat in throughput: the 1.8x spread in x-realtime
 across those rows is machine noise, not the delay. A rerun of the 2400ms config
 reproduced 16.44% / 26.55% byte-identically at 31.2x, which both confirms determinism

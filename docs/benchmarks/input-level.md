@@ -46,6 +46,11 @@ this corpus needed no normalization and unity gain was already near-optimal.
 | +6 dB | 17.09% | **23.96%** |
 | rms to -23 dBFS | 17.09% | **23.93%** |
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/gain-dark.svg">
+  <img alt="Error by input gain, auto ships and is a no-op on this corpus" src="img/gain-light.svg">
+</picture>
+
 Paired across files:
 
 | comparison | diff | 95% CI | verdict |

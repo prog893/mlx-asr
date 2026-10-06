@@ -38,6 +38,11 @@ used to argue an effect is small.
 
 ## Precision
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="benchmarks/img/precision-dark.svg">
+  <img alt="Japanese CER by precision for each model, with peak memory per precision, shipped precision ringed" src="benchmarks/img/precision-light.svg">
+</picture>
+
 One default per model, chosen as the cheapest precision whose accuracy cost is worth its
 price. **Measured per model, never inherited between them:** assuming one model's precision
 behaviour carries to another is how the Voxtral default came to be justified wrongly for
@@ -57,6 +62,11 @@ there is a memory choice made blind. Its memory cost is measured
 ([peak-memory.md](benchmarks/peak-memory.md)).
 
 ## Chunking and windows
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="benchmarks/img/windows-dark.svg">
+  <img alt="Error by decode window length for kotoba, qwen3-asr, voxtral-v1 and parakeet, shipped window ringed" src="benchmarks/img/windows-light.svg">
+</picture>
 
 | default | why | detail |
 |---|---|---|

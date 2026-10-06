@@ -75,6 +75,11 @@ M2 Ultra 137GB, 60 GPU cores, 4-bit affine, mlx 0.32.0:
 | 96 | 12.08 | 82.8 | 92.8 | 16.16 |
 | 128 | 10.11 | 99.0 | **103.5** | 19.61 |
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/batch-dark.svg">
+  <img alt="Voxtral throughput by batch size on M2 Ultra and M4, shipped batch ringed" src="img/batch-light.svg">
+</picture>
+
 Read the M4 column carefully: **batch 8 costs 5x more per step than batch 1**, and
 batch 12 is *cheaper* than batch 8. Batch 1 at 22.4ms is exactly 2.5GB / 120GB/s, the
 bandwidth floor, so nothing is wrong at batch 1; the penalty from 2 upward is a
