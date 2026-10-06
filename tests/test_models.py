@@ -197,15 +197,18 @@ def test_sizes_are_declared_only_where_there_is_a_choice():
     assert sizes_for("kotoba") == []
 
 
-def test_whisper_defaults_to_turbo_not_the_largest():
-    """The counterintuitive default, and it is measured.
-
-    Picking by size number would take large-v3, which on this corpus scores 39.91% at
-    library defaults against turbo's 24.97%, and 17.36% against 15.91% with
-    no-condition. Turbo is more accurate here AND ~2x faster.
+def test_whisper_defaults_to_large_v3():
+    """large-v3 and turbo tie on the corpus at the shipped config (14.55 vs 14.68% JP,
+    18.26 vs 18.31% EN), and the tie is broken toward the full decoder rather than
+    toward speed, because 20 files cannot rule out where turbo's 4-layer decoder loses.
+    Both must keep condition_on_previous_text=False, which is worth 25 points on
+    large-v3.
     """
-    assert resolve("whisper").repo == "mlx-community/whisper-large-v3-turbo"
-    assert resolve("whisper").size == "turbo"
+    m = resolve("whisper")
+    assert m.repo == "mlx-community/whisper-large-v3-mlx"
+    assert m.size == "large-v3"
+    assert m.opts.get("condition_on_previous_text") is False
+    assert resolve("whisper", "turbo").opts.get("condition_on_previous_text") is False
 
 
 def test_qwen3_defaults_to_the_larger_size():

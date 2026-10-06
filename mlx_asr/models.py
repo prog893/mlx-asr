@@ -56,9 +56,10 @@ four choices, and the second layer is where "same model, different tradeoff" liv
     mlx-asr a.wav --model qwen3-asr --size 0.6B --quantization 4bit -f txt
 
 The two second-layer flags are not equivalent, and the difference is measured.
-**Size is a large accuracy lever** (43 CER points from `tiny` to `turbo`), so each
-family's default is chosen on evidence: `whisper` defaults to `turbo`, not to the
-larger `large-v3`, which is both less accurate here and half the speed.
+**Size is a large accuracy lever** (37 CER points from `tiny` to `large-v3`), so each
+family's default is chosen on evidence: `whisper` defaults to `large-v3`, which ties
+`turbo` on the corpus and is kept as the default because a 20-file corpus cannot rule
+out where the smaller decoder loses.
 **Precision is not a lever at all** (0.43 points across five variants of Voxtral), so
 its default is the cheapest that loses nothing, and the flag exists mainly to let
 someone re-check that on their own audio or to fit a smaller machine.
@@ -379,9 +380,10 @@ REGISTRY: dict[str, Model] = {
             label="Whisper large-v3-turbo",
             weights_gb=1.6,
             opts={"condition_on_previous_text": False},
-            notes="most accurate measured here. cross-window conditioning is "
-                  "disabled by default; leaving it enabled costs 10 points on "
-                  "long audio",
+            notes="the speed option: ties large-v3 on the corpus at 2.1x its speed "
+                  "and 1.5GB less memory, with a 4-layer decoder. cross-window "
+                  "conditioning is disabled by default; leaving it enabled costs 10 "
+                  "points on long audio",
         ),
         Model(
             alias="whisper-large-v3",
@@ -392,8 +394,9 @@ REGISTRY: dict[str, Model] = {
             label="Whisper large-v3",
             weights_gb=3.1,
             opts={"condition_on_previous_text": False},
-            notes="slower than turbo and no more accurate on our corpus; "
-                  "disabling cross-window conditioning is worth 22 points here",
+            notes="ties turbo on the corpus at half its speed; the default because "
+                  "its full 32-layer decoder is the safer bet on audio unlike the "
+                  "corpus. Disabling cross-window conditioning is worth 25 points here",
         ),
         Model(
             alias="whisper-large-v2",
@@ -590,14 +593,17 @@ DEFAULT_ALIAS = "voxtral"
 # Default size per multi-size family, and it is a measured choice rather than the
 # biggest or the newest.
 #
-#   whisper    `turbo` and not `large-v3`, which is the counterintuitive one. On this
-#              corpus large-v3 at library defaults scores 39.91% against turbo's
-#              24.97%, and with no-condition 17.36% against 15.91%. Turbo is both
-#              more accurate here and ~2x faster, so picking by size number would be
-#              wrong in both directions.
+#   whisper    `large-v3`. At the shipped config it TIES turbo on the 20-file corpus
+#              (14.55% against 14.68% JP, 18.26% against 18.31% EN, both inside
+#              turbo's own rerun spread), so the measurement cannot pick between them.
+#              The tie is broken toward capacity rather than speed: the corpus is 20
+#              files from a few sources, and turbo's 4-layer decoder is where an
+#              untested language or recording condition would show a loss. Turbo is
+#              the speed option (2.1x, 1.5GB less memory). An older 7-file table had
+#              turbo ahead; it measured large-v3 at library defaults and is superseded.
 #   qwen3-asr  `1.7B`, which beats 0.6B by 3.9 points on the 20-file corpus (19.33%
 #              against 23.27%). The 0.6B is the speed option, not the default.
-DEFAULT_SIZE = {"whisper": "turbo", "qwen3-asr": "1.7B", "voxtral-v1": "3B"}
+DEFAULT_SIZE = {"whisper": "large-v3", "qwen3-asr": "1.7B", "voxtral-v1": "3B"}
 
 # Display order per family: smallest/weakest first, so a list reads as a ladder.
 # Explicit rather than sorted, because neither alphabetical nor parameter count gives

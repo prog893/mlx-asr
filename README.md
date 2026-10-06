@@ -57,7 +57,7 @@ mlx-asr interview.m4a                     # writes interview.srt next to it
 mlx-asr talk.mp4 -f json                  # timestamps + metadata as JSON
 mlx-asr talk.mp4 -f all -o out/talk       # srt, vtt, txt and json together
 mlx-asr earnings.wav --prompt "EBITDA, ARR, Grafana"   # bias toward domain terms
-mlx-asr interview.m4a --model whisper --language ja        # turbo by default
+mlx-asr interview.m4a --model whisper --language ja        # large-v3 by default
 mlx-asr interview.m4a --model whisper --size small --language ja
 mlx-asr --list-models
 ```
@@ -112,7 +112,7 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 |---|---|
 | `voxtral` (default) | Mistral's 2026 realtime model. Takes a vocabulary prompt, decodes greedily so reruns on one machine are byte-identical, and has the steadiest timestamps here |
 | `voxtral-v1` | Mistral's first-generation Voxtral (2025). `--size 3B` (default) or `24B`, the latter for large-memory Macs. At 24B, the lowest English error measured here (on three files); weak on Japanese, which its card does not claim. Greedy. **Writes no subtitles**, like `qwen3-asr` |
-| `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **turbo**, which ties large-v3 on accuracy at about 2x the speed. The most accurate engine on the test corpus, but it samples, so reruns differ |
+| `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **large-v3**; turbo ties it on accuracy at about 2x the speed. The most accurate engine on the test corpus, but it samples, so reruns differ |
 | `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, Japanese only, and samples like Whisper |
 | `qwen3-asr` | Alibaba's Qwen3-ASR. `--size 1.7B` (default) or `0.6B`, the fastest engine measured here. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
 | `parakeet` | NVIDIA's Japanese FastConformer-TDT, through mlx-audio. Greedy, token-level timestamps so subtitles work. The fastest engine measured here (244x realtime), well behind the multilingual defaults on this corpus's Japanese |
@@ -157,8 +157,8 @@ The short version: transcription delay is the biggest lever and it is free; thro
 not monotonic in batch size, so the middle of the range is worse than one at a time; VAD
 cut points and dropping silence both turned out to change nothing measurable, so both stay
 off; higher precision does help Voxtral, so 4-bit is a distribution choice rather than the
-best-scoring one; and whisper defaults to turbo rather than large-v3 because it ties it at
-twice the speed.
+best-scoring one; and whisper defaults to large-v3 although turbo ties it at twice the
+speed, because a tie on 20 files is not evidence the smaller decoder is safe elsewhere.
 
 ## License
 
