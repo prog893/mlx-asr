@@ -24,9 +24,9 @@ PICKER = [
     # name, JP CER, EN WER, x realtime, peak, speed_note, source of the JP/EN/speed row
     ("voxtral", "16.22%", "21.50%", "29.6x", "6.77GB", "", "RESULTS.md"),
     ("whisper large-v3", "14.55%", "18.26%", "11.4x", "6.99GB", "",
-     "docs/benchmarks/engines.md"),
+     "docs/benchmarks/engines/whisper.md"),
     ("whisper turbo", "14.68%", "18.31%", "23.7x", "5.52GB", "floor",
-     "docs/benchmarks/engines.md"),
+     "docs/benchmarks/engines/whisper.md"),
     ("qwen3-asr 1.7B", "19.33%", "25.45%", "21.8x", "4.05GB", "", "RESULTS.md"),
     ("qwen3-asr 0.6B", "23.27%", "24.26%", "32.8x", "2.36GB", "", "RESULTS.md"),
     ("voxtral-v1 3B", "36.52%", "17.86%", "12.9x", "7.28GB", "shared GPU",
@@ -34,11 +34,11 @@ PICKER = [
     ("voxtral-v1 24B", "27.56%", "16.86%", "3.1x", "27.92GB", "shared GPU",
      "RESULTS.md"),
     ("kotoba", "27.01%", None, "36.2x", "2.38GB", "",
-     "docs/benchmarks/japanese-only.md"),
+     "docs/benchmarks/engines.md"),
     ("parakeet", "26.19%", None, "244.6x", "4.77GB", "floor",
-     "docs/benchmarks/japanese-only.md"),
+     "docs/benchmarks/engines.md"),
     ("reazon", "30.45%", None, "51.6x", None, "CPU, floor",
-     "docs/benchmarks/japanese-only.md"),
+     "docs/benchmarks/engines.md"),
 ]
 
 # --- sweeps: (doc, title, x label, rows, chosen x) ---------------------------------
@@ -48,7 +48,7 @@ PICKER = [
 # for an ordinal axis. `basis` is printed under the chart so a 7-file sweep is never
 # read as a 20-file one.
 WHISPER_SIZES = {
-    "doc": "docs/benchmarks/engines.md",
+    "doc": "docs/benchmarks/engines/whisper.md",
     "basis": "20 files, default config (no-condition on small and larger)",
     "rows": [("tiny", "51.28%", "32.17%"), ("base", "29.93%", "27.14%"),
              ("small", "21.33%", "22.68%"), ("medium", "21.63%", "18.23%"),
@@ -58,22 +58,22 @@ WHISPER_SIZES = {
 }
 
 WINDOWS = [
-    {"name": "kotoba", "doc": "docs/benchmarks/engines.md",
+    {"name": "kotoba", "doc": "docs/benchmarks/engines/kotoba.md",
      "basis": "17 JP files",
      "rows": [(10, "27.01%", None), (20, "31.33%", None), (30, "49.71%", None)],
      "chosen": 10},
-    {"name": "qwen3-asr 1.7B", "doc": "docs/benchmarks/qwen3-asr.md",
+    {"name": "qwen3-asr 1.7B", "doc": "docs/benchmarks/engines/qwen3-asr.md",
      "basis": "7-file subset",
      "rows": [(15, "20.04%", "30.38%"), (30, "19.98%", "31.38%"),
               (60, "21.42%", "29.86%"), (120, "23.55%", "34.47%"),
               (300, "62.47%", "37.24%")],
      "chosen": 30},
-    {"name": "voxtral-v1 3B", "doc": "docs/benchmarks/voxtral-v1.md",
+    {"name": "voxtral-v1 3B", "doc": "docs/benchmarks/engines/voxtral-v1.md",
      "basis": "7-file subset, bf16",
      "rows": [(15, "45.81%", "22.47%"), (30, "44.27%", "21.70%"),
               (60, "45.97%", "20.72%"), (120, "57.54%", "21.17%")],
      "chosen": 30},
-    {"name": "parakeet", "doc": "docs/benchmarks/japanese-only.md",
+    {"name": "parakeet", "doc": "docs/benchmarks/engines/parakeet.md",
      "basis": "17 JP files",
      "rows": [(120, "26.19%", None), (300, "32.60%", None)],
      "chosen": 120},
@@ -87,21 +87,21 @@ PRECISION = [
               ("8-bit", "15.27%", "7.29GB"), ("mxfp8", "15.86%", "7.14GB"),
               ("fp16", "15.04%", "12.98GB")],
      "chosen": "4-bit"},
-    {"name": "qwen3-asr 1.7B", "doc": "docs/benchmarks/qwen3-asr.md",
+    {"name": "qwen3-asr 1.7B", "doc": "docs/benchmarks/engines/qwen3-asr.md",
      "rows": [("4bit", "20.06%", "3.19GB"), ("5bit", "19.19%", "3.40GB"),
               ("6bit", "19.45%", "3.62GB"), ("8bit", "19.33%", "4.05GB"),
               ("bf16", "19.40%", "5.66GB")],
      "chosen": "8bit"},
-    {"name": "qwen3-asr 0.6B", "doc": "docs/benchmarks/qwen3-asr.md",
+    {"name": "qwen3-asr 0.6B", "doc": "docs/benchmarks/engines/qwen3-asr.md",
      "rows": [("4bit", "30.29%", "2.06GB"), ("5bit", "24.84%", "2.14GB"),
               ("6bit", "25.01%", "2.21GB"), ("8bit", "23.27%", "2.36GB"),
               ("bf16", "23.03%", "2.92GB")],
      "chosen": "8bit"},
-    {"name": "voxtral-v1 3B", "doc": "docs/benchmarks/voxtral-v1.md",
+    {"name": "voxtral-v1 3B", "doc": "docs/benchmarks/engines/voxtral-v1.md",
      "rows": [("4bit", "44.54%", "5.25GB"), ("8bit", "36.52%", "7.28GB"),
               ("bf16", "37.16%", "10.91GB")],
      "chosen": "8bit"},
-    {"name": "voxtral-v1 24B", "doc": "docs/benchmarks/voxtral-v1.md",
+    {"name": "voxtral-v1 24B", "doc": "docs/benchmarks/engines/voxtral-v1.md",
      "rows": [("4bit", "28.14%", "16.27GB"), ("8bit", "27.56%", "27.92GB"),
               ("bf16", "27.10%", "50.08GB")],
      "chosen": "8bit"},
@@ -179,9 +179,18 @@ def _load_sweeps():
             SWEEPS[name] = sweep
 
 
+def ci(s: str) -> tuple[float, float]:
+    """A printed interval "[15.10, 17.40]" (units like % allowed) to (lo, hi)."""
+    lo, hi = (float(x.strip().rstrip("%x").replace("+", "")) for x in s.strip("[] ").split(","))
+    return lo, hi
+
+
 def value(s: str) -> float:
     """A doc cell as printed ("44.27%", "29.6x", "7.28GB", "0.428") to a float."""
-    return float(s.strip("*").rstrip("%xGB"))
+    import re
+    s = s.strip("*").replace(",", "").strip()
+    s = re.sub(r"\s*(ms/min|ms|min|GB|s|x|%)$", "", s)   # printed unit suffixes
+    return float(s)
 
 
 _load_sweeps()

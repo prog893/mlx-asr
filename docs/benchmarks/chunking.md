@@ -22,9 +22,9 @@ an engine that cannot honour it is an error, not a warning.
 | `--compact-silence` | off | accuracy ties on all four precisions; the 3-5% speed gain does not justify silently discarding input |
 | composite flag | none (`--fast` removed) | the right chunk/batch pair reverses sign across hardware, so every lever is set independently |
 
-**Setup:** [one clip](corpus.md#the-single-clip) scored by plain CER, and the
-[7-file subset](corpus.md#the-7-file-subset) and [20-file corpus](corpus.md#the-20-file-corpus)
-scored by [coverage CER/WER](metrics.md#coverage-cer-and-why-it-had-to-exist); M2 Ultra 128GB
+**Setup:** [one clip](reference/corpus.md#the-single-clip) scored by plain CER, and the
+[7-file subset](reference/corpus.md#the-7-file-subset) and [20-file corpus](reference/corpus.md#the-20-file-corpus)
+scored by [coverage CER/WER](reference/metrics.md#coverage-cer-and-why-it-had-to-exist); M2 Ultra 128GB
 and M4 16GB as stated per experiment. The two kinds of material disagree, which is the main
 lesson of this page. Single-clip differences are compared with a **paired** test over 40
 regions of the same audio (`scripts/benchmarks/compare_configs.py`), so shared difficulty
@@ -34,12 +34,14 @@ Scripts: `scripts/benchmarks/sweep_overlap.py` (overlap), `scripts/benchmarks/ru
 
 ## Experiment: chunk length
 
-**Basis:** [one clip](corpus.md#the-single-clip), M2 Ultra 128GB, 4-bit, no overlap; batch changes with chunk length.
+**Basis:** [one clip](reference/corpus.md#the-single-clip), M2 Ultra 128GB, 4-bit, no overlap; batch changes with chunk length.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/chunking-length-dark.svg">
   <img alt="Two panels over chunk length from 20s to 180s: CER falls from 12.46% to 7.37% at 60s and then stays in a 7.5 to 8.0% band, while speed peaks at 31.0x realtime at 30s and falls to 11.6x at 180s." src="img/chunking-length-light.svg">
 </picture>
+
+**Table:** CER and speed by chunk length on one clip, M2 Ultra, with the batch each length runs at.
 
 | chunk | batch | CER | x realtime |
 |---|---|---|---|
@@ -58,6 +60,13 @@ loss is in [How it works](#errors-concentrate-at-chunk-starts).
 
 Paired testing is stricter than the point estimates suggest:
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-length-paired-dark.svg">
+  <img alt="Paired CER differences on one clip with 95% CIs: 60s beats 30s by 1.85 points with a CI clear of zero, and 60s against 90s is 0.62 points with a CI that crosses zero." src="img/chunking-length-paired-light.svg">
+</picture>
+
+**Table:** paired CER difference between chunk lengths on one clip, 40 regions, positive meaning 60s is better.
+
 | comparison | diff | 95% CI | verdict |
 |---|---|---|---|
 | 60s beats 30s | 1.85 | [+0.71, +3.24] | significant |
@@ -74,7 +83,7 @@ tune for accuracy on spontaneous conversational audio, as the next experiment sh
 
 ## Experiment: 30s versus 60s chunks
 
-**Basis:** [7-file subset](corpus.md#the-7-file-subset), then the [20-file corpus](corpus.md#the-20-file-corpus) on M4 16GB, sequential, `--delay-ms 2400`, kv8, 60s/B16 against 30s/B32.
+**Basis:** [7-file subset](reference/corpus.md#the-7-file-subset), then the [20-file corpus](reference/corpus.md#the-20-file-corpus) on M4 16GB, sequential, `--delay-ms 2400`, kv8, 60s/B16 against 30s/B32.
 
 On the **7-file** subset the 60s-versus-30s difference does not resolve
 (+1.67, CI [-1.22, +4.73]), and 30s/batch 32 was nominally better on every axis including
@@ -87,10 +96,17 @@ small-corpus result that more audio might plausibly turn into a decision. It did
 Both arms re-run on one machine (M4 16GB, 20 files, sequential, `--delay-ms 2400`, kv8;
 60s at batch 16 and 30s at batch 32, each machine's profile for that chunk length):
 
-| | 60s / b16 | 30s / b32 | paired difference | 95% CI |
-|---|---|---|---|---|
-| JP coverage CER, 17 files | 16.29% | **16.19%** | +0.10 | [-1.89, +2.03] |
-| EN coverage WER, 3 files | 26.14% | **25.24%** | +0.90 | [-0.27, +1.69] |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-30-60-dark.svg">
+  <img alt="Two panels comparing 60s/B16 and 30s/B32 on the 20-file corpus on the M4: Japanese CER 16.29% against 16.19% and English WER 26.14% against 25.24%, and paired differences of +0.10 and +0.90 points whose 95% CIs both cross zero; the M4 default 60s/B16 is ringed." src="img/chunking-30-60-light.svg">
+</picture>
+
+**Table:** coverage error per arm on the 20-file corpus, M4 16GB, with the paired difference (60s minus 30s, positive meaning 30s is better) on the 30s row.
+
+| config | JP coverage CER, 17 files | EN coverage WER, 3 files | JP paired difference | JP 95% CI | EN paired difference | EN 95% CI |
+|---|---|---|---|---|---|---|
+| 60s / b16 (default on M4) | 16.29% | 26.14% | | | | |
+| 30s / b32 | **16.19%** | **25.24%** | +0.10 | [-1.89, +2.03] | +0.90 | [-0.27, +1.69] |
 
 Not resolvable on either unit, and the Japanese point estimate fell from +1.67 at n=7 to
 +0.10 at n=17: the two chunk lengths are indistinguishable on this material. 30s won 6 of 17
@@ -109,7 +125,7 @@ in [decode-throughput.md](decode-throughput.md) and in the `--fast` decompositio
 
 ## Experiment: prefix overlap
 
-**Basis:** [one clip](corpus.md#the-single-clip), M2 Ultra 128GB, 30s chunks, batch 32, kv8 (chart and first table); M4 16GB at 30s/B32 for the repeat; 60s chunks for the second table.
+**Basis:** [one clip](reference/corpus.md#the-single-clip), M2 Ultra 128GB, 30s chunks, batch 32, kv8 (chart and first table); M4 16GB at 30s/B32 for the repeat; 60s chunks for the second table.
 
 `--overlap-seconds N` prepends N seconds of the preceding audio to each chunk and discards
 the tokens produced from it, so the model warms up before the region that is kept.
@@ -118,6 +134,8 @@ the tokens produced from it, so the model warms up before the region that is kep
   <source media="(prefers-color-scheme: dark)" srcset="img/chunking-overlap-dark.svg">
   <img alt="CER against prefix overlap on one clip: at 30s chunks CER drops from 8.73% at 0s to a noisy 7.25 to 7.80% band between 4s and 12s and jumps to 11.20% at 15s; at 60s chunks it rises slightly from 7.37% at 0s to 8.06% at 8s." src="img/chunking-overlap-light.svg">
 </picture>
+
+**Table:** CER, speed and extra decoded audio by prefix overlap on one clip, M2 Ultra, 30s chunks, batch 32.
 
 | overlap | CER | delta | x realtime | extra audio decoded |
 |---|---|---|---|---|
@@ -145,6 +163,8 @@ Three things to read off this:
 
 At 60s chunks it stops paying, because seams are sparse:
 
+**Table:** CER by prefix overlap on one clip at 60s chunks (plotted as the second series of the overlap chart above).
+
 | overlap | CER | delta |
 |---|---|---|
 | 0s | 7.37% | - |
@@ -156,7 +176,20 @@ long chunks"** rather than "harmful". An earlier version said harmful; corrected
 
 ## Experiment: prefix overlap, paired over files
 
-**Basis:** [7-file subset](corpus.md#the-7-file-subset), overlap against no overlap, scored by coverage CER/WER; the machine and overlap length for this run are not recorded on this page.
+**Basis:** [7-file subset](reference/corpus.md#the-7-file-subset), overlap against no overlap, scored by coverage CER/WER; the machine and overlap length for this run are not recorded on this page.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-overlap-paired-dark.svg">
+  <img alt="Paired error points saved by prefix overlap with 95% CIs: +1.80 on one clip at 30s chunks with a CI clear of zero, -0.69 on one clip at 60s chunks and -1.47 on the 7-file subset, both with CIs crossing zero." src="img/chunking-overlap-paired-light.svg">
+</picture>
+
+**Table:** every paired overlap-against-none difference on this page, positive meaning overlap lowered the error; the clip rows are from the previous experiment.
+
+| material | error points saved by overlap | 95% CI |
+|---|---|---|
+| one clip, 30s chunks | +1.80 | [+0.62, +3.20] |
+| one clip, 60s chunks | -0.69 | [-1.47, +0.07] |
+| 7-file subset | -1.47 | [-4.33, +2.36] |
 
 On the 7-file subset the effect **reversed sign**: -1.47 points, CI [-4.33, +2.36], with
 no-overlap nominally better on 5 files to 2. English was worse by 4 points
@@ -174,7 +207,7 @@ single-clip result that did not generalize.
 
 ## Experiment: where to cut, energy versus VAD
 
-**Basis:** [one clip](corpus.md#the-single-clip), M2 Ultra 128GB, 4-bit, kv8; then the [20-file corpus](corpus.md#the-20-file-corpus) on an idle M2 Ultra at 60s/B16 (2026-08-24).
+**Basis:** [one clip](reference/corpus.md#the-single-clip), M2 Ultra 128GB, 4-bit, kv8; then the [20-file corpus](reference/corpus.md#the-20-file-corpus) on an idle M2 Ultra at 60s/B16 (2026-08-24).
 
 `--vad` uses Silero VAD (ONNX, no torch) to cut in the middle of the longest non-speech
 run near each target, instead of at the quietest 50ms window. It never removes audio,
@@ -182,6 +215,13 @@ only chooses where to cut, so the chunks still cover the input exactly. VAD infe
 negligible: 2.2s for 935s of audio, 426x realtime.
 
 M2 Ultra 128GB, 4-bit, kv8, single clip:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-vad-clip-dark.svg">
+  <img alt="Two panels over six configs on one clip: every VAD arm has a higher CER and lenient CER than its energy pair, by 0.8 to 3.0 points, and runs slightly slower; the M2 Ultra default, 30s with energy cut points, is ringed." src="img/chunking-vad-clip-light.svg">
+</picture>
+
+**Table:** CER, lenient CER and speed for energy and VAD cut points on one clip, M2 Ultra.
 
 | config | CER | lenient CER | x realtime |
 |---|---|---|---|
@@ -200,10 +240,17 @@ there: paired over 40 regions at 60s chunks, energy beats VAD by 3.00 points, CI
 was the default then (60s/B16, the first row of the `--fast` table below; 2026-08-24, idle
 M2 Ultra), energy still leads but not resolvably:
 
-| | JP coverage CER | EN coverage WER | x realtime |
-|---|---|---|---|
-| energy (default) | **16.21%** | **22.43%** | 19.8x |
-| VAD | 16.68% | 25.95% | 19.3x |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-vad-corpus-dark.svg">
+  <img alt="Three panels comparing energy and VAD cut points on the 20-file corpus: Japanese CER 16.21% against 16.68% and English WER 22.43% against 25.95%; the paired Japanese difference of +0.47 has a CI crossing zero and the English +3.52 a CI just clear of it; speed 19.8x against 19.3x." src="img/chunking-vad-corpus-light.svg">
+</picture>
+
+**Table:** coverage error, speed and paired difference (VAD minus energy, positive meaning energy is better) on the 20-file corpus, idle M2 Ultra, 60s/B16.
+
+| cut points | JP coverage CER | EN coverage WER | x realtime | JP difference | JP 95% CI | EN difference | EN 95% CI |
+|---|---|---|---|---|---|---|---|
+| energy (default) | **16.21%** | **22.43%** | 19.8x | | | | |
+| VAD | 16.68% | 25.95% | 19.3x | +0.47 | [-0.84, +2.04] | +3.52 | [+0.06, +5.62] |
 
     Japanese: +0.47 points, CI [-0.84, +2.04], VAD wins 9 of 17 files -> not resolvable
     English:  +3.52 points, CI [+0.06, +5.62], VAD loses all 3 files -> resolved, but n=3
@@ -212,7 +259,7 @@ So the supported reading is narrower than the clip suggested. The 3.00-point Jap
 does not reproduce, and VAD wins slightly more Japanese files than it loses; the aggregate
 tips to energy on length weighting rather than on a consistent per-file advantage. The
 English arm resolves against VAD, but n=3 cannot carry much
-([metrics.md](metrics.md#the-english-bootstrap-is-n3-and-that-is-worse-than-it-sounds)).
+([metrics.md](reference/metrics.md#the-english-bootstrap-is-n3-and-that-is-worse-than-it-sounds)).
 
 **Marginal, so it stays off.** Energy is never behind, VAD costs an `onnxruntime`
 dependency and a little speed, and a flag that changes nothing measurable should not be the
@@ -232,11 +279,18 @@ for noisy material where energy minima may mislead.
 
 ## Experiment: carrying context across seams instead of overlapping
 
-**Basis:** [one clip](corpus.md#the-single-clip), M2 Ultra 128GB, 30s chunks, batch 32.
+**Basis:** [one clip](reference/corpus.md#the-single-clip), M2 Ultra 128GB, 30s chunks, batch 32.
 
 The Voxtral paper notes the decoder reuses KV state as audio is appended, so a chunk
 boundary is where this tool discards context. Two ways to give it back, using the
 existing per-chunk prompt mechanism. M2 Ultra 128GB, 30s chunks, batch 32, single clip:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-carry-dark.svg">
+  <img alt="Two panels over four seam-context variants on one clip: carry_pair and carry both reach 8.56% CER against 8.73% for none, while speed falls from 33.9x to 16.8x and 5.3x; static keywords is 9.11% at 33.5x. The default, none, is ringed." src="img/chunking-carry-light.svg">
+</picture>
+
+**Table:** CER, wall clock and speed for each way of carrying context across seams, one clip, M2 Ultra.
 
 | variant | CER | delta | wall | x realtime | note |
 |---|---|---|---|---|---|
@@ -253,7 +307,7 @@ chunks recover the full amount for free.
 
 ## Experiment: dropping silence before decode
 
-**Basis:** [one clip](corpus.md#the-single-clip) for the cut-cleanliness measurement; [20-file corpus](corpus.md#the-20-file-corpus), idle M2 Ultra, 4-bit (2026-08-24) for accuracy and speed.
+**Basis:** [one clip](reference/corpus.md#the-single-clip) for the cut-cleanliness measurement; [20-file corpus](reference/corpus.md#the-20-file-corpus), idle M2 Ultra, 4-bit (2026-08-24) for accuracy and speed.
 
 `--compact-silence` drops the middle of pauses longer than 400ms, keeping the first
 240ms. Since decode cost is one step per 80ms frame, removing silence removes steps
@@ -266,10 +320,17 @@ result, which appeared to depend on quantization, did not reproduce and is under
 On the corpus at the 4-bit config that was the default then (2026-08-24, 20 files, idle M2
 Ultra) it is slightly better rather than worse:
 
-| | JP coverage CER | EN coverage WER | x realtime |
-|---|---|---|---|
-| off (default) | 16.21% | 22.43% | 19.8x |
-| `--compact-silence` | **16.00%** | 22.43% | **20.5x** |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-silence-dark.svg">
+  <img alt="Three panels comparing --compact-silence off and on on the 20-file corpus: Japanese CER 16.21% against 16.00% and English WER 22.43% on both; the paired Japanese difference of -0.21 has a CI crossing zero; speed 19.8x against 20.5x. The default, off, is ringed." src="img/chunking-silence-light.svg">
+</picture>
+
+**Table:** coverage error, speed and paired Japanese difference (on minus off) with and without silence compaction, 20-file corpus, idle M2 Ultra, 4-bit.
+
+| | JP coverage CER | EN coverage WER | x realtime | JP difference | JP 95% CI |
+|---|---|---|---|---|---|
+| off (default) | 16.21% | 22.43% | 19.8x | | |
+| `--compact-silence` | **16.00%** | 22.43% | **20.5x** | -0.21 | [-0.70, +0.22] |
 
     -0.21 points, CI [-0.70, +0.22], better on 6 of 8 files that moved -> not resolvable
 
@@ -279,17 +340,29 @@ One file went the other way by +1.04.
 
 ## Experiment: silence compaction across precisions
 
-**Basis:** [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra, `--compact-silence` off and on at 4-bit, 8-bit, mxfp8 and nvfp4.
+**Basis:** [20-file corpus](reference/corpus.md#the-20-file-corpus), M2 Ultra, `--compact-silence` off and on at 4-bit, 8-bit, mxfp8 and nvfp4.
 
 That dependence was the reason the flag was off, so it was run on every precision available.
 All four are ties on accuracy and all four are faster:
 
-| precision | off | on | difference | x realtime |
-|---|---|---|---|---|
-| 4-bit (default) | 16.21% | 16.00% | +0.21, CI [-0.70, +0.22] | 19.8x -> **20.5x** |
-| 8-bit | 15.27% | 15.30% | -0.03, CI [-0.63, +0.42] | 19.8x -> **20.4x** |
-| mxfp8 | 15.86% | 15.78% | +0.08, CI [-0.63, +0.65] | 19.4x -> **20.7x** |
-| nvfp4 | 16.07% | 16.05% | +0.02, CI [-0.97, +0.78] | 19.4x -> **20.2x** |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-silence-precision-dark.svg">
+  <img alt="Three panels over four precisions: JP coverage CER with compaction off and on differs by at most 0.21 points at every precision, every paired difference sits near zero, and compaction is faster at every precision, 19.4x to 19.8x off against 20.2x to 20.7x on. The default, 4-bit with compaction off, is ringed." src="img/chunking-silence-precision-light.svg">
+</picture>
+
+**Table:** JP coverage CER and speed with silence compaction off and on at each precision, with the paired difference (off minus on), 20-file corpus, M2 Ultra.
+
+| precision | off | on | difference | 95% CI | x realtime, off | x realtime, on |
+|---|---|---|---|---|---|---|
+| 4-bit (default) | 16.21% | 16.00% | +0.21 | [-0.70, +0.22] | 19.8x | **20.5x** |
+| 8-bit | 15.27% | 15.30% | -0.03 | [-0.63, +0.42] | 19.8x | **20.4x** |
+| mxfp8 | 15.86% | 15.78% | +0.08 | [-0.63, +0.65] | 19.4x | **20.7x** |
+| nvfp4 | 16.07% | 16.05% | +0.02 | [-0.97, +0.78] | 19.4x | **20.2x** |
+
+The 4-bit row's interval is identical to the one printed in the previous experiment, where
+the same comparison is signed on minus off (-0.21). Against this table's off minus on sign it
+does not bracket +0.21 in the usual way, so the chart omits that one error bar until the
+interval is recomputed in this table's sign.
 
 **nvfp4 is the headline**, because that is the arm the 4-point loss came from. On the corpus
 it is +0.02 points and splits 4 files to 4. Nothing survives of the effect, so the
@@ -308,12 +381,19 @@ quantization-dependent. Closes
 
 ## Experiment: the composite flag
 
-**Basis:** [20-file corpus](corpus.md#the-20-file-corpus), idle M2 Ultra, JP coverage CER; the bundle measured as one config and then decomposed.
+**Basis:** [20-file corpus](reference/corpus.md#the-20-file-corpus), idle M2 Ultra, JP coverage CER; the bundle measured as one config and then decomposed.
 
 `--fast` set three levers at once (halve the chunk, double the batch, add 8s warm-up
 overlap). Only its components had been measured separately, which is not enough to predict a
 combination: overlap on its own won on a clip and then reversed sign on the corpus. Measured
 as one config, and then decomposed, 20 files, idle M2 Ultra:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-composite-dark.svg">
+  <img alt="Two panels over six chunk, batch and overlap arms on the 20-file corpus: JP coverage CER stays between 16.21% and 16.32% for every arm except the 8s-overlap bundle at 16.79%, while speed ranges from 17.7x with overlap alone to 28.9x for 30s/B32 without overlap, the ringed M2 Ultra default." src="img/chunking-composite-light.svg">
+</picture>
+
+**Table:** JP coverage CER and speed for the `--fast` bundle and each of its components, 20-file corpus, idle M2 Ultra.
 
 | config | JP coverage CER | x realtime | isolates |
 |---|---|---|---|
@@ -340,14 +420,21 @@ Two things fall out, and the second corrects the obvious reading:
 
 ## Experiment: chunk and batch across GPU core counts
 
-**Basis:** M2 Ultra 128GB (60 GPU cores) and M4 16GB (10 GPU cores), 60s/B16 against 30s/B32; the Ultra figures are from the previous experiment on the [20-file corpus](corpus.md#the-20-file-corpus).
+**Basis:** M2 Ultra 128GB (60 GPU cores) and M4 16GB (10 GPU cores), 60s/B16 against 30s/B32; the Ultra figures are from the previous experiment on the [20-file corpus](reference/corpus.md#the-20-file-corpus).
 
 Same change, the two benchmarked machines:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-machines-dark.svg">
+  <img alt="Two panels of speed for 60s/B16 and 30s/B32: on the M2 Ultra 30s/B32 is faster, 28.9x against 19.8x, and is ringed as its default; on the M4 the printed ranges are 1.9 to 2.0x for 60s/B16 and 1.5 to 1.9x for 30s/B32, so 60s/B16 is the faster pair there." src="img/chunking-machines-light.svg">
+</picture>
+
+**Table:** speed of the two chunk/batch pairs on each benchmarked machine, the faster pair per machine in bold (the M4 cells are ranges as recorded).
 
 | machine | GPU cores | 60s / B16 | 30s / B32 |
 |---|---|---|---|
 | M2 Ultra 128GB | 60 | 19.8x | **28.9x** |
-| M4 16GB | 10 | 1.9-2.0x | **1.5-1.9x** |
+| M4 16GB | 10 | **1.9-2.0x** | 1.5-1.9x |
 
 Halving the chunk doubles the chunk count, and each chunk pays fixed encoder cost. With 60
 cores that encoder work is cheap and the decode saving dominates; with 10 cores the encoder
@@ -372,6 +459,13 @@ above refutes.
 
 Locating every edit operation relative to the nearest chunk boundary, 30s chunks, single clip:
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-seams-dark.svg">
+  <img alt="Share of edit operations against share of audio for three regions of a 30s chunk: the first 3s holds 22.3% of edits in 9.9% of the audio, the last 3s 12.9% in 9.9%, and the rest 64.8% in 80.1%." src="img/chunking-seams-light.svg">
+</picture>
+
+**Table:** substitutions, insertions and deletions by position within a 30s chunk on one clip, with each region's share of edits, share of audio and enrichment.
+
 | region | subs | ins | del | total | share of edits | share of audio | enrichment |
 |---|---|---|---|---|---|---|---|
 | first 3s of a chunk | 33 | 24 | 28 | 85 | 22.3% | 9.9% | **2.24x** |
@@ -394,6 +488,8 @@ Replaced by the 20-file corpus runs in
 [Experiment: silence compaction across precisions](#experiment-silence-compaction-across-precisions),
 where all four precisions tie. On the clip the accuracy result appeared to split by
 quantization; the table is kept as the record of what was measured rather than as a finding:
+
+**Table:** superseded single-clip CER and deletion counts with and without silence compaction, per machine, precision and chunk/batch pair.
 
 | config | CER baseline | CER compacted | deletions |
 |---|---|---|---|

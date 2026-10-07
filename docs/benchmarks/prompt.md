@@ -20,18 +20,18 @@ nothing here transfers to it.
 | `--prompt` | empty | costs English 14 to 72 WER points in every variant tested; on Japanese, Japanese-language prompts are within 0.26 points of none and English-language ones cost 1.4 to 3.3; no measurable vocabulary recall |
 | `--prompt` with `--overlap-seconds` | prompt ignored, overlap kept | the two together scored 18.64% CER against 7.16% for overlap alone |
 
-**Setup:** [20-file corpus](corpus.md#the-20-file-corpus) (17 Japanese, 3 English) for the
-crossed language experiment, [7-file subset](corpus.md#the-7-file-subset) for the first
-corpus test, and [one clip](corpus.md#the-single-clip) (the 935s narration and its 180s
+**Setup:** [20-file corpus](reference/corpus.md#the-20-file-corpus) (17 Japanese, 3 English) for the
+crossed language experiment, [7-file subset](reference/corpus.md#the-7-file-subset) for the first
+corpus test, and [one clip](reference/corpus.md#the-single-clip) (the 935s narration and its 180s
 excerpt) for the earlier sweeps. M2 Ultra 128GB throughout, plus an M4 16GB for one
 comparison. Corpus runs are scored by
-[coverage CER/WER](metrics.md#coverage-cer-and-why-it-had-to-exist); single-clip runs by
+[coverage CER/WER](reference/metrics.md#coverage-cer-and-why-it-had-to-exist); single-clip runs by
 plain CER, since those references are verbatim. Scripts: `scripts/benchmarks/ab_prompt.py`,
 `scripts/benchmarks/sweep_prompt_language.py`, `scripts/benchmarks/run_corpus.py`.
 
 ## Experiment: prompt content crossed with prompt language
 
-**Basis:** [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra 128GB, 30s chunks, batch 32, kv8, delay 2400.
+**Basis:** [20-file corpus](reference/corpus.md#the-20-file-corpus), M2 Ultra 128GB, 30s chunks, batch 32, kv8, delay 2400.
 
 The earlier corpus test had one prompt, written in English, on a corpus that is mostly
 Japanese, so "an instruction is harmful" and "an English prompt on Japanese audio is
@@ -41,6 +41,13 @@ audio-Japanese and an audio-English row. `scripts/benchmarks/sweep_prompt_langua
 30s chunks, batch 32, kv8, delay 2400, M2 Ultra 128GB. The no-prompt row reproduced the
 headline exactly (16.22% / 25.24%), which is the check that this script decodes the same
 way `run_corpus.py` does.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/prompt-language-dark.svg">
+  <img alt="Three panels over nine prompt arms: Japanese coverage CER stays between 15.97% and 19.53% with no prompt at 16.22%; against no prompt the Japanese-language arms sit within 0.26 points of zero and the English-language ones cost 1.40 to 3.31 points; on English every arm costs 14.30 to 72.37 WER points." src="img/prompt-language-light.svg">
+</picture>
+
+**Table:** each prompt arm (content shape and language) against no prompt, Japanese CER and English WER.
 
 | prompt content | lang | tokens | JP coverage CER (17 files) | vs none | EN coverage WER (3 files) | vs none |
 |---|---|---|---|---|---|---|
@@ -68,6 +75,8 @@ eight prompts cost English between 14 and 72 WER points, which reads as near-tot
 Inspecting the transcripts shows it is not. **A prompt suppresses space emission on English
 audio**, and word error rate charges every word of a space-free transcript as wrong.
 
+**Table:** space emission on one English recording, by prompt arm.
+
 | arm | spaces per character | word count | character count |
 |---|---|---|---|
 | none | 0.19 | 4016 | 20923 |
@@ -84,6 +93,8 @@ prompted).
 
 Rescoring the English files at character level with whitespace stripped from both sides
 collapses the difference:
+
+**Table:** per English file, the range of scores across arms, by word and by whitespace-free character.
 
 | file | covWER span across arms | covCER span, no whitespace |
 |---|---|---|
@@ -155,10 +166,17 @@ instruction, a description or a vocabulary list. It is conditioning register.
 
 ## Experiment: the instruction trap
 
-**Basis:** [7-file subset](corpus.md#the-7-file-subset), M2 Ultra 128GB, one English instruction prompt against no prompt.
+**Basis:** [7-file subset](reference/corpus.md#the-7-file-subset), M2 Ultra 128GB, one English instruction prompt against no prompt.
 
 The single clip could not show that the instruction effect is language-dependent. The
 subset can. Putting "Transcribe the audio accurately." in the prompt field:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/prompt-instruction-dark.svg">
+  <img alt="Instruction prompt minus no prompt on the 7-file subset: English +13.77 WER points with a 95% CI of +10.34 to +15.25, Japanese +1.41 CER points, all 7 pooled +3.53 with a 95% CI of +0.41 to +9.82." src="img/prompt-instruction-light.svg">
+</picture>
+
+**Table:** an English instruction prompt minus no prompt, by audio language, with paired 95% CIs.
 
 | files | diff | 95% CI |
 |---|---|---|
@@ -176,9 +194,16 @@ what predicts the damage is the *audio* language, not the match between prompt a
 
 ## Experiment: prompt plus overlap
 
-**Basis:** [one clip](corpus.md#the-single-clip), M2 Ultra 128GB, 30s chunks, batch 32, kv8.
+**Basis:** [one clip](reference/corpus.md#the-single-clip), M2 Ultra 128GB, 30s chunks, batch 32, kv8.
 
 Found while re-running the config matrix. M2 Ultra 128GB, 30s chunks, batch 32, kv8:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/prompt-overlap-dark.svg">
+  <img alt="CER on one clip for four configs: no prompt and no overlap 9.04%, prompt only 9.04%, overlap 4s only 7.16%, prompt plus overlap 4s 18.64%." src="img/prompt-overlap-light.svg">
+</picture>
+
+**Table:** CER on one clip with and without a prompt and a 4s overlap.
 
 | config | CER |
 |---|---|
@@ -252,6 +277,8 @@ recall by counting term emissions directly, and finds the same over-production.
 M2 Ultra 128GB, 60s chunks, batch 16, kv8, 935s clip (4205 scored characters), 31-token
 window.
 
+**Table:** CER on one clip for each prompt style, ordering and separator, against no prompt.
+
 | variant | tokens | kept | CER | vs none |
 |---|---|---|---|---|
 | ASCII-comma term list | 38 | 31 | **7.09%** | -0.19 |
@@ -270,6 +297,8 @@ window.
 Excluding the outlier, eleven variants span 7.09-7.59%: a 0.50-point spread against a
 noise floor of roughly 1 point on this clip. Paired testing puts every one of them inside
 the noise:
+
+**Table:** paired differences against no prompt (and between term orders) with 95% CIs.
 
 | comparison | diff | 95% CI | verdict |
 |---|---|---|---|
@@ -295,6 +324,8 @@ clip, is consistent with the 20-file result, where no Japanese arm moved more th
 points.
 
 The 180s excerpt, 943 reference characters, one row per variant, run on both machines:
+
+**Table:** CER on the 180s excerpt per separator variant, one column per machine.
 
 | variant | tokens | CER, M4 16GB (nvfp4) | CER, M2 Ultra 128GB (4-bit affine) |
 |---|---|---|---|

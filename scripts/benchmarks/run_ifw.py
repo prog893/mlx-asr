@@ -6,7 +6,7 @@ insanely-fast-whisper is not a model, it is a *runner*: transformers'
 reason this is worth measuring separately. mlx-whisper implements Whisper's
 **sequential** long-form algorithm (30s windows, decoder state carried across
 them); IFW uses the **chunked** algorithm (independent windows, batched, stitched
-on timestamps). The kotoba result in docs/benchmarks/engines.md showed that swapping exactly
+on timestamps). The kotoba result in docs/benchmarks/engines/kotoba.md showed that swapping exactly
 these two algorithms moved one model by 68 points, so the same swap has to be
 tried on the general models before any "Whisper scores X" claim is safe.
 

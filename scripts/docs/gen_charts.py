@@ -48,7 +48,10 @@ def _grid(t, nrows, ncols, width, height):
 
 
 def _caption(fig, t, text):
-    fig.text(0.01, -0.02, text, ha="left", va="top", color=t["muted"], fontsize=8.5)
+    import textwrap
+    width = int(fig.get_figwidth() * 15.5)   # ~characters per line at 8.5pt
+    wrapped = "\n".join(textwrap.wrap(" ".join(text.split()), width))
+    fig.text(0.01, -0.02, wrapped, ha="left", va="top", color=t["muted"], fontsize=8.5)
 
 
 def _log_x(ax, xs, fmt=lambda x: f"{x:g}"):
@@ -157,7 +160,7 @@ def whisper_sizes(t):
                  fontweight="bold", color=t["ink"])
     legend(ax, t)
     _caption(fig, t, f"{d['basis']}. large-v3 and turbo tie; the tie goes to the full "
-                     f"decoder. Source: engines.md.")
+                     f"decoder. Source: engines/whisper.md.")
     fig.tight_layout()
     return fig
 
@@ -180,7 +183,7 @@ def windows(t):
     align_panels(axes)
     _caption(fig, t, "Decode window length per engine. Longer windows let a repetition "
                      "loop burn a bigger token budget, which is why most curves turn up. "
-                     "Sources: engines.md, qwen3-asr.md, voxtral-v1.md, japanese-only.md.")
+                     "Sources: engines/kotoba.md, engines/qwen3-asr.md, engines/voxtral-v1.md, engines/parakeet.md.")
     fig.tight_layout()
     return fig
 
@@ -210,8 +213,8 @@ def precision(t):
     axes[-1].set_visible(False)
     _caption(fig, t, "Japanese coverage CER by precision, 20-file corpus; each tick "
                      "shows peak GPU memory. Every panel spans at least 8 points, so "
-                     "flat means a tie. Sources: quantization.md, qwen3-asr.md, "
-                     "voxtral-v1.md.")
+                     "flat means a tie. Sources: quantization.md, engines/qwen3-asr.md, "
+                     "engines/voxtral-v1.md.")
     fig.tight_layout()
     return fig
 
@@ -289,8 +292,21 @@ def _sweep_axis(ax, t, spec, panel, xs, pos):
         pts = [(p, cd.value(r[2][i])) for p, r in zip(pos, spec["rows"])
                if r[2][i] is not None]
         ax.plot([p for p, _ in pts], [v for _, v in pts], color=colors[i],
-                marker=_MARKERS[i], markersize=6, markeredgecolor=t["surface"],
-                markeredgewidth=2, zorder=3, label=label)
+                marker=_MARKERS[i],
+                markersize=(7 if not spec.get("connect", True) else 6) + (0 if i == 0 else 2),
+                markeredgecolor=t["surface"], markeredgewidth=2 if i == 0 else 1,
+                zorder=3, label=label,
+                linestyle="-" if spec.get("connect", True) else "none")
+        # 95% CI per point, when the spec carries one: rows may have a 4th element,
+        # a tuple of "[lo, hi]" strings per series (as printed in the table).
+        bars = [(p, cd.value(r[2][i]), r[3][i]) for p, r in zip(pos, spec["rows"])
+                if len(r) > 3 and r[3] and r[3][i]]
+        if bars:
+            lo = [v - cd.ci(c)[0] for _, v, c in bars]
+            hi = [cd.ci(c)[1] - v for _, v, c in bars]
+            ax.errorbar([p for p, _, _ in bars], [v for _, v, _ in bars],
+                        yerr=[lo, hi], fmt="none", ecolor=colors[i], elinewidth=1.2,
+                        capsize=3, zorder=2)
         if len(idxs) >= 4:   # past three series the legend alone is not enough
             px, py = pts[-1]
             ax.annotate(label, (px, py), xytext=(6, 0), textcoords="offset points",
@@ -301,6 +317,7 @@ def _sweep_axis(ax, t, spec, panel, xs, pos):
     if spec["scale"] == "category":
         ax.set_xticks(pos)
         ax.set_xticklabels([fmt(x) for x in xs])
+        ax.set_xlim(-0.6, len(xs) - 0.4)
     elif spec["scale"] == "log":
         _log_x(ax, uniq, fmt)
     else:
@@ -318,6 +335,8 @@ def _sweep_axis(ax, t, spec, panel, xs, pos):
             ax.set_ylim(mid - span / 2, mid + span / 2)
     ax.set_xlabel(spec["xlabel"])
     ax.set_ylabel(panel.get("ylabel", spec.get("ylabel", "")))
+    if panel.get("zero_line"):   # a difference-against-the-default panel
+        ax.axhline(0, color=t["ink2"], linewidth=1, zorder=1)
     if panel.get("title"):
         ax.set_title(panel["title"], loc="left", fontsize=9.5, fontweight="bold",
                      color=t["ink"])

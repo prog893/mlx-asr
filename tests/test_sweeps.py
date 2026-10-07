@@ -23,8 +23,10 @@ ROWS = [(name, spec, row) for name, spec in cd.SWEEPS.items() for row in spec["r
 def test_sweep_row_matches_one_table_row(name, spec, row):
     if spec.get("layout") == "columns":
         pytest.skip("column-laid table; checked per series below")
-    x, key, values = row
+    x, key, values = row[:3]
     vals = [v for v in values if v is not None]
+    if len(row) > 3 and row[3]:   # the CI strings must be printed on the same row
+        vals += [c for c in row[3] if c]
     lines = [ln for ln in (ROOT / spec["doc"]).read_text().splitlines()
              if ln.startswith("|")]
     assert any(key in ln and all(v in ln for v in vals) for ln in lines), (

@@ -24,7 +24,7 @@ costs accuracy without noticing.
 Window length matters: at the shipped 30s a 13-minute file yields ~26 chunks, so batch 32
 would be one group and the knob would be untestable above that. Pass a shorter window to
 get enough chunks to fill several groups, and note that the accuracy baseline then shifts
-with it ([qwen3-asr.md](../../docs/benchmarks/qwen3-asr.md) measured 15s as a tie with 30s).
+with it ([qwen3-asr.md](../../docs/benchmarks/engines/qwen3-asr.md) measured 15s as a tie with 30s).
 """
 
 import argparse

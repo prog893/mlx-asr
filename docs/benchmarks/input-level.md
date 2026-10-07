@@ -15,14 +15,14 @@ applies gain, so `--gain` is rejected on the other engines and this was measured
 |---|---|---|
 | `--gain` | `auto` | quiet input costs accuracy through an absolute mel floor; `auto` lifts only quiet files and leaves the rest byte-identical |
 
-**Setup:** [7-file subset](corpus.md#the-7-file-subset) for the gain sweep (recorded at
+**Setup:** [7-file subset](reference/corpus.md#the-7-file-subset) for the gain sweep (recorded at
 -0.5 to -5.3 dBFS peak), Voxtral at 30s chunks, batch 32, kv8, `scripts/benchmarks/sweep_gain.py`,
-scored by [coverage CER/WER](metrics.md#coverage-cer-and-why-it-had-to-exist). The
-recovery check uses [one clip](corpus.md#the-single-clip), scored by plain CER.
+scored by [coverage CER/WER](reference/metrics.md#coverage-cer-and-why-it-had-to-exist). The
+recovery check uses [one clip](reference/corpus.md#the-single-clip), scored by plain CER.
 
 ## Experiment: mel bins clamped by input level
 
-**Basis:** one recording, mel front end only, share of mel bins at the floor at five gain settings.
+**Basis:** one recording, mel front end only, share of mel bins at the floor at five gain settings; error columns from the [7-file subset](reference/corpus.md#the-7-file-subset) gain sweep below, at the same gains.
 
 The mel front end flattens anything with `log10(power)` below `global_log_mel_max - 8.0`.
 That threshold is **absolute**, not relative to the utterance, so quiet input has its
@@ -31,24 +31,31 @@ sitting exactly at the floor, one recording:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/input-level-clamp-dark.svg">
-  <img alt="Share of mel bins clamped at the floor falls from 65.5% at -20 dB to 2.8% at +6 dB on one recording" src="img/input-level-clamp-light.svg">
+  <img alt="Share of mel bins clamped at the floor falls from 65.5% at -20 dB to 2.8% at +6 dB on one recording, while Japanese error on the 7-file subset is lowest at 0 dB, the default" src="img/input-level-clamp-light.svg">
 </picture>
 
-| gain | peak dBFS | % mel bins clamped |
-|---|---|---|
-| -20dB | -25.5 | 65.5% |
-| -12dB | -17.5 | 41.5% |
-| -6dB | -11.5 | 24.0% |
-| unity | -5.5 | 9.9% |
-| +6dB | 0.0 | 2.8% |
+**Table:** share of mel bins at the floor on one recording at each gain, next to the 7-file subset's error at the same gain (-6 dB was not run on the subset).
+
+| gain | peak dBFS | % mel bins clamped | JP coverage CER (7-file subset) | EN coverage WER (7-file subset) |
+|---|---|---|---|---|
+| -20dB | -25.5 | 65.5% | 23.76% | 36.65% |
+| -12dB | -17.5 | 41.5% | 19.42% | 34.23% |
+| -6dB | -11.5 | 24.0% | not run | not run |
+| unity | -5.5 | 9.9% | 16.44% | 26.55% |
+| +6dB | 0.0 | 2.8% | 17.09% | 23.96% |
 
 This is a question of level, and bit depth plays no part. The sources are 32-bit float, so
 gain is mathematically lossless; what matters is only where the signal sits relative to
 the model's fixed floor.
 
+Fewer clamped bins is not the target in itself. Past unity the clamp share keeps falling,
+but Japanese error rises and +6 dB puts this recording's peak at full scale, where any
+louder file would clip. `--gain auto` therefore leaves a file already peaking above
+-6 dBFS alone and lifts only quieter ones.
+
 ## Experiment: error by input gain
 
-**Basis:** [7-file subset](corpus.md#the-7-file-subset), Voxtral at 30s chunks, batch 32, kv8, coverage CER/WER.
+**Basis:** [7-file subset](reference/corpus.md#the-7-file-subset), Voxtral at 30s chunks, batch 32, kv8, coverage CER/WER.
 
 The 7-file subset needed no normalization, and unity gain was already near-optimal.
 
@@ -56,6 +63,8 @@ The 7-file subset needed no normalization, and unity gain was already near-optim
   <source media="(prefers-color-scheme: dark)" srcset="img/gain-dark.svg">
   <img alt="Error by input gain; the default, auto, is a no-op on this corpus" src="img/gain-light.svg">
 </picture>
+
+**Table:** Japanese and English coverage error on the 7-file subset at each gain mode.
 
 | mode | JP coverage CER | EN coverage WER |
 |---|---|---|
@@ -66,7 +75,14 @@ The 7-file subset needed no normalization, and unity gain was already near-optim
 | +6 dB | 17.09% | **23.96%** |
 | rms to -23 dBFS | 17.09% | **23.93%** |
 
-Paired across files:
+Paired across files, against unity:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/input-level-paired-dark.svg">
+  <img alt="Paired difference against unity with 95% CIs: attenuation by 20 and 12 dB is clearly worse, +6 dB and peak normalization overall straddle zero, +6 dB helps the two English files and marginally hurts the five Japanese ones" src="img/input-level-paired-light.svg">
+</picture>
+
+**Table:** paired difference in coverage error against unity gain, with its 95% CI, per arm and language split.
 
 | comparison | diff | 95% CI | verdict |
 |---|---|---|---|
@@ -88,9 +104,11 @@ Two readings, one solid and one a lead:
 
 ## Experiment: recovery of an attenuated clip
 
-**Basis:** [one clip](corpus.md#the-single-clip), Voxtral, plain CER.
+**Basis:** [one clip](reference/corpus.md#the-single-clip), Voxtral, plain CER.
 
 Attenuating a clip by 14 dB and transcribing it three ways:
+
+**Table:** plain CER on one clip at its original level and attenuated by 14 dB, with and without `auto`.
 
 | condition | CER |
 |---|---|
@@ -105,6 +123,8 @@ default: inert on well-recorded material, and it repairs quiet material almost e
 
 The two findings give an asymmetric rule rather than a loudness target: quiet audio must be
 lifted, loud audio must be left alone.
+
+**Table:** the gain `auto` applies to a file at each peak level, and the resulting peak.
 
 | peak dBFS | gain applied | result |
 |---|---|---|
@@ -138,6 +158,6 @@ already peaking near full scale, which is exactly what `auto` declines to touch.
 
 ## Related
 
-- [corpus.md](corpus.md): the recordings and the narration clip
-- [metrics.md](metrics.md): coverage CER/WER and the paired comparison
+- [corpus.md](reference/corpus.md): the recordings and the narration clip
+- [metrics.md](reference/metrics.md): coverage CER/WER and the paired comparison
 - [delay.md](delay.md): the other Voxtral-only lever, measured on the same config

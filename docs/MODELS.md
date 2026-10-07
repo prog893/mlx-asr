@@ -94,7 +94,7 @@ whisper ladder lands between 4 and 7GB regardless of size.
 
 Every figure is the maximum over the 20-file corpus on an M2 Ultra, one method for all of
 them, so the column can be read against itself. Method and caveats:
-[benchmarks/peak-memory.md](benchmarks/peak-memory.md).
+[benchmarks/reference/peak-memory.md](benchmarks/reference/peak-memory.md).
 
 Every run also prints its own peak, since the figure moves with the machine, the audio and
 the flags, and `--stats-json` writes it to a file. Treat the table as a guide to what fits
@@ -103,11 +103,11 @@ and your own run as the number.
 `voxtral`, `voxtral-v1`, `qwen3-asr`, `parakeet` and `reazon` decode greedily and rerun byte-identically
 on one machine. `whisper` samples whenever a segment trips its fallback thresholds, and
 `kotoba` runs on Whisper's decoder so it samples too, which makes neither safe to rerun for
-a comparison ([benchmarks/determinism.md](benchmarks/determinism.md)).
+a comparison ([benchmarks/reference/determinism.md](benchmarks/reference/determinism.md)).
 
 Accuracy and throughput per model: [benchmarks/engines.md](benchmarks/engines.md),
-[benchmarks/qwen3-asr.md](benchmarks/qwen3-asr.md) and
-[benchmarks/voxtral-v1.md](benchmarks/voxtral-v1.md), which describe the corpus and method
+[benchmarks/engines/qwen3-asr.md](benchmarks/engines/qwen3-asr.md) and
+[benchmarks/engines/voxtral-v1.md](benchmarks/engines/voxtral-v1.md), which describe the corpus and method
 each figure came from.
 
 The `kotoba` alias points at v2.0 because v2.2 holds identical ASR weights (all 539
@@ -197,7 +197,7 @@ seconds, and on this project's material it returned Russian for Japanese audio a
 CER points.** `qwen3-asr` does not autodetect at all: omitting the flag forces English.
 `voxtral-v1` detects the language when the flag is omitted, and on Japanese that sends
 whole windows out in English or Turkish instead
-([benchmarks/voxtral-v1.md](benchmarks/voxtral-v1.md#experiment-leaving-the-language-to-the-model)),
+([benchmarks/engines/voxtral-v1.md](benchmarks/engines/voxtral-v1.md#experiment-leaving-the-language-to-the-model)),
 so pass it.
 
 Any spelling works on any model that takes one. These are all Japanese:

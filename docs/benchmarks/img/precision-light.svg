@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="785.348906pt" height="459.695625pt" viewBox="0 0 785.348906 459.695625" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="849.616875pt" height="459.695625pt" viewBox="0 0 849.616875 459.695625" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
@@ -16,8 +16,8 @@
  <g id="figure_1">
   <g id="patch_1">
    <path d="M 0 459.695625 
-L 785.348906 459.695625 
-L 785.348906 0 
+L 849.616875 459.695625 
+L 849.616875 0 
 L 0 0 
 z
 " style="fill: #fcfcfb"/>
@@ -964,7 +964,7 @@ z
    </g>
   </g>
   <g id="text_71">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #898781" x="10.8" y="447.015" transform="rotate(-0 10.8 447.015)">Japanese coverage CER by precision, 20-file corpus; each tick shows peak GPU memory. Every panel spans at least 8 points, so flat means a tie. Sources: quantization.md, qwen3-asr.md, voxtral-v1.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #898781" x="10.8" y="447.015" transform="rotate(-0 10.8 447.015)">Japanese coverage CER by precision, 20-file corpus; each tick shows peak GPU memory. Every panel spans at least 8 points, so flat means a tie. Sources: quantization.md, engines/qwen3-asr.md, engines/voxtral-v1.md.</text>
   </g>
  </g>
  <defs>

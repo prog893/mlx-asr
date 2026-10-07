@@ -10,20 +10,22 @@ unquantized KV on the corpus and is on by default.
 | setting | default | why |
 |---|---|---|
 | `--quantization` on `voxtral` | `4bit` | last of five on the corpus, but fp16 peaks at 12.98GB and 1.65x the wall clock, and the 8-bit that ties fp16 is not published in a loadable form |
-| `--quantization` on `qwen3-asr` 1.7B | `8bit` | all five rungs tie; a tie does not move a default ([qwen3-asr.md](qwen3-asr.md)) |
-| `--quantization` on `qwen3-asr` 0.6B | `8bit` | 4bit is 7.02 points worse, 5bit and 6bit 1.57 and 1.74 ([qwen3-asr.md](qwen3-asr.md)) |
-| `--quantization` on `voxtral-v1` | `8bit` | ties bf16 on both sizes; the 3B at 4bit loses 8.01 points ([voxtral-v1.md](voxtral-v1.md)) |
+| `--quantization` on `qwen3-asr` 1.7B | `8bit` | all five rungs tie; a tie does not move a default ([qwen3-asr.md](engines/qwen3-asr.md)) |
+| `--quantization` on `qwen3-asr` 0.6B | `8bit` | 4bit is 7.02 points worse, 5bit and 6bit 1.57 and 1.74 ([qwen3-asr.md](engines/qwen3-asr.md)) |
+| `--quantization` on `voxtral-v1` | `8bit` | ties bf16 on both sizes; the 3B at 4bit loses 8.01 points ([voxtral-v1.md](engines/voxtral-v1.md)) |
 | `--quantization` on `whisper`, `kotoba` | fp16 | one build each, so the flag errors |
+| `--quantization` on `parakeet` | its one build | one published build, so the flag errors |
+| `reazon` precision | fp32 | not a `--quantization` choice; int8 drops whole phrases (36.93% against 30.45%), an engine decision ([reazon.md](engines/reazon.md)) |
 | `--kv-bits` (Voxtral only) | `8` | ties unquantized KV on the corpus and on the clip, and reads half the cache bytes per step |
 
-**Setup:** the [20-file corpus](corpus.md#the-20-file-corpus), plus [one clip](corpus.md#the-single-clip)
-for the superseded ladder, M2 Ultra 128GB, scored by coverage CER ([metrics.md](metrics.md)).
+**Setup:** the [20-file corpus](reference/corpus.md#the-20-file-corpus), plus [one clip](reference/corpus.md#the-single-clip)
+for the superseded ladder, M2 Ultra 128GB, scored by coverage CER ([metrics.md](reference/metrics.md)).
 
 ## Experiment: the weight-precision ladder
 
-**Basis:** the [20-file corpus](corpus.md#the-20-file-corpus), idle M2 Ultra 128GB, Voxtral at 60s chunks, batch 16, kv8, delay 2400ms.
+**Basis:** the [20-file corpus](reference/corpus.md#the-20-file-corpus), M2 Ultra 128GB. Voxtral on an idle host at 60s chunks, batch 16, kv8, delay 2400ms; `qwen3-asr` on an idle host (Mac14,14) with 30s windows; `voxtral-v1` on 2026-09-24/25 with other GPU clients resident on the host between runs, 30s windows.
 
-Five precisions, one config. Every arm through `run_corpus.py`, paired with
+Voxtral: five precisions, one config. Every arm through `run_corpus.py`, paired with
 `compare_engines.py`. This overturns the clip result in
 [Superseded](#the-single-clip-ladder).
 
@@ -32,19 +34,42 @@ Five precisions, one config. Every arm through `run_corpus.py`, paired with
   <img alt="Japanese CER by precision for each model, with peak memory per precision, default precision ringed" src="img/precision-light.svg">
 </picture>
 
-| weights | on disk | JP coverage CER | vs 4-bit | x realtime | peak GPU |
-|---|---|---|---|---|---|
-| fp16 | 8.9GB | **15.04%** | +1.30, CI [+0.59, +2.26] | 11.2x | 12.98GB |
-| **8-bit** | 4.7GB | **15.27%** | +1.07, CI [+0.18, +2.16] | **19.8x** | 7.29GB |
-| mxfp8 | 4.6GB | 15.86% | +0.48, CI [-0.43, +1.45] | 19.4x | 7.14GB |
-| nvfp4 | 2.5GB | 16.07% | +0.27, CI [-0.47, +1.23] | 19.6x | **5.09GB** |
-| 4-bit (default) | 2.9GB | 16.34% | | 18.5x | 6.77GB |
+**Table:** every model that offers `--quantization`, each rung's Japanese coverage CER on the 20-file corpus, its paired difference against that model's default where the source page prints one, throughput, peak GPU memory and weight size. Positive means the rung scored better than the default, except the two `voxtral-v1` 4bit cells, which print 4bit minus 8bit as their source does. Bold marks the best value within one model's ladder, as on the source pages. `voxtral` rows are from this page; the `qwen3-asr` rows from [qwen3-asr.md](engines/qwen3-asr.md#experiment-precision-ladder) and the `voxtral-v1` rows from [voxtral-v1.md](engines/voxtral-v1.md), where the paired cells are quoted from its prose. Weights are on disk for `voxtral` and as printed on [voxtral-v1.md](engines/voxtral-v1.md); [qwen3-asr.md](engines/qwen3-asr.md) does not print them.
+
+| model | size | precision | JP coverage CER | paired against the default | x realtime | peak GPU | weights |
+|---|---|---|---|---|---|---|---|
+| `voxtral` | 4B | fp16 | **15.04%** | +1.30, CI [+0.59, +2.26] | 11.2x | 12.98GB | 8.9GB |
+| `voxtral` | 4B | **8-bit** (local conversion) | **15.27%** | +1.07, CI [+0.18, +2.16] | **19.8x** | 7.29GB | 4.7GB |
+| `voxtral` | 4B | mxfp8 | 15.86% | +0.48, CI [-0.43, +1.45] | 19.4x | 7.14GB | 4.6GB |
+| `voxtral` | 4B | nvfp4 | 16.07% | +0.27, CI [-0.47, +1.23] | 19.6x | **5.09GB** | 2.5GB |
+| `voxtral` | 4B | 4-bit (default) | 16.34% | | 18.5x | 6.77GB | 2.9GB |
+| `qwen3-asr` | 1.7B | 4bit | 20.06% | -0.73, CI [-1.76, +0.31] | **26.3x** | **3.19GB** | |
+| `qwen3-asr` | 1.7B | 5bit | 19.19% | +0.15, CI [-0.37, +0.78] | 23.3x | 3.40GB | |
+| `qwen3-asr` | 1.7B | 6bit | 19.45% | -0.11, CI [-0.53, +0.29] | 24.2x | 3.62GB | |
+| `qwen3-asr` | 1.7B | **8bit (default)** | 19.33% | | 21.9x | 4.05GB | |
+| `qwen3-asr` | 1.7B | bf16 | 19.40% | -0.07, CI [-0.23, +0.10] | 16.2x | 5.66GB | |
+| `qwen3-asr` | 0.6B | 4bit | 30.29% | **-7.02**, CI [-8.82, -5.30] | 26.9x | **2.06GB** | |
+| `qwen3-asr` | 0.6B | 5bit | 24.84% | **-1.57**, CI [-2.16, -1.06] | 32.0x | 2.14GB | |
+| `qwen3-asr` | 0.6B | 6bit | 25.01% | **-1.74**, CI [-2.94, -0.86] | 33.5x | 2.21GB | |
+| `qwen3-asr` | 0.6B | **8bit (default)** | 23.27% | | 31.9x | 2.36GB | |
+| `qwen3-asr` | 0.6B | bf16 | 23.03% | -0.51, CI [-1.01, +0.13] | 30.3x | 2.92GB | |
+| `voxtral-v1` | 3B | 4bit | 44.54% | +8.01, CI [+4.77, +11.73] (4bit minus 8bit) | 14.0x | 5.25GB | 3.55GB |
+| `voxtral-v1` | 3B | **8bit (default)** | **36.52%** | | 12.9x | 7.28GB | 5.57GB |
+| `voxtral-v1` | 3B | bf16 | 37.16% | -0.64, CI [-1.56, +0.32] | 10.0x | 10.91GB | 9.37GB |
+| `voxtral-v1` | 24B | 4bit | 28.14% | +0.59, CI [-2.65, +3.83] (4bit minus 8bit) | **4.3x** | **16.27GB** | 14.7GB |
+| `voxtral-v1` | 24B | **8bit (default)** | 27.56% | | 3.1x | 27.92GB | 26.4GB |
+| `voxtral-v1` | 24B | bf16 | **27.10%** | +0.46, CI [-0.25, +1.56] | 2.4x | 50.08GB | 48.5GB |
+
+`whisper`, `kotoba` and `parakeet` publish one build each, so they have no precision choice
+and `--quantization` errors on them. `reazon` has no `--quantization` either: it runs the
+authors' fp32 ONNX, and int8 is measured and rejected as an engine decision in
+[reazon.md](engines/reazon.md#experiment-reazon-k2-int8-against-fp32).
 
 The ordering is monotonic in bit width **on this model**, which is what one would naively
 expect and what the clip sweep denied. Two comparisons clear significance against 4-bit
 (fp16 and 8-bit); mxfp8 and nvfp4 land inside the resolution floor. Nothing here has been
 carried over to `qwen3-asr`, whose ladder is measured separately and behaves differently
-([qwen3-asr.md](qwen3-asr.md)). The two models share nothing but a `--quantization` flag,
+([qwen3-asr.md](engines/qwen3-asr.md)). The two models share nothing but a `--quantization` flag,
 so neither ladder says anything about the other.
 
 **8-bit is the interesting result.** Against fp16 it is a tie (+0.23 points, CI [-0.12,
@@ -55,6 +80,8 @@ speed (19.8x against 18.5x) and 7.29GB instead of 12.98GB. It also beats nvfp4 (
 **The result is not a metric artifact.** For the fp16/4-bit pair, fp16 leads on all three
 error types counted separately, and coverage excusal moves the wrong way to manufacture the
 result:
+
+**Table:** Voxtral fp16 and 4-bit error counts by type, summed over the 20-file corpus.
 
 | | substitutions | deletions | insertions counted |
 |---|---|---|---|
@@ -84,7 +111,7 @@ locally and point `--model` at it;** the local 8-bit matches fp16 at 7.3GB and f
 
 ## Experiment: KV cache precision
 
-**Basis:** the [20-file corpus](corpus.md#the-20-file-corpus) on M2 Ultra 128GB at batch 16 (first table), and the earlier [single clip](corpus.md#the-single-clip) on M4 16GB and M2 Ultra 128GB at the configs in the second table.
+**Basis:** the [20-file corpus](reference/corpus.md#the-20-file-corpus) on M2 Ultra 128GB at batch 16 (first table), and the earlier [single clip](reference/corpus.md#the-single-clip) on M4 16GB and M2 Ultra 128GB at the configs in the second table.
 
 `--kv-bits 8` halves the cache bytes read per step, which matters because at batch 16 and
 838 positions the cache is 1.43GB per step against 2.5GB of weights.
@@ -94,11 +121,13 @@ locally and point `--model` at it;** the local 8-bit matches fp16 at 7.3GB and f
   <img alt="Japanese coverage CER for unquantized, 8-bit and 4-bit KV cache; the three tie within noise, kv8 is the default" src="img/quantization-kv-light.svg">
 </picture>
 
-| | JP coverage CER | x realtime |
-|---|---|---|
-| unquantized KV | 16.38% | 19.7x |
-| **kv8 (default)** | 16.21% | 19.8x |
-| kv4 | 15.95% | 19.8x |
+**Table:** Voxtral with unquantized, 8-bit and 4-bit KV cache on the 20-file corpus at batch 16: Japanese coverage CER, the paired difference kv8 minus that arm (negative means kv8 is better) with its 95% CI, and throughput.
+
+| | JP coverage CER | kv8 minus this arm | x realtime |
+|---|---|---|---|
+| unquantized KV | 16.38% | -0.17, CI [-0.51, +0.12] | 19.7x |
+| **kv8 (default)** | 16.21% | | 19.8x |
+| kv4 | 15.95% | +0.27, CI [-0.51, +1.27] | 19.8x |
 
     kv8 vs unquantized: -0.17 points, CI [-0.51, +0.12]  -> tie
     kv8 vs kv4:         +0.27 points, CI [-0.51, +1.27]  -> tie
@@ -110,6 +139,8 @@ nominally best on the narration clip. What kv4 does offer is a further halving o
 bytes, unmeasured for memory here.
 
 The default was set earlier on the clip, before the corpus existed:
+
+**Table:** the earlier single-clip check of `--kv-bits 8`, per machine and config: CER and decode seconds without and with it.
 
 | config | CER without | CER with kv8 | decode s without | decode s with |
 |---|---|---|---|---|
@@ -127,8 +158,9 @@ profiles.
 **`--kv-bits` is Voxtral only**, since it applies to our own batched decoder.
 **`--quantization` works on any model that publishes more than one build**, currently
 `voxtral`, `qwen3-asr` and `voxtral-v1`; the `whisper` sizes point at fp16 MLX conversions
-with no quantized builds in use here, so it errors there. whisper.cpp quantization is
-covered in [engines.md](engines.md), where it costs speed rather than accuracy.
+with no quantized builds in use here, so it errors there, as it does on `kotoba`,
+`parakeet` and `reazon`. whisper.cpp quantization is
+covered in [whisper.md](engines/whisper.md#experiment-competing-apple-silicon-runners), where it costs speed rather than accuracy.
 
 ### One measured default per model
 
@@ -142,17 +174,21 @@ default is picked by this rule, in this order:
    machine has, and no loadable 8-bit build is published.
 2. **Where only one build exists, use that.** Nothing to choose.
 
+**Table:** the default precision of every model family, the other builds `--quantization` accepts, and why that default was chosen.
+
 | model | default | other options | why that default |
 |---|---|---|---|
 | `voxtral` | 4-bit | `fp16` | fp16 is 8.9GB of weights, 12.98GB peak and 1.65x the wall clock on the corpus, where it is 1.30 points better and 4-bit is last of five. 4-bit stays the default for memory and because no loadable 8-bit is published. Measured above |
 | `whisper-*` | fp16 | none | 0.08-3.1GB; no quantized MLX builds in use here |
 | `kotoba` | fp16 | none | 1.6GB, converted on first use |
+| `parakeet` | its one build | none | one published MLX build |
+| `reazon` | fp32 | none through `--quantization` | int8 drops whole phrases on this corpus (36.93% against 30.45%); see [reazon.md](engines/reazon.md) |
 | `qwen3-asr` | **8-bit** | 4bit, 5bit, 6bit, bf16 | bf16 **tied** it on accuracy (20.16% vs 19.98%) while costing **1.36x the wall clock** (14.1x vs 19.2x) and **1.4x the peak memory** (5.66 vs 4.05GB) |
 | `qwen3-asr-small` | **8-bit** | 4bit, 5bit, 6bit, bf16 | same, and the gap is wider: bf16 26.24% vs 23.27%, and 23.0x vs 32.8x, which would remove the only reason this model is offered |
-| `voxtral-v1` | **8bit** | 4bit, bf16 | ties bf16 on both sizes at a fraction of the memory; the 3B at 4bit is 8.01 points worse. See [voxtral-v1.md](voxtral-v1.md) |
+| `voxtral-v1` | **8bit** | 4bit, bf16 | ties bf16 on both sizes at a fraction of the memory; the 3B at 4bit is 8.01 points worse. See [voxtral-v1.md](engines/voxtral-v1.md) |
 
 The two `qwen3-asr` rows quote the earlier 8-bit against bf16 measurement. The full
-five-rung ladder in [qwen3-asr.md](qwen3-asr.md) reaches the same defaults with different
+five-rung ladder in [qwen3-asr.md](engines/qwen3-asr.md) reaches the same defaults with different
 figures (1.7B bf16 19.40% against 8bit 19.33%; 0.6B bf16 23.03% against 23.27%, a tie), and
 `qwen3-asr-small` is now `--model qwen3-asr --size 0.6B`.
 
@@ -209,7 +245,7 @@ Still true on 2026-08-20, which is why `--quantization` on `voxtral` offers only
 On a new engine the thing worth checking afresh is **decoder degeneracy**, where the effect
 size is large rather than fractional. On Qwen3-ASR it made no difference: bf16 and 8-bit
 produced near-identical repetition-loop counts (2/0/18/0/31 against 3/0/19/0/31 per file),
-so its loops are not a quantization artifact. See [qwen3-asr.md](qwen3-asr.md).
+so its loops are not a quantization artifact. See [qwen3-asr.md](engines/qwen3-asr.md).
 
 ### Adjacent questions that came up and were closed
 
@@ -231,7 +267,7 @@ produced.
 **Quantization on other runners is a different story.** On whisper.cpp, q5_0 is 27%
 *slower* than fp16 at identical CER, because dequantization is work an fp16 matmul does not
 do. So on Apple Silicon, quantize when memory-bound rather than for speed. See
-[engines.md](engines.md).
+[whisper.md](engines/whisper.md#experiment-competing-apple-silicon-runners).
 
 ## Superseded
 
@@ -252,6 +288,8 @@ because it is the material this project is tuned for.
 fp16 at all. Differences are checked with a paired test over 40 regions of the same clip
 (`scripts/benchmarks/compare_configs.py`) rather than by eyeballing two overall CERs.
 
+**Table:** the superseded single-clip Voxtral ladder: five precisions on the 935s narration clip, with accuracy, throughput, decode rate and peak memory.
+
 | weights | bytes | CER | kana CER | x realtime | decode steps/s | peak GB |
 |---|---|---|---|---|---|---|
 | fp16 (unquantized) | 8.9GB | 7.61% | 6.08% | 13.6x | 14.5 | 15.28 |
@@ -263,6 +301,8 @@ fp16 at all. Differences are checked with a paired test over 40 regions of the s
 The whole spread is 0.43 CER points. The fp16 and 4-bit hypotheses differ by 65 characters
 out of 4205 (1.5%), and fp16's 15 extra errors are spread across categories rather than
 concentrated:
+
+**Table:** fp16 and 4-bit error counts by type on the single clip.
 
 | weights | sub | ins | del | total |
 |---|---|---|---|---|
@@ -312,7 +352,7 @@ does not describe spontaneous multi-speaker audio.
 The same config on an M4 16GB (nvfp4) and an M2 Ultra 128GB (4-bit affine) agreed to within
 ~1 point on 5 of 7 files. That comparison cannot fully separate quantization from hardware,
 because the two machines do not produce byte-identical output even at identical weights
-(see [determinism.md](determinism.md)).
+(see [determinism.md](reference/determinism.md)).
 
 That confound was later bounded. Running one identical 4-bit config on both machines over
 18 files put 11 of them at *identical* coverage CER and 16 within 0.16 points, so the
@@ -334,12 +374,12 @@ resolvable without a second corpus.
 **A full ladder is not swept per model, and that policy is on notice.** The corpus result
 shows that inheriting the clip's answer was unsound for Voxtral. The `qwen3-asr` and
 `voxtral-v1` rungs have since been measured on the corpus too
-([qwen3-asr.md](qwen3-asr.md), [voxtral-v1.md](voxtral-v1.md)).
+([qwen3-asr.md](engines/qwen3-asr.md), [voxtral-v1.md](engines/voxtral-v1.md)).
 
 **kv4's memory saving** is a further halving of cache bytes, unmeasured here.
 
 ## Related
 
 [decode-throughput.md](decode-throughput.md) for why bytes-per-step sets the speed.
-[metrics.md](metrics.md) for why kana CER is reported but not trusted as the fair number.
-[qwen3-asr.md](qwen3-asr.md) and [voxtral-v1.md](voxtral-v1.md) for the other two ladders.
+[metrics.md](reference/metrics.md) for why kana CER is reported but not trusted as the fair number.
+[qwen3-asr.md](engines/qwen3-asr.md) and [voxtral-v1.md](engines/voxtral-v1.md) for the other two ladders.

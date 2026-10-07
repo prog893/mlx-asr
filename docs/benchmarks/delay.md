@@ -11,19 +11,21 @@ reject `--delay-ms`.
 |---|---|---|
 | `--delay-ms` | `2400` | lowest error in both languages, 7-0 on files, no throughput cost; applied on every machine and not part of the hardware profile, since there is no tradeoff to tune |
 
-**Setup:** [7-file subset](corpus.md#the-7-file-subset), M2 Ultra 128GB, Voxtral at 30s
+**Setup:** [7-file subset](reference/corpus.md#the-7-file-subset), M2 Ultra 128GB, Voxtral at 30s
 chunks, batch 32, kv8, via `scripts/benchmarks/run_corpus.py`; scored by
-[coverage CER/WER](metrics.md#coverage-cer-and-why-it-had-to-exist) at `min_cut` 30
+[coverage CER/WER](reference/metrics.md#coverage-cer-and-why-it-had-to-exist) at `min_cut` 30
 characters / 6 words.
 
 ## Experiment: transcription delay
 
-**Basis:** [7-file subset](corpus.md#the-7-file-subset), M2 Ultra 128GB, Voxtral at 30s chunks, batch 32, kv8, delay stepped 480ms / 960ms / 2400ms.
+**Basis:** [7-file subset](reference/corpus.md#the-7-file-subset), M2 Ultra 128GB, Voxtral at 30s chunks, batch 32, kv8, delay stepped 480ms / 960ms / 2400ms.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/delay-dark.svg">
   <img alt="Error by transcription delay, 2400ms is the default" src="img/delay-light.svg">
 </picture>
+
+**Table:** error and throughput at each transcription delay.
 
 | delay | JP coverage CER | EN coverage WER | x realtime |
 |---|---|---|---|
@@ -38,6 +40,13 @@ which both confirms determinism and shows how much the speed column wanders betw
 on a shared machine.
 
 Paired across files, bootstrapped over files with 20k resamples:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/delay-paired-dark.svg">
+  <img alt="Paired difference of 480ms and 960ms against the 2400ms default, both intervals above zero" src="img/delay-paired-light.svg">
+</picture>
+
+**Table:** paired per-file difference of each lower delay against 2400ms, with its 95% CI and file wins.
 
 | comparison | diff | 95% CI | files won |
 |---|---|---|---|
@@ -70,7 +79,7 @@ Nothing extra is decoded.
 
 ## Superseded
 
-On the [single narration clip](corpus.md#the-single-clip) the same lever reads 14.74% at
+On the [single narration clip](reference/corpus.md#the-single-clip) the same lever reads 14.74% at
 480ms versus 7.49% at 2400ms. The corpus result above replaces it as the measurement of
 record; the clip confirms that the direction and rough magnitude hold on prepared speech.
 

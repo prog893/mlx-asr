@@ -18,13 +18,13 @@ other engines emit their own segments, so `--gap-seconds`, `--max-chars` and
 | `--max-dur-seconds` (`max_dur_s`) | 7.0 | inert from 4 to 9 seconds on this material; kept as a safety valve |
 
 **Setup:** 7 files with author-written timed subtitle references (one prepared-narration
-clip and six published videos, all by one editor; see [timed references](corpus.md#timed-references)), scored by
+clip and six published videos, all by one editor; see [timed references](reference/corpus.md#timed-references)), scored by
 break F1 and mid-phrase rate from `eval_timing`. The sweep regroups cached Voxtral tokens,
 so its scores do not depend on the machine.
 
 ## Experiment: gap_s at max_chars 32
 
-**Basis:** the 7 [timed references](corpus.md#timed-references), cached Voxtral tokens regrouped by `sweep_cues.py` (machine-independent), `gap_s` 0.6 to 1.2 at `max_chars=32` plus the default pair.
+**Basis:** the 7 [timed references](reference/corpus.md#timed-references), cached Voxtral tokens regrouped by `sweep_cues.py` (machine-independent), `gap_s` 0.6 to 1.2 at `max_chars=32` plus the default pair.
 
 With seven timed references `gap_s` is not flat, as the earlier n=1 sweep suggested (see
 [Superseded](#the-n1-sweep)). It is monotonic, and it points the **opposite
@@ -36,6 +36,8 @@ way** from the n=1 result. The last table row is the default pair, which uses
   <img alt="Across gap_s 0.6 to 1.2 seconds at max_chars 32, break F1 falls from 44.5% to 35.9% while cues per reference falls from 1.36 to 0.92." src="img/cue-layout-gap-light.svg">
 </picture>
 
+**Table:** break F1, mid-phrase rate and cues per reference cue at each `gap_s` with `max_chars=32`, plus the default pair.
+
 | gap_s (max_chars 32) | break F1 | mid-phrase | cues/ref |
 |---|---|---|---|
 | 0.6 | 44.5% | 55.7% | 1.36 |
@@ -46,6 +48,13 @@ way** from the n=1 result. The last table row is the default pair, which uses
 | 1.2 / chars 28 (**default**) | 37.0% | 58.1% | 1.01 |
 
 Per file, the default pair against the n=7 optimum:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/cue-layout-per-file-dark.svg">
+  <img alt="Break F1 per file for the default pair 1.2/28 and the n=7 optimum 0.7/32: the default is higher only on narration-jp, 46.1% against 35.9%, and lower on all six other files." src="img/cue-layout-per-file-light.svg">
+</picture>
+
+**Table:** break F1 per timed file for the default pair `1.2/28` and the n=7 optimum `0.7/32`; the higher value in each row is bold.
 
 | file | 1.2/28 (default) | 0.7/32 |
 |---|---|---|
@@ -77,9 +86,16 @@ cannot be quietly applied.
 
 ## Experiment: the default pair against the sweep optimum, end to end
 
-**Basis:** the 7 [timed references](corpus.md#timed-references), Voxtral end to end on the same audio with written SRTs scored by `eval_timing`, `1.2/28` against `0.7/32`.
+**Basis:** the 7 [timed references](reference/corpus.md#timed-references), Voxtral end to end on the same audio with written SRTs scored by `eval_timing`, `1.2/28` against `0.7/32`.
 
 Measured end to end on the same audio with everything else fixed:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/cue-layout-end-to-end-dark.svg">
+  <img alt="End to end on the 7 timed files, the default 1.2/28 scores 37.4% break F1 against 42.9% for 0.7/32, with 786 ms p95 drift against 829 ms." src="img/cue-layout-end-to-end-light.svg">
+</picture>
+
+**Table:** break F1, mid-phrase rate and timestamp drift of the written SRTs for the default pair and the n=7 optimum, Voxtral end to end on the 7 timed files.
 
 | Voxtral, 7 timed files | break F1 | mid-phrase | median drift | p95 drift |
 |---|---|---|---|---|
@@ -107,7 +123,7 @@ taken these two ways.
 
 ## Experiment: max_chars and max_dur_s
 
-**Basis:** the 7 [timed references](corpus.md#timed-references), the same cached-token regrouping as the `gap_s` sweep, `max_chars` 28 to 72 and `max_dur_s` 4 to 9 seconds.
+**Basis:** the 7 [timed references](reference/corpus.md#timed-references), the same cached-token regrouping as the `gap_s` sweep, `max_chars` 28 to 72 and `max_dur_s` 4 to 9 seconds.
 
 `max_chars` is worth under a point anywhere in 28-72. `max_dur_s` is inert on this
 material at any value from 4 to 9 seconds, because `gap_s` or `max_chars` always fires

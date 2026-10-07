@@ -87,4 +87,22 @@ SWEEPS = {
             (8, "| 8 | 40.5 / 40.6 |", ("-26.8%",)),
         ],
     },
+    "decode-throughput-stages": {
+        "doc": DOC,
+        "title": "Wall clock by stage on the 935s clip, 60s chunks",
+        "basis": "935s clip in 60s chunks, M4 16GB (nvfp4) and M2 Ultra 128GB (4-bit affine). "
+                 "Encode is 36% of the M4's wall clock, so decode speed alone does not set it.",
+        "xlabel": "stage",
+        "ylabel": "seconds (lower is faster)",
+        "scale": "category",
+        "connect": False,
+        "unit": "s",
+        "series": ["M4 16GB", "M2 Ultra 128GB"],
+        "rows": [
+            ("encode", "| encode (16 chunks) |", ("47.3", "10.8")),
+            ("decode", "| decode (816 steps) |", ("78.9", "31.8")),
+            ("total", "| total |", ("130.3", "43.9")),
+        ],
+        "zero": True,
+    },
 }

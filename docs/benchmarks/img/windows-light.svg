@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="795.319141pt" height="474.383625pt" viewBox="0 0 795.319141 474.383625" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="900.381797pt" height="474.383625pt" viewBox="0 0 900.381797 474.383625" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
@@ -16,8 +16,8 @@
  <g id="figure_1">
   <g id="patch_1">
    <path d="M 0 474.383625 
-L 795.319141 474.383625 
-L 795.319141 0 
+L 900.381797 474.383625 
+L 900.381797 0 
 L 0 0 
 z
 " style="fill: #fcfcfb"/>
@@ -734,7 +734,7 @@ z
    </g>
   </g>
   <g id="text_51">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #898781" x="10.8" y="461.703" transform="rotate(-0 10.8 461.703)">Decode window length per engine. Longer windows let a repetition loop burn a bigger token budget, which is why most curves turn up. Sources: engines.md, qwen3-asr.md, voxtral-v1.md, japanese-only.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #898781" x="10.8" y="461.703" transform="rotate(-0 10.8 461.703)">Decode window length per engine. Longer windows let a repetition loop burn a bigger token budget, which is why most curves turn up. Sources: engines/kotoba.md, engines/qwen3-asr.md, engines/voxtral-v1.md, engines/parakeet.md.</text>
   </g>
  </g>
  <defs>

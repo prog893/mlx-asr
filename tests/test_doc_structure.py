@@ -8,7 +8,8 @@ Lever and engine pages (`# Lever: ...`, `# Engine: ...`):
     **Setup:** <one paragraph>
     ## Experiment: <topic>                one or more, first
        **Basis:** <material, machine>     first line of every experiment
-       <chart>                            optional; directly followed by its table
+       <chart>                            optional; then its caption and table
+       **Table:** <what it shows>         directly above every table
        <table, reading>                   no ### inside an experiment
     ## How it works                        optional, ### allowed
     ## Superseded                          optional, ### allowed (one per old result)
@@ -26,7 +27,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-PAGES = sorted(p for p in (ROOT / "docs" / "benchmarks").glob("*.md") if p.name != "README.md")
+PAGES = sorted(p for p in (ROOT / "docs" / "benchmarks").rglob("*.md") if p.name != "README.md")
 TAIL = ["How it works", "Superseded", "Not settled", "Reproducing", "Related"]
 
 
@@ -60,12 +61,19 @@ def lint(path: Path) -> list[str]:
     if not head_text or head_text[0].startswith(("|", "**Setup", "<picture", "#")):
         errs.append("a conclusion/lead paragraph must come right after the title")
 
-    # charts are directly followed by their table, everywhere
+    # every table says what it is: a '**Table:** <what it shows>' line directly above it
+    # (the setting/default/why table at the top is exempt); a chart is followed by that
+    # caption and then its table
     for n, (i, l) in enumerate(lines):
         if l.strip() == "</picture>":
             nxt = next((m for _, m in lines[n + 1:] if m.strip()), "")
-            if not nxt.startswith("|"):
-                errs.append(f"line {i + 1}: a chart must be directly followed by its table")
+            if not nxt.startswith("**Table:**"):
+                errs.append(f"line {i + 1}: a chart must be followed by its '**Table:**' caption and table")
+        starts_table = (l.startswith("|") and n > 0 and not lines[n - 1][1].startswith("|"))
+        if starts_table and not l.startswith("| setting | default | why |"):
+            prev = next((m for _, m in reversed(lines[:n]) if m.strip()), "")
+            if not prev.startswith("**Table:**"):
+                errs.append(f"line {i + 1}: table without a '**Table:** <what it shows>' line above it")
 
     if kind == "Reference":
         if any(l.startswith("| setting | default |") for l in head):

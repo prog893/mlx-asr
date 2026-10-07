@@ -27,46 +27,47 @@ the 935s clip. `x realtime = steps/s x batch x 0.08`, since each row advances 80
 ## Experiment: batch size on two machines
 
 **Basis:** synthetic inputs via `mlx-asr-bench` (random embeddings, no audio), M4 16GB (10 GPU
-cores, nvfp4 weights) and M2 Ultra 128GB (60 GPU cores, 4-bit affine), mlx 0.32.0; the first
-table is the M4, the second the M2 Ultra.
+cores, nvfp4 weights) and M2 Ultra 128GB (60 GPU cores, 4-bit affine), mlx 0.32.0; one
+table with a machine column.
 
 400 steps per batch size, reported in four blocks so decay within a measurement is visible.
+
+The per-machine batch default is chosen on end-to-end corpus runs
+([chunking.md](chunking.md)), because this synthetic decode-only throughput keeps rising
+past it on both machines (M4 peaks at 32, the M2 Ultra at 128).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/batch-dark.svg">
   <img alt="Voxtral throughput by batch size on M2 Ultra and M4, default batch ringed" src="img/batch-light.svg">
 </picture>
 
-| batch | steps/s | ms/step | x realtime | peak GB |
-|---|---|---|---|---|
-| 1 | 44.63 | 22.4 | 3.6 | 2.79 |
-| 2 | 38.19 | 26.2 | 6.1 | 2.91 |
-| 4 | 19.26 | 51.9 | 6.2 | 3.25 |
-| 8 | 9.03 | **110.8** | 5.8 | 3.78 |
-| 12 | 11.28 | 88.7 | 10.8 | 4.45 |
-| 16 | 11.07 | 90.3 | 14.2 | 4.94 |
-| 24 | 10.28 | 97.3 | 19.7 | 5.92 |
-| 32 | 9.66 | 103.6 | **24.7** | 6.84 |
-| 48 | 5.23 | 191.4 | 20.1 | 8.42 |
+**Table:** decode throughput and peak memory by batch size on each machine, synthetic inputs.
 
-M2 Ultra 128GB, 60 GPU cores, 4-bit affine, mlx 0.32.0:
+| machine | batch | steps/s | ms/step | x realtime | peak GB |
+|---|---|---|---|---|---|
+| M4 16GB | 1 | 44.63 | 22.4 | 3.6 | 2.79 |
+| M4 16GB | 2 | 38.19 | 26.2 | 6.1 | 2.91 |
+| M4 16GB | 4 | 19.26 | 51.9 | 6.2 | 3.25 |
+| M4 16GB | 8 | 9.03 | **110.8** | 5.8 | 3.78 |
+| M4 16GB | 12 | 11.28 | 88.7 | 10.8 | 4.45 |
+| M4 16GB | 16 | 11.07 | 90.3 | 14.2 | 4.94 |
+| M4 16GB | 24 | 10.28 | 97.3 | 19.7 | 5.92 |
+| M4 16GB | 32 | 9.66 | 103.6 | **24.7** | 6.84 |
+| M4 16GB | 48 | 5.23 | 191.4 | 20.1 | 8.42 |
+| M2 Ultra 128GB | 1 | 92.60 | 10.8 | 7.4 | 5.15 |
+| M2 Ultra 128GB | 2 | 78.35 | 12.8 | 12.5 | 5.32 |
+| M2 Ultra 128GB | 4 | 61.45 | 16.3 | 19.7 | 5.65 |
+| M2 Ultra 128GB | 8 | 40.55 | 24.7 | 26.0 | 6.28 |
+| M2 Ultra 128GB | 12 | 32.09 | 31.2 | 30.8 | 6.75 |
+| M2 Ultra 128GB | 16 | 29.74 | 33.6 | 38.1 | 7.43 |
+| M2 Ultra 128GB | 24 | 29.10 | 34.4 | 55.9 | 8.38 |
+| M2 Ultra 128GB | 32 | 29.54 | 33.9 | 75.6 | 9.06 |
+| M2 Ultra 128GB | 48 | 18.81 | 53.2 | 72.2 | 10.73 |
+| M2 Ultra 128GB | 64 | 18.85 | 53.0 | 96.5 | 12.41 |
+| M2 Ultra 128GB | 96 | 12.08 | 82.8 | 92.8 | 16.16 |
+| M2 Ultra 128GB | 128 | 10.11 | 99.0 | **103.5** | 19.61 |
 
-| batch | steps/s | ms/step | x realtime | peak GB |
-|---|---|---|---|---|
-| 1 | 92.60 | 10.8 | 7.4 | 5.15 |
-| 2 | 78.35 | 12.8 | 12.5 | 5.32 |
-| 4 | 61.45 | 16.3 | 19.7 | 5.65 |
-| 8 | 40.55 | 24.7 | 26.0 | 6.28 |
-| 12 | 32.09 | 31.2 | 30.8 | 6.75 |
-| 16 | 29.74 | 33.6 | 38.1 | 7.43 |
-| 24 | 29.10 | 34.4 | 55.9 | 8.38 |
-| 32 | 29.54 | 33.9 | 75.6 | 9.06 |
-| 48 | 18.81 | 53.2 | 72.2 | 10.73 |
-| 64 | 18.85 | 53.0 | 96.5 | 12.41 |
-| 96 | 12.08 | 82.8 | 92.8 | 16.16 |
-| 128 | 10.11 | 99.0 | **103.5** | 19.61 |
-
-Read the M4 column carefully: **batch 8 costs 5x more per step than batch 1**, and
+Read the M4 rows carefully: **batch 8 costs 5x more per step than batch 1**, and
 batch 12 is *cheaper* than batch 8. Batch 1 at 22.4ms is exactly 2.5GB / 120GB/s, the
 bandwidth floor, so nothing is wrong at batch 1; the penalty from 2 upward is a
 kernel-path effect. Per-step cost grows roughly linearly with batch in the 2-8 range,
@@ -91,6 +92,8 @@ steps/s decays as the cache fills, about 25% over 800 steps at batch 16 on the M
   <img alt="On the M4 at batch 16, ms per step and peak memory both rise as kv_len grows from 138 to 838" src="img/decode-throughput-kvlen-light.svg">
 </picture>
 
+**Table:** ms per step and peak memory at batch 16 as the KV cache grows, M4.
+
 | kv_len | ms/step | peak GB |
 |---|---|---|
 | 138 | 78.4 | 4.28 |
@@ -106,10 +109,17 @@ machines, so it is on by default. See [quantization.md](quantization.md).
 
 ## Experiment: wall clock by stage
 
-**Basis:** the 935s clip ([corpus.md](corpus.md#the-single-clip)) in 60s chunks, M4 16GB
+**Basis:** the 935s clip ([corpus.md](reference/corpus.md#the-single-clip)) in 60s chunks, M4 16GB
 (nvfp4 weights) and M2 Ultra 128GB (4-bit affine), mlx 0.32.0.
 
 Decode is not the whole story. Splitting wall clock on the 935s clip, 60s chunks:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/decode-throughput-stages-dark.svg">
+  <img alt="Encode and decode seconds on the 935s clip in 60s chunks: the M4 takes 2.5 to 4.4 times as long as the M2 Ultra at every stage" src="img/decode-throughput-stages-light.svg">
+</picture>
+
+**Table:** wall-clock seconds per stage on the 935s clip in 60s chunks, per machine.
 
 | stage | M4 16GB | M2 Ultra 128GB |
 |---|---|---|
@@ -141,6 +151,8 @@ dodge the valley by changing the leading dimension each matmul sees.
   <img alt="On the M4, folding the batch tracks the plain path within a few percent while splitting into 2 or 4 sub-batches is much slower" src="img/decode-throughput-reshape-light.svg">
 </picture>
 
+**Table:** decode ms per step by batch layout and batch size, M4.
+
 | batch | plain | fold `[B,1,d]`->`[1,B,d]` | split into 2 | split into 4 |
 |---|---|---|---|---|
 | 4 | 50.3 | 50.3 | 50.1 | 80.9 |
@@ -154,7 +166,7 @@ best. Splitting is far worse, because each sub-batch pays full weight reads.
 
 ## Experiment: batching the encoder
 
-**Basis:** audio from the 935s clip ([corpus.md](corpus.md#the-single-clip)) via
+**Basis:** audio from the 935s clip ([corpus.md](reference/corpus.md#the-single-clip)) via
 `scripts/benchmarks/probes/probe_encoder_batch.py`, M4 16GB, mlx 0.32.0.
 
 `scripts/benchmarks/probes/probe_encoder_batch.py`. mlx-audio's encoder attention is
@@ -166,6 +178,8 @@ slightly slower:
   <img alt="Seconds per encoder chunk: the default per-chunk path is fastest and every batched variant from 1 to 8 is slower" src="img/decode-throughput-encoder-batch-light.svg">
 </picture>
 
+**Table:** encoder seconds per chunk, per-chunk default against batched variants, M4.
+
 | batch | s/chunk | vs per-chunk |
 |---|---|---|
 | per-chunk (stock) | 1.497 | 1.00x |
@@ -176,6 +190,8 @@ slightly slower:
 
 Arithmetic intensity explains it. Batching amortizes *weight reads*, so it only pays
 when a stage is bandwidth-bound, and the encoder is not:
+
+**Table:** estimated arithmetic intensity of one encoder chunk and one decoder step.
 
 | stage | FLOP per chunk/step | bytes read | FLOP/byte | bound by |
 |---|---|---|---|---|
@@ -230,6 +246,8 @@ be a default. Two interleaved runs of each arm, decode steps/s, idle host:
   <source media="(prefers-color-scheme: dark)" srcset="img/decode-throughput-qmv-wide-dark.svg">
   <img alt="Forcing qmv_wide on the M2 Ultra leaves batch 1 unchanged and cuts decode steps per second by 14 to 27 percent at batch 2 to 8, refuting the hypothesis" src="img/decode-throughput-qmv-wide-light.svg">
 </picture>
+
+**Table:** decode steps per second in two interleaved runs per arm, default `qmv` against forced `qmv_wide`, M2 Ultra.
 
 | batch | affine `qmv` (default) | forced `qmv_wide` | change |
 |---|---|---|---|
@@ -332,4 +350,4 @@ contribution to this project, and needs no audio: see
   bytes-per-step story.
 - [chunking.md](chunking.md): chunk length, which bounds `kv_len` and sets the encoder's
   share of wall clock.
-- [peak-memory.md](peak-memory.md): peak memory per engine and size.
+- [peak-memory.md](reference/peak-memory.md): peak memory per engine and size.

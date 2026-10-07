@@ -32,7 +32,7 @@ languages their card lists, and it shows: both are behind every other multilingu
 on Japanese, largely through repetition loops. The 24B's English figure is the lowest in
 the table, on three files. Both write no subtitles. Their throughput was measured with other
 GPU clients resident on the host between runs. See
-[voxtral-v1.md](docs/benchmarks/voxtral-v1.md).
+[voxtral-v1.md](docs/benchmarks/engines/voxtral-v1.md).
 
 The two Japanese-specialized engines were added on 2026-08-23 and change no
 default. Rows marked * differ from the rest of this table in two ways, both
@@ -41,7 +41,7 @@ recorded in their result files: they cover the 17 Japanese files rather than all
 memory was parked by a resident agent, so their throughput figures are floors.
 Both decode greedily, so accuracy is unaffected by contention. Parakeet sets a
 project throughput record anyway, 7x past anything else measured. See
-[japanese-only.md](docs/benchmarks/japanese-only.md).
+[engines.md](docs/benchmarks/engines.md#experiment-the-japanese-only-engines-against-the-multilingual-defaults).
 
 Whisper is about 1.7 points more accurate on Japanese, and the result holds under all three
 tests this project has: 3/3 repeat runs beat the baseline, the run-distribution interval
@@ -58,13 +58,13 @@ The two Qwen3-ASR rows were added on 2026-08-19 and change no default: the 1.7B 
 accuracy and slower than Voxtral. The 0.6B is the fastest engine measured here (32.8x, in
 2.36GB) and the only reason either ships. Both **write no subtitles**, since their
 timestamps are decode-window boundaries. See
-[qwen3-asr.md](docs/benchmarks/qwen3-asr.md).
+[qwen3-asr.md](docs/benchmarks/engines/qwen3-asr.md).
 
 **The English figures changed on 2026-08-19** and every earlier English number in this repo
 is superseded. Reference lines were being joined with no separator, fusing a word at every
 line break on the word-level path; one subtitle-shaped reference carried 131 such fusions
 and scored 20.09% where the correct figure is 3.29%. Japanese was never affected, because it
-has no word spaces. See [metrics.md](docs/benchmarks/metrics.md), which also explains why
+has no word spaces. See [metrics.md](docs/benchmarks/reference/metrics.md), which also explains why
 plain CER is meaningless on this editorial material.
 
 ## What was measured
@@ -72,9 +72,9 @@ plain CER is meaningless on this editorial material.
 | lever | conclusion | detail |
 |---|---|---|
 | transcription delay | `2400` is worth 9 points and free. The strongest result here. | [delay.md](docs/benchmarks/delay.md) |
-| Qwen3-ASR | Neither alias beats an existing default on accuracy; the 0.6B is the fastest engine here. Writes no subtitles. 30s window, measured. | [qwen3-asr.md](docs/benchmarks/qwen3-asr.md) |
-| Voxtral v1 | 3B and 24B added, no default changed. Weak on Japanese (outside the card's languages); the 24B is the best English row measured. 8bit ships on both; 3B at 4bit loses 8 points. Pass `--language`: detection sends Japanese windows out in other languages. | [voxtral-v1.md](docs/benchmarks/voxtral-v1.md) |
-| Japanese-specialized engines | parakeet 26.19% at a record 244.6x; reazon-k2 fp32 30.45% on CPU. Domain-matched training does not beat Whisper's breadth here; int8 is NOT near-parity for reazon on conversational audio. | [japanese-only.md](docs/benchmarks/japanese-only.md) |
+| Qwen3-ASR | Neither alias beats an existing default on accuracy; the 0.6B is the fastest engine here. Writes no subtitles. 30s window, measured. | [qwen3-asr.md](docs/benchmarks/engines/qwen3-asr.md) |
+| Voxtral v1 | 3B and 24B added, no default changed. Weak on Japanese (outside the card's languages); the 24B is the best English row measured. 8bit ships on both; 3B at 4bit loses 8 points. Pass `--language`: detection sends Japanese windows out in other languages. | [voxtral-v1.md](docs/benchmarks/engines/voxtral-v1.md) |
+| Japanese-specialized engines | parakeet 26.19% at a record 244.6x; reazon-k2 fp32 30.45% on CPU. Domain-matched training does not beat Whisper's breadth here; int8 is NOT near-parity for reazon on conversational audio. | [engines.md](docs/benchmarks/engines.md#experiment-the-japanese-only-engines-against-the-multilingual-defaults) |
 | chunking | 30s vs 60s is not resolvable on the corpus (+0.10, CI [-1.89, +2.03]), so choose on speed. Overlap helps only where seams are dense. Energy cuts beat VAD. | [chunking.md](docs/benchmarks/chunking.md) |
 | engine choice | Whisper turbo + no-condition is more accurate; Voxtral is faster and reproducible. | [engines.md](docs/benchmarks/engines.md) |
 | batch size | Not monotonic. Never use 2-8. | [decode-throughput.md](docs/benchmarks/decode-throughput.md) |
@@ -84,9 +84,9 @@ plain CER is meaningless on this editorial material.
 | timestamps | Voxtral holds timing, Whisper places cues better. | [timestamps.md](docs/benchmarks/timestamps.md) |
 | cue grouping | Two sweeps run, neither adopted, deliberately. | [cue-layout.md](docs/benchmarks/cue-layout.md) |
 
-Supporting: [corpus.md](docs/benchmarks/corpus.md) (what the material is, how to build
-your own), [metrics.md](docs/benchmarks/metrics.md) (which number to trust),
-[determinism.md](docs/benchmarks/determinism.md) (what reproduces and what does not).
+Supporting: [corpus.md](docs/benchmarks/reference/corpus.md) (what the material is, how to build
+your own), [metrics.md](docs/benchmarks/reference/metrics.md) (which number to trust),
+[determinism.md](docs/benchmarks/reference/determinism.md) (what reproduces and what does not).
 [JOURNAL.md](JOURNAL.md) is the chronological log the findings were distilled from,
 including the runs that produced nothing and the conclusions that were later withdrawn.
 Read it for history, not for current numbers.
@@ -155,7 +155,7 @@ stay on one machine. Measured over 18 files rather than one, though, 11 score id
 and 16 agree within 0.16 points; the 5.45-point case that established this is the shortest
 file in the corpus, and the effect scales inversely with reference length. The earlier
 "~1 point per file floor" was an extrapolation from n=1 and is withdrawn. See
-[determinism.md](docs/benchmarks/determinism.md).
+[determinism.md](docs/benchmarks/reference/determinism.md).
 
 **CLOSED: chunk length 30s versus 60s is settled as a non-effect.** Re-run on one machine
 over all 20 files: +0.10 points, CI [-1.89, +2.03], against +1.67 at n=7. Both chunk lengths

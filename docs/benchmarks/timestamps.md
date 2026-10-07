@@ -14,15 +14,15 @@ subtitle output, with the cue knobs exposed so you can fit them to your own refe
 | `--gap-seconds` | `1.2` | not the sweep optimum; costs 5.4 break-F1 points, see [cue-layout.md](cue-layout.md) |
 | `--max-chars` | `28` | paired with `--gap-seconds 1.2`, see [cue-layout.md](cue-layout.md) |
 
-**Setup:** the 7 [timed references](corpus.md#timed-references) (six published videos and
+**Setup:** the 7 [timed references](reference/corpus.md#timed-references) (six published videos and
 the single clip), on a machine not recorded with this table, scored by drift and cue-break
-metrics reported separately by `eval_timing` ([metrics.md](metrics.md)). n=7 is the
+metrics reported separately by `eval_timing` ([metrics.md](reference/metrics.md)). n=7 is the
 smallest sample in the project, because no other recording here has an authored subtitle
 track.
 
 ## Experiment: Voxtral against Whisper at the default cue config
 
-**Basis:** the 7 [timed references](corpus.md#timed-references), on a machine not recorded with this table, SRT output at the default cue config (`gap_s=1.2, max_chars=28`).
+**Basis:** the 7 [timed references](reference/corpus.md#timed-references), on a machine not recorded with this table, SRT output at the default cue config (`gap_s=1.2, max_chars=28`). The Whisper column is turbo-nocond, measured before large-v3 became the Whisper default.
 
 Both engines are asked for SRT output on the same audio and scored by `eval_timing`
 (`scripts/benchmarks/run_timing_sweep.py`), at the cue grouping the CLI defaults to
@@ -30,7 +30,14 @@ Both engines are asked for SRT output on the same audio and scored by `eval_timi
 Both of those were bugs once; see [Superseded](#superseded).
 
 n=7, every row above the 50% anchor-coverage bar (lowest is 75.6%), so nothing is
-excluded:
+excluded.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/timestamps-engines-dark.svg">
+  <img alt="Voxtral has lower median p95 error (786 against 1908 ms) and worst drift slope (25.3 against 122.7 ms/min); Whisper turbo-nocond has higher break F1 (56.0% against 37.4%) and fewer mid-phrase splits." src="img/timestamps-engines-light.svg">
+</picture>
+
+**Table:** timing and cue-break metrics for Voxtral and Whisper turbo-nocond at the default cue config, n=7.
 
 | | Voxtral | whisper turbo-nocond |
 |---|---|---|
@@ -55,14 +62,14 @@ references.
 
 ## Experiment: stability of Whisper's worst slope
 
-**Basis:** the one [timed reference](corpus.md#timed-references) that produces Whisper's worst slope, on a machine not recorded with this table, two runs of the identical default config.
+**Basis:** the one [timed reference](reference/corpus.md#timed-references) that produces Whisper's worst slope, on a machine not recorded with this table, two runs of the identical default config.
 
 Read Whisper's worst slope as an order of magnitude, not a value. Two runs of the identical config gave 122.7
 and 180.7 ms/min on the file that produces it, because Whisper samples: its output on that
 file differed between runs, one cue splitting where the other did not. Every other Whisper
 row matched exactly across the two runs, so this is one file's instability rather than
 general noise. Both values are 5-7x Voxtral's worst, so the comparison is unaffected. See
-[determinism.md](determinism.md).
+[determinism.md](reference/determinism.md).
 
 ## How it works
 
@@ -136,5 +143,5 @@ override per-file detection.
 ## Related
 
 [cue-layout.md](cue-layout.md) for why the default cue settings are not the sweep optimum.
-[determinism.md](determinism.md) for why Whisper needs a distribution.
-[metrics.md](metrics.md) for `eval_timing` alongside the text metrics.
+[determinism.md](reference/determinism.md) for why Whisper needs a distribution.
+[metrics.md](reference/metrics.md) for `eval_timing` alongside the text metrics.

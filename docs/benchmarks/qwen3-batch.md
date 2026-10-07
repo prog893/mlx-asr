@@ -9,18 +9,20 @@ accuracy stays within 0.65 CER points, inside this corpus's noise. This closes
 |---|---|---|
 | decoder batch size | 1 | fastest arm at every size tested, with no accuracy cost; `--max-batch` is refused |
 
-**Setup:** [20-file corpus](corpus.md#the-20-file-corpus) (7.95h), `Qwen3-ASR-1.7B-8bit`,
+**Setup:** [20-file corpus](reference/corpus.md#the-20-file-corpus) (7.95h), `Qwen3-ASR-1.7B-8bit`,
 `--language ja`, 15s windows, M2 Ultra (a shared machine, which affects the x-realtime
-column; see the caveat below), scored by coverage CER/WER ([metrics.md](metrics.md)).
+column; see the caveat below), scored by coverage CER/WER ([metrics.md](reference/metrics.md)).
 
 ## Experiment: batch size
 
-**Basis:** [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra (shared, not idle), `Qwen3-ASR-1.7B-8bit` with `--language ja` and 15s windows, batch 1, 2, 4 and 8.
+**Basis:** [20-file corpus](reference/corpus.md#the-20-file-corpus), M2 Ultra (shared, not idle), `Qwen3-ASR-1.7B-8bit` with `--language ja` and 15s windows, batch 1, 2, 4 and 8.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/qwen3-batch-batch-dark.svg">
   <img alt="Qwen3-ASR throughput falls from 23.18x realtime at batch 1 to 9.91x at batch 8 while Japanese CER and English WER stay flat." src="img/qwen3-batch-batch-light.svg">
 </picture>
+
+**Table:** throughput, accuracy and peak GPU memory at each decoder batch size on the 20-file corpus.
 
 | batch | x realtime | JP coverage CER | EN coverage WER | peak GPU |
 |---|---|---|---|---|
@@ -48,7 +50,7 @@ per-chunk by construction; that asymmetry is the thing being measured.
 
 15s windows rather than the default 30s, so that a file yields enough chunks to fill
 several groups at batch 8 and 16. 15s ties 30s on accuracy
-([qwen3-asr.md](qwen3-asr.md)), so the baseline is comparable.
+([qwen3-asr.md](engines/qwen3-asr.md)), so the baseline is comparable.
 
 **Caveat on the throughput figures.** This is a shared machine and two arms began with
 another process holding GPU memory (48.8GB at the start of batch 2, 8.9GB at batch 4), which
@@ -92,6 +94,13 @@ can then spend the budget its batch-mates needed.
 Measured on one 14.7-minute file at batch 4, with upstream's accounting against a
 per-group budget:
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/qwen3-batch-budget-dark.svg">
+  <img alt="On one file, batch 4 with a per-group budget ties batch 1 on CER but runs slower; with upstream's file-wide budget it emits 37.8 chars/s, scores 49.86% CER, runs at 1.8x realtime and peaks at 13.09GB." src="img/qwen3-batch-budget-light.svg">
+</picture>
+
+**Table:** output length, CER, speed and peak memory on one 14.7-minute file for batch 1 and for batch 4 under each token budget accounting.
+
 | | chars emitted | chars/s of audio | CER | x realtime | peak |
 |---|---|---|---|---|---|
 | batch 1 (default) | 4,409 | 5.0 | 17.56% | 36.2x | 3.73GB |
@@ -114,6 +123,6 @@ decision, which is to keep refusing the flag.
 
 ## Related
 
-- [qwen3-asr.md](qwen3-asr.md): the engine page, including the 15s and 30s window comparison.
+- [qwen3-asr.md](engines/qwen3-asr.md): the engine page, including the 15s and 30s window comparison.
 - [Issue #1](https://github.com/prog893/mlx-asr/issues/1): the request this page closes.
-- [metrics.md](metrics.md): coverage CER/WER.
+- [metrics.md](reference/metrics.md): coverage CER/WER.
