@@ -360,9 +360,9 @@ All four are ties on accuracy and all four are faster:
 | nvfp4 | 16.07% | 16.05% | +0.02 | [-0.97, +0.78] | 19.4x | **20.2x** |
 
 The 4-bit row's interval is identical to the one printed in the previous experiment, where
-the same comparison is signed on minus off (-0.21). Against this table's off minus on sign it
-does not bracket +0.21 in the usual way, so the chart omits that one error bar until the
-interval is recomputed in this table's sign.
+the same comparison is signed on minus off (-0.21). That interval is centred near -0.24, so
+it does not belong to this table's off minus on sign (+0.21), and the chart omits that one
+error bar until the interval is recomputed in this table's sign.
 
 **nvfp4 is the headline**, because that is the arm the 4-point loss came from. On the corpus
 it is +0.02 points and splits 4 files to 4. Nothing survives of the effect, so the

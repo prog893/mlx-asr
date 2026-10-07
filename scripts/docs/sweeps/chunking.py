@@ -68,8 +68,8 @@ SWEEPS = {
         "panels": [
             {"series": [0, 1], "ylabel": "error % (lower is better)", "title": "accuracy",
              "min_span": 12},
-            {"series": [2, 3], "ylabel": "60s minus 30s (points; above 0 favours 30s)",
-             "title": "paired difference, 95% CI", "zero_line": True},
+            {"series": [2, 3], "ylabel": "60s minus 30s (points)",
+             "title": "paired difference, 95% CI (above 0: 30s better)", "zero_line": True},
         ],
     },
     "chunking-overlap": {
@@ -159,10 +159,10 @@ SWEEPS = {
         "panels": [
             {"series": [0, 1], "ylabel": "error % (lower is better)", "title": "accuracy",
              "min_span": 12},
-            {"series": [2, 3], "ylabel": "VAD minus energy (points; above 0 favours energy)",
-             "title": "paired difference, 95% CI", "zero_line": True},
+            {"series": [2, 3], "ylabel": "VAD minus energy (points)",
+             "title": "paired diff., 95% CI (above 0: energy better)", "zero_line": True},
             {"series": [4], "ylabel": "x realtime (higher is faster)", "title": "speed",
-             "zero": True},
+             "min_span": 4},
         ],
     },
     "chunking-carry": {
@@ -207,10 +207,10 @@ SWEEPS = {
         "panels": [
             {"series": [0, 1], "ylabel": "error % (lower is better)", "title": "accuracy",
              "min_span": 12},
-            {"series": [2], "ylabel": "on minus off (points; below 0 favours on)",
-             "title": "paired difference, 95% CI", "zero_line": True},
+            {"series": [2], "ylabel": "on minus off (points)",
+             "title": "paired diff., 95% CI (below 0: on better)", "zero_line": True},
             {"series": [3], "ylabel": "x realtime (higher is faster)", "title": "speed",
-             "zero": True},
+             "min_span": 4},
         ],
     },
     "chunking-silence-precision": {
@@ -240,9 +240,9 @@ SWEEPS = {
             {"series": [0, 1], "ylabel": "JP coverage CER % (lower is better)",
              "title": "accuracy", "min_span": 4},
             {"series": [2], "ylabel": "off minus on (points)",
-             "title": "paired difference, 95% CI", "zero_line": True},
+             "title": "paired diff., 95% CI (above 0: on better)", "zero_line": True},
             {"series": [3, 4], "ylabel": "x realtime (higher is faster)", "title": "speed",
-             "zero": True},
+             "min_span": 4},
         ],
     },
     "chunking-composite": {
@@ -295,7 +295,7 @@ SWEEPS = {
             {"series": [0], "ylabel": "x realtime (higher is faster)",
              "title": "M2 Ultra, 60 GPU cores", "zero": True},
             {"series": [1, 2], "ylabel": "x realtime (higher is faster)",
-             "title": "M4, 10 GPU cores (default 60s/B16)", "zero": True},
+             "title": "M4, 10 GPU cores (default 60s/B16)", "min_span": 1.5},
         ],
     },
     "chunking-seams": {
