@@ -1,142 +1,29 @@
 # Lever: which engine
 
-**Conclusion first.** Whisper with `condition_on_previous_text=False` is the most accurate
-engine on this corpus, about 1.7 points ahead of Voxtral on Japanese, resolved by every test
-available here including a bootstrap over files. That comparison was run with
-large-v3-turbo; `large-v3`, the shipped default since 2026-10-06, ties turbo on the same
-corpus, so the verdict is about the engine rather than about one size. Voxtral is 1.35-1.65x faster, needs
-no language hint, needs no long-form-stability flag, and is reproducible on a given
-machine, which is why it is the default. No "fastest on Apple Silicon" claim survives
-measurement.
+`voxtral` is the default engine, and `large-v3` is Whisper's default size (since
+2026-10-06; it ties turbo on the 20-file corpus and the tie goes to capacity). Whisper with
+`condition_on_previous_text=False` is the more accurate engine, about 1.7 points ahead of
+Voxtral on Japanese and resolved by every test available here including a bootstrap over
+files; that comparison was measured with large-v3-turbo, and since `large-v3` ties turbo,
+the verdict is about the engine rather than one size. Voxtral is the default because it is
+1.35-1.65x faster, needs no language hint and no long-form-stability flag, and reproduces
+on a given machine. No "fastest on Apple Silicon" claim survives measurement.
 
-Whisper's *library defaults* are worth 7 to 25 CER points on this material, all of it
-cross-window repetition loops, so any Whisper figure taken without
-`condition_on_previous_text=False` describes the defaults rather than the model. The CLI
-ships that flag on `small` and larger.
+| setting | default | why |
+|---|---|---|
+| `--model` (engine family) | `voxtral` | 1.35-1.65x faster than turbo-nocond, no language hint, no stability flag, deterministic on one machine; Whisper is about 1.7 JP points more accurate |
+| Whisper `--size` | `large-v3` | ties `turbo` at n=20 (14.55% vs 14.68% JP); the tie goes to capacity, turbo stays the speed option |
+| Whisper `condition_on_previous_text` | `False` on `small` and larger | worth 7 to 25 CER points on long audio; library defaults on `tiny` and `base` |
+| kotoba driver | chunked, 10s windows (MLX) | 27.01% against 31.33% at 20s and 49.71% at 30s; the sequential driver scores 94.23% |
+| kotoba checkpoint | v2.0, converted on first use | bit-identical ASR weights to v2.2 |
 
-## Corpus
+**Setup:** [20-file corpus](corpus.md#the-20-file-corpus) (17 Japanese, 3 English, 7.95h)
+for the final comparison and the size sweep, the [7-file subset](corpus.md#the-7-file-subset)
+for the superseded tables, and [the single clip](corpus.md#the-single-clip) for the
+runner and narration comparisons; M2 Ultra, scored by coverage CER/WER at `min_cut` 30/6
+([metrics.md](metrics.md)).
 
-7 recordings for the size sweep (5 Japanese, 2 English), grown to 20 for the final
-Voxtral-versus-Whisper comparison. Plus the single prepared-narration clip, where a
-complete verbatim reference makes plain CER meaningful. Editorial references elsewhere, so
-coverage CER/WER at `min_cut` 30/6. See [corpus.md](corpus.md) and
-[metrics.md](metrics.md).
-
-## Method
-
-`scripts/benchmarks/run_whisper.py` scores with the *same* functions `run_corpus.py` uses, on the
-*same* cached 16kHz files (verified byte-identical to what the Voxtral runs read), so rows
-sit next to each other without an asterisk. Engine: `mlx-whisper` 0.4.3.
-
-Whisper is run at library defaults (temperature ladder 0.0-1.0,
-`condition_on_previous_text=True`) unless a row says otherwise, because that is what
-`mlx_whisper.transcribe` gives a user. Paired comparisons bootstrap over files,
-length-weighted, 20k resamples (`scripts/benchmarks/compare_engines.py`).
-
-Whisper samples, so a single run is a draw from a distribution; see
-[determinism.md](determinism.md) for why the headline uses a 3-run mean.
-
-## Experiment: every Whisper size at the config that ships
-
-**Superseded the earlier 7-file size sweep, which measured the wrong thing.** That table
-ran `large-v2`, `medium` and `small` at mlx-whisper's library defaults, while the CLI
-ships those three with `condition_on_previous_text=False`. Its rows therefore described
-configs this CLI does not run, and understated them by 7 to 25 points. The old numbers
-are kept below the new ones because the gap between them is the finding.
-
-20 files, 7.95h, idle M2 Ultra, `--no-condition` on `small` and larger (which is what
-ships) and library defaults on `tiny` and `base` (also what ships). Peak GPU memory from
-`mx.get_peak_memory()`, reset per file. An independent re-run reproduced every peak here
-within 0.02GB and found that Whisper's figure grows with audio length rather than being a
-property of the size ([peak-memory.md](peak-memory.md)).
-
-| size | JP coverage CER | EN coverage WER | x realtime | peak GPU | old table, library defaults |
-|---|---|---|---|---|---|
-| `tiny` | 51.28% | 32.17% | **52.7x** | **3.98GB** | 59.27% |
-| `base` | 29.93% | 27.14% | 34.5x | 4.07GB | 29.96% |
-| `small` | 21.33% | 22.68% | 20.1x | 4.37GB | 28.61% |
-| `medium` | 21.63% | 18.23% | 21.4x | 5.43GB | 28.93% |
-| `large-v2` | 17.87% | 17.68% | 14.4x | 6.97GB | 25.02% |
-| `large-v3` **(ships)** | **14.55%** | 18.26% | 11.4x | 7.00GB | 39.91% |
-| `turbo` | 14.68% | 18.31% | 23.7x | 5.53GB | 24.97% |
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="img/whisper-sizes-dark.svg">
-  <img alt="Japanese CER and English WER by Whisper size; large-v3 and turbo tie, large-v3 ships" src="img/whisper-sizes-light.svg">
-</picture>
-
-Three things follow.
-
-**`turbo` and `large-v3` tie**: 14.68% against 14.55% on Japanese, well inside the ±0.27
-that repeat runs of turbo spread, and 18.31% against 18.26% on English. The earlier 7-file
-table appeared to show turbo winning outright; at n=20 with both at their shipped config
-the honest statement is that the corpus cannot separate them. Turbo is **2.1x faster** and
-uses 1.5GB less memory. The default was turbo on that basis until 2026-10-06, and is now
-**`large-v3`**: a tie on 20 files from a few sources is not evidence that turbo's 4-layer
-decoder holds up on material the corpus does not cover, so the tie is broken toward
-capacity, and turbo stays available as the speed option.
-
-**`large-v3` was the worst-served by the old measurement.** 39.91% at library defaults
-against 14.55% shipped, a 25-point artifact of cross-window repetition loops that
-`condition_on_previous_text=False` prevents. Anyone reading the old table would have
-concluded the model was broken.
-
-**Peak memory barely tracks download size.** `tiny` downloads 0.07GB and peaks at 3.98GB,
-because the working set is the 30s mel window and decoder activations rather than the
-weights. So the whole size ladder fits in 4 to 7GB, and picking `tiny` to save memory buys
-almost nothing while costing 37 points.
-
-The `turbo` row was measured while the host was not idle, so its 23.7x is a floor rather
-than a clean figure; the accuracy figures are unaffected, since contention costs wall clock
-only. Its 14.68% is consistent with the separately published 3-run mean of 14.49% ±0.27.
-
-### The superseded 7-file table
-
-Kept for the record. Library defaults except where a row says otherwise, so the
-`large-v2`, `medium`, `small`, `base`, `tiny` and plain `large-v3`/`turbo` rows do not
-describe anything the CLI runs.
-
-| engine / config | JP coverage CER | EN coverage WER | x realtime |
-|---|---|---|---|
-| whisper large-v3-turbo, no-condition (mean of 6 runs) | **15.91%** ±0.94 | **22.24%** ±0.96 | 15.4x |
-| **voxtral 30s b32 kv8** | 16.44% | 26.55% | **31.3x** |
-| whisper large-v3, no-condition | 17.36% | 23.57% | 9.2x |
-| voxtral 60s b16 kv8 | 18.21% | 27.75% | 21.4x |
-| whisper large-v3-turbo | 24.97% | 30.69% | 17.3x |
-| whisper large-v2 | 25.02% | 28.05% | 15.0x |
-| whisper small | 28.61% | 25.80% | 26.4x |
-| whisper medium | 28.93% | 23.52% | 21.8x |
-| whisper base | 29.96% | 32.16% | 25.5x |
-| whisper large-v3 | 39.91% | 29.37% | 9.1x |
-| whisper large-v3-turbo, autodetect | 50.14% | 22.73% | 24.3x |
-| whisper tiny | 59.27% | 40.47% | 46.4x |
-| whisper large-v3-turbo, greedy | 84.92% | 93.00% | 82.3x |
-
-Paired against Voxtral, positive meaning Whisper is worse:
-
-| comparison | JP diff | 95% CI | EN diff | 95% CI |
-|---|---|---|---|---|
-| turbo-nocond | -1.51 | [-4.62, +0.67] | **-4.56** | [-7.27, +1.74] |
-| large-v3-nocond | +0.91 | [-2.46, +4.45] | -2.97 | [-7.34, +7.20] |
-| turbo (defaults) | **+8.52** | [+1.12, +13.24] | **+4.14** | [+3.09, +6.58] |
-| large-v2 | **+8.58** | [+3.86, +13.13] | **+1.50** | [+1.12, +1.67] |
-| large-v3 | **+23.47** | [+11.16, +38.61] | **+2.82** | [+2.30, +4.05] |
-| medium | **+12.49** | [+7.47, +21.91] | **-3.02** | [-4.25, -0.17] |
-| small | **+12.16** | [+4.90, +17.04] | -0.74 | [-2.54, +3.43] |
-| base | **+13.52** | [+11.32, +15.02] | **+5.61** | [+3.14, +11.36] |
-| tiny | **+42.83** | [+24.83, +67.27] | **+13.92** | [+8.91, +25.58] |
-| turbo, autodetect | **+33.70** | [+19.65, +42.36] | -3.82 | [-5.85, +0.90] |
-
-**At library defaults, Voxtral beats every Whisper size on Japanese.** That is the honest
-default-versus-default result, and it is mostly a statement about Whisper's defaults on
-long-form audio (see the no-condition section below).
-
-**On English, Voxtral is behind**, and this is the most robust accuracy finding here:
-medium by 3.02 points with a CI excluding zero at 0.69x the speed, and turbo-nocond by
-4.56 points in every one of 6 repeat runs. Note the English side is n=2 here, n=3 in the
-final corpus, so treat it as a direction rather than a magnitude.
-
-## Experiment: the final comparison, 20 files
+## Experiment: Voxtral against Whisper, 20 files
 
 Measured 2026-08-06 on an idle `Apple M2 Ultra 128GB (Mac14,14)`, mlx 0.32.0, macOS
 26.4.1. 20 recordings, 7.95h, 17 Japanese and 3 English. Voxtral at `--chunk-seconds 30
@@ -154,6 +41,21 @@ ones; Japanese is unchanged, because Japanese has no word spaces and could not b
 | EN coverage WER, 3 files | 21.50% | 17.85 / 18.04 / 19.13 -> **18.34% ±0.69** | CI [16.62, 20.07] entirely below -> **whisper** |
 | x realtime | **29.6x** | 18.0 / 21.6 / 22.0x | **voxtral, ~1.4x** |
 
+Whisper wins accuracy on both units, in all 3 runs, with the whole interval below
+Voxtral's fixed value. Voxtral is 1.35-1.65x faster depending on the Whisper run, since
+Whisper's sampling ladder makes its own throughput vary by more than 20%. Per file the split
+is structural rather than noisy: Whisper wins 13 of 20 files in all 3 runs and loses 5 of 20
+in all 3, with 2 files changing sign between runs. So the aggregate reflects a consistent
+per-file ordering rather than one file carrying the result, and those 5 losses are the reason
+the win is under 2 points rather than a rout.
+
+The method matters for the Whisper column. Its temperature-fallback ladder samples, so a
+single run is a draw rather than a score; the interval above is a one-sample t-interval on
+the Whisper mean with Voxtral as a constant, since only one side has sampling error
+(`scripts/benchmarks/repeat_distribution.py`). Voxtral gets no error bar because greedy
+decoding reproduces byte-identically on one machine, which is also why its column is one
+run rather than three. See [determinism.md](determinism.md).
+
 Qwen3-ASR was added as a fourth engine on 2026-08-19 and is measured on the same 20 files
 with the same scorers: 19.33% JP / 25.45% EN at 21.8x for the 1.7B, 23.27% / 24.26% at
 32.8x for the 0.6B. Both are behind the two rows above on Japanese, so neither changes the
@@ -166,7 +68,7 @@ the 24B at 8bit. Japanese is outside its card's eight languages and it is behind
 other multilingual row there; the 24B's English is the lowest measured, on three files. It
 writes no subtitles. See [voxtral-v1.md](voxtral-v1.md).
 
-### The generalization test, finally run
+### The generalization test
 
 The interval above answers "does this hold on a rerun", which is what
 `repeat_distribution.py` is for. It contains no between-file uncertainty, so on its own it
@@ -181,26 +83,16 @@ bootstrap over *files*, and it had never been run at this sample size. It resolv
 | sign test over files | 13 of 17 won, p=0.049 | whisper |
 
 All four agree, so the engine conclusion is stronger than it was when it rested on the
-rerun interval alone. Note the file bootstrap is the strictest of these and its interval is
+rerun interval alone. The file bootstrap is the strictest of these and its interval is
 much wider, which is the honest measure of how much this generalizes: the lower bound is
-+0.58 points, not +1.7.
++0.58 points rather than +1.7.
 
-Whisper wins accuracy on both units, in all 3 runs, with the whole interval below
-Voxtral's fixed value. Voxtral is 1.35-1.65x faster depending on the Whisper run, since
-Whisper's sampling ladder makes its own throughput vary by more than 20%. Per file the split
-is structural rather than noisy: Whisper wins 13 of 20 files in all 3 runs and loses 5 of 20
-in all 3, with 2 files changing sign between runs. So the aggregate reflects a consistent
-per-file ordering rather than one file carrying the result, and those 5 losses are the reason
-the win is under 2 points rather than a rout.
+### The ordering at each corpus size
 
-The method matters for the Whisper column. Its temperature-fallback ladder samples, so a
-single run is a draw rather than a score; the interval above is a one-sample t-interval on
-the Whisper mean with Voxtral as a constant, since only one side has sampling error
-(`scripts/benchmarks/repeat_distribution.py`). Voxtral gets no error bar because greedy
-decoding reproduces byte-identically on one machine, which is also why its column is one
-run rather than three.
-
-The ordering held at every corpus size and only became resolvable as n grew:
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/engines-corpus-size-dark.svg">
+  <img alt="Japanese coverage CER for Voxtral and Whisper turbo-nocond at 5, 12 and 17 Japanese files; Whisper is lower at every size and Voxtral barely moves" src="img/engines-corpus-size-light.svg">
+</picture>
 
 | corpus | JP files | voxtral | turbo-nocond | verdict |
 |---|---|---|---|---|
@@ -208,15 +100,17 @@ The ordering held at every corpus size and only became resolvable as n grew:
 | grown | 12 | 16.08% | 14.07% ±0.17 (n=3) | whisper better |
 | final | 17 | 16.22% | 14.49% ±0.27 (n=3) | whisper better, and resolved over files |
 
-Voxtral's own number barely moved (16.44 -> 16.08 -> 16.22) while the corpus more than
-tripled, which says the original 5 files were not unrepresentative. What changed is the
-*resolution*, not the estimate. That is the argument for more audio rather than more
-reruns.
+The ordering held at every corpus size and only became resolvable as n grew. Voxtral's own
+number barely moved (16.44 -> 16.08 -> 16.22) while the corpus more than tripled, which
+says the original 5 files were not unrepresentative. What changed is the *resolution*
+rather than the estimate. That is the argument for more audio rather than more reruns.
 
-**Provenance.** Both columns are re-measured and both result files record the machine and
-its state. This closes the gap the previous version of this section described: the numbers
-had come from a single session with no surviving result file, and a re-run attempted
-earlier on 2026-08-06 was voided because the host was doing unrelated GPU work throughout.
+### Provenance
+
+Both columns are re-measured and both result files record the machine and its state. This
+closes the gap an earlier version of this page described: the numbers had come from a
+single session with no surviving result file, and a re-run attempted earlier on 2026-08-06
+was voided because the host was doing unrelated GPU work throughout.
 
 Two things the re-measurement establishes beyond the comparison itself. Voxtral's Japanese
 accuracy reproduced the earlier session **exactly** (16.22%), across three separate sessions
@@ -248,9 +142,73 @@ cost nothing measurable, and the spread is Whisper's own sampling. The flag stay
 deliberately cautious, since the cost of investigating a false warning is far below the
 cost of publishing a contaminated figure.
 
-## `condition_on_previous_text=False` is worth more than model size
+### Why the default is not the most accurate engine
 
-The single largest Whisper lever here:
+`voxtral` is the default despite Whisper being ~1.3 points more accurate, because it is
+faster (~1.4-2x), needs no language hint, needs no stability flag, has better-behaved
+timestamps ([timestamps.md](timestamps.md)), and reproduces on a given machine
+([determinism.md](determinism.md)). Whisper is one flag away for anyone who wants the
+accuracy.
+
+The two `qwen3-asr` aliases are available without displacing anything. The 1.7B is last of
+the four on accuracy; the 0.6B is the fastest here (32.8x in 2.36GB), which is the case for
+keeping it. Both refuse `-f srt`.
+
+## Experiment: every Whisper size at its default config
+
+20 files, 7.95h, idle M2 Ultra, `--no-condition` on `small` and larger and library defaults
+on `tiny` and `base`, which is each size's default config. Peak GPU memory from
+`mx.get_peak_memory()`, reset per file. An independent re-run reproduced every peak here
+within 0.02GB and found that Whisper's figure grows with audio length rather than being a
+property of the size ([peak-memory.md](peak-memory.md)). The last column is the superseded
+7-file measurement at library defaults (see [Superseded](#superseded)), kept beside the new
+one because the gap between them is a finding.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/whisper-sizes-dark.svg">
+  <img alt="Japanese CER and English WER by Whisper size; large-v3 and turbo tie, large-v3 is the default" src="img/whisper-sizes-light.svg">
+</picture>
+
+| size | JP coverage CER | EN coverage WER | x realtime | peak GPU | old table, library defaults |
+|---|---|---|---|---|---|
+| `tiny` | 51.28% | 32.17% | **52.7x** | **3.98GB** | 59.27% |
+| `base` | 29.93% | 27.14% | 34.5x | 4.07GB | 29.96% |
+| `small` | 21.33% | 22.68% | 20.1x | 4.37GB | 28.61% |
+| `medium` | 21.63% | 18.23% | 21.4x | 5.43GB | 28.93% |
+| `large-v2` | 17.87% | 17.68% | 14.4x | 6.97GB | 25.02% |
+| `large-v3` **(default)** | **14.55%** | 18.26% | 11.4x | 7.00GB | 39.91% |
+| `turbo` | 14.68% | 18.31% | 23.7x | 5.53GB | 24.97% |
+
+**`turbo` and `large-v3` tie**: 14.68% against 14.55% on Japanese, well inside the ±0.27
+that repeat runs of turbo spread, and 18.31% against 18.26% on English. The earlier 7-file
+table appeared to show turbo winning outright; at n=20 with both at their default config
+the honest statement is that the corpus cannot separate them. Turbo is **2.1x faster** and
+uses 1.5GB less memory. The default was turbo on that basis until 2026-10-06, and is now
+**`large-v3`**: a tie on 20 files from a few sources is not evidence that turbo's 4-layer
+decoder holds up on material the corpus does not cover, so the tie is broken toward
+capacity, and turbo stays available as the speed option.
+
+**`large-v3` was the worst-served by the old measurement.** 39.91% at library defaults
+against 14.55% at its default config, a 25-point artifact of cross-window repetition loops
+that `condition_on_previous_text=False` prevents. Anyone reading the old table would have
+concluded the model was broken.
+
+**Peak memory barely tracks download size.** `tiny` downloads 0.07GB and peaks at 3.98GB,
+because the working set is the 30s mel window and decoder activations rather than the
+weights. So the whole size ladder fits in 4 to 7GB, and picking `tiny` to save memory buys
+almost nothing while costing 37 points.
+
+The `turbo` row was measured while the host was not idle, so its 23.7x is a floor rather
+than a clean figure; the accuracy figures are unaffected, since contention costs wall clock
+only. Its 14.68% is consistent with the separately published 3-run mean of 14.49% ±0.27.
+
+## Experiment: `condition_on_previous_text=False`
+
+Whisper's *library defaults* are worth 7 to 25 CER points on this material, all of it
+cross-window repetition loops, so any Whisper figure taken without
+`condition_on_previous_text=False` describes the defaults rather than the model. The CLI
+sets that flag by default on `small` and larger. It is the single largest Whisper lever
+here:
 
 | model | defaults | no-condition | change |
 |---|---|---|---|
@@ -267,7 +225,7 @@ where the loop has room to compound.**
 This also inverts the size ranking: at defaults large-v3 (39.91%) is *worse* than small
 (28.61%) on Japanese, purely from loop instability, and turbo beats the full large-v3 it
 was distilled from. Anyone quoting "large-v3 is the best Whisper" on long-form Japanese
-should check this flag first. The registry sets it for every `whisper-*` alias.
+should check this flag first. The registry sets it on `small` and larger; `tiny` and `base` keep the library default.
 
 Voxtral has no equivalent knob and no equivalent failure, because it decodes independent
 chunks.
@@ -275,7 +233,7 @@ chunks.
 Pure greedy decoding is not a fix for the resulting nondeterminism: `--greedy` collapses
 to 84.92% / 93.00%, because the fallback ladder is what rescues looping segments.
 
-## Whisper needs to be told the language, and that is not free
+## Experiment: telling Whisper the language
 
 Voxtral takes no language token. Whisper does, and all three ways of supplying it on a
 mixed corpus cost something:
@@ -294,14 +252,21 @@ Whisper that information for free; the autodetect row is what a zero-config user
 `run_whisper.py` refuses `--language` on a mixed-script set rather than silently producing
 the 100% rows.
 
-## kotoba-whisper: the long-form driver accounted for 68 points
+## Experiment: kotoba-whisper's long-form driver
 
 Our first measurement of this Japanese-finetuned distil model was 91.47% coverage CER.
-That figure reflects our harness, not the model: we ran it under `mlx-whisper`, whose
-long-form algorithm is a poor match for a distil checkpoint. Running it the way its
-authors document recovers most of the difference. Recorded here because the same mistake
-is easy to make with any model whose published recipe differs from your preferred
-runtime:
+That figure reflects our harness rather than the model: we ran it under `mlx-whisper`,
+whose long-form algorithm is a poor match for a distil checkpoint. Running it the way its
+authors document recovers most of the difference, 68 points in all. Recorded here because
+the same mistake is easy to make with any model whose published recipe differs from your
+preferred runtime.
+
+### Runner and the authors' chunk length
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/engines-kotoba-authors-chunk-dark.svg">
+  <img alt="kotoba CER by chunk_length_s in the authors' pipeline; 10s is best on the corpus, 20s on the narration clip, 30s is worst on both" src="img/engines-kotoba-authors-chunk-light.svg">
+</picture>
 
 | what was run | corpus coverage CER | narration | extra_ratio | engine |
 |---|---|---|---|---|
@@ -314,7 +279,10 @@ runtime:
 | official pipeline, `chunk_length_s=15` | 30.40% | 20.88% | 1.37 | transformers |
 | official pipeline, `chunk_length_s=10` | **26.16%** | 23.71% | 1.39 | transformers |
 
-**The cause is the long-form algorithm, not the weights.** `mlx-whisper` implements
+The chart plots the four `official pipeline` rows. This is the authors' torch pipeline,
+used as a reference; the CLI runs kotoba through the MLX chunked driver below.
+
+**The cause is the long-form algorithm rather than the weights.** `mlx-whisper` implements
 Whisper's *sequential* 30s-window algorithm, which leans on the decoder to carry state
 across windows. Distil models keep 2 decoder layers instead of 32 and cannot do that. The
 model card uses transformers' *chunked* pipeline, which decodes independent windows.
@@ -330,12 +298,18 @@ optimum is material-dependent: 10s is best on spontaneous speech, 20s on clean n
 so the model card's 15s is a sensible general default. Worth up to 23 points, so sweep it
 on your own audio.
 
-### Chunked long-form is a property of the driver, not the framework
+### Chunked long-form on MLX
 
 That conclusion was half-applied at first: kotoba was left running on torch/MPS with its
 throughput marked "not comparable". But slicing audio, decoding each window independently
-and offsetting timestamps requires nothing from torch. `mlx_asr/chunked.py` is that driver
-on MLX. Same weights, 17 Japanese files:
+and offsetting timestamps requires nothing from torch, so chunked long-form is a property
+of the driver rather than the framework. `mlx_asr/chunked.py` is that driver on MLX. Same
+weights, 17 Japanese files:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/engines-kotoba-window-dark.svg">
+  <img alt="kotoba through the MLX chunked driver at 10, 20 and 30 second windows; CER rises and throughput rises with window length, 10s is the default" src="img/engines-kotoba-window-light.svg">
+</picture>
 
 | driver | runtime | coverage CER | x realtime | comparable? |
 |---|---|---|---|---|
@@ -347,8 +321,8 @@ on MLX. Same weights, 17 Japanese files:
 
 **MLX-chunked matches the torch reference to within a point at 1.4x the throughput**, so
 the asterisk is gone and so is the torch dependency. The chunk-length curve reproduces
-exactly as it did on torch, confirming the mechanism. Note throughput moves the opposite
-way to accuracy, since fewer windows means less per-window overhead.
+exactly as it did on torch, confirming the mechanism. Throughput moves the opposite way to
+accuracy, since fewer windows means less per-window overhead.
 
 Generalising, because this is the reusable part: **any distil-derived Whisper checkpoint
 (2-4 decoder layers) is a poor match for a sequential driver** and should be routed to a
@@ -356,16 +330,17 @@ chunked one. `models.infer_backend` sends both `kotoba` and `distil` repo ids to
 `mlx-chunked` for that reason.
 
 Run as its authors intend, kotoba scores 26-27% on this material, behind both Voxtral and
-turbo-nocond. Worth noting what that comparison is and is not: it is a 2-layer distil model
-being measured against full-size decoders on spontaneous multi-speaker audio with editorial
-references, which is not the setting its published numbers describe. Its appeal is
-throughput, and there it is competitive (36.2x through our MLX chunked driver).
+turbo-nocond. That comparison measures a 2-layer distil model against full-size decoders
+on spontaneous multi-speaker audio with editorial references, which is not the setting its
+published numbers describe. Its appeal is throughput, and there it is competitive (36.2x
+through our MLX chunked driver).
 
 ### v2.0 and v2.2 are the same ASR model
 
-Measured, not assumed from version numbers. Loading both checkpoints' `model.safetensors`
-and differencing every tensor: 539 tensors each, identical keys, **max absolute difference
-exactly 0.0**. The files differ only in container metadata and stored dtype.
+Measured rather than assumed from version numbers. Loading both checkpoints'
+`model.safetensors` and differencing every tensor: 539 tensors each, identical keys, **max
+absolute difference exactly 0.0**. The files differ only in container metadata and stored
+dtype.
 
 v2.2's own model card agrees, describing itself as v2.0 plus speaker diarization
 (`diarizers`) and punctuation (`punctuators`), both separate post-processing models loaded
@@ -376,7 +351,7 @@ reachable and avoids a torch dependency.
 An earlier version of this project's notes claimed v2.2 superseded v2.0 on weights. That
 was inferred from the version numbers rather than checked, and it was wrong.
 
-## Competing Apple Silicon runners
+## Experiment: competing Apple Silicon runners
 
 Run because the alternative was an unfalsifiable speed claim. Same 935s clip, complete
 reference so plain CER is valid, `--language ja`, model load and warm-up excluded,
@@ -404,33 +379,32 @@ mlx-whisper (44.3x, CER 0.0908) are effectively tied: 6% apart on throughput, 0.
 points apart in the other direction, on one clip where the documented noise band is about
 1.3 points. Anyone claiming one beats the other on this evidence is reading noise.
 whisper.cpp also has far fewer dependencies. What this project contributes is the Voxtral
-engine, one interface over three engines, and the measurement harness, not a faster
-Whisper.
+engine, one interface over several engines, and the measurement harness, rather than a
+faster Whisper.
 
 **faster-whisper cannot use the GPU here at all**, which is the most load-bearing finding
 for anyone choosing a runner, because it is the most-cited "fast whisper" and its
-reputation is CUDA-shaped. CTranslate2 4.8.1 has no Metal backend, verified rather than
+reputation was built on CUDA. CTranslate2 4.8.1 has no Metal backend, verified rather than
 assumed: `get_cuda_device_count()` returns 0, `get_supported_compute_types("cuda")` raises
 `ValueError: This CTranslate2 package was not compiled with CUDA support`, and the CPU
 compute types are `{float32, int8, int8_float32}` with **no float16**. During the run it
 sat at 460-520% CPU with the 60-core GPU idle. Its accuracy is fine (0.0804 is the best
 CER in the table), so the problem is purely throughput and it is structural.
 
-**Quantization costs speed on the GPU**, not just accuracy: q5_0 is 27% slower than fp16
+**Quantization costs speed on the GPU** as well as accuracy: q5_0 is 27% slower than fp16
 at identical CER, because dequantization is work an fp16 matmul does not do. So quantize
-when memory-bound, not for speed. Thread count is irrelevant (`-t 4` and `-t 8` gave 41.0x
-and 41.7x with byte-identical output), so the workload is Metal-bound.
+when memory-bound rather than for speed. Thread count is irrelevant (`-t 4` and `-t 8`
+gave 41.0x and 41.7x with byte-identical output), so the workload is Metal-bound.
 
-Also note large-v3 q5_0 at 0.1641 is not a quantization artifact but a repetition loop,
-with one segment duplicated five times. turbo, with 4 decoder layers instead of 32, avoided
-it, which matches the pattern above: the deeper decoder is the less stable one on long
-audio.
+large-v3 q5_0 at 0.1641 is a repetition loop rather than a quantization artifact, with one
+segment duplicated five times. turbo, with 4 decoder layers instead of 32, avoided it,
+which matches the pattern above: the deeper decoder is the less stable one on long audio.
 
 Not measured: whisperX (its ASR stage is faster-whisper, so its throughput is bounded above
 by the CPU-only rows), and whisper.cpp with a CoreML encoder (the Homebrew bottle is built
 `COREML = 0`).
 
-## Clean narration: the gap nearly closes
+## Experiment: clean narration, one clip
 
 The same models on the single narration clip, where the reference is complete:
 
@@ -448,30 +422,93 @@ The same models on the single narration clip, where the reference is complete:
 | whisper base | 22.73% | 25.97% | 90.5x |
 | whisper tiny | 34.51% | 36.27% | 101.8x |
 
-Voxtral's 7.28% leads turbo's 9.08%, a much narrower margin than the corpus suggests, and
-turbo is faster on this clip. Two caveats: this is n=1, and **`--no-condition` *hurts* on
-clean audio** (turbo 8.28% -> 10.42%) exactly where it helped enormously on long
-spontaneous audio. The flag is a long-form-instability fix, not a general improvement.
+On clean narration the gap nearly closes. Voxtral's 7.28% leads turbo's 9.08%, a much
+narrower margin than the corpus suggests, and turbo is faster on this clip. Two caveats:
+this is n=1, and **`--no-condition` *hurts* on clean audio** (turbo 8.28% -> 10.42%)
+exactly where it helped enormously on long spontaneous audio. The flag is a
+long-form-instability fix rather than a general improvement.
 
-## What ships, and why the default is not the most accurate engine
+## How it works
 
-`voxtral` is the default despite Whisper being ~1.3 points more accurate, because it is
-faster (~1.4-2x), needs no language hint, needs no stability flag, has better-behaved
-timestamps ([timestamps.md](timestamps.md)), and reproduces on a given machine
-([determinism.md](determinism.md)). Whisper is one flag away for anyone who wants the
-accuracy.
+`scripts/benchmarks/run_whisper.py` scores with the *same* functions `run_corpus.py` uses,
+on the *same* cached 16kHz files (verified byte-identical to what the Voxtral runs read),
+so rows sit next to each other without an asterisk. Engine: `mlx-whisper` 0.4.3.
 
-The two `qwen3-asr` aliases ship without displacing anything. The 1.7B is last of the four
-on accuracy; the 0.6B is the fastest here (32.8x in 2.36GB), which is the case for keeping
-it. Both refuse `-f srt`.
+Whisper is run at library defaults (temperature ladder 0.0-1.0,
+`condition_on_previous_text=True`) unless a row says otherwise, because that is what
+`mlx_whisper.transcribe` gives a user. Paired comparisons bootstrap over files,
+length-weighted, 20k resamples (`scripts/benchmarks/compare_engines.py`).
 
-## What this does and does not settle
+Whisper samples, so a single run is a draw from a distribution; see
+[determinism.md](determinism.md) for why the headline uses a 3-run mean.
 
-Settled: turbo-nocond is the accuracy winner; Voxtral is the speed winner at comparable
-accuracy; `condition_on_previous_text=False` is mandatory before quoting any long-form
-Whisper number; running a model through the wrong long-form algorithm can cost more than
-the model choice.
+## Superseded
 
-Not settled: the English side is n=3. The competing-runner table is n=1. Whisper's own
-chunking/VAD front-ends (faster-whisper, whisperX) are untested and would likely help
-turbo further.
+### The 7-file size and engine table
+
+Replaced by the [20-file size sweep](#experiment-every-whisper-size-at-its-default-config)
+for the size ranking and by the [20-file comparison](#experiment-voxtral-against-whisper-20-files)
+for the engine verdict. This table ran `large-v2`, `medium` and `small` at mlx-whisper's
+library defaults, while the CLI's default for those three is
+`condition_on_previous_text=False`, so its rows described configs this CLI does not run
+and understated them by 7 to 25 points. Library defaults except where a row says otherwise,
+so the `large-v2`, `medium`, `small`, `base`, `tiny` and plain `large-v3`/`turbo` rows do
+not describe anything the CLI runs. 7 recordings (5 Japanese, 2 English).
+
+| engine / config | JP coverage CER | EN coverage WER | x realtime |
+|---|---|---|---|
+| whisper large-v3-turbo, no-condition (mean of 6 runs) | **15.91%** ±0.94 | **22.24%** ±0.96 | 15.4x |
+| **voxtral 30s b32 kv8** | 16.44% | 26.55% | **31.3x** |
+| whisper large-v3, no-condition | 17.36% | 23.57% | 9.2x |
+| voxtral 60s b16 kv8 | 18.21% | 27.75% | 21.4x |
+| whisper large-v3-turbo | 24.97% | 30.69% | 17.3x |
+| whisper large-v2 | 25.02% | 28.05% | 15.0x |
+| whisper small | 28.61% | 25.80% | 26.4x |
+| whisper medium | 28.93% | 23.52% | 21.8x |
+| whisper base | 29.96% | 32.16% | 25.5x |
+| whisper large-v3 | 39.91% | 29.37% | 9.1x |
+| whisper large-v3-turbo, autodetect | 50.14% | 22.73% | 24.3x |
+| whisper tiny | 59.27% | 40.47% | 46.4x |
+| whisper large-v3-turbo, greedy | 84.92% | 93.00% | 82.3x |
+
+### The 7-file paired comparisons
+
+Replaced by the [generalization test](#the-generalization-test) on 17 Japanese files.
+Paired against Voxtral, positive meaning Whisper is worse:
+
+| comparison | JP diff | 95% CI | EN diff | 95% CI |
+|---|---|---|---|---|
+| turbo-nocond | -1.51 | [-4.62, +0.67] | **-4.56** | [-7.27, +1.74] |
+| large-v3-nocond | +0.91 | [-2.46, +4.45] | -2.97 | [-7.34, +7.20] |
+| turbo (defaults) | **+8.52** | [+1.12, +13.24] | **+4.14** | [+3.09, +6.58] |
+| large-v2 | **+8.58** | [+3.86, +13.13] | **+1.50** | [+1.12, +1.67] |
+| large-v3 | **+23.47** | [+11.16, +38.61] | **+2.82** | [+2.30, +4.05] |
+| medium | **+12.49** | [+7.47, +21.91] | **-3.02** | [-4.25, -0.17] |
+| small | **+12.16** | [+4.90, +17.04] | -0.74 | [-2.54, +3.43] |
+| base | **+13.52** | [+11.32, +15.02] | **+5.61** | [+3.14, +11.36] |
+| tiny | **+42.83** | [+24.83, +67.27] | **+13.92** | [+8.91, +25.58] |
+| turbo, autodetect | **+33.70** | [+19.65, +42.36] | -3.82 | [-5.85, +0.90] |
+
+**At library defaults, Voxtral beats every Whisper size on Japanese.** That is the honest
+default-versus-default result, and it is mostly a statement about Whisper's defaults on
+long-form audio (see [`condition_on_previous_text=False`](#experiment-condition_on_previous_textfalse)).
+
+**On English, Voxtral is behind**, and this is the most robust accuracy finding here:
+medium by 3.02 points with a CI excluding zero at 0.69x the speed, and turbo-nocond by
+4.56 points in every one of 6 repeat runs. The English side is n=2 here, n=3 in the
+final corpus, so treat it as a direction rather than a magnitude.
+
+## Not settled
+
+The English side is n=3. The competing-runner table is n=1. Whisper's own chunking/VAD
+front-ends (faster-whisper, whisperX) are untested and would likely help turbo further.
+
+## Related
+
+- [corpus.md](corpus.md): the 20-file corpus, the 7-file subset and the single clip
+- [metrics.md](metrics.md): coverage CER/WER and the 2026-08-19 reference-loader fix
+- [determinism.md](determinism.md): why Whisper needs 3 runs and Voxtral one
+- [peak-memory.md](peak-memory.md): the peak GPU column
+- [timestamps.md](timestamps.md): timestamp behaviour by engine
+- [qwen3-asr.md](qwen3-asr.md) and [voxtral-v1.md](voxtral-v1.md): the other engine families
+- [japanese-only.md](japanese-only.md): kotoba and the other Japanese-only engines

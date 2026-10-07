@@ -1,13 +1,16 @@
-# Metrics: which number to trust, and why the usual one is wrong here
+# Reference: metrics
 
-**Conclusion first.** Plain CER is the wrong metric for most of this project's material,
-because the references deliberately omit audio and plain CER counts correct
-transcription of that audio as error. Four corpus files read **over 100% plain CER**
-while scoring 15-20% on the coverage-aware metric. Use `coverage CER/WER` for editorial
-references, plain CER only for verbatim ones, and lenient CER as the fair Japanese
-number. Kana CER is reported but should not be quoted as "the" figure: it over-forgives,
+Use coverage CER/WER for editorial references, plain CER only for verbatim ones, and
+lenient CER as the fair Japanese number. Plain CER fails on most of this material because
+the references deliberately omit audio, so it counts correct transcription of that audio
+as error: four corpus files read over 100% plain CER while scoring 15-20% on coverage
+CER. Kana CER is reported but should not be quoted as "the" figure: it over-forgives,
 and until 2026-08-19 it also under-forgave, because pykakasi never read numerals (see
 below).
+
+**Setup:** the [20-file corpus](corpus.md#the-20-file-corpus), its
+[7-file subset](corpus.md#the-7-file-subset), and [one clip](corpus.md#the-single-clip)
+with a verbatim reference. The text above each table names which one it uses.
 
 ## The metrics, and when each is wrong
 
@@ -88,9 +91,16 @@ cut material does not.
 It also strips speaker-label lines (`Name:` alone on a line), which are diarization
 metadata the models never emit.
 
-### The threshold has to be quoted with any absolute number
+## The threshold has to be quoted with any absolute number
 
-`scripts/benchmarks/sweep_min_cut.py`, varying `min_cut` over saved hypotheses:
+`scripts/benchmarks/sweep_min_cut.py`, varying `min_cut` over saved hypotheses. Japanese
+coverage CER on the [7-file subset](corpus.md#the-7-file-subset) (its 5 Japanese files),
+from the 7-file runs (the Whisper rows from the 2026-07-29 baseline):
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/metrics-mincut-configs-dark.svg">
+  <img alt="Japanese coverage CER against the min_cut excusal threshold for three Voxtral configs; the ranking holds at every threshold, 30 is the default" src="img/metrics-mincut-configs-light.svg">
+</picture>
 
 | config | mc10 | mc20 | mc30 | mc50 | mc80 |
 |---|---|---|---|---|---|
@@ -107,6 +117,11 @@ depend on. Every figure in these documents uses 30 characters / 6 words.
 The obvious worry is that excusing insertions helps whichever engine inserts more.
 Whisper's `extra_ratio` on Japanese (2.2-2.7) is higher than Voxtral's (2.1), so the
 threshold could in principle favour Whisper. Across engines:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/metrics-mincut-engines-dark.svg">
+  <img alt="Japanese coverage CER against the min_cut threshold for five engines; levels drift but the leaders keep their order, 30 is the default" src="img/metrics-mincut-engines-light.svg">
+</picture>
 
 | config | mc10 | mc20 | mc30 | mc50 | mc80 |
 |---|---|---|---|---|---|
@@ -125,7 +140,7 @@ rerun noise anyway.
 ## How much of Japanese CER is just spelling
 
 Japanese has no fixed orthography, so a reference typist's choice of kanji versus kana is
-not a model error. Three metrics on the best run of the narration clip:
+not a model error. Three metrics on the best run of the narration clip ([single clip](corpus.md#the-single-clip)):
 
 | metric | value | forgives |
 |---|---|---|
@@ -169,7 +184,7 @@ not よねん), and a digit string a speaker would read one digit at a time is r
 quantity unless it is longer than 20 digits or carries a leading zero. Each leaves a small
 residual charge, so this narrows the confound rather than erasing it.
 
-## Score the text, not the subtitle layout
+## Text and subtitle output score identically
 
 Cue segmentation is underdetermined: many groupings of the same tokens are equally valid,
 and the choice shifts characters between lines. Scoring a concatenated SRT therefore
@@ -183,7 +198,7 @@ only on complete-character boundaries) improved CER by 0.40 points paired, CI
 [+0.05, +0.81].
 
 With that fixed, text-only CER equals SRT-joined CER **to four decimals across all 12
-configs on both machines**:
+configs on both machines** (plain CER on the [single clip](corpus.md#the-single-clip)):
 
 | config | M2 Ultra 128GB text | M2 Ultra 128GB srt | M4 16GB text | M4 16GB srt |
 |---|---|---|---|---|
@@ -230,7 +245,7 @@ running:
     corpus: fp16 vs 4-bit = 1.30 points, CI [+0.59, +2.26], resolved at n=20
 
 Off by roughly three orders of magnitude, and the conclusion it licensed ("precision costs
-nothing measurable") shipped in seven places for weeks
+nothing measurable") stood in seven places for weeks
 ([quantization.md](quantization.md)).
 
 The error is not sampling noise; it is that a power calculation inherits the validity of
@@ -285,3 +300,14 @@ uv run python -m metrics.eval_timing REF.srt HYP.srt
 is how to check that the excusal rule is catching cut material rather than hallucination.
 
 Needs the `eval` extra: `uv sync --extra eval`.
+
+## Related
+
+- [corpus.md](corpus.md): the recordings, the clip, and why the references are editorial
+- [determinism.md](determinism.md): run-to-run and cross-machine variation, and why Whisper
+  needs a run distribution
+- [quantization.md](quantization.md): the corpus result the single-clip power calculation
+  wrongly ruled out
+- [prompt.md](prompt.md): the word-spacing defect that stripping whitespace hides
+- [engines.md](engines.md): the cross-engine comparison the `min_cut` sweep checks
+- [README.md](README.md): index of every lever page

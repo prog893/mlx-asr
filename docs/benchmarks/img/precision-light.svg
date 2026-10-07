@@ -225,7 +225,7 @@ z
     </g>
    </g>
    <g id="text_15">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="54.451563" y="80.363832" transform="rotate(-0 54.451563 80.363832)">ships</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="54.451563" y="80.720316" transform="rotate(-0 54.451563 80.720316)">default</text>
    </g>
    <g id="text_16">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="42.619219" y="17.925" transform="rotate(-0 42.619219 17.925)">voxtral</text>
@@ -435,7 +435,7 @@ L 460.605055 112.617982
     </g>
    </g>
    <g id="text_31">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="418.346682" y="100.201671" transform="rotate(-0 418.346682 100.201671)">ships</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="418.346682" y="100.558155" transform="rotate(-0 418.346682 100.558155)">default</text>
    </g>
    <g id="text_32">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="279.739219" y="17.925" transform="rotate(-0 279.739219 17.925)">qwen3-asr 1.7B</text>
@@ -612,7 +612,7 @@ L 697.725055 172.486755
     </g>
    </g>
    <g id="text_44">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="655.466682" y="154.330424" transform="rotate(-0 655.466682 154.330424)">ships</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="655.466682" y="154.686908" transform="rotate(-0 655.466682 154.686908)">default</text>
    </g>
    <g id="text_45">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="516.859219" y="17.925" transform="rotate(-0 516.859219 17.925)">qwen3-asr 0.6B</text>
@@ -761,7 +761,7 @@ L 223.485055 372.818109
     </g>
    </g>
    <g id="text_55">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="138.968309" y="369.241286" transform="rotate(-0 138.968309 369.241286)">ships</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="138.968309" y="369.59777" transform="rotate(-0 138.968309 369.59777)">default</text>
    </g>
    <g id="text_56">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="42.619219" y="228.565312" transform="rotate(-0 42.619219 228.565312)">voxtral-v1 3B</text>
@@ -943,7 +943,7 @@ L 460.605055 329.451059
     </g>
    </g>
    <g id="text_69">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="376.088309" y="305.908764" transform="rotate(-0 376.088309 305.908764)">ships</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="376.088309" y="306.265248" transform="rotate(-0 376.088309 306.265248)">default</text>
    </g>
    <g id="text_70">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="279.739219" y="228.565312" transform="rotate(-0 279.739219 228.565312)">voxtral-v1 24B</text>

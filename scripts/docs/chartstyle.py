@@ -1,7 +1,9 @@
 """Shared styling for the doc charts: one light and one dark SVG per chart.
 
-Colors are the validated reference palette (slots 1 and 2, checked for colorblind and
-normal-vision separation in both modes), with text in ink tokens rather than series
+Colors are the validated reference palette (slots 1 to 5 in fixed order, checked for
+colorblind and normal-vision separation in both modes; slots 3 to 5 sit under 3:1 on the
+light surface, so every chart carries its table directly below it and, from four series
+up, direct end labels), with text in ink tokens rather than series
 colors. Output is deterministic (no date metadata, a fixed hash salt, text kept as
 text), so regenerating an unchanged chart produces no diff.
 """
@@ -16,10 +18,12 @@ import matplotlib.pyplot as plt  # noqa: E402
 THEMES = {
     "light": {"surface": "#fcfcfb", "ink": "#0b0b0b", "ink2": "#52514e",
               "muted": "#898781", "grid": "#e1e0d9", "axis": "#c3c2b7",
-              "s1": "#2a78d6", "s2": "#eb6834"},
+              "s1": "#2a78d6", "s2": "#eb6834", "s3": "#1baf7a", "s4": "#eda100",
+              "s5": "#e87ba4"},
     "dark": {"surface": "#1a1a19", "ink": "#ffffff", "ink2": "#c3c2b7",
              "muted": "#898781", "grid": "#2c2c2a", "axis": "#383835",
-             "s1": "#3987e5", "s2": "#d95926"},
+             "s1": "#3987e5", "s2": "#d95926", "s3": "#199e70", "s4": "#c98500",
+             "s5": "#d55181"},
 }
 
 matplotlib.rcParams.update({
@@ -35,8 +39,8 @@ matplotlib.rcParams.update({
 })
 
 
-def mark_chosen(ax, x, y, theme, label="ships", dx=0, dy=-14):
-    """Ring the shipped value and say so; the one direct label a sweep needs."""
+def mark_chosen(ax, x, y, theme, label="default", dx=0, dy=-14):
+    """Ring the default value and say so; the one direct label a sweep needs."""
     ax.scatter([x], [y], s=150, facecolors="none", edgecolors=theme["ink"],
                linewidths=1.5, zorder=5)
     ax.annotate(label, (x, y), xytext=(dx, dy), textcoords="offset points",

@@ -172,7 +172,7 @@ z
     </g>
    </g>
    <g id="text_11">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="60.50646" y="169.254299" transform="rotate(-0 60.50646 169.254299)">ships</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="60.50646" y="169.610784" transform="rotate(-0 60.50646 169.610784)">default</text>
    </g>
    <g id="text_12">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="43.339219" y="17.925" transform="rotate(-0 43.339219 17.925)">kotoba (17 JP files)</text>
@@ -367,7 +367,7 @@ z
     </g>
    </g>
    <g id="text_24">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="435.85111" y="169.254299" transform="rotate(-0 435.85111 169.254299)">ships</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="435.85111" y="169.610784" transform="rotate(-0 435.85111 169.610784)">default</text>
    </g>
    <g id="text_25">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="361.939219" y="17.925" transform="rotate(-0 361.939219 17.925)">qwen3-asr 1.7B (7-file subset)</text>
@@ -565,7 +565,7 @@ L 305.752759 399.26261
     </g>
    </g>
    <g id="text_38">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="142.255226" y="299.266666" transform="rotate(-0 142.255226 299.266666)">ships</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="142.255226" y="299.623151" transform="rotate(-0 142.255226 299.623151)">default</text>
    </g>
    <g id="text_39">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="43.339219" y="235.725" transform="rotate(-0 43.339219 235.725)">voxtral-v1 3B (7-file subset, bf16)</text>
@@ -731,7 +731,7 @@ L 624.352759 263.685701
     </g>
    </g>
    <g id="text_51">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="379.10646" y="387.054299" transform="rotate(-0 379.10646 387.054299)">ships</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="379.10646" y="387.410784" transform="rotate(-0 379.10646 387.410784)">default</text>
    </g>
    <g id="text_52">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="361.939219" y="235.725" transform="rotate(-0 361.939219 235.725)">parakeet (17 JP files)</text>

@@ -1,151 +1,33 @@
-# Lever: the `--prompt` vocabulary-bias field (Voxtral only)
+# Lever: the `--prompt` field (Voxtral only)
 
-**Applies to `--model voxtral` only.** The field is a Voxtral architectural feature, not a
-general one: it writes into that model's decoder left-pad region. The `whisper-*` and
-`kotoba` engines report it as ignored rather than silently dropping it. Whisper has its own
-`initial_prompt` concept with different semantics, which this project has not measured, so
-nothing here transfers to it.
+The default is an empty prompt. The field is a weak and unreliable lever, worth a few tenths
+of a CER point at best, and it can be negative. On English audio every one of eight variants
+tested on the 20-file corpus cost 14 to 72 WER points, because a prompt suppresses word
+spacing; on Japanese audio the four Japanese-language variants landed within 0.26 points of
+no prompt, and a term prompt moved emission of the prompted terms by under 7%, so it does not
+recall vocabulary. Putting an instruction there costs about 6 CER points on Japanese on a
+single clip and 14 WER points on English at n=20, and combined with `--overlap-seconds` it
+sends the decoder into repetition loops.
 
-**Conclusion first.** `--prompt` is a weak and unreliable lever, worth a few tenths of a
-CER point at best, and it can be negative. Two prohibitions matter more than any gain.
+| setting | default | why |
+|---|---|---|
+| `--prompt` | empty | costs English 14 to 72 WER points in every variant tested; on Japanese, Japanese-language prompts are within 0.26 points of none and English-language ones cost 1.4 to 3.3; no measurable vocabulary recall |
+| `--prompt` with `--overlap-seconds` | prompt ignored, overlap kept | the two together scored 18.64% CER against 7.16% for overlap alone |
 
-**It is not an instruction field.** Putting an ASR-style imperative there costs about 6 CER
-points on Japanese on a single clip, and 14 WER points on English at n=20.
-
-**On English audio, do not use it at all.** Measured across eight prompt variants on 20
-files, *every* variant cost English 14 to 72 WER points, whatever it contained and whatever
-language it was written in. The mechanism is specific and worth knowing: **the prompt
-suppresses word spacing**, so the transcript comes back in the shape of
-`Thisisroughlywhatitlookslike.` with the content largely intact but unreadable and
-unscoreable at word level. Japanese is untouched by this because it has no word spaces,
-which is most of why its numbers barely move. So the deciding factor is the language of the
-*audio*, not whether the prompt language matches it, which is the opposite of what this
-project concluded from the 7-file corpus.
-
-If you use it on Japanese audio, write it in Japanese. All four Japanese-language variants
-landed within 0.26 points of no-prompt; all four English-language ones cost 1.4 to 3.3.
-
-**Do not expect it to recall vocabulary.** Counting the prompted terms in the transcripts,
-a term prompt moved their emission count by under 7% while the model was already producing
-them at 3.8x the reference rate without any prompt. The field conditions register, not word
-choice.
-
-It also conflicts badly with `--overlap-seconds`, and the CLI refuses to use both.
-
-## What the field actually is
-
-Voxtral Realtime's decoder input is `audio_embed + embed(prev_token)`, and the architecture
-puts a 32-token left-pad region before the audio. Prompt text is injected there, so **the
-model reads it as text it has already emitted** during the leading silence, not as a
-directive. That is why the field behaves the way it does, and why none of this generalises
-to an engine with a different long-form design.
-
-Two consequences follow directly and both were confirmed by measurement:
-
-- An imperative makes the model *continue* in the register of the imperative. "Transcribe
-  the audio accurately." is English, so it pulls output toward English.
-- Only the last 31 tokens survive (`n_left_pad_tokens - 1`). Earlier tokens are dropped.
-  The CLI now warns when it truncates; it used to do so silently.
-
-## Corpus
-
-Two clips and two corpora, because the effect is small enough that the material changes
-the sign. Single-clip work: the 935s Japanese prepared-narration recording (4205 scored
-characters) and a 180s excerpt (943 characters), both with verbatim references, so plain
-CER applies. Corpus work: the early sweeps used 7 spontaneous recordings (5 Japanese, 2
-English); the crossed language experiment uses all 20 (17 Japanese, 3 English). Coverage
-metric throughout. `scripts/benchmarks/ab_prompt.py`,
+**Setup:** [20-file corpus](corpus.md#the-20-file-corpus) (17 Japanese, 3 English) for the
+crossed language experiment, [7-file subset](corpus.md#the-7-file-subset) for the first
+corpus test, and [one clip](corpus.md#the-single-clip) (the 935s narration and its 180s
+excerpt) for the earlier sweeps. M2 Ultra 128GB throughout, plus an M4 16GB for one
+comparison. Corpus runs are scored by
+[coverage CER/WER](metrics.md#coverage-cer-and-why-it-had-to-exist); single-clip runs by
+plain CER, since those references are verbatim. Scripts: `scripts/benchmarks/ab_prompt.py`,
 `scripts/benchmarks/sweep_prompt_language.py`, `scripts/benchmarks/run_corpus.py`.
 
-The single-clip prompt contents are redacted below because they were real domain
-vocabulary. The 20-file experiment does not need that redaction: its term lists are derived
-from the references by a rule (tokens appearing in at least two files, ranked by frequency),
-so the arm is reproducible from the corpus without publishing anyone's word list, and the
-selection cannot be tuned to the outcome.
-
-## Experiment: style, ordering and separators
-
-M2 Ultra 128GB, 60s chunks, batch 16, kv8, 935s clip, 31-token window. Prompt contents are
-redacted here because they were real domain vocabulary; the shape of each variant is
-what matters.
-
-| variant | tokens | kept | CER | vs none |
-|---|---|---|---|---|
-| ASCII-comma term list | 38 | 31 | **7.09%** | -0.19 |
-| term list, importance-first (so truncation drops the important ones) | 33 | 31 | **7.09%** | -0.19 |
-| topic sentence only | 17 | 17 | **7.09%** | -0.19 |
-| topic sentence + terms | 33 | 31 | 7.11% | -0.17 |
-| natural sentence using the terms | 23 | 23 | 7.11% | -0.17 |
-| space-separated terms | 32 | 31 | 7.16% | -0.12 |
-| CJK-comma term list | 33 | 31 | 7.21% | -0.07 |
-| short list, fits fully | 16 | 16 | 7.21% | -0.07 |
-| **no prompt** | 0 | 0 | 7.28% | - |
-| language hint + terms | 23 | 23 | 7.49% | +0.21 |
-| single term only | 4 | 4 | 7.59% | +0.31 |
-| **generic instruction** ("Transcribe the Japanese audio accurately.") | 7 | 7 | **13.17%** | **+5.90** |
-
-Excluding the outlier, eleven variants span 7.09-7.59%: a 0.50-point spread against a
-noise floor of roughly 1 point on this clip. Paired testing puts every one of them inside
-the noise:
-
-| comparison | diff | 95% CI | verdict |
-|---|---|---|---|
-| generic instruction vs none | 5.90 | [+1.40, +11.64] | **significant** |
-| best variant vs none | 0.19 | [-0.26, +0.60] | not resolvable |
-| topic sentence vs none | 0.19 | [-0.17, +0.57] | not resolvable |
-| term order forward vs reversed | 0.12 | [-0.26, +0.59] | not resolvable |
-
-**The ordering result is the informative one.** Reversing the term list so that
-truncation discards the terms you care about scored *identically* to keeping them. If the
-small gains were really about specific vocabulary reaching the model, that could not
-happen. Whatever the prompt does here, it is not vocabulary recall.
-
-Confirming that from the other direction: none of the variants recovered the rare proper
-nouns they targeted. The rarest term appears once in the reference and was hit 0 times in
-every variant. One mid-frequency term went from 1 hit to 4 against 2 in the reference,
-i.e. the prompt caused *over*-production rather than recall. The 20-file experiment below
-reproduces this by counting term emissions directly, and finds the same over-production at
-corpus scale.
-
-## Experiment: separators across two machines
-
-The 180s clip, 943 reference characters, one row per variant, run on both machines:
-
-| variant | tokens | CER, M4 16GB (nvfp4) | CER, M2 Ultra 128GB (4-bit affine) |
-|---|---|---|---|
-| no prompt | 0 | 10.05% | **9.03%** |
-| CJK punctuation | 45 | **9.59%** | 9.71% |
-| CJK, reordered | 40 | 9.71% | 10.05% |
-| natural sentence | 26 | 9.71% | 9.71% |
-| minimal keyword list | 27 | 10.05% | 9.71% |
-| Latin `, ` | 44 | 10.05% | 9.71% |
-| Latin `,` no space | 40 | 10.16% | 10.05% |
-| bare spaces | 36 | 10.05% | 9.82% |
-
-**The two machines disagree in sign.** Every variant helped on the M4 16GB and every one hurt
-on the Ultra, where no-prompt was the best cell in the table. The models differ (nvfp4
-versus 4-bit affine) so this is not a clean isolation of the prompt, but the spread
-within each column (~0.5 points) is the same size as the disagreement between them. That
-is the clearest statement of how weak this lever is.
-
-## Experiment: the instruction trap on a real corpus
-
-The single clip could not show that this effect is language-dependent. The corpus can.
-Putting "Transcribe the audio accurately." in the prompt field:
-
-| files | diff | 95% CI |
-|---|---|---|
-| English (2 files) | **+13.77 WER points** | [+10.34, +15.25] |
-| Japanese (5 files) | +1.41 CER points | CI spans zero |
-| all 7, pooled | +3.53 | [+0.41, +9.82] |
-
-That fits the mechanism exactly. An English instruction is English text the decoder
-believes it just emitted, so it pulls English output badly off-register while barely
-perturbing Japanese.
-
-The reading at the time was "the magnitude depends on whether the prompt language matches
-the audio". The crossed experiment below tests that directly and **it is wrong**: what
-predicts the damage is the *audio* language, not the match between prompt and audio.
+**Applies to `--model voxtral` (Voxtral Realtime) only.** The field is an architectural
+feature of that model: it writes into its decoder left-pad region. Every other engine,
+including `voxtral-v1`, refuses `--prompt` with exit 2. Whisper has its own
+`initial_prompt` concept with different semantics, which this project has not measured, so
+nothing here transfers to it.
 
 ## Experiment: prompt content crossed with prompt language, 20 files
 
@@ -172,9 +54,10 @@ way `run_corpus.py` does.
 
 Nothing truncated: the longest arm is 24 tokens against a 31-token window, so none of this
 is a truncation artifact. Prompt texts were the four shapes written natively in each
-language; the term lists were derived mechanically from the references (tokens appearing in
+language. The term lists were derived mechanically from the references (tokens appearing in
 at least two files, ranked by frequency) rather than hand-picked, so they could not be
-chosen to flatter the result.
+chosen to flatter the result, and the arm is reproducible from the corpus without
+publishing anyone's word list.
 
 **Three results, in order of how much they change the guidance.**
 
@@ -192,10 +75,10 @@ audio**, and word error rate charges every word of a space-free transcript as wr
 | terms en | 0.0001 | 3 | 15517 |
 
 One 4112-word recording: without a prompt the model emits 4016 spaces, with the English
-term list it emits **two**, producing a 15517-character string in the shape of
-`Thisisroughlywhatitlookslike.` The character count barely moves, so the words are all
-there.
-The ratio holds on all three English files (0.19 unprompted, 0.00 to 0.11 prompted).
+term list it emits **two**, producing a 15517-character string in which the words run
+together with no spaces between them. The character count barely moves, so the words are
+all there. The ratio holds on all three English files (0.19 unprompted, 0.00 to 0.11
+prompted).
 
 Rescoring the English files at character level with whitespace stripped from both sides
 collapses the difference:
@@ -209,13 +92,16 @@ collapses the difference:
 So the honest statement is narrower than the aggregate suggested: **a prompt degrades
 English word segmentation badly, and leaves the transcribed content roughly intact.** That
 still makes the field unusable on English if you want readable output or a word-level
-score, which is why the guidance stands, but the earlier reading of these numbers as
+score, which is why the default stands, but the earlier reading of these numbers as
 "catastrophic transcription failure" was wrong and is corrected here.
 
 Japanese is unaffected by this mechanism because Japanese is not space-delimited, which is
 also why its scores move so little. That is the real asymmetry: not that Japanese audio
 resists prompting, but that the damage a prompt does is invisible to a character metric on
-a language without word spaces. Note n=3 for English, so treat magnitudes as directional.
+a language without word spaces. The deciding factor is therefore the language of the
+*audio*, not whether the prompt language matches it, which is the opposite of what this
+project concluded from the 7-file subset. Note n=3 for English, so treat magnitudes as
+directional.
 
 **2. On Japanese, a prompt in Japanese is at worst free and possibly a small gain.** All
 four Japanese-language arms land within 0.26 points of baseline, two of them below it,
@@ -259,13 +145,32 @@ prompt cannot fix a rare-word miss here: the words are not being missed, they ar
 over-produced, which is a different failure that a bias prompt makes marginally worse.
 Whatever the -0.25 points came from, it was not the terms.
 
-**Your content shape did not matter the way the shapes suggest it should.** An imperative,
+**Content shape did not matter the way the shapes suggest it should.** An imperative,
 a scene-setting description of the recording, a topic sentence and a bare term list all
 behave alike within a language: same sign, same rough magnitude, ordered differently on
 Japanese than on English. Whatever the field does, it is not reading the prompt as an
 instruction, a description or a vocabulary list. It is conditioning register.
 
-## Experiment: prompt plus overlap is catastrophic
+## Experiment: the instruction trap on the 7-file subset
+
+The single clip could not show that the instruction effect is language-dependent. The
+subset can. Putting "Transcribe the audio accurately." in the prompt field:
+
+| files | diff | 95% CI |
+|---|---|---|
+| English (2 files) | **+13.77 WER points** | [+10.34, +15.25] |
+| Japanese (5 files) | +1.41 CER points | CI spans zero |
+| all 7, pooled | +3.53 | [+0.41, +9.82] |
+
+That fits the mechanism exactly. An English instruction is English text the decoder
+believes it just emitted, so it pulls English output badly off-register while barely
+perturbing Japanese.
+
+The reading at the time was "the magnitude depends on whether the prompt language matches
+the audio". The 20-file crossed experiment above tests that directly and **it is wrong**:
+what predicts the damage is the *audio* language, not the match between prompt and audio.
+
+## Experiment: prompt plus overlap
 
 Found while re-running the config matrix. M2 Ultra 128GB, 30s chunks, batch 32, kv8:
 
@@ -286,7 +191,100 @@ The CLI ignores `--prompt` when overlap is active and says so, keeping overlap b
 is by far the stronger effect. Benchmarks pass no prompt, so the overlap rows in
 [chunking.md](chunking.md) are clean.
 
-## Practical guidance
+## How it works
+
+Voxtral Realtime's decoder input is `audio_embed + embed(prev_token)`, and the architecture
+puts a 32-token left-pad region before the audio. Prompt text is injected there, so **the
+model reads it as text it has already emitted** during the leading silence, not as a
+directive. That is why the field behaves the way it does, and why none of this generalises
+to an engine with a different long-form design.
+
+Two consequences follow directly and both were confirmed by measurement:
+
+- An imperative makes the model *continue* in the register of the imperative. "Transcribe
+  the audio accurately." is English, so it pulls output toward English.
+- Only the last 31 tokens survive (`n_left_pad_tokens - 1`). Earlier tokens are dropped.
+  The CLI now warns when it truncates; it used to do so silently.
+
+The CLI help says "domain keywords" explicitly and warns on truncation. With
+`--overlap-seconds` above 0 the prompt is logged as ignored and the run continues with the
+overlap; on any engine without the field, `--prompt` exits 2.
+
+## Superseded
+
+Both single-clip experiments are kept for the record. Their prompt contents are redacted
+because they were real domain vocabulary; the shape of each variant is what matters.
+
+### Style, ordering and separators, one clip
+
+Confirmed at corpus scale: the 20-file experiment reproduces the absence of vocabulary
+recall by counting term emissions directly, and finds the same over-production.
+
+M2 Ultra 128GB, 60s chunks, batch 16, kv8, 935s clip (4205 scored characters), 31-token
+window.
+
+| variant | tokens | kept | CER | vs none |
+|---|---|---|---|---|
+| ASCII-comma term list | 38 | 31 | **7.09%** | -0.19 |
+| term list, importance-first (so truncation drops the important ones) | 33 | 31 | **7.09%** | -0.19 |
+| topic sentence only | 17 | 17 | **7.09%** | -0.19 |
+| topic sentence + terms | 33 | 31 | 7.11% | -0.17 |
+| natural sentence using the terms | 23 | 23 | 7.11% | -0.17 |
+| space-separated terms | 32 | 31 | 7.16% | -0.12 |
+| CJK-comma term list | 33 | 31 | 7.21% | -0.07 |
+| short list, fits fully | 16 | 16 | 7.21% | -0.07 |
+| **no prompt** | 0 | 0 | 7.28% | - |
+| language hint + terms | 23 | 23 | 7.49% | +0.21 |
+| single term only | 4 | 4 | 7.59% | +0.31 |
+| **generic instruction** ("Transcribe the Japanese audio accurately.") | 7 | 7 | **13.17%** | **+5.90** |
+
+Excluding the outlier, eleven variants span 7.09-7.59%: a 0.50-point spread against a
+noise floor of roughly 1 point on this clip. Paired testing puts every one of them inside
+the noise:
+
+| comparison | diff | 95% CI | verdict |
+|---|---|---|---|
+| generic instruction vs none | 5.90 | [+1.40, +11.64] | **significant** |
+| best variant vs none | 0.19 | [-0.26, +0.60] | not resolvable |
+| topic sentence vs none | 0.19 | [-0.17, +0.57] | not resolvable |
+| term order forward vs reversed | 0.12 | [-0.26, +0.59] | not resolvable |
+
+**The ordering result is the informative one.** Reversing the term list so that
+truncation discards the terms you care about scored *identically* to keeping them. If the
+small gains were really about specific vocabulary reaching the model, that could not
+happen. Whatever the prompt does here, it is not vocabulary recall.
+
+Confirming that from the other direction: none of the variants recovered the rare proper
+nouns they targeted. The rarest term appears once in the reference and was hit 0 times in
+every variant. One mid-frequency term went from 1 hit to 4 against 2 in the reference,
+i.e. the prompt caused *over*-production rather than recall.
+
+### Separators across two machines, one clip
+
+Not re-run at corpus scale. Its conclusion, that the lever is too weak to resolve on one
+clip, is consistent with the 20-file result, where no Japanese arm moved more than 0.26
+points.
+
+The 180s excerpt, 943 reference characters, one row per variant, run on both machines:
+
+| variant | tokens | CER, M4 16GB (nvfp4) | CER, M2 Ultra 128GB (4-bit affine) |
+|---|---|---|---|
+| no prompt | 0 | 10.05% | **9.03%** |
+| CJK punctuation | 45 | **9.59%** | 9.71% |
+| CJK, reordered | 40 | 9.71% | 10.05% |
+| natural sentence | 26 | 9.71% | 9.71% |
+| minimal keyword list | 27 | 10.05% | 9.71% |
+| Latin `, ` | 44 | 10.05% | 9.71% |
+| Latin `,` no space | 40 | 10.16% | 10.05% |
+| bare spaces | 36 | 10.05% | 9.82% |
+
+**The two machines disagree in sign.** Every variant helped on the M4 16GB and every one hurt
+on the Ultra, where no-prompt was the best cell in the table. The models differ (nvfp4
+versus 4-bit affine) so this is not a clean isolation of the prompt, but the spread
+within each column (~0.5 points) is the same size as the disagreement between them. That
+is the clearest statement of how weak this lever is.
+
+## If you set it anyway
 
 - **On English audio, leave it empty.** Every variant tested at n=20 cost 14 to 72 WER
   points. This is the strongest guidance on this page, and it does not depend on what the
@@ -308,12 +306,6 @@ is by far the stronger effect. Benchmarks pass no prompt, so the overlap rows in
 - If you use it at all, verify on your own audio. The effect is small enough to flip with
   the model or the clip.
 - Japanese punctuation is a marginally better separator than Latin commas.
-
-## What ships
-
-No prompt by default, and Voxtral only. The CLI help says "domain keywords" explicitly,
-warns on truncation, and reports when it is ignoring the prompt, whether because overlap is
-active or because the selected engine has no such field.
 
 ## Related
 

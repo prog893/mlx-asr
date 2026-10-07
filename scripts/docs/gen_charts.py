@@ -34,7 +34,7 @@ def _style_axes(ax, t):
     ax.xaxis.label.set_color(t["ink2"])
     ax.yaxis.label.set_color(t["ink2"])
     ax.title.set_color(t["ink"])
-    # Room for the end rings and the "ships" label above the top point.
+    # Room for the end rings and the "default" label above the top point.
     ax.margins(x=0.07, y=0.16)
 
 
@@ -132,7 +132,7 @@ def picker(t):
                                          "runs on the CPU, no GPU peak"],
                  frameon=False, labelcolor=t["ink2"], fontsize=8.5, loc="lower left")
     _caption(fig, t, "M2 Ultra. Speeds marked floor or shared GPU were measured with "
-                     "other GPU work resident; CPU runs on the CPU. Each shipped default "
+                     "other GPU work resident; CPU runs on the CPU. Each model at its default "
                      "precision. Source: RESULTS.md, engines.md, MODELS.md.")
     fig.tight_layout()
     return fig
@@ -151,7 +151,7 @@ def whisper_sizes(t):
     i = xs.index(d["chosen"])
     mark_chosen(ax, i, cd.pct(d["rows"][i][1]), t, dy=-12)
     ax.set_ylabel("error % (lower is better)")
-    ax.set_title("Whisper size, shipped config", loc="left", fontsize=10,
+    ax.set_title("Whisper size, default config", loc="left", fontsize=10,
                  fontweight="bold", color=t["ink"])
     legend(ax, t, loc="upper right")
     _caption(fig, t, f"{d['basis']}. large-v3 and turbo tie; the tie goes to the full "
@@ -230,7 +230,7 @@ def batch(t):
     return fig
 
 
-def _simple_sweep(t, d, title, xlabel, xfmt, log, chosen_label="ships"):
+def _simple_sweep(t, d, title, xlabel, xfmt, log, chosen_label="default"):
     fig, (ax,) = _grid(t, 1, 1, 6.4, 3.4)
     xs = [r[0] for r in d["rows"]]
     jp = [cd.pct(r[1]) for r in d["rows"]]
@@ -272,8 +272,89 @@ def gain(t):
     return fig
 
 
+_MARKERS = ["o", "s", "^", "D", "v"]
+
+
+def _sweep_axis(ax, t, spec, panel, xs, pos):
+    """Draw one panel of a sweep: the series it names, on one y scale."""
+    colors = [t[f"s{i}"] for i in range(1, 6)]
+    idxs = panel.get("series", list(range(len(spec["series"]))))
+    for i in idxs:
+        label = spec["series"][i]
+        pts = [(p, cd.value(r[2][i])) for p, r in zip(pos, spec["rows"])
+               if r[2][i] is not None]
+        ax.plot([p for p, _ in pts], [v for _, v in pts], color=colors[i],
+                marker=_MARKERS[i], markersize=6, markeredgecolor=t["surface"],
+                markeredgewidth=2, zorder=3, label=label)
+        if len(idxs) >= 4:   # past three series the legend alone is not enough
+            px, py = pts[-1]
+            ax.annotate(label, (px, py), xytext=(6, 0), textcoords="offset points",
+                        va="center", ha="left", color=t["ink2"], fontsize=8)
+    unit = spec.get("unit", "")
+    fmt = lambda x: f"{x:g}{unit}" if isinstance(x, (int, float)) else str(x)  # noqa: E731
+    uniq = sorted(set(xs)) if spec["scale"] != "category" else xs
+    if spec["scale"] == "category":
+        ax.set_xticks(pos)
+        ax.set_xticklabels([fmt(x) for x in xs])
+    elif spec["scale"] == "log":
+        _log_x(ax, uniq, fmt)
+    else:
+        ax.set_xticks(uniq)
+        ax.set_xticklabels([fmt(x) for x in uniq])
+    # Axis honesty, per panel: `zero` anchors a cost axis at 0 so a ratio reads as a
+    # ratio; `min_span` keeps a tie inside noise from being stretched into a slope.
+    lo, hi = ax.get_ylim()
+    if panel.get("zero", spec.get("zero")):
+        ax.set_ylim(0, hi)
+    elif panel.get("min_span", spec.get("min_span")):
+        span = panel.get("min_span", spec.get("min_span"))
+        if hi - lo < span:
+            mid = (lo + hi) / 2
+            ax.set_ylim(mid - span / 2, mid + span / 2)
+    ax.set_xlabel(spec["xlabel"])
+    ax.set_ylabel(panel.get("ylabel", spec.get("ylabel", "")))
+    if panel.get("title"):
+        ax.set_title(panel["title"], loc="left", fontsize=9.5, fontweight="bold",
+                     color=t["ink"])
+    chosen_series = spec.get("chosen_series", spec["series"][idxs[0]])
+    if spec.get("chosen") is not None and spec["series"].index(chosen_series) in idxs:
+        ci = xs.index(spec["chosen"])
+        si = spec["series"].index(chosen_series)
+        mark_chosen(ax, pos[ci], cd.value(spec["rows"][ci][2][si]), t,
+                    label=spec.get("chosen_label", "default"),
+                    dy=spec.get("label_dy", 12))
+    if len(idxs) > 1:
+        legend(ax, t, loc=panel.get("legend_loc", spec.get("legend_loc", "best")))
+    if len(idxs) >= 4:
+        ax.margins(x=0.18)
+
+
+def sweep(spec):
+    """One generic chart from a chart_data.SWEEPS spec: one panel, or several that
+    share the x axis when the measures have different units (never two y scales)."""
+    def draw(t):
+        panels = spec.get("panels", [{}])
+        width = spec.get("width", 6.6 if len(panels) == 1 else 4.6 * len(panels))
+        fig, axes = _grid(t, 1, len(panels), width, spec.get("height", 3.5))
+        xs = [r[0] for r in spec["rows"]]
+        pos = list(range(len(xs))) if spec["scale"] == "category" else xs
+        for ax, panel in zip(axes, panels):
+            _sweep_axis(ax, t, spec, panel, xs, pos)
+        if len(panels) == 1:
+            axes[0].set_title(spec["title"], loc="left", fontsize=10,
+                              fontweight="bold", color=t["ink"])
+        else:
+            fig.suptitle(spec["title"], x=0.01, ha="left", fontsize=10,
+                         fontweight="bold", color=t["ink"])
+        _caption(fig, t, f"{spec['basis']} Source: {spec['doc'].split('/')[-1]}.")
+        fig.tight_layout()
+        return fig
+    return draw
+
+
 CHARTS = {"picker": picker, "whisper-sizes": whisper_sizes, "windows": windows,
           "precision": precision, "batch": batch, "delay": delay, "gain": gain}
+CHARTS.update({name: sweep(spec) for name, spec in cd.SWEEPS.items()})
 
 
 def render_all(out: Path = OUT) -> list[Path]:
@@ -282,8 +363,25 @@ def render_all(out: Path = OUT) -> list[Path]:
 
 
 def main():
-    for path in render_all():
-        print(path.relative_to(OUT.parents[2]))
+    import argparse
+    p = argparse.ArgumentParser()
+    p.add_argument("--only", nargs="*", help="chart names to render (default: all)")
+    p.add_argument("--png", help="also write PNG previews into this directory")
+    a = p.parse_args()
+    names = a.only or list(CHARTS)
+    unknown = [n for n in names if n not in CHARTS]
+    if unknown:
+        print(f"unknown charts: {unknown}; known: {sorted(CHARTS)}", file=sys.stderr)
+        return 2
+    for name in names:
+        for mode, theme in THEMES.items():
+            print(save(CHARTS[name](theme), OUT, name, mode).relative_to(OUT.parents[2]))
+            if a.png:
+                fig = CHARTS[name](theme)
+                Path(a.png).mkdir(parents=True, exist_ok=True)
+                fig.savefig(Path(a.png) / f"{name}-{mode}.png", dpi=110,
+                            facecolor=fig.get_facecolor(), bbox_inches="tight")
+                plt.close(fig)
     return 0
 
 

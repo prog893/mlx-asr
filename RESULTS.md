@@ -9,6 +9,11 @@ what is still open.
 20 recordings, 7.95h of Japanese and English, on an idle Apple M2 Ultra 128GB (Mac14,14),
 re-measured 2026-08-19 after a reference-loading fix (see below):
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/benchmarks/img/picker-dark.svg">
+  <img alt="Error against speed for every engine at its defaults, Japanese and English panels; filled points fit a 16GB Mac" src="docs/benchmarks/img/picker-light.svg">
+</picture>
+
 | engine | JP coverage CER | EN coverage WER | x realtime |
 |---|---|---|---|
 | voxtral (default) | 16.22% | 21.50% | 29.6x |
@@ -20,10 +25,6 @@ re-measured 2026-08-19 after a reference-loading fix (see below):
 | parakeet-ja (17 JP files)* | 26.19% | n/a, ja-only | **244.6x*** |
 | reazon-k2 fp32 (17 JP files)* | 30.45% | n/a, ja-only | 51.6x*, CPU |
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/benchmarks/img/picker-dark.svg">
-  <img alt="Error against speed for every engine as shipped, Japanese and English panels; filled points fit a 16GB Mac" src="docs/benchmarks/img/picker-light.svg">
-</picture>
 
 The two voxtral-v1 rows (Mistral's first-generation Voxtral, Mini 3B and Small 24B, 2507)
 were added on 2026-09-25 and change no default. Japanese is not among the eight

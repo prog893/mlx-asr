@@ -8,7 +8,7 @@ already published in docs/; nothing per file, nothing private.
 A value is written exactly as its doc prints it (a string), and parsed for plotting.
 """
 
-# --- the picker: one point per engine/size as shipped ------------------------------
+# --- the picker: one point per engine/size at its defaults ------------------------------
 #
 # JP and EN from the 20-file corpus (JP: the 17 Japanese files; EN: the 3 English
 # files). Speed is the run's own x realtime; `speed_note` marks a figure that is not
@@ -49,7 +49,7 @@ PICKER = [
 # read as a 20-file one.
 WHISPER_SIZES = {
     "doc": "docs/benchmarks/engines.md",
-    "basis": "20 files, shipped config (no-condition on small and larger)",
+    "basis": "20 files, default config (no-condition on small and larger)",
     "rows": [("tiny", "51.28%", "32.17%"), ("base", "29.93%", "27.14%"),
              ("small", "21.33%", "22.68%"), ("medium", "21.63%", "18.23%"),
              ("large-v2", "17.87%", "17.68%"), ("large-v3", "14.55%", "18.26%"),
@@ -128,7 +128,7 @@ DELAY = {
     "chosen": 2400,
 }
 
-# Input level: the four fixed-gain arms on a dB axis. `auto` ships and is a no-op on
+# Input level: the four fixed-gain arms on a dB axis. `auto` is the default and is a no-op on
 # this corpus (every file already peaks above -6 dBFS), so it sits on the 0 dB point.
 GAIN = {
     "doc": "docs/benchmarks/input-level.md", "basis": "7-file subset",
@@ -144,3 +144,44 @@ def pct(s: str) -> float:
 
 def num(s: str) -> float:
     return float(s.rstrip("xGB"))
+
+
+# --- generic single-lever sweeps ----------------------------------------------------
+#
+# One chart each, embedded in its own doc. A spec is data only:
+#   doc      the doc the table lives in (and that the chart is embedded in)
+#   title, basis, xlabel, ylabel
+#   scale    "log", "linear" or "category"
+#   unit     suffix for tick labels ("s", "ms", "")
+#   series   ordered series labels; each row gives one value per series, or None
+#   rows     (x, key, values): `key` is text unique to that table row in the doc,
+#            which the test uses to match the row's values to the right line
+#   chosen   the x the doc names as the default (ringed), on series `chosen_series`
+SWEEPS: dict = {}
+
+
+def _load_sweeps():
+    """Collect SWEEPS from scripts/docs/sweeps/<doc>.py, one module per doc page.
+
+    One file per page so the page's charts are edited alongside it and two pages never
+    touch the same file. Chart names must start with the page's stem.
+    """
+    import importlib.util
+    from pathlib import Path
+
+    for path in sorted((Path(__file__).parent / "sweeps").glob("*.py")):
+        spec = importlib.util.spec_from_file_location(f"sweeps_{path.stem}", path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        for name, sweep in getattr(mod, "SWEEPS", {}).items():
+            assert name.startswith(path.stem.replace("_", "-")), (path.name, name)
+            assert name not in SWEEPS, name
+            SWEEPS[name] = sweep
+
+
+def value(s: str) -> float:
+    """A doc cell as printed ("44.27%", "29.6x", "7.28GB", "0.428") to a float."""
+    return float(s.strip("*").rstrip("%xGB"))
+
+
+_load_sweeps()

@@ -1,26 +1,17 @@
-# Determinism: what reproduces, and what does not
+# Reference: determinism
 
-**Conclusion first.** Voxtral is byte-identical across reruns **on one machine** and
-**not** across machines: the same audio, config and weight file give different output on
-an M4 16GB and an M2 Ultra 128GB. Whisper is not reliably reproducible, because its
-temperature fallback samples whenever a segment trips a threshold, and `kotoba` inherits
-that ladder. So one Voxtral run is its score, reruns add no information, and a config
-comparison must stay on a single machine.
+Voxtral is byte-identical across reruns **on one machine** and **not** across machines:
+the same audio, config and weight file give different output on an M4 16GB and an M2
+Ultra 128GB. Whisper is not reliably reproducible, because its temperature fallback
+samples whenever a segment trips a threshold, and `kotoba` inherits that ladder. So one
+Voxtral run is its score, reruns add no information, a config comparison must stay on a
+single machine, and a Whisper figure needs a run distribution.
 
-"Not reliably" rather than "not at all": a file that never trips fallback decodes greedily
-and does repeat exactly. On this corpus one file scored an identical 11.91% in all six
-runs. That is a property of the audio, not a guarantee the engine offers, so it cannot be
-relied on in advance.
-
-## Why it matters before any number is quoted
-
-Two things follow from it that shape every other document here.
-
-- **Voxtral needs no error bars from repetition.** One run is the answer. Statistical
-  power comes only from more audio, which is why the method bootstraps over files.
-- **Whisper needs a distribution.** Quoting one Whisper run as "the" result is
-  indefensible: the run-to-run spread on this corpus is 2.5 points, larger than most of
-  the effects being measured.
+**Setup:** the [7-file subset](corpus.md#the-7-file-subset) for reruns and the Whisper
+repeat runs, the full corpus (18 files at the time; the current
+[20-file corpus](corpus.md#the-20-file-corpus) added two later) for the cross-machine
+comparison, and one 112s file of the corpus for the first cross-machine check and the
+`kotoba` runs. Machines: M4 16GB and M2 Ultra 128GB.
 
 ## Voxtral: deterministic on a machine
 
@@ -50,8 +41,8 @@ file (`model.safetensors` md5 matching on both hosts):
 | repeat run on the same host | byte-identical | byte-identical |
 
 These are accuracy figures, so machine load does not affect them: contention costs wall
-clock, not output. (The Ultra was busy at the time, which is why no speed number from that
-session was kept.)
+clock and leaves output unchanged. (The Ultra was busy at the time, which is why no speed
+number from that session was kept.)
 
 The two diverge early and stay diverged, which is what one flipped token does: everything
 after it is conditioned differently.
@@ -64,19 +55,20 @@ where the reduction order is fixed and fails where it is not.
 **Consequences.**
 
 - A hypothesis file cannot be validated by re-decoding it elsewhere.
-- A config comparison must be run on one machine. Comparing an M4 16GB row against an Ultra row
-  measures hardware plus config, not config.
-- The cross-machine agreement check in this project (M4 16GB nvfp4 versus Ultra 4-bit, agreeing
-  to ~1 point on 5 of 7 files) cannot separate quantization from hardware. It was set up
-  as a quantization comparison and is not one. Both candidate causes are small, so the
-  conclusion survives, but the clean quantization evidence is the single-machine precision
-  sweep in [quantization.md](quantization.md).
-## How large is the cross-machine effect, really? Usually zero
+- A config comparison must be run on one machine. Comparing an M4 16GB row against an
+  Ultra row measures hardware plus config rather than config alone.
+- The cross-machine agreement check in this project (M4 16GB nvfp4 versus Ultra 4-bit,
+  agreeing to ~1 point on 5 of 7 files) cannot separate quantization from hardware. It was
+  set up as a quantization comparison and is not one. Both candidate causes are small, so
+  the conclusion survives, but the clean quantization evidence is the single-machine
+  precision sweep in [quantization.md](quantization.md).
+
+## Voxtral: size of the cross-machine effect
 
 The 112s file above was the only file compared when this was first measured, and the
-"roughly 1 point per file" floor stated here was an extrapolation from it. Running the
-identical config on all 18 files of the corpus on both machines shows that extrapolation was
-wrong, and the truth is more useful:
+"roughly 1 point per file" floor once stated here was an extrapolation from it. Running the
+identical config on all 18 files of the corpus on both machines shows that extrapolation
+was wrong:
 
 | agreement between M4 16GB and M2 Ultra 128GB, same config | files |
 |---|---|
@@ -84,24 +76,26 @@ wrong, and the truth is more useful:
 | within 0.16 points | 16 of 18 |
 | the 112s file | 5.45 points apart (12.56% against 18.01%) |
 
-So divergence is **not** a per-file floor that applies everywhere. Most files decode to the
+So divergence is not a per-file floor that applies everywhere. Most files decode to the
 same score on both chips, several byte-identically, and the aggregate difference is small.
-What the 112s file shows is the *worst case*, not the typical one, and it is the shortest
-file in the corpus: 422 reference characters, so a single flipped token moves the percentage
-several points, where the same flip in a 9830-character file moves it by hundredths.
+The 112s file shows the *worst case* rather than the typical one, and it is the shortest
+file in the corpus: 422 reference characters, so a single flipped token moves the
+percentage several points, where the same flip in a 9830-character file moves it by
+hundredths.
 
-That reframes the practical rule. Cross-machine divergence is real, it is caused by
-reduction order, and it cannot be predicted or averaged away on any individual file. But its
-*magnitude* scales inversely with how much text the file contains, which means:
+Cross-machine divergence is real, it is caused by reduction order, and it cannot be
+predicted or averaged away on any individual file. Its *magnitude* scales inversely with
+how much text the file contains, which means:
 
-- **Still true:** a config comparison must stay on one machine, and a hypothesis file cannot
-  be validated by re-decoding it elsewhere. One flipped token is unbounded in principle.
+- **Still true:** a config comparison must stay on one machine, and a hypothesis file
+  cannot be validated by re-decoding it elsewhere. One flipped token is unbounded in
+  principle.
 - **Corrected:** there is no ~1 point floor. Expect near-exact agreement on files of
-  substantial length and volatility on short ones, so a short-clip comparison across machines
-  is the dangerous case rather than the representative one.
+  substantial length and volatility on short ones, so a short-clip comparison across
+  machines is the dangerous case rather than the representative one.
 - **Consequence for method:** this is another reason single-clip results in this project
-  reversed on a corpus. A 112s clip cannot distinguish a config effect from a reduction-order
-  coin flip.
+  reversed on a corpus. A 112s clip cannot distinguish a config effect from a
+  reduction-order coin flip.
 
 ## Whisper: samples, so it needs a run distribution
 
@@ -125,32 +119,20 @@ The right test here is one-sample: only one side has sampling error, so the Whis
 gets a t-interval and Voxtral enters as a constant. Bootstrapping over files answers a
 different question ("would this hold on other audio").
 
-**The variance is structural, not uniform.** Whisper wins all 6 runs on three files and
-loses all 6 on three others; only one file flips. On one file it produced the identical
-11.91% in all six runs, i.e. that file never triggers fallback. So the aggregate is
-decided by which files dominate the length weighting, not by sampling luck.
+**The variance is structural rather than uniform.** Whisper wins all 6 runs on three files
+and loses all 6 on three others; only one file flips. On one file it produced the
+identical 11.91% in all six runs, i.e. that file never triggers fallback. So the aggregate
+is decided by which files dominate the length weighting rather than by sampling luck.
 
-## kotoba inherits it
-
-`kotoba` runs on mlx-whisper's `transcribe` and does not override the sampling ladder, so
-it is not reproducible either. Five runs of one 112s clip on identical audio and flags gave
-five distinct transcripts, 401 to 409 characters, agreeing through the body and diverging
-at the tail.
-
-Worth stating explicitly because the model is a *distil* checkpoint reached through this
-project's own chunked driver, which makes it easy to assume the driver decides the
-sampling. It does not: the driver fixes `condition_on_previous_text=False` and leaves
-temperature alone.
-
-So of the four engines, `voxtral` and `qwen3-asr` reproduce on one machine by
-construction, while `whisper` and `kotoba` reproduce only on audio that happens never to
-trip fallback, which is not knowable before the run.
+That file is why the summary says "not reliably" rather than "not at all": a file that
+never trips fallback decodes greedily and does repeat exactly. That is a property of the
+audio and no guarantee from the engine, so it cannot be relied on in advance.
 
 Two further observations:
 
 - **SD collapses as the corpus grows**, from 0.94 at 7 files to 0.17 at 12. More files
   means each file's sampling luck matters less to the aggregate. That is a reason to
-  distrust small-corpus repeatability figures, not evidence that Whisper became
+  distrust small-corpus repeatability figures, and no evidence that Whisper became
   deterministic.
 - **Greedy decoding is not a fix.** `--greedy` (temperature 0.0, no ladder) collapses to
   84.92% / 93.00%, because the fallback is what rescues segments that enter a repetition
@@ -163,10 +145,32 @@ the run's Japanese aggregate by **3.6 points**, from 14.69% to 18.32%, off 4.4% 
 reference characters. A one-run Whisper figure can be wrong by that much in either
 direction.
 
+## kotoba: inherits Whisper's sampling
+
+`kotoba` runs on mlx-whisper's `transcribe` and does not override the sampling ladder, so
+it is not reproducible either. Five runs of one 112s clip on identical audio and flags gave
+five distinct transcripts, 401 to 409 characters, agreeing through the body and diverging
+at the tail.
+
+Worth stating explicitly because the model is a *distil* checkpoint reached through this
+project's own chunked driver, which makes it easy to assume the driver decides the
+sampling. It does not: the driver fixes `condition_on_previous_text=False` and leaves
+temperature alone.
+
+So `voxtral`, `voxtral-v1`, `qwen3-asr`, `parakeet` and `reazon` reproduce on one machine
+by construction (greedy decoding, each verified byte-identical on repeat decodes; see
+[voxtral-v1.md](voxtral-v1.md#determinism), [qwen3-asr.md](qwen3-asr.md) and
+[japanese-only.md](japanese-only.md)), while `whisper` and `kotoba` reproduce only on audio
+that happens never to trip fallback, which is not knowable before the run.
+
 ## Practical rules
 
-- Report Voxtral from one run, and say which machine.
-- Report Whisper from at least 3 runs, with mean and spread, and never from one.
+- Report Voxtral from one run, and say which machine. It needs no error bars from
+  repetition; statistical power comes only from more audio, which is why the method
+  bootstraps over files.
+- Report Whisper from at least 3 runs, with mean and spread, and never from one. The
+  run-to-run spread on the 7-file subset is 2.5 points, larger than most of the effects
+  being measured.
 - Never compare across machines and attribute the difference to a config.
 - If a hypothesis file needs checking, re-run it on the machine that produced it.
 

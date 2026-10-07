@@ -1,31 +1,101 @@
-# The test corpus, and how to build your own
+# Reference: the test corpus
 
-## What was used here
+Every accuracy and timing figure in these documents was measured on one of three sets of
+material: the 20-file corpus, the 7-file subset it grew from, or a single narration clip.
+This page is the one description of all three, and the other pages link here rather than
+restating it. It ends with how to build a corpus of your own.
 
-20 recordings, about 7.9 hours: 17 Japanese and 3 English. Two kinds of material,
-which behave differently enough that they are never pooled:
+## The 20-file corpus
+
+20 recordings, 7.95h: 17 Japanese (6.78h) and 3 English. Files run from 1.9 to 93 minutes;
+the shortest is 112s. Two kinds of material, which behave differently enough that they are
+never pooled:
 
 - **Spontaneous multi-speaker recordings.** Studio conversation, several speakers,
   code-switching mid-sentence, long pauses, and stretches in a third language. Their
-  references are editorial transcripts, not verbatim ones (see below). This is the
-  realistic case and where the 16-18% coverage-error baseline comes from.
+  references are editorial transcripts rather than verbatim ones (see
+  [Editorial references](#editorial-references-and-why-plain-cer-breaks-on-them)). This
+  is the realistic case and where the 16-18% coverage-error baseline comes from.
 - **Published videos with author-written subtitle tracks.** Narration and dialogue
   with real cue timings, which is the only material that can score timestamp quality
-  at all. Seven files have such timed references.
+  at all.
 
-Plus one prepared-narration clip with a complete verbatim reference, which is the one
-file where plain CER is meaningful and where most single-clip work was done.
+### Timed references
 
-The corpus is not distributable, so none of the per-file numbers in these documents
-can be re-derived from this repo. That is why the conclusions are written out rather
-than left implicit in data files: see the other documents in this directory.
+Seven files have author-written subtitle tracks with real cue timings: the
+[single clip](#the-single-clip), which is outside the 20, and six published videos, which
+joined the 20-file corpus when it grew. They are the only material that can score drift or
+cue placement ([timestamps.md](timestamps.md), [cue-layout.md](cue-layout.md)). All seven
+were authored by one editor, and no other recording here has an authored subtitle track,
+so timing work stays at n=7. The timed set is a different set of files from the
+[7-file subset](#the-7-file-subset), whose references are plain transcripts.
+
+### Editorial references
+
+The references were written for readability rather than for ASR evaluation: off-topic
+passages, side conversation in another language, and non-speech segments were cut, and
+several recordings open with minutes of untranscribed studio talk. The audio still
+contains that material, so a correct transcription includes text the reference lacks.
+Plain CER counts all of it as insertions: four files exceed 100% plain CER while scoring
+15-20% on the coverage-aware metric.
+
+### How files are scored
+
+Every corpus figure is coverage CER (Japanese) or coverage WER (English) at `min_cut` 30
+characters / 6 words, defined in [metrics.md](metrics.md). The scoring unit and the
+language are both taken per file from the reference script, the two units are aggregated
+separately and never averaged together, and speaker-label lines are stripped before
+scoring. Comparisons between configs are a length-weighted bootstrap over files
+(`scripts/benchmarks/compare_engines.py`), which resolves about **1.6 points at n=20**.
+
+### How it grew
+
+The corpus started as the 7-file subset below and grew in two steps. Measured by Japanese
+file count, it went from 5 to 12 to 17 ([engines.md](engines.md)). Pages that quote
+results from the intermediate size say so where they do.
+
+The corpus is not distributable, so none of the per-file numbers in these documents can be
+re-derived from this repo. That is why the conclusions are written out rather than left
+implicit in data files.
+
+## The 7-file subset
+
+The original 7 recordings: 5 Japanese and 2 English, 5.18h, editorial references, scored
+with the same coverage metric. Peak levels run from -0.5 to -5.3 dBFS
+([input-level.md](input-level.md)). It was the whole corpus before the growth to 20, so
+every sweep run before then used it, and some sweeps still do:
+
+- transcription delay ([delay.md](delay.md))
+- input gain ([input-level.md](input-level.md))
+- the window sweeps for `qwen3-asr` and `voxtral-v1` ([qwen3-asr.md](qwen3-asr.md),
+  [voxtral-v1.md](voxtral-v1.md))
+- the early prompt sweeps ([prompt.md](prompt.md))
+- parts of the chunking and determinism work ([chunking.md](chunking.md),
+  [determinism.md](determinism.md))
+
+At n=7 the file-level bootstrap resolves about **3.2 points**, twice the 20-file floor. A
+"not resolvable" verdict on this subset means the effect is smaller than about 3 points,
+which is weaker than saying it is small; see [metrics.md](metrics.md).
+
+## The single clip
+
+One 935s Japanese prepared-narration recording with a complete verbatim reference (4205
+scored characters). It is the one file where plain CER is meaningful, and most early
+lever work was done on it, compared with a paired test over 40 regions of the same audio.
+[prompt.md](prompt.md) also uses a 180s excerpt of it (943 characters).
+
+A paired result on the clip means the effect is real on that clip. Several clip findings
+reversed sign on the corpus, among them overlap ([chunking.md](chunking.md)) and the
+precision tie ([quantization.md](quantization.md)). **Where a corpus result exists, it
+supersedes the clip result.** Clip results that have no corpus counterpart are labelled as
+such on their pages.
+
+## Building your own
 
 **Contributing a hardware profile needs none of this.** `mlx-asr-bench` drives the
 decoder with random embeddings, so it measures decode throughput with no audio and no
 reference at all, and prints a ready-to-paste issue body. Only accuracy work needs a
 corpus.
-
-## Building your own
 
 ### Shape on disk
 
@@ -120,8 +190,14 @@ More than feels necessary. Between-file variation on this corpus is larger than 
 of the config effects being tested: the same unchanged config spans 11-28% per-file
 coverage error. Resolution depends on how many files an experiment uses: roughly 3.2
 points at 7 files and 1.6 at all 20, so anything smaller than that needs either a paired
-test or more audio. Several
-single-clip findings here reversed sign when a real corpus arrived.
+test or more audio. Several single-clip findings here reversed sign when a real corpus
+arrived ([The single clip](#the-single-clip)).
 
 Decoding is deterministic per machine, so repeating a run adds no information. Only
 more audio adds statistical power.
+
+## Related
+
+- [metrics.md](metrics.md): coverage CER, `min_cut`, and how comparisons are tested
+- [determinism.md](determinism.md): run-to-run and cross-machine variation on this material
+- [README.md](README.md): index of every lever page
