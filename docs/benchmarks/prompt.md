@@ -9,6 +9,12 @@ recall vocabulary. Putting an instruction there costs about 6 CER points on Japa
 single clip and 14 WER points on English at n=20, and combined with `--overlap-seconds` it
 sends the decoder into repetition loops.
 
+**Applies to `--model voxtral` (Voxtral Realtime) only.** The field is an architectural
+feature of that model: it writes into its decoder left-pad region. Every other engine,
+including `voxtral-v1`, refuses `--prompt` with exit 2. Whisper has its own
+`initial_prompt` concept with different semantics, which this project has not measured, so
+nothing here transfers to it.
+
 | setting | default | why |
 |---|---|---|
 | `--prompt` | empty | costs English 14 to 72 WER points in every variant tested; on Japanese, Japanese-language prompts are within 0.26 points of none and English-language ones cost 1.4 to 3.3; no measurable vocabulary recall |
@@ -23,13 +29,9 @@ comparison. Corpus runs are scored by
 plain CER, since those references are verbatim. Scripts: `scripts/benchmarks/ab_prompt.py`,
 `scripts/benchmarks/sweep_prompt_language.py`, `scripts/benchmarks/run_corpus.py`.
 
-**Applies to `--model voxtral` (Voxtral Realtime) only.** The field is an architectural
-feature of that model: it writes into its decoder left-pad region. Every other engine,
-including `voxtral-v1`, refuses `--prompt` with exit 2. Whisper has its own
-`initial_prompt` concept with different semantics, which this project has not measured, so
-nothing here transfers to it.
+## Experiment: prompt content crossed with prompt language
 
-## Experiment: prompt content crossed with prompt language, 20 files
+**Basis:** [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra 128GB, 30s chunks, batch 32, kv8, delay 2400.
 
 The earlier corpus test had one prompt, written in English, on a corpus that is mostly
 Japanese, so "an instruction is harmful" and "an English prompt on Japanese audio is
@@ -151,7 +153,9 @@ behave alike within a language: same sign, same rough magnitude, ordered differe
 Japanese than on English. Whatever the field does, it is not reading the prompt as an
 instruction, a description or a vocabulary list. It is conditioning register.
 
-## Experiment: the instruction trap on the 7-file subset
+## Experiment: the instruction trap
+
+**Basis:** [7-file subset](corpus.md#the-7-file-subset), M2 Ultra 128GB, one English instruction prompt against no prompt.
 
 The single clip could not show that the instruction effect is language-dependent. The
 subset can. Putting "Transcribe the audio accurately." in the prompt field:
@@ -171,6 +175,8 @@ the audio". The 20-file crossed experiment above tests that directly and **it is
 what predicts the damage is the *audio* language, not the match between prompt and audio.
 
 ## Experiment: prompt plus overlap
+
+**Basis:** [one clip](corpus.md#the-single-clip), M2 Ultra 128GB, 30s chunks, batch 32, kv8.
 
 Found while re-running the config matrix. M2 Ultra 128GB, 30s chunks, batch 32, kv8:
 
@@ -209,6 +215,29 @@ Two consequences follow directly and both were confirmed by measurement:
 The CLI help says "domain keywords" explicitly and warns on truncation. With
 `--overlap-seconds` above 0 the prompt is logged as ignored and the run continues with the
 overlap; on any engine without the field, `--prompt` exits 2.
+
+### If you set it anyway
+
+- **On English audio, leave it empty.** Every variant tested at n=20 cost 14 to 72 WER
+  points. This is the strongest guidance on this page, and it does not depend on what the
+  prompt says.
+- **Never put an instruction there**, in any language. Use domain vocabulary or a short
+  topic sentence describing the recording.
+- **Write the prompt in the language of the audio.** On Japanese audio the four
+  Japanese-language variants were free to marginally positive; the English-language ones all
+  cost 1.4 to 3.3 points.
+- Content shape matters less than language. Term list, topic sentence, description and
+  imperative all behave similarly within a language, which is why none of them is
+  recommended over the others on the evidence here.
+- **Do not reach for it to fix a missed proper noun.** Term counts moved under 7% when the
+  terms were prompted, and on this material the model over-produces them unprompted
+  anyway. If a name comes out wrong, this field is not the fix.
+- Put terms you care about **last**, since only the final 31 tokens survive. Though note
+  the ordering experiment and the emission counts both suggest this matters less than it
+  should.
+- If you use it at all, verify on your own audio. The effect is small enough to flip with
+  the model or the clip.
+- Japanese punctuation is a marginally better separator than Latin commas.
 
 ## Superseded
 
@@ -283,29 +312,6 @@ on the Ultra, where no-prompt was the best cell in the table. The models differ 
 versus 4-bit affine) so this is not a clean isolation of the prompt, but the spread
 within each column (~0.5 points) is the same size as the disagreement between them. That
 is the clearest statement of how weak this lever is.
-
-## If you set it anyway
-
-- **On English audio, leave it empty.** Every variant tested at n=20 cost 14 to 72 WER
-  points. This is the strongest guidance on this page, and it does not depend on what the
-  prompt says.
-- **Never put an instruction there**, in any language. Use domain vocabulary or a short
-  topic sentence describing the recording.
-- **Write the prompt in the language of the audio.** On Japanese audio the four
-  Japanese-language variants were free to marginally positive; the English-language ones all
-  cost 1.4 to 3.3 points.
-- Content shape matters less than language. Term list, topic sentence, description and
-  imperative all behave similarly within a language, which is why none of them is
-  recommended over the others on the evidence here.
-- **Do not reach for it to fix a missed proper noun.** Term counts moved under 7% when the
-  terms were prompted, and on this material the model over-produces them unprompted
-  anyway. If a name comes out wrong, this field is not the fix.
-- Put terms you care about **last**, since only the final 31 tokens survive. Though note
-  the ordering experiment and the emission counts both suggest this matters less than it
-  should.
-- If you use it at all, verify on your own audio. The effect is small enough to flip with
-  the model or the clip.
-- Japanese punctuation is a marginally better separator than Latin commas.
 
 ## Related
 

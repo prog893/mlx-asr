@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.ticker import FixedLocator, NullLocator  # noqa: E402
 
 import chart_data as cd  # noqa: E402
-from chartstyle import THEMES, legend, mark_chosen, save  # noqa: E402
+from chartstyle import THEMES, align_panels, legend, mark_chosen, save  # noqa: E402
 
 OUT = Path(__file__).resolve().parents[2] / "docs" / "benchmarks" / "img"
 
@@ -127,10 +127,12 @@ def picker(t):
                           linewidths=2)
     h_cpu = ax_jp.scatter([], [], s=70, marker="D", facecolors="none",
                           edgecolors=t["s1"], linewidths=2)
-    ax_jp.legend([h_fit, h_big, h_cpu], ["fits a 16GB Mac (GPU peak under 12.7GB)",
-                                         "needs more GPU memory",
-                                         "runs on the CPU, no GPU peak"],
-                 frameon=False, labelcolor=t["ink2"], fontsize=8.5, loc="lower left")
+    # One row above both panels, never over the data.
+    fig.legend([h_fit, h_big, h_cpu], ["fits a 16GB Mac (GPU peak under 12.7GB)",
+                                       "needs more GPU memory",
+                                       "runs on the CPU, no GPU peak"],
+               loc="lower left", bbox_to_anchor=(0.01, 1.0), ncol=3, frameon=False,
+               labelcolor=t["ink2"], fontsize=8.5, borderaxespad=0)
     _caption(fig, t, "M2 Ultra. Speeds marked floor or shared GPU were measured with "
                      "other GPU work resident; CPU runs on the CPU. Each model at its default "
                      "precision. Source: RESULTS.md, engines.md, MODELS.md.")
@@ -153,7 +155,7 @@ def whisper_sizes(t):
     ax.set_ylabel("error % (lower is better)")
     ax.set_title("Whisper size, default config", loc="left", fontsize=10,
                  fontweight="bold", color=t["ink"])
-    legend(ax, t, loc="upper right")
+    legend(ax, t)
     _caption(fig, t, f"{d['basis']}. large-v3 and turbo tie; the tie goes to the full "
                      f"decoder. Source: engines.md.")
     fig.tight_layout()
@@ -172,7 +174,10 @@ def windows(t):
         ax.set_title(f"{p['name']} ({p['basis']})", loc="left", fontsize=9.5,
                      fontweight="bold", color=t["ink"])
         ax.set_ylabel("error %")
-    legend(axes[1], t, loc="upper left")
+    for ax in axes:
+        if len(ax.get_lines()) > 1:
+            legend(ax, t)
+    align_panels(axes)
     _caption(fig, t, "Decode window length per engine. Longer windows let a repetition "
                      "loop burn a bigger token budget, which is why most curves turn up. "
                      "Sources: engines.md, qwen3-asr.md, voxtral-v1.md, japanese-only.md.")
@@ -245,7 +250,7 @@ def _simple_sweep(t, d, title, xlabel, xfmt, log, chosen_label="default"):
     ax.set_title(title, loc="left", fontsize=10, fontweight="bold", color=t["ink"])
     ax.set_xlabel(xlabel)
     ax.set_ylabel("error % (lower is better)")
-    legend(ax, t, loc="upper right")
+    legend(ax, t)
     return fig, ax
 
 
@@ -324,7 +329,7 @@ def _sweep_axis(ax, t, spec, panel, xs, pos):
                     label=spec.get("chosen_label", "default"),
                     dy=spec.get("label_dy", 12))
     if len(idxs) > 1:
-        legend(ax, t, loc=panel.get("legend_loc", spec.get("legend_loc", "best")))
+        legend(ax, t)
     if len(idxs) >= 4:
         ax.margins(x=0.18)
 
@@ -343,9 +348,13 @@ def sweep(spec):
         if len(panels) == 1:
             axes[0].set_title(spec["title"], loc="left", fontsize=10,
                               fontweight="bold", color=t["ink"])
+            # The legend was placed before this title existed; lift it now.
+            from chartstyle import lift_title
+            lift_title(axes[0], getattr(axes[0], "_legend_rows", 0))
         else:
             fig.suptitle(spec["title"], x=0.01, ha="left", fontsize=10,
                          fontweight="bold", color=t["ink"])
+        align_panels(axes)
         _caption(fig, t, f"{spec['basis']} Source: {spec['doc'].split('/')[-1]}.")
         fig.tight_layout()
         return fig

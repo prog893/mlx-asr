@@ -159,7 +159,7 @@ temperature alone.
 
 So `voxtral`, `voxtral-v1`, `qwen3-asr`, `parakeet` and `reazon` reproduce on one machine
 by construction (greedy decoding, each verified byte-identical on repeat decodes; see
-[voxtral-v1.md](voxtral-v1.md#determinism), [qwen3-asr.md](qwen3-asr.md) and
+[voxtral-v1.md](voxtral-v1.md#experiment-repeat-decodes), [qwen3-asr.md](qwen3-asr.md) and
 [japanese-only.md](japanese-only.md)), while `whisper` and `kotoba` reproduce only on audio
 that happens never to trip fallback, which is not knowable before the run.
 

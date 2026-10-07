@@ -19,11 +19,13 @@ unquantized KV on the corpus and is on by default.
 **Setup:** the [20-file corpus](corpus.md#the-20-file-corpus), plus [one clip](corpus.md#the-single-clip)
 for the superseded ladder, M2 Ultra 128GB, scored by coverage CER ([metrics.md](metrics.md)).
 
-## Experiment: the weight-precision ladder on the corpus
+## Experiment: the weight-precision ladder
 
-Five precisions, one config (60s chunks, batch 16, kv8, delay 2400ms), idle M2 Ultra. Every
-arm through `run_corpus.py`, paired with `compare_engines.py`. This overturns the clip result
-in [Superseded](#superseded-the-single-clip-ladder).
+**Basis:** the [20-file corpus](corpus.md#the-20-file-corpus), idle M2 Ultra 128GB, Voxtral at 60s chunks, batch 16, kv8, delay 2400ms.
+
+Five precisions, one config. Every arm through `run_corpus.py`, paired with
+`compare_engines.py`. This overturns the clip result in
+[Superseded](#the-single-clip-ladder).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/precision-dark.svg">
@@ -50,10 +52,9 @@ so neither ladder says anything about the other.
 speed (19.8x against 18.5x) and 7.29GB instead of 12.98GB. It also beats nvfp4 (+0.80, CI
 [+0.03, +1.66]).
 
-### Why this is not a metric artifact
-
-For the fp16/4-bit pair, fp16 leads on all three error types counted separately, and
-coverage excusal moves the wrong way to manufacture the result:
+**The result is not a metric artifact.** For the fp16/4-bit pair, fp16 leads on all three
+error types counted separately, and coverage excusal moves the wrong way to manufacture the
+result:
 
 | | substitutions | deletions | insertions counted |
 |---|---|---|---|
@@ -64,10 +65,8 @@ The result also survives dropping the largest contributors one at a time and bot
 (+1.20, +1.03, +0.93; every CI still clear of zero), so it is not one outlier file. Both
 material types agree (spontaneous +1.58, published-video +0.73).
 
-### Why the default is still 4-bit
-
-The default has not moved yet, deliberately. Two things need settling before moving a
-default that every user gets:
+**The default stays 4-bit for now, deliberately.** Two things need settling before moving
+a default that every user gets:
 
 - **8-bit is not on the hub in a loadable form.** The two repos that advertise it ship raw
   Mistral `config.json` with no `model_type` and crash the loader (see
@@ -84,6 +83,8 @@ rather than as free. **If you have the memory, pass `--quantization fp16`, or co
 locally and point `--model` at it;** the local 8-bit matches fp16 at 7.3GB and full speed.
 
 ## Experiment: KV cache precision
+
+**Basis:** the [20-file corpus](corpus.md#the-20-file-corpus) on M2 Ultra 128GB at batch 16 (first table), and the earlier [single clip](corpus.md#the-single-clip) on M4 16GB and M2 Ultra 128GB at the configs in the second table.
 
 `--kv-bits 8` halves the cache bytes read per step, which matters because at batch 16 and
 838 positions the cache is 1.43GB per step against 2.5GB of weights.
@@ -232,7 +233,9 @@ produced.
 do. So on Apple Silicon, quantize when memory-bound rather than for speed. See
 [engines.md](engines.md).
 
-## Superseded: the single-clip ladder
+## Superseded
+
+### The single-clip ladder
 
 This is superseded on accuracy by the corpus ladder above and still valid on cost (wall
 clock, memory, decode steps/s), which are properties of the weights and the hardware rather

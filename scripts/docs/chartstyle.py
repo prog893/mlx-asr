@@ -48,9 +48,45 @@ def mark_chosen(ax, x, y, theme, label="default", dx=0, dy=-14):
                 fontsize=9, fontweight="bold")
 
 
-def legend(ax, theme, **kw):
-    leg = ax.legend(frameon=False, labelcolor=theme["ink2"], fontsize=9, **kw)
+def legend(ax, theme, ncol=None, **_ignored):
+    """Legend in a row ABOVE the plot area, never over the data.
+
+    The panel's left title is lifted to sit above the legend rows, so title, legend and
+    plot stack without touching. Any `loc` a caller passes is ignored on purpose: a
+    legend placed inside the axes is exactly what this exists to prevent.
+    """
+    import math
+
+    handles, labels = ax.get_legend_handles_labels()
+    if not handles:
+        return None
+    ncol = ncol or min(len(labels), 3)
+    rows = math.ceil(len(labels) / ncol)
+    leg = ax.legend(handles, labels, loc="lower left", bbox_to_anchor=(0, 1.02),
+                    ncol=ncol, frameon=False, labelcolor=theme["ink2"], fontsize=8.5,
+                    borderaxespad=0, handlelength=1.8, columnspacing=1.2)
+    lift_title(ax, rows)
+    ax._legend_rows = rows
     return leg
+
+
+def lift_title(ax, rows):
+    """Raise the panel's left title to clear `rows` legend rows."""
+    title = ax.get_title(loc="left")
+    if title:
+        old = ax._left_title
+        ax.set_title(title, loc="left", pad=8 + 15 * rows,
+                     fontsize=old.get_fontsize(), fontweight=old.get_fontweight(),
+                     color=old.get_color())
+
+
+def align_panels(axes):
+    """Give every panel the title space of the tallest legend, so plot areas line up."""
+    rows = max((getattr(ax, "_legend_rows", 0) for ax in axes), default=0)
+    if rows:
+        for ax in axes:
+            if getattr(ax, "_legend_rows", 0) != rows:
+                lift_title(ax, rows)
 
 
 def save(fig, out_dir: Path, name: str, mode: str):

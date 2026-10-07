@@ -7,25 +7,27 @@ segmentation. Measured end to end, the choice costs 5.4 break-F1 points against 
 optimum `0.7/32` and is slightly better on p95 drift. `gap_s` is the only knob that
 matters, and it is exposed as `--gap-seconds` so you can fit it to your own references.
 
+**Voxtral only.** Cue grouping is our heuristic over Voxtral's per-token timestamps. The
+other engines emit their own segments, so `--gap-seconds`, `--max-chars` and
+`--max-dur-seconds` are rejected there.
+
 | setting | default | why |
 |---|---|---|
 | `--gap-seconds` (`gap_s`) | 1.2 | conservative; the n=7 sweep favours lower values, but only against one editor's convention, and partly by emitting more cues |
 | `--max-chars` (`max_chars`) | 28 | worth under a point anywhere in 28-72; kept as a safety valve |
 | `--max-dur-seconds` (`max_dur_s`) | 7.0 | inert from 4 to 9 seconds on this material; kept as a safety valve |
 
-**Voxtral only.** Cue grouping is our heuristic over Voxtral's per-token timestamps. The
-other engines emit their own segments, so `--gap-seconds`, `--max-chars` and
-`--max-dur-seconds` are rejected there.
-
 **Setup:** 7 files with author-written timed subtitle references (one prepared-narration
 clip and six published videos, all by one editor; see [timed references](corpus.md#timed-references)), scored by
 break F1 and mid-phrase rate from `eval_timing`. The sweep regroups cached Voxtral tokens,
 so its scores do not depend on the machine.
 
-## Experiment: gap_s at max_chars 32, n=7
+## Experiment: gap_s at max_chars 32
+
+**Basis:** the 7 [timed references](corpus.md#timed-references), cached Voxtral tokens regrouped by `sweep_cues.py` (machine-independent), `gap_s` 0.6 to 1.2 at `max_chars=32` plus the default pair.
 
 With seven timed references `gap_s` is not flat, as the earlier n=1 sweep suggested (see
-[Superseded](#superseded-the-n1-sweep)). It is monotonic, and it points the **opposite
+[Superseded](#the-n1-sweep)). It is monotonic, and it points the **opposite
 way** from the n=1 result. The last table row is the default pair, which uses
 `max_chars=28` and so is not a point on the charted line.
 
@@ -73,7 +75,9 @@ that; a reader does not.
 `mlx_asr/output.py` documents this and a test pins the defaults, so a future sweep result
 cannot be quietly applied.
 
-## Experiment: the default pair against the n=7 optimum, end to end
+## Experiment: the default pair against the sweep optimum, end to end
+
+**Basis:** the 7 [timed references](corpus.md#timed-references), Voxtral end to end on the same audio with written SRTs scored by `eval_timing`, `1.2/28` against `0.7/32`.
 
 Measured end to end on the same audio with everything else fixed:
 
@@ -102,6 +106,8 @@ grid points. The 37.4% and 37.0% figures for the default pair are the same measu
 taken these two ways.
 
 ## Experiment: max_chars and max_dur_s
+
+**Basis:** the 7 [timed references](corpus.md#timed-references), the same cached-token regrouping as the `gap_s` sweep, `max_chars` 28 to 72 and `max_dur_s` 4 to 9 seconds.
 
 `max_chars` is worth under a point anywhere in 28-72. `max_dur_s` is inert on this
 material at any value from 4 to 9 seconds, because `gap_s` or `max_chars` always fires
@@ -141,7 +147,9 @@ done
 
 Or use `scripts/benchmarks/sweep_cues.py --corpus DIR` to do the whole grid from one decode.
 
-## Superseded: the n=1 sweep
+## Superseded
+
+### The n=1 sweep
 
 376 combinations against the single timed reference then available. It moved the defaults
 from `(1.0, 32)` to `(1.2, 28)`, reporting break F1 up from 35.4% to 43.6%.
@@ -152,9 +160,9 @@ across 0.6-1.3, and `max_chars=28` suspiciously close to that reference's mechan
 rather than real phrase awareness. The n=7 sweep above replaced its reading of `gap_s`;
 the `(1.2, 28)` pair it produced remains the default for the reasons given there.
 
-## Not settled: extending cue ends
+## Not settled
 
-Extending each cue's end to the next cue's start, the usual subtitle convention, to fix a
+**Extending cue ends.** Extending each cue's end to the next cue's start, the usual subtitle convention, to fix a
 systematic early bias. It makes break F1 *worse* (43.6% -> 40.2 / 27.0 / 34.3% at 0.5 / 1
 / 2s holds, on the n=1 data), because every extended end stops matching a human cue end.
 A 0.2s hold was F1-neutral and improved drift, so that is the only variant worth

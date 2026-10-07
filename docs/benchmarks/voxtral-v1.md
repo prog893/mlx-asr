@@ -26,7 +26,7 @@ details are under [How the runs were made](#how-the-runs-were-made).
 
 ## Experiment: the decode window
 
-3B, bf16, the 7-file subset:
+**Basis:** the [7-file subset](corpus.md#the-7-file-subset), M2 Ultra 128GB (Mac14,14), 2026-09-24/25, other GPU clients resident on the host between runs; 3B, bf16.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/voxtral-v1-window-dark.svg">
@@ -52,7 +52,7 @@ repetition loop in a longer window writes more text before it is cut off.
 
 ## Experiment: precision, 3B
 
-The 20-file corpus, 30s:
+**Basis:** the [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra 128GB (Mac14,14), 2026-09-24/25, other GPU clients resident on the host between runs; 3B, 30s windows.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/voxtral-v1-precision-3b-dark.svg">
@@ -73,7 +73,7 @@ costly here. 8bit is the default because it is the cheapest build that loses not
 
 ## Experiment: Small 24B
 
-The 20-file corpus, 30s (the window was swept on the 3B only):
+**Basis:** the [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra 128GB (Mac14,14), 2026-09-24/25, other GPU clients resident on the host between runs; 24B, 30s windows (the window was swept on the 3B only).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/voxtral-v1-precision-24b-dark.svg">
@@ -110,7 +110,7 @@ and all 1190 tensors and the config were bit-identical.
 
 ## Experiment: leaving the language to the model
 
-3B, bf16, 30s, the 20-file corpus, with and without the `lang:` prefix:
+**Basis:** the [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra 128GB (Mac14,14), 2026-09-24/25, other GPU clients resident on the host between runs; 3B, bf16, 30s windows, with and without the `lang:` prefix.
 
 | language | JP coverage CER | EN coverage WER | Latin-script share of JP output | files with loops |
 |---|---|---|---|---|
@@ -129,6 +129,14 @@ either way).
 
 So `--language` is honoured when given and the model detects when it is not, and for
 Japanese the flag should be passed.
+
+## Experiment: repeat decodes
+
+**Basis:** the 7 shortest files of the [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra 128GB (Mac14,14), 2026-09-24/25, other GPU clients resident on the host between runs; 3B at 8bit and 24B at 4bit, each file decoded twice.
+
+The 7 shortest files, each decoded twice: 7/7 byte-identical for the 3B at 8bit and 7/7
+for the 24B at 4bit, as greedy decoding predicts. So one run per configuration is its
+score.
 
 ## How it works
 
@@ -181,11 +189,13 @@ is its score. Peak memory is the maximum of `mx.get_peak_memory()` over the corp
 including the load, which is the figure a CLI run with `--stats-json` reports. Throughput
 is the run's own.
 
-## Determinism
+### What it does not do
 
-The 7 shortest files, each decoded twice: 7/7 byte-identical for the 3B at 8bit and 7/7
-for the 24B at 4bit, as greedy decoding predicts. So one run per configuration is its
-score.
+- **No subtitles.** `-f srt`, `-f vtt` and `-f all` exit 2. The weights emit text and no
+  times, and the cue boundaries would be decode windows.
+- **No batching.** `--max-batch` exits 2. Windows are decoded one at a time.
+- **Every Voxtral Realtime flag is refused**, as on the other non-Voxtral engines:
+  `--prompt`, `--delay-ms`, `--vad`, `--compact-silence`, the KV flags and the cue flags.
 
 ## Not settled
 
@@ -197,14 +207,6 @@ score.
 - **The window was swept on the 3B only**; the 24B uses the same 30s.
 - **English is three files** (two in the window sweep), so every English difference
   here rests on very few recordings.
-
-## What it does not do
-
-- **No subtitles.** `-f srt`, `-f vtt` and `-f all` exit 2. The weights emit text and no
-  times, and the cue boundaries would be decode windows.
-- **No batching.** `--max-batch` exits 2. Windows are decoded one at a time.
-- **Every Voxtral Realtime flag is refused**, as on the other non-Voxtral engines:
-  `--prompt`, `--delay-ms`, `--vad`, `--compact-silence`, the KV flags and the cue flags.
 
 ## Related
 

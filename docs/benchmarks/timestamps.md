@@ -22,6 +22,8 @@ track.
 
 ## Experiment: Voxtral against Whisper at the default cue config
 
+**Basis:** the 7 [timed references](corpus.md#timed-references), on a machine not recorded with this table, SRT output at the default cue config (`gap_s=1.2, max_chars=28`).
+
 Both engines are asked for SRT output on the same audio and scored by `eval_timing`
 (`scripts/benchmarks/run_timing_sweep.py`), at the cue grouping the CLI defaults to
 (`gap_s=1.2, max_chars=28`) and with Whisper's language taken per file from its reference.
@@ -51,9 +53,11 @@ If you need timing accuracy, use Voxtral. If you need cue boundaries that read n
 and are willing to accept drift, Whisper's are better, or fit `--gap-seconds` to your own
 references.
 
-### Whisper's worst slope is unstable
+## Experiment: stability of Whisper's worst slope
 
-Read it as an order of magnitude, not a value. Two runs of the identical config gave 122.7
+**Basis:** the one [timed reference](corpus.md#timed-references) that produces Whisper's worst slope, on a machine not recorded with this table, two runs of the identical default config.
+
+Read Whisper's worst slope as an order of magnitude, not a value. Two runs of the identical config gave 122.7
 and 180.7 ms/min on the file that produces it, because Whisper samples: its output on that
 file differed between runs, one cue splitting where the other did not. Every other Whisper
 row matched exactly across the two runs, so this is one file's instability rather than

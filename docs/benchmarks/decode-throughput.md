@@ -26,14 +26,16 @@ the 935s clip. `x realtime = steps/s x batch x 0.08`, since each row advances 80
 
 ## Experiment: batch size on two machines
 
+**Basis:** synthetic inputs via `mlx-asr-bench` (random embeddings, no audio), M4 16GB (10 GPU
+cores, nvfp4 weights) and M2 Ultra 128GB (60 GPU cores, 4-bit affine), mlx 0.32.0; the first
+table is the M4, the second the M2 Ultra.
+
 400 steps per batch size, reported in four blocks so decay within a measurement is visible.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/batch-dark.svg">
   <img alt="Voxtral throughput by batch size on M2 Ultra and M4, default batch ringed" src="img/batch-light.svg">
 </picture>
-
-M4 16GB, 10 GPU cores, nvfp4 weights, mlx 0.32.0:
 
 | batch | steps/s | ms/step | x realtime | peak GB |
 |---|---|---|---|---|
@@ -79,6 +81,9 @@ metric to optimize, not ms/step.
 
 ## Experiment: KV cache length
 
+**Basis:** synthetic inputs (random embeddings, no audio) via
+`scripts/benchmarks/probes/probe_kvlen.py`, M4 16GB (nvfp4 weights), mlx 0.32.0, batch 16.
+
 steps/s decays as the cache fills, about 25% over 800 steps at batch 16 on the M4:
 
 <picture>
@@ -101,6 +106,9 @@ machines, so it is on by default. See [quantization.md](quantization.md).
 
 ## Experiment: wall clock by stage
 
+**Basis:** the 935s clip ([corpus.md](corpus.md#the-single-clip)) in 60s chunks, M4 16GB
+(nvfp4 weights) and M2 Ultra 128GB (4-bit affine), mlx 0.32.0.
+
 Decode is not the whole story. Splitting wall clock on the 935s clip, 60s chunks:
 
 | stage | M4 16GB | M2 Ultra 128GB |
@@ -122,6 +130,9 @@ than kernel work.
 
 ## Experiment: reshaping the decode batch
 
+**Basis:** synthetic inputs (random embeddings, no audio) via
+`scripts/benchmarks/probes/probe_batch_split.py`, M4 16GB, nvfp4 weights, mlx 0.32.0.
+
 `scripts/benchmarks/probes/probe_batch_split.py`, M4 16GB, nvfp4, ms/step. The aim was to
 dodge the valley by changing the leading dimension each matmul sees.
 
@@ -142,6 +153,9 @@ dodge the valley by changing the leading dimension each matmul sees.
 best. Splitting is far worse, because each sub-batch pays full weight reads.
 
 ## Experiment: batching the encoder
+
+**Basis:** audio from the 935s clip ([corpus.md](corpus.md#the-single-clip)) via
+`scripts/benchmarks/probes/probe_encoder_batch.py`, M4 16GB, mlx 0.32.0.
 
 `scripts/benchmarks/probes/probe_encoder_batch.py`. mlx-audio's encoder attention is
 batch-1 only, so giving it a batch axis is the obvious next move. It is 0.84-0.91x, i.e.
@@ -175,11 +189,18 @@ opportunity.
 
 ## Experiment: `mx.compile` on the decode step
 
+**Basis:** synthetic inputs (random embeddings, no audio) via
+`scripts/benchmarks/probes/probe_compile.py`, mlx 0.32.0; the machine was not recorded, and
+the batch-1 baseline of 22.6 ms/step matches the M4 16GB batch sweep above.
+
 22.6 -> 23.2 ms/step at batch 1, 83.4 -> 89.8 at batch 16, 98.6 -> 106.7 at 32. Equal or
 worse everywhere, which is the expected result for a bandwidth-bound loop rather than a
 launch-bound one.
 
-## Experiment: is the batch valley MLX's affine `qmv_wide` gate? No.
+## Experiment: the affine `qmv_wide` gate
+
+**Basis:** synthetic decoder inputs (no audio), M2 Ultra 128GB (`applegpu_g14d`, 4-bit affine
+weights), mlx 0.32.0, idle host.
 
 A promising-looking lead, tested and closed. MLX dispatches small-batch quantized matvecs
 to a kernel called `qmv_wide`, built specifically for M=2..8, which loads each weight group

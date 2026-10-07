@@ -8,6 +8,11 @@ and slower on the 10-core M4. Prefix overlap won 1.4-1.8 points at 30s chunks on
 clip but reversed sign on a real corpus, so it defaults to zero; cut points default to
 energy minima, which were never behind a VAD.
 
+`--overlap-seconds`, `--vad` and `--compact-silence` apply to Voxtral only;
+`--chunk-seconds` also applies to `kotoba`, where it sets the independent-window length. The
+`whisper-*` driver's 30s window is fixed by the model's positional encoding. Passing a flag to
+an engine that cannot honour it is an error, not a warning.
+
 | setting | default | why |
 |---|---|---|
 | `--chunk-seconds` | per machine: 30s on M2 Ultra, 60s on M4 | 30s and 60s are indistinguishable on the 20-file corpus; throughput decides, and it reverses across hardware |
@@ -16,11 +21,6 @@ energy minima, which were never behind a VAD.
 | cut points | energy minima; `--vad` opt-in | energy is never behind; VAD ties on Japanese at n=17 and loses all 3 English files |
 | `--compact-silence` | off | accuracy ties on all four precisions; the 3-5% speed gain does not justify silently discarding input |
 | composite flag | none (`--fast` removed) | the right chunk/batch pair reverses sign across hardware, so every lever is set independently |
-
-`--overlap-seconds`, `--vad` and `--compact-silence` apply to Voxtral only;
-`--chunk-seconds` also applies to `kotoba`, where it sets the independent-window length. The
-`whisper-*` driver's 30s window is fixed by the model's positional encoding. Passing a flag to
-an engine that cannot honour it is an error, not a warning.
 
 **Setup:** [one clip](corpus.md#the-single-clip) scored by plain CER, and the
 [7-file subset](corpus.md#the-7-file-subset) and [20-file corpus](corpus.md#the-20-file-corpus)
@@ -32,9 +32,9 @@ cancels; absolute CER differences under about half a point are not resolvable on
 Scripts: `scripts/benchmarks/sweep_overlap.py` (overlap), `scripts/benchmarks/run_matrix.sh`
 (chunk length), `scripts/benchmarks/probes/probe_seam_errors.py` (seam analysis).
 
-## Experiment: chunk length on one clip
+## Experiment: chunk length
 
-M2 Ultra 128GB, 4-bit, no overlap, single clip. Batch changes with chunk length:
+**Basis:** [one clip](corpus.md#the-single-clip), M2 Ultra 128GB, 4-bit, no overlap; batch changes with chunk length.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/chunking-length-dark.svg">
@@ -54,7 +54,7 @@ Accuracy improves up to 60s then flattens in the 7.5-8.0% band while speed falls
 because chunks beyond ~60s exceed the encoder's 750-frame sliding window (a 60s chunk is
 already ~1948 conv frames) and the batch has to shrink to fit memory. At 20s the loss is
 mostly deletions, as short rows end early and drop text. The mechanism behind the short-chunk
-loss is in [How it works](#how-it-works-errors-concentrate-at-chunk-starts).
+loss is in [How it works](#errors-concentrate-at-chunk-starts).
 
 Paired testing is stricter than the point estimates suggest:
 
@@ -72,7 +72,9 @@ Chunk length is still worth understanding, because it is the largest lever on *t
 and because it does drive accuracy on dense single-speaker narration. It is not a lever to
 tune for accuracy on spontaneous conversational audio, as the next experiment shows.
 
-## Experiment: 30s versus 60s chunks on the corpus
+## Experiment: 30s versus 60s chunks
+
+**Basis:** [7-file subset](corpus.md#the-7-file-subset), then the [20-file corpus](corpus.md#the-20-file-corpus) on M4 16GB, sequential, `--delay-ms 2400`, kv8, 60s/B16 against 30s/B32.
 
 On the **7-file** subset the 60s-versus-30s difference does not resolve
 (+1.67, CI [-1.22, +4.73]), and 30s/batch 32 was nominally better on every axis including
@@ -107,6 +109,8 @@ in [decode-throughput.md](decode-throughput.md) and in the `--fast` decompositio
 
 ## Experiment: prefix overlap
 
+**Basis:** [one clip](corpus.md#the-single-clip), M2 Ultra 128GB, 30s chunks, batch 32, kv8 (chart and first table); M4 16GB at 30s/B32 for the repeat; 60s chunks for the second table.
+
 `--overlap-seconds N` prepends N seconds of the preceding audio to each chunk and discards
 the tokens produced from it, so the model warms up before the region that is kept.
 
@@ -114,8 +118,6 @@ the tokens produced from it, so the model warms up before the region that is kep
   <source media="(prefers-color-scheme: dark)" srcset="img/chunking-overlap-dark.svg">
   <img alt="CER against prefix overlap on one clip: at 30s chunks CER drops from 8.73% at 0s to a noisy 7.25 to 7.80% band between 4s and 12s and jumps to 11.20% at 15s; at 60s chunks it rises slightly from 7.37% at 0s to 8.06% at 8s." src="img/chunking-overlap-light.svg">
 </picture>
-
-M2 Ultra 128GB, 30s chunks, batch 32, kv8, single clip:
 
 | overlap | CER | delta | x realtime | extra audio decoded |
 |---|---|---|---|---|
@@ -152,14 +154,16 @@ At 60s chunks it stops paying, because seams are sparse:
 Paired, that is -0.69 with CI [-1.47, +0.07], so the supported claim is **"no benefit at
 long chunks"** rather than "harmful". An earlier version said harmful; corrected.
 
-### On the 7-file corpus it reverses sign
+## Experiment: prefix overlap, paired over files
+
+**Basis:** [7-file subset](corpus.md#the-7-file-subset), overlap against no overlap, scored by coverage CER/WER; the machine and overlap length for this run are not recorded on this page.
 
 On the 7-file subset the effect **reversed sign**: -1.47 points, CI [-4.33, +2.36], with
 no-overlap nominally better on 5 files to 2. English was worse by 4 points
 (26.55% -> 30.77% coverage WER). Two plausible mechanisms: these recordings contain long
 stretches of non-reference material, so a warm-up window often carries content the
 reference cut; and the seam-error enrichment in
-[How it works](#how-it-works-errors-concentrate-at-chunk-starts) was measured on dense
+[How it works](#errors-concentrate-at-chunk-starts) was measured on dense
 narration and may not hold for conversational audio with frequent long pauses.
 
 So overlap defaults to zero on every profile. It was for a while bundled into a `--fast`
@@ -169,6 +173,8 @@ result applies; that turned out to be wrong twice over, and the direct measureme
 single-clip result that did not generalize.
 
 ## Experiment: where to cut, energy versus VAD
+
+**Basis:** [one clip](corpus.md#the-single-clip), M2 Ultra 128GB, 4-bit, kv8; then the [20-file corpus](corpus.md#the-20-file-corpus) on an idle M2 Ultra at 60s/B16 (2026-08-24).
 
 `--vad` uses Silero VAD (ONNX, no torch) to cut in the middle of the longest non-speech
 run near each target, instead of at the quietest 50ms window. It never removes audio,
@@ -226,6 +232,8 @@ for noisy material where energy minima may mislead.
 
 ## Experiment: carrying context across seams instead of overlapping
 
+**Basis:** [one clip](corpus.md#the-single-clip), M2 Ultra 128GB, 30s chunks, batch 32.
+
 The Voxtral paper notes the decoder reuses KV state as audio is appended, so a chunk
 boundary is where this tool discards context. Two ways to give it back, using the
 existing per-chunk prompt mechanism. M2 Ultra 128GB, 30s chunks, batch 32, single clip:
@@ -244,6 +252,8 @@ left-to-right context, is **no better** than the cheap two-pass one, which says 
 chunks recover the full amount for free.
 
 ## Experiment: dropping silence before decode
+
+**Basis:** [one clip](corpus.md#the-single-clip) for the cut-cleanliness measurement; [20-file corpus](corpus.md#the-20-file-corpus), idle M2 Ultra, 4-bit (2026-08-24) for accuracy and speed.
 
 `--compact-silence` drops the middle of pauses longer than 400ms, keeping the first
 240ms. Since decode cost is one step per 80ms frame, removing silence removes steps
@@ -267,7 +277,9 @@ It removed 3-4% of audio on the spontaneous recordings, less than the 12% on the
 clip, and the win is concentrated in the three longest files (-2.19, -1.30, -0.59 points).
 One file went the other way by +1.04.
 
-### The quantization dependence does not survive the corpus either
+## Experiment: silence compaction across precisions
+
+**Basis:** [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra, `--compact-silence` off and on at 4-bit, 8-bit, mxfp8 and nvfp4.
 
 That dependence was the reason the flag was off, so it was run on every precision available.
 All four are ties on accuracy and all four are faster:
@@ -294,7 +306,9 @@ current default and its documentation now says the cost is unmeasurable rather t
 quantization-dependent. Closes
 [#6](https://github.com/prog893/mlx-asr/issues/6).
 
-## Experiment: the composite flag that used to bundle these, and why it is gone
+## Experiment: the composite flag
+
+**Basis:** [20-file corpus](corpus.md#the-20-file-corpus), idle M2 Ultra, JP coverage CER; the bundle measured as one config and then decomposed.
 
 `--fast` set three levers at once (halve the chunk, double the batch, add 8s warm-up
 overlap). Only its components had been measured separately, which is not enough to predict a
@@ -324,7 +338,9 @@ Two things fall out, and the second corrects the obvious reading:
   reach 28.9x, so shorter chunks help only once the batch is wide enough to hold them in one
   pass. A flag called `--fast` bundling both obscured which half mattered.
 
-### And the sign reverses on a low-core GPU
+## Experiment: chunk and batch across GPU core counts
+
+**Basis:** M2 Ultra 128GB (60 GPU cores) and M4 16GB (10 GPU cores), 60s/B16 against 30s/B32; the Ultra figures are from the previous experiment on the [20-file corpus](corpus.md#the-20-file-corpus).
 
 Same change, the two benchmarked machines:
 
@@ -350,7 +366,9 @@ both halves (the accuracy cost is unresolvable, and the speed gain is not univer
 document said the bundled overlap was justified by the short-chunk regime, which the third row
 above refutes.
 
-## How it works: errors concentrate at chunk starts
+## How it works
+
+### Errors concentrate at chunk starts
 
 Locating every edit operation relative to the nearest chunk boundary, 30s chunks, single clip:
 
@@ -372,7 +390,8 @@ point where the encoder's sliding window ends the gains.
 ### Silence compaction on one clip, split by quantization
 
 Replaced by the 20-file corpus runs in
-[Experiment: dropping silence before decode](#experiment-dropping-silence-before-decode),
+[Experiment: dropping silence before decode](#experiment-dropping-silence-before-decode) and
+[Experiment: silence compaction across precisions](#experiment-silence-compaction-across-precisions),
 where all four precisions tie. On the clip the accuracy result appeared to split by
 quantization; the table is kept as the record of what was measured rather than as a finding:
 

@@ -26,6 +26,8 @@ figure is one run.
 
 ## Experiment: the decode window
 
+**Basis:** the [7-file subset](corpus.md#the-7-file-subset), idle M2 Ultra 128GB (Mac14,14), 1.7B at 8bit, windows of 15/30/60/120/300s.
+
 One run per arm, run sequentially with `machine_state` confirming `busy: false` before
 each arm; the 300s arm waited out a load spike before starting.
 `scripts/benchmarks/sweep_qwen3_chunk.py`.
@@ -77,6 +79,8 @@ precisely because the library's unmeasured 1200s would otherwise have set it.
 
 ## Experiment: precision ladder
 
+**Basis:** the [20-file corpus](corpus.md#the-20-file-corpus), idle M2 Ultra 128GB (Mac14,14), both sizes at 4bit/5bit/6bit/8bit/bf16, window fixed at 30s.
+
 Every rung, both sizes, 20 files, window fixed at 30s, one harness, idle M2 Ultra. Only
 the weights change. This closes the gap where the lower rungs were exposed with no
 accuracy figure at all.
@@ -125,9 +129,11 @@ The cost side tracks weight bytes, as the bandwidth model predicts and as the Vo
 measurement found ([quantization.md](quantization.md)): bf16 is the slowest rung on both
 sizes.
 
-### Quantization does not cause the repetition loops
+## Experiment: repetition loops by precision
 
-Worth checking, because it was a live hypothesis: repetition is a decoder degeneracy, and
+**Basis:** the [7-file subset](corpus.md#the-7-file-subset), idle M2 Ultra 128GB (Mac14,14), 1.7B at 8-bit and bf16, window fixed at 30s.
+
+Quantization does not cause the repetition loops. Worth checking, because it was a live hypothesis: repetition is a decoder degeneracy, and
 quantization noise perturbs exactly the near-tie logits that sustain one, so unlike a
 fractional CER difference a loop-rate change would be large enough for this corpus to see.
 
@@ -143,6 +149,8 @@ loops are a property of these weights on this material, not an artifact of the d
 precision, and running bf16 is not a workaround for them.
 
 ## Experiment: against the current headline
+
+**Basis:** the [20-file corpus](corpus.md#the-20-file-corpus), idle M2 Ultra 128GB (Mac14,14), both sizes at 8bit with 30s windows.
 
 Full 20-file corpus (7.95h), one run per size since both are greedy, on the same idle
 M2 Ultra 128GB with the same scorers and the same cached audio as the rows above them.

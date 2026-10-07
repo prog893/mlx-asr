@@ -7,6 +7,10 @@ audio that was already healthy was close to a wash. `auto` encodes that asymmetr
 byte-identical no-op on well-recorded material, and recovered essentially all of a 2.2-point
 loss on a clip attenuated by 14 dB.
 
+**Voxtral only** as a flag, though the underlying mel floor is Whisper's too: both use the
+same front end, so quiet input is likely to cost accuracy on either. Only the Voxtral path
+applies gain, so `--gain` is rejected on the other engines and this was measured on Voxtral.
+
 | setting | default | why |
 |---|---|---|
 | `--gain` | `auto` | quiet input costs accuracy through an absolute mel floor; `auto` lifts only quiet files and leaves the rest byte-identical |
@@ -16,11 +20,9 @@ loss on a clip attenuated by 14 dB.
 scored by [coverage CER/WER](metrics.md#coverage-cer-and-why-it-had-to-exist). The
 recovery check uses [one clip](corpus.md#the-single-clip), scored by plain CER.
 
-**Voxtral only** as a flag, though the underlying mel floor is Whisper's too: both use the
-same front end, so quiet input is likely to cost accuracy on either. Only the Voxtral path
-applies gain, so `--gain` is rejected on the other engines and this was measured on Voxtral.
-
 ## Experiment: mel bins clamped by input level
+
+**Basis:** one recording, mel front end only, share of mel bins at the floor at five gain settings.
 
 The mel front end flattens anything with `log10(power)` below `global_log_mel_max - 8.0`.
 That threshold is **absolute**, not relative to the utterance, so quiet input has its
@@ -45,6 +47,8 @@ gain is mathematically lossless; what matters is only where the signal sits rela
 the model's fixed floor.
 
 ## Experiment: error by input gain
+
+**Basis:** [7-file subset](corpus.md#the-7-file-subset), Voxtral at 30s chunks, batch 32, kv8, coverage CER/WER.
 
 The 7-file subset needed no normalization, and unity gain was already near-optimal.
 
@@ -83,6 +87,8 @@ Two readings, one solid and one a lead:
   floor. **n=2 on the English side, so treat that as a lead rather than a result.**
 
 ## Experiment: recovery of an attenuated clip
+
+**Basis:** [one clip](corpus.md#the-single-clip), Voxtral, plain CER.
 
 Attenuating a clip by 14 dB and transcribing it three ways:
 

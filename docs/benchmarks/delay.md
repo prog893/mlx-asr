@@ -16,7 +16,9 @@ chunks, batch 32, kv8, via `scripts/benchmarks/run_corpus.py`; scored by
 [coverage CER/WER](metrics.md#coverage-cer-and-why-it-had-to-exist) at `min_cut` 30
 characters / 6 words.
 
-## Experiment: delay stepped from 480ms to 2400ms
+## Experiment: transcription delay
+
+**Basis:** [7-file subset](corpus.md#the-7-file-subset), M2 Ultra 128GB, Voxtral at 30s chunks, batch 32, kv8, delay stepped 480ms / 960ms / 2400ms.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/delay-dark.svg">

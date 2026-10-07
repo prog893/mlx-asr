@@ -98,20 +98,6 @@ the life of the machine, and the 3.03GB one-off is noted in MODELS.md where the 
 is described. As a side effect: converting twice produces byte-identical output, so the
 conversion is deterministic.
 
-## Reproducing
-
-`scripts/docs/gen_model_matrix.py` holds the table as data and prints the markdown; it
-does not measure. The sweep is a separate script kept out of the repo because it needs the
-corpus, which is not distributable ([corpus.md](corpus.md)). It is 100 lines: for each
-`(model, size, quantization)`, run the CLI over every file with `--stats-json`, take the
-max of `peak_memory_gb`.
-
-Any single run reports its own figure, which is the one that matters on your hardware:
-
-```bash
-mlx-asr audio.wav --stats-json stats.json      # peak_memory_gb in the JSON
-```
-
 ## Caveats
 
 - **One machine.** Peak memory depends on the allocator and the GPU working set, and
@@ -128,6 +114,20 @@ mlx-asr audio.wav --stats-json stats.json      # peak_memory_gb in the JSON
   so they carry no rerun spread. Voxtral and qwen3-asr are deterministic, so a rerun would
   be identical; whisper samples, and its allocation pattern can therefore vary run to run
   by an amount not measured here.
+
+## Reproducing
+
+`scripts/docs/gen_model_matrix.py` holds the table as data and prints the markdown; it
+does not measure. The sweep is a separate script kept out of the repo because it needs the
+corpus, which is not distributable ([corpus.md](corpus.md)). It is 100 lines: for each
+`(model, size, quantization)`, run the CLI over every file with `--stats-json`, take the
+max of `peak_memory_gb`.
+
+Any single run reports its own figure, which is the one that matters on your hardware:
+
+```bash
+mlx-asr audio.wav --stats-json stats.json      # peak_memory_gb in the JSON
+```
 
 ## Related
 

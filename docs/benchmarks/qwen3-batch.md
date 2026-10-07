@@ -15,6 +15,8 @@ column; see the caveat below), scored by coverage CER/WER ([metrics.md](metrics.
 
 ## Experiment: batch size
 
+**Basis:** [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra (shared, not idle), `Qwen3-ASR-1.7B-8bit` with `--language ja` and 15s windows, batch 1, 2, 4 and 8.
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/qwen3-batch-batch-dark.svg">
   <img alt="Qwen3-ASR throughput falls from 23.18x realtime at batch 1 to 9.91x at batch 8 while Japanese CER and English WER stay flat." src="img/qwen3-batch-batch-light.svg">

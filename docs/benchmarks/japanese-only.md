@@ -22,6 +22,8 @@ contention; throughput figures are floors.
 
 ## Experiment: the engines against the multilingual defaults
 
+**Basis:** the 17 Japanese files of the [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra on 2026-08-23 with another GPU client resident (throughput figures are floors), the four arms below beside the multilingual rows from [engines.md](engines.md).
+
 | arm | config | notes |
 |---|---|---|
 | `parakeet_c120` | `mlx-community/parakeet-tdt_ctc-0.6b-ja`, 120s windows, 2s overlap | the default window, and the measured winner (next section) |
@@ -52,7 +54,9 @@ Parakeet decodes 6.78h of audio in 100 seconds. For a rough transcript of everyt
 as fast as possible, nothing measured here comes close. For subtitles worth
 publishing, turbo remains the accuracy pick and parakeet is not close enough to trade.
 
-## Experiment: parakeet's window length, settled at n=17
+## Experiment: parakeet window length
+
+**Basis:** the 17 Japanese files of the [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra on 2026-08-23 with another GPU client resident (throughput figures are floors), `mlx-community/parakeet-tdt_ctc-0.6b-ja` at 120s and 300s windows.
 
 On one file, 120s and 300s tied (380 characters each) while 60s lost content, so 300s
 looked free. At corpus scale it is not:
@@ -75,6 +79,8 @@ arrived ([corpus.md](corpus.md)). 60s was not swept at corpus scale because it
 demonstrably drops content on even one file.
 
 ## Experiment: reazon-k2 int8 against fp32
+
+**Basis:** the 17 Japanese files of the [20-file corpus](corpus.md#the-20-file-corpus), M2 Ultra on 2026-08-23 with another GPU client resident (throughput figures are floors), the authors' ONNX at fp32 and int8, 30s energy-minima windows.
 
 Reazon's release notes put int8 within ~0.3 CER of fp32 on JSUT, Common Voice and
 TEDxJP-10K. On this corpus int8 drops whole phrases mid-file: 296 against 376
