@@ -12,7 +12,7 @@ flags exist only on this engine and the others refuse them.
 | setting | default | why |
 |---|---|---|
 | `--delay-ms` | `2400` | the largest accuracy lever measured, at no throughput cost ([delay.md](../delay.md)) |
-| `--chunk-seconds` and batch | per machine: 30s/B32 on M2 Ultra, 60s/B16 on M4 | 30s and 60s are indistinguishable on the 20-file corpus; throughput decides, and it reverses across hardware ([chunking.md](../chunking.md), [decode-throughput.md](../decode-throughput.md)) |
+| `--chunk-seconds` and batch | chunk per chip (30s on M2 Ultra, 60s on M4); batch from memory (128 on 128GB, 32 on 16GB) | 30s and 60s are indistinguishable on the 20-file corpus; throughput decides, and it reverses across hardware ([chunking.md](../chunking.md), [decode-throughput.md](../decode-throughput.md)) |
 | `--overlap-seconds` | 0 | won on one clip at 30s chunks, reversed sign on the 7-file corpus ([chunking.md](../chunking.md)) |
 | `--quantization` | `4bit` | last of five on the corpus, but fp16 peaks at 12.98GB and the 8-bit that ties fp16 is not published in a loadable form ([quantization.md](../quantization.md)) |
 | `--kv-bits` | `8` | ties unquantized KV on the corpus and reads half the cache bytes per step ([quantization.md](../quantization.md)) |

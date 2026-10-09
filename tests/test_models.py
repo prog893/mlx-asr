@@ -337,9 +337,8 @@ def test_voxtral_weights_gb_travels_with_the_precision():
     # And it really changes the derived batch, rather than just being recorded.
     from mlx_asr.hardware import derive_batch
 
-    small = derive_batch(gpu_gb=12.7, weights_gb=8.9, chunk_seconds=60.0,
-                         gpu_cores=10)
-    big = derive_batch(gpu_gb=12.7, weights_gb=2.5, chunk_seconds=60.0, gpu_cores=10)
+    small = derive_batch(gpu_gb=12.7, weights_gb=8.9, chunk_seconds=60.0)
+    big = derive_batch(gpu_gb=12.7, weights_gb=2.5, chunk_seconds=60.0)
     assert small < big or small == 1, (small, big)
 
 

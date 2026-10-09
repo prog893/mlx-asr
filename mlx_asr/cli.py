@@ -64,7 +64,7 @@ from .audio import (
     load_audio_16k,
     split_with_overlap,
 )
-from .hardware import machine_info, resolve_profile
+from .hardware import batch_budget_gb, machine_info, predicted_peak_gb, resolve_profile
 from .languages import UnknownLanguage, to_english_name, to_iso
 from .models import (
     REGISTRY,
@@ -517,7 +517,8 @@ def main(argv=None):
 
     info = machine_info()
     prof = resolve_profile(info, weights_gb=spec.weights_gb,
-                           chunk_seconds=a.chunk_seconds)
+                           chunk_seconds=a.chunk_seconds,
+                           overlap_seconds=a.overlap_seconds)
     # Three independent levers, each resolved the same way: your value if you gave one,
     # otherwise this machine's profile. There is deliberately no composite flag bundling
     # them. A `--fast` used to exist and it was a mistake: the chunk/batch trade it
@@ -553,9 +554,18 @@ def main(argv=None):
         f"{info['gpu_working_set_gb']}GB GPU -> batch {batch}, chunk {chunk_s:.0f}s"
         + (f", kv {kv_bits}-bit" if kv_bits else "")
         + f" ({prof['matched']})")
+    if a.max_batch and info.get("gpu_working_set_gb"):
+        need = predicted_peak_gb(batch, spec.weights_gb, chunk_s + overlap_s)
+        budget = batch_budget_gb(info["gpu_working_set_gb"])
+        if need > budget:
+            log(f"[machine] warning: --max-batch {batch} at {chunk_s:.0f}s chunks"
+                + (f" plus {overlap_s:.0f}s overlap" if overlap_s else "")
+                + f" is predicted to peak at {need:.1f}GB, over this machine's {budget:.1f}GB "
+                f"budget; expect swapping or an out-of-memory failure on long audio "
+                f"(the default here is batch {prof['batch']})")
     if prof["matched"] != "profile" and not a.max_batch:
-        log("[machine] no measured profile for this hardware; run "
-            "`mlx-asr-bench` to find the best batch size and share it")
+        log("[machine] no measured profile for this hardware, so chunk length is a "
+            "default; run `mlx-asr-bench` to measure it and share the result")
     log(f"[audio] {duration:.1f}s -> {len(chunks)} chunks of ~{chunk_s:.0f}s"
         + (f" (+{overlap_s:.0f}s warm-up overlap)" if overlap_s else ""))
 

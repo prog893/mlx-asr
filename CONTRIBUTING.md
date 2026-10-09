@@ -3,9 +3,10 @@
 ## Hardware profiles, which need no audio
 
 The most useful contribution is a measured profile for a Mac that is not yet in
-`mlx_asr/profiles.json`. Good batch sizes cannot be calculated: decode throughput is not
-monotonic in batch size, and on every machine measured so far batch 2-8 is *slower per
-step* than batch 1. So defaults come from measurements.
+`mlx_asr/profiles.json`. A profile sets chunk length, which depends on how expensive the
+encoder is on a given GPU and cannot be calculated. Batch is sized from GPU memory on every
+machine, from a peak-memory model fitted on two machines, so a third machine's peak memory
+at each batch is what tests that model.
 
 ```bash
 uv run mlx-asr-bench
@@ -28,7 +29,6 @@ Maintainers turn a pasted bench block into a registry entry:
 {
   "match": {"chip": "Apple M3 Max", "ram_gb_min": 36, "ram_gb_max": 36},
   "model_id": "Mac15,8",
-  "batch": 32,
   "chunk_seconds": 60,
   "kv_bits": 8,
   "overlap_seconds": 0,
@@ -41,9 +41,9 @@ Maintainers turn a pasted bench block into a registry entry:
 
 `match` is a substring test against `sysctl -n machdep.cpu.brand_string` plus a RAM
 window. **`ram_gb` is nameplate GiB**, the number on the spec sheet: a 16GB Mac reports
-16, not the 17 you get from dividing bytes by 1e9. Keep `batch` out of the 2-8 range, and
-keep `peak_gb` under roughly 60% of the machine's GPU working set so a real run has room
-for the encoder.
+16, not the 17 you get from dividing bytes by 1e9. There is no `batch` field: the batch is
+sized from GPU memory at run time on every machine. `peak_gb` records the peak at the batch
+the machine resolves to, which is what tests the memory model.
 
 `model_id` (`sysctl -n hw.model`) is recorded but not matched on. It identifies the
 enclosure, and therefore the cooling: a fanless MacBook Air, a MacBook Pro and a Mac

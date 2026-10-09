@@ -85,7 +85,7 @@ def main(argv=None):
     current = resolve_profile(info)
     print(f"mlx-asr bench: {info['chip']}, {info['ram_gb']}GB RAM, "
           f"{info['gpu_cores']} GPU cores, {info['gpu_working_set_gb']}GB GPU working set")
-    print(f"current profile: batch {current['batch']} ({current['matched']})\n")
+    print(f"current default: batch {current['batch']} (sized from GPU memory)\n")
 
     model = load_model(a.model)
     dim = model.config.decoder.dim
@@ -125,7 +125,7 @@ def main(argv=None):
     print(f"\nbest: batch {best['batch']} -> {best['x_realtime']}x realtime decode "
           f"({best['peak_gb']}GB peak)")
     if best["batch"] != current["batch"]:
-        print(f"this beats your current profile (batch {current['batch']}). "
+        print(f"this beats your current default (batch {current['batch']}). "
               f"Run with:  --max-batch {best['batch']} --chunk-seconds {chunk}")
 
     issue = {
@@ -137,7 +137,6 @@ def main(argv=None):
             "match": {"chip": info["chip"],
                       "ram_gb_min": max(0, (info["ram_gb"] or 0) - 2),
                       "ram_gb_max": (info["ram_gb"] or 0) + 2},
-            "batch": best["batch"],
             "chunk_seconds": chunk,
             "peak_gb": best["peak_gb"],
             "model_id": info.get("model_id"),

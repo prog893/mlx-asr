@@ -173,7 +173,7 @@ z
     </g>
    </g>
    <g id="text_11">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="118.966224" y="187.031685" transform="rotate(-0 118.966224 187.031685)">default (M4)</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #0b0b0b" x="118.966224" y="187.031685" transform="rotate(-0 118.966224 187.031685)">60s chosen (M4)</text>
    </g>
    <g id="text_12">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="43.8" y="44.265" transform="rotate(-0 43.8 44.265)">accuracy</text>
@@ -413,8 +413,8 @@ z
    <text style="font-weight: 700; font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="10.8" y="18.3" transform="rotate(-0 10.8 18.3)">Voxtral: 30s/B32 against 60s/B16 on the corpus (M4)</text>
   </g>
   <g id="text_28">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 269.301587)">20-file corpus, M4 16GB, sequential, delay 2400ms, kv8. Both paired CIs span zero, so the M4 default 60s/B16 is set by throughput on that</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 277.810386)">machine. Source: chunking.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 269.301587)">20-file corpus, M4 16GB, sequential, delay 2400ms, kv8. Both paired CIs span zero, so the M4 chunk length (60s) is set by throughput on</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 277.810386)">that machine. Source: chunking.md.</text>
   </g>
  </g>
  <defs>

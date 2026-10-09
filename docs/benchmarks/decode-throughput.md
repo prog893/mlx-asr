@@ -4,15 +4,16 @@
 decode one stream at a time and reject `--max-batch`. Batch size is the single largest
 speed lever and it is **not monotonic**: on every machine measured, batch 2-8 is *slower
 per step* than batch 1, and on the M4 batch 8 costs 5x batch 1 per step, so the default is
-either 1 or 12 and up, taken from a measured per-machine profile (16 on the M4, 32 on the
-M2 Ultra). The cause is upstream kernel dispatch in MLX, which reshaping the batch,
+either 1 or 12 and up. Batch is memory-bound, so the default is the largest well-measured
+batch that fits the machine's GPU memory, whatever the chip (32 on the M4 16GB, 128 on the
+M2 Ultra 128GB). The cause is upstream kernel dispatch in MLX, which reshaping the batch,
 batching the encoder, `mx.compile` and forcing MLX's `qmv_wide` kernel all failed to work
 around.
 
 | setting | default | why |
 |---|---|---|
-| `--max-batch`, machine listed in `profiles.json` | the profile's measured batch: 16 on the M4 16GB, 32 on the M2 Ultra 128GB | throughput is not monotonic in batch, so it is measured per machine rather than predicted from specs |
-| `--max-batch`, unlisted machine | the smaller of a memory cap and a compute cap, snapped onto 1, 12, 16, 24, 32, 64, 128 | anything landing in 2-11 falls back to 1; see [How the default is chosen](#how-the-default-is-chosen) |
+| `--max-batch` | the largest of 1, 12, 16, 24, 32, 64, 128 whose predicted peak fits 78% of the GPU working set: 32 on a 16GB Mac at 60s chunks, 128 from about 27GB of working set up | batch is memory-bound: on both benchmarked machines speed rises with batch until memory runs out, while accuracy shifts by about 0.1 point, unresolved ([chunking.md](chunking.md#experiment-batch-size-end-to-end)); see [How the default is chosen](#how-the-default-is-chosen) |
+| `--max-batch` given explicitly | used as given; a warning if its predicted peak exceeds the budget | an explicit value is respected, but a batch the machine cannot hold should not fail silently on long audio |
 | `--kv-bits` | 8 | halves KV cache reads; faster and no less accurate on both machines ([quantization.md](quantization.md)) |
 | encoder | one chunk at a time | a batched encoder measured 0.84-0.91x |
 | decode batch layout | plain `[B,1,d]`, no fold or split | fold is worth 3-7% at best; splitting is far worse |
@@ -33,8 +34,9 @@ table with a machine column.
 400 steps per batch size, reported in four blocks so decay within a measurement is visible.
 
 The per-machine batch default is chosen on end-to-end corpus runs
-([chunking.md](chunking.md)), because this synthetic decode-only throughput keeps rising
-past it on both machines (M4 peaks at 32, the M2 Ultra at 128).
+([chunking.md](chunking.md#experiment-batch-size-end-to-end)), not on this synthetic
+decode-only throughput. The two agree on both machines: each default is the largest batch
+that fits, 128 on the M2 Ultra and 32 on the M4.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/batch-dark.svg">
@@ -321,27 +323,30 @@ treat any speed number without a stated machine state as unreliable.
 
 ### How the default is chosen
 
-Two tiers, in `mlx_asr/hardware.py`.
+In `mlx_asr/hardware.py`, from memory on every machine. Chunk length is the only
+decode setting that stays per chip (`mlx_asr/profiles.json`), because it depends on
+how expensive the encoder is on a given GPU; the batch depends on how much memory
+there is.
 
-A machine listed in `mlx_asr/profiles.json`, matched on chip and RAM, uses its measured
-numbers outright. That is the point of the file: the right batch is not predictable
-from specs, because throughput is not monotonic, so a formula fitted to one machine
-mispredicts the next.
+The batch is the largest of the sizes that measured well (1, 12, 16, 24, 32, 64, 128)
+whose predicted peak fits the budget:
 
-For anything unbenchmarked, the batch is the smaller of two caps, then snapped onto the
-sizes that measured well (1, 12, 16, 24, 32, 64, 128):
+- **predicted peak**: model weights + 3.4GB + 0.0018GB per row-second of chunk audio.
+  The constants cover every peak measured on the 20-file corpus
+  ([chunking.md](chunking.md#experiment-batch-size-end-to-end)); the tightest is the M2
+  Ultra at 30s/B64, 9.36GB predicted against 9.17GB measured.
+- **budget**: 78% of the GPU working set. That is fitted on the M4, the one machine
+  where memory binds: it admits B32 (8.08GB measured) and excludes B48, which is past
+  the M4's memory wall. Two machines is a thin fit, and a third RAM size would test it.
 
-- a **memory cap**: half the GPU working set, minus model weights and ~0.6GB fixed
-  overhead, divided by ~0.002 GB per row-second of chunk audio, which is the asymptote
-  of both batch sweeps above.
-- a **compute cap**: 3 rows per GPU core, since both batch sweeps reach 90% of peak
-  throughput at 1.1-3.2 rows per core.
-
-Anything landing in the 2-11 range falls back to 1, because the real choice there is
-"12 or more" versus "1", not a point on a smooth curve.
+Anything landing in the 2-11 range falls back to 1 (2-8 measured slower per step than 1;
+9-11 were not measured), because the real choice there is
+"12 or more" versus "1", not a point on a smooth curve. Model weights enter the
+prediction, so fp16 gets a smaller batch than 4-bit on the same machine.
 
 Contributing a measured profile for a machine that is not listed is the most useful
-contribution to this project, and needs no audio: see
+contribution to this project (it sets chunk length, and its peak memory tests the batch
+model), and needs no audio: see
 [../../CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 ## Related

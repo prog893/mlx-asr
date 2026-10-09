@@ -184,8 +184,9 @@ def test_shipped_profiles_json_is_valid_and_sane():
          / "mlx_asr" / "profiles.json").read_text(encoding="utf-8")
     )
     for prof in data["profiles"]:
-        assert {"match", "batch", "chunk_seconds"} <= set(prof)
-        assert prof["batch"] == 1 or prof["batch"] >= 12
+        assert {"match", "chunk_seconds"} <= set(prof)
+        # batch is sized from memory on every machine, never stored per chip
+        assert "batch" not in prof
     # The old bucket-table fallback was replaced by hardware.py:derive_batch;
     # what ships now is the formula's inputs, not a list of rules.
     derived = data["derived"]

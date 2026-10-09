@@ -1,10 +1,9 @@
 {
-  "_comment": "Known-good decode configs per machine. Throughput is NOT monotonic in batch size, so these are measured, not calculated. Add yours: run `mlx-asr-bench` and open an issue with its output. Keys are matched as substrings of `sysctl -n machdep.cpu.brand_string` plus a RAM window in nameplate GiB. Machines with no entry fall through to a derived formula (see hardware.py: derive_batch), not to a bucket table.",
+  "_comment": "Known-good chunk length and KV precision per machine, measured rather than calculated because the right chunk length depends on how expensive the encoder is on a given GPU. Batch is not stored here: it is sized from GPU memory on every machine (hardware.py: derive_batch). Add yours: run `mlx-asr-bench` and open an issue with its output. Keys are matched as substrings of `sysctl -n machdep.cpu.brand_string` plus a RAM window in nameplate GiB. Machines with no entry get a 60s chunk default.",
   "_schema": {
-    "batch": "rows decoded in lockstep; the single most important knob",
     "chunk_seconds": "audio per row; shorter = fewer decode steps per row but more chunk seams. 30s vs 60s is not resolvable on the 20-file corpus (+0.10, CI [-1.89, +2.03]), so this is a throughput choice, not an accuracy one",
-    "measured_x_realtime": "end-to-end on the reference clip, incl. model load",
-    "peak_gb": "GPU peak at this batch; keep under ~60% of gpu_working_set_gb",
+    "measured_x_realtime": "end-to-end decode over the 20-file corpus at the batch this machine resolves to",
+    "peak_gb": "GPU peak at the batch this machine resolves to, on the 20-file corpus; the batch budget is 78% of gpu_working_set_gb (hardware.py: USABLE_FRACTION)",
     "source": "who measured it and on what",
     "ram_gb": "nameplate GiB, i.e. the number on the spec sheet (a 16GB Mac reports 16, not 17)",
     "model_id": "e.g. Mac16,1: the enclosure, and therefore the cooling class. Chip and RAM do not determine sustained throughput; a fanless Air, a MacBook Pro and a Mac Studio with the same chip hold different clocks over a minutes-long decode. Recorded for provenance, not matched on, until two profiles disagree at equal chip+RAM"
@@ -16,14 +15,13 @@
         "ram_gb_min": 16,
         "ram_gb_max": 16
       },
-      "batch": 16,
       "chunk_seconds": 60,
       "kv_bits": 8,
       "overlap_seconds": 0,
-      "notes": "10 GPU cores, ~120GB/s. 60s/B16 because SHORTER chunks lose here: the encoder is 36% of wall clock and compute-bound, so doubling the chunk count costs more than the shorter decode rows save. Measured 30s/B32 slower than 60s/B16 on this chip, which is the opposite of the M2 Ultra and the reason chunk length is a profile value rather than a flag. B=4..8 is a hard valley (110ms/step vs 22ms at B=1) and B=48 exceeds the ~8.4GB KV wall. Overlap stays 0: it won 1.8 CER points at 30s on one clip and did not reproduce on the 20-file corpus.",
-      "measured_x_realtime": 7.5,
-      "measured_cer": 0.0744,
-      "peak_gb": 6.8,
+      "notes": "10 GPU cores, ~120GB/s. 60s chunks because SHORTER chunks lose here: the encoder is 36% of wall clock and compute-bound, so doubling the chunk count costs more than the shorter decode rows save. Measured 30s/B32 slower than 60s/B16 on this chip, which is the opposite of the M2 Ultra and the reason chunk length is a profile value rather than a flag. Batch resolves to 32 from memory, the largest that runs reliably here: two full 20-file runs at 60s, no errors, 8.08GB peak; B48 exceeds the ~8.4GB KV wall. End to end at 60s: B16 4.66x, B24 5.62x, B32 5.46x, with accuracy unresolved (paired B32 against B16 -0.12 points, CI [-0.28, +0.00]), the gain only on files over 16 chunks. B=4..8 is a hard valley (110ms/step vs 22ms at B=1). Overlap stays 0: it won 1.8 CER points at 30s on one clip and did not reproduce on the 20-file corpus.",
+      "measured_x_realtime": 5.5,
+      "measured_cer": 0.1617,
+      "peak_gb": 8.1,
       "source": "Apple M4, 16GB, 10 GPU cores (Mac16,1), mlx 0.32.0, nvfp4",
       "model_id": "Mac16,1"
     },
@@ -33,20 +31,19 @@
         "ram_gb_min": 96,
         "ram_gb_max": 192
       },
-      "batch": 32,
       "chunk_seconds": 30.0,
       "kv_bits": 8,
       "overlap_seconds": 0,
-      "notes": "60 GPU cores, ~800GB/s. 30s/B32 measured 28.9x against 19.8x for 60s/B16 over the 20-file corpus at identical accuracy (16.22% vs 16.21%, paired -0.01 CI [-1.96, +1.87]), so short chunks are a free 46% here. That is the reverse of the low-core M4, where the same change loses. Overlap stays 0: adding 8s cost both speed and accuracy on this corpus (23.5x at 16.79%). A whole 935s clip fits in one batch of 32, so nothing is lost to padding.",
-      "measured_x_realtime": 28.9,
-      "measured_cer": 0.1622,
-      "peak_gb": 9.1,
+      "notes": "60 GPU cores, ~800GB/s. 30s chunks measured 28.9x against 19.8x for 60s/B16 over the 20-file corpus at identical accuracy (16.22% vs 16.21%, paired -0.01 CI [-1.96, +1.87]), so short chunks are a free 46% here. That is the reverse of the low-core M4, where the same change loses. Batch resolves to 128 from memory; the end-to-end batch sweep at 30s chunks rose with batch size (B16 19.3x, B32 28.0x, B64 31.9x, B128 33.6x), with accuracy unresolved (paired B128 against B32 is +0.07 points, CI [-0.01, +0.18]), the gain coming only from files over 32 chunks; peak memory 11.33GB, under 10% of the working set. Overlap stays 0: adding 8s cost both speed and accuracy on this corpus (23.5x at 16.79%).",
+      "measured_x_realtime": 33.6,
+      "measured_cer": 0.1629,
+      "peak_gb": 11.3,
       "source": "Apple M2 Ultra, 128GB, 60 GPU cores (Mac14,14), mlx 0.32.0, 4bit affine, 20-file corpus",
       "model_id": "Mac14,14"
     }
   ],
   "derived": {
-    "_comment": "Inputs to hardware.py:derive_batch, used only when no profile above matches. Batch itself is computed from GPU working set, GPU cores, model weight size and chunk length, then snapped onto FAST_BATCHES; it is deliberately NOT a table, because memory and core count are detectable at runtime while the batch-size valley is not.",
+    "_comment": "Defaults for chips with no profile above. Batch is not set here on any machine: hardware.py:derive_batch sizes it from GPU working set, model weight size and chunk length, then snaps it onto FAST_BATCHES.",
     "chunk_seconds_default": 60.0,
     "chunk_seconds_low_core": 60.0,
     "_chunk_note": "60s both ways for now. On a low-core GPU the compute-bound encoder makes short chunks a net loss on throughput; that is measured on the M4 but not yet on any other low-core part, so the two values are kept separate rather than collapsed. This is a speed argument, not an accuracy one: 30s and 60s are indistinguishable on accuracy over the 20-file corpus.",
