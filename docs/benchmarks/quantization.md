@@ -212,7 +212,7 @@ name everywhere: bf16 for Qwen3-ASR and Voxtral-v1, fp16 for Voxtral. Both spell
 either.
 
 On `voxtral` the flag also moves the **weight footprint used to size the batch**. That
-matters: `derive_batch` subtracts it from the GPU budget, so on an unprofiled 16GB-class
+matters: `derive_batch` subtracts it from the GPU budget, so on a 16GB
 machine 4-bit derives batch 32 and fp16 derives batch 1. Claiming 4-bit's 2.5GB while
 loading 8.9GB would plan for memory already spent, and the failure would surface as an OOM
 rather than as a bad default.

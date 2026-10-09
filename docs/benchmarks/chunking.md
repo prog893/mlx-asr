@@ -1,10 +1,12 @@
 # Lever: how the audio is cut into chunks
 
-Chunk length, batch and overlap default per machine from `mlx_asr/profiles.json`: 30s/B32 on
-the M2 Ultra and 60s/B16 on the M4, overlap 0 on both. On the 20-file corpus 60s versus 30s
+Chunk length and overlap default per chip from `mlx_asr/profiles.json`, and batch from GPU
+memory: 30s/B128 on the M2 Ultra 128GB and 60s/B32 on the M4 16GB, overlap 0 on both. On the 20-file corpus 60s versus 30s
 is +0.10 points with a CI of [-1.89, +2.03], so the pair is chosen on throughput, and the
 `--fast` decomposition showed 30s/B32 is faster on the 60-core Ultra (28.9x against 19.8x)
-and slower on the 10-core M4. Prefix overlap won 1.4-1.8 points at 30s chunks on a single
+and slower on the 10-core M4. At 30s chunks on the Ultra, end-to-end speed keeps rising up to
+batch 128 (33.6x against 28.0x at B32) with accuracy unchanged, all of it on files longer
+than 32 chunks. Prefix overlap won 1.4-1.8 points at 30s chunks on a single
 clip but reversed sign on a real corpus, so it defaults to zero; cut points default to
 energy minima, which were never behind a VAD.
 
@@ -16,7 +18,7 @@ an engine that cannot honour it is an error, not a warning.
 | setting | default | why |
 |---|---|---|
 | `--chunk-seconds` | per machine: 30s on M2 Ultra, 60s on M4 | 30s and 60s are indistinguishable on the 20-file corpus; throughput decides, and it reverses across hardware |
-| batch | per machine: 32 on M2 Ultra, 16 on M4 | the batch carries most of the speedup; 30s/B32 is the faster pair on 60 GPU cores and the slower one on 10 |
+| batch | from memory, not chip: 128 on M2 Ultra 128GB, 32 on M4 16GB | the largest batch that fits the GPU memory; larger batches only speed up files longer than one batch, and accuracy does not move ([decode-throughput.md](decode-throughput.md#how-the-default-is-chosen)) |
 | `--overlap-seconds` | 0 | won on one clip at 30s chunks, reversed sign on the 7-file corpus, and is the only arm slower than the old default |
 | cut points | energy minima; `--vad` opt-in | energy is never behind; VAD ties on Japanese at n=17 and loses all 3 English files |
 | `--compact-silence` | off | accuracy ties on all four precisions; the 3-5% speed gain does not justify silently discarding input |
@@ -98,14 +100,14 @@ Both arms re-run on one machine (M4 16GB, 20 files, sequential, `--delay-ms 2400
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/chunking-30-60-dark.svg">
-  <img alt="Two panels comparing 60s/B16 and 30s/B32 on the 20-file corpus on the M4: Japanese CER 16.29% against 16.19% and English WER 26.14% against 25.24%, and paired differences of +0.10 and +0.90 points whose 95% CIs both cross zero; the M4 default 60s/B16 is ringed." src="img/chunking-30-60-light.svg">
+  <img alt="Two panels comparing 60s/B16 and 30s/B32 on the 20-file corpus on the M4: Japanese CER 16.29% against 16.19% and English WER 26.14% against 25.24%, and paired differences of +0.10 and +0.90 points whose 95% CIs both cross zero; the M4's chosen 60s chunk length is ringed." src="img/chunking-30-60-light.svg">
 </picture>
 
 **Table:** coverage error per arm on the 20-file corpus, M4 16GB, with the paired difference (60s minus 30s, positive meaning 30s is better) on the 30s row.
 
 | config | JP coverage CER, 17 files | EN coverage WER, 3 files | JP paired difference | JP 95% CI | EN paired difference | EN 95% CI |
 |---|---|---|---|---|---|---|
-| 60s / b16 (default on M4) | 16.29% | 26.14% | | | | |
+| 60s / b16 (M4 chunk length) | 16.29% | 26.14% | | | | |
 | 30s / b32 | **16.19%** | **25.24%** | +0.10 | [-1.89, +2.03] | +0.90 | [-0.27, +1.69] |
 
 Not resolvable on either unit, and the Japanese point estimate fell from +1.67 at n=7 to
@@ -388,7 +390,7 @@ as one config, and then decomposed, 20 files, idle M2 Ultra:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/chunking-composite-dark.svg">
-  <img alt="Two panels over six chunk, batch and overlap arms on the 20-file corpus: JP coverage CER stays between 16.21% and 16.32% for every arm except the 8s-overlap bundle at 16.79%, while speed ranges from 17.7x with overlap alone to 28.9x for 30s/B32 without overlap, the ringed M2 Ultra default." src="img/chunking-composite-light.svg">
+  <img alt="Two panels over six chunk, batch and overlap arms on the 20-file corpus: JP coverage CER stays between 16.21% and 16.32% for every arm except the 8s-overlap bundle at 16.79%, while speed ranges from 17.7x with overlap alone to 28.9x for 30s/B32 without overlap, ringed as the M2 Ultra's chosen chunk length." src="img/chunking-composite-light.svg">
 </picture>
 
 **Table:** JP coverage CER and speed for the `--fast` bundle and each of its components, 20-file corpus, idle M2 Ultra.
@@ -424,7 +426,7 @@ Same change, the two benchmarked machines:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/chunking-machines-dark.svg">
-  <img alt="Two panels of speed for 60s/B16 and 30s/B32: on the M2 Ultra 30s/B32 is faster, 28.9x against 19.8x, and is ringed as its default; on the M4 the printed ranges are 1.9 to 2.0x for 60s/B16 and 1.5 to 1.9x for 30s/B32, so 60s/B16 is the faster pair there." src="img/chunking-machines-light.svg">
+  <img alt="Two panels of speed for 60s/B16 and 30s/B32: on the M2 Ultra 30s/B32 is faster, 28.9x against 19.8x, and is ringed as its chosen chunk length; on the M4 the printed ranges are 1.9 to 2.0x for 60s/B16 and 1.5 to 1.9x for 30s/B32, so 60s/B16 is the faster pair there." src="img/chunking-machines-light.svg">
 </picture>
 
 **Table:** speed of the two chunk/batch pairs on each benchmarked machine, the faster pair per machine in bold (the M4 cells are ranges as recorded).
@@ -442,14 +444,75 @@ profiled.
 
 **That is why the flag was removed rather than turned on.** A flag has one value; this lever
 has two right answers, one per machine, and `profiles.json` already had a field for it. The
-Ultra profile now defaults to 30s/B32 and the M4 keeps 60s/B16, so each machine gets its
-measured best with nothing to remember. No composite flag replaced it: every lever it touched
+Ultra profile defaults to 30s chunks and the M4 to 60s (batch for each from the next
+experiment), so each machine gets its measured best with nothing to remember. No composite flag replaced it: every lever it touched
 is set independently, defaulting per machine.
 
 Two claims died with it. The README said "faster, slightly less accurate", which was wrong in
 both halves (the accuracy cost is unresolvable, and the speed gain is not universal), and this
 document said the bundled overlap was justified by the short-chunk regime, which the third row
 above refutes.
+
+## Experiment: batch size end to end
+
+**Basis:** [20-file corpus](reference/corpus.md#the-20-file-corpus), M2 Ultra 128GB, 30s chunks, kv8, `--delay-ms 2400`, one run per batch, 2026-10-07; then M4 16GB at 60s chunks on AC power, 2026-10-08.
+
+The synthetic sweep in [decode-throughput.md](decode-throughput.md) measures decode steps
+alone. This one runs the whole pipeline over real audio, with the batch as the only change:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-batch-dark.svg">
+  <img alt="Two panels over max batch 16, 32, 48, 64 and 128 at 30s chunks on the M2 Ultra: speed over all 20 files rises from 19.3x at B16 to 28.0x at B32, 31.9x at B64 and 33.6x at B128, which is ringed as the default; the 8 files over 32 chunks rise from 19.2x to 36.3x while the 12 shorter files stay between 24.2x and 28.1x from B32 up; peak memory rises from 6.56GB to 11.33GB." src="img/chunking-batch-light.svg">
+</picture>
+
+**Table:** end-to-end speed by max batch over all files and split at 32 chunks (the files a batch of 32 already holds whole), with peak memory, 20-file corpus, M2 Ultra, 30s chunks.
+
+| max batch | all 20 files | 12 files of 32 chunks or fewer (2.2h) | 8 files over 32 chunks (5.7h) | peak memory |
+|---|---|---|---|---|
+| 16 | 19.3x | 19.7x | 19.2x | 6.56GB |
+| 32 | 28.0x | 27.9x | 28.0x | 7.23GB |
+| 48 | 26.4x | 24.2x | 27.4x | 8.14GB |
+| 64 | 31.9x | 25.7x | 35.2x | 9.17GB |
+| **128** | **33.6x** | 28.1x | **36.3x** | 11.33GB |
+
+Accuracy does not move with batch: JP coverage CER is 16.22% to 16.29% across all five arms
+and EN coverage WER is 21.50% in every one.
+
+A file of 32 chunks or fewer is decoded in one batch from B32 up, so for those 12 files B32,
+B48, B64 and B128 do identical work and their spread (24.2x to 28.1x) is machine noise. The
+B64 run started with 25.2GB of GPU memory held by another process, and B48 lost two files to
+transient slowdowns (11.3x and 12.7x against about 30x for their neighbours); the machine
+was not idle during this sweep. The 8 longer files are where batch matters: B128 is faster
+than B64 on 7 of them, by 1-6%, and reaches 40.1x on the 93-minute file against 23.5x at B32.
+
+B128 is what the Ultra's memory resolves to. Its 11.33GB peak is under 10% of the machine's
+working set, and the rule the default follows on every machine is the largest batch that fits: on the files a batch already holds whole it
+costs nothing, and on longer files it is the fastest arm measured.
+
+The same sweep on the M4, at its 60s chunks:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/chunking-batch-m4-dark.svg">
+  <img alt="Two panels over max batch 16, 24 and 32 at 60s chunks on the M4: speed over all 20 files is 4.66x at B16, 5.62x at B24 and 5.46x at B32, which is ringed as the default; the 8 files over 16 chunks rise from 4.89x to 6.42x and 6.30x while the 12 shorter files stay between 4.08x and 4.27x; peak memory rises from 6.60GB to 8.08GB." src="img/chunking-batch-m4-light.svg">
+</picture>
+
+**Table:** end-to-end speed by max batch over all files and split at 16 chunks (the files a batch of 16 already holds whole), with peak memory, 20-file corpus, M4 16GB, 60s chunks.
+
+| max batch | all 20 files | 12 files of 16 chunks or fewer (2.2h) | 8 files over 16 chunks (5.7h) | peak memory |
+|---|---|---|---|---|
+| 16 | 4.66x | 4.14x | 4.89x | 6.60GB |
+| 24 | 5.62x | 4.27x | 6.42x | 7.34GB |
+| **32** | 5.46x | 4.08x | 6.30x | 8.08GB |
+
+JP coverage CER is 16.29% at B16 and 16.17% at B24 and B32; EN coverage WER is 22.43% in all
+three. The shape matches the Ultra: the 12 shorter files run at the same speed at every batch,
+and the 8 longer ones gain about 30% from B16 to B24 or B32. B24 and B32 tie within this
+machine's noise (the B24 run started at load 6.7).
+
+B32 is what the M4's memory resolves to, as the largest batch that runs reliably there: it completed the full
+corpus twice with no errors at an 8.08GB peak, both times starting with 7.4-7.6GB of swap
+already in use, and B48 exceeds the ~8.4GB KV wall that [decode-throughput.md](decode-throughput.md) shows as a
+throughput cliff.
 
 ## How it works
 

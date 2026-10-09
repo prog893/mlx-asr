@@ -1,32 +1,37 @@
 """Machine detection and decode-config defaults.
 
-Two-tier by design, because the two things being decided have different
-characters:
+Two decisions, made on different inputs because they have different causes:
 
-  measured profiles   A table, matched on chip + RAM. Throughput is NOT monotonic
-                      in batch size and the dips are not predictable from specs,
-                      so where a machine has been benchmarked its numbers win
-                      outright.
-  derived fallback    A function, for machines nobody has benchmarked. It sizes
-                      the batch from GPU working set, model footprint and chunk
-                      length, then snaps the result onto the batch sizes that are
-                      actually fast.
+  batch          sized from memory on every machine (``derive_batch``). Batch is
+                 memory-bound: on both benchmarked machines end-to-end speed rises
+                 with batch until memory runs out, accuracy does not move, and
+                 larger batches only speed up files longer than one batch.
+  chunk length   per chip, from profiles.json. It is a throughput choice set by
+                 how expensive the encoder is on a given GPU, so it has to be
+                 measured; chips with no profile fall back to 60s.
 
-The old fallback was a bucket table keyed on GPU memory, which gave the same
-answer for a 16GB M4 and a 36GB M3 Pro and had nothing to say about chunk length
-or model size. The formula below is derived from the two full batch sweeps in
-scripts/benchmarks/sweep_*.json.
+## The memory model
 
-## What the sweeps show
+Peak MLX memory over the 20-file corpus is linear in rows times chunk seconds, on
+top of the weights and a fixed cost:
 
-KV memory per decoded row is nearly constant per row-second, and converges as
-batch grows (the fixed cost amortizes):
+    M2 Ultra 128GB, 30s, 4-bit: 6.56 / 7.23 / 8.14 / 9.17 / 11.33 GB at B=16/32/48/64/128
+                                (0.0014 GB per row-second, 3.4 GB fixed beyond weights)
+    M4 16GB,       60s, 4-bit: 6.60 / 7.34 / 8.08 GB at B=16/24/32
+                                (0.0015 GB per row-second, 2.6 GB fixed beyond weights)
 
-    M2 Ultra 128GB, 60s chunks: 0.152 GB/row at B=16 -> 0.114 at B=128
-    M4 16GB,       60s chunks: 0.143 GB/row at B=16 -> 0.120 at B=48
+The Ultra points are not quite linear (B=48 to 64 is steeper than the rest), so the
+constants below are set to cover every measured peak rather than to fit the mean:
+the tightest is the Ultra at B=64 (9.36GB predicted, 9.17 measured), and the M4 at
+B=32 is over-predicted by 16% (9.36 against 8.08).
 
-so ~0.002 GB per row-second is a good planning figure, and batch capacity is
-(usable memory) / (0.002 * chunk_seconds).
+The budget is a fraction of the GPU working set, fitted to the one machine where
+memory binds: on the M4 (12.7GB working set) B=32 completed the corpus twice with
+no errors at 8.08GB, while B=48 is past the ~8.4GB wall where synthetic decode
+throughput collapses. 0.78 (a 9.9GB budget) admits the former with 0.55GB to spare
+and excludes the latter (11.1GB predicted). On the
+Ultra (115.4GB) memory does not bind below the largest measured-good batch, 128.
+Two machines is a thin fit; a third with a different RAM size is the test.
 
 ## Why the result gets snapped to a list
 
@@ -36,32 +41,12 @@ measured:
     B = 2..8   worse per step than B=1. On the M4, x-realtime is 6.1 / 6.2 / 5.8
                at B=2/4/8 versus 3.6 at B=1: the batch grows 8x and throughput
                does not follow. Never default here.
-    B = 48     a real regression on both machines (M2 Ultra 903 tok/s at 48 vs
-               945 at 32; M4 251 vs 309). B=96 dips on the Ultra too.
+    B = 48     a regression in the synthetic sweep on both machines (M2 Ultra 903
+               tok/s at 48 vs 945 at 32; M4 251 vs 309). B=96 dips on the Ultra too.
 
 These look like scheduling artifacts rather than a memory effect, so no formula
 over specs will predict them. ``FAST_BATCHES`` encodes the sizes that measured
-well.
-
-## Why memory alone is the wrong limit
-
-Sizing purely to memory overshoots badly on large machines: 115GB of working set
-allows batch 128, but the Ultra sweep only gains 7% from 64 to 128 and dips at 96
-on the way. Throughput saturates before memory does, and it saturates as a
-function of *GPU cores*:
-
-    M2 Ultra 128GB, 60 cores: 90% of peak throughput first reached at batch 64  (1.1 rows/core)
-    M4 16GB,       10 cores: 90% of peak throughput first reached at batch 32  (3.2 rows/core)
-
-Neither machine benefits much past ~2-3 rows per core, so the derived batch is
-the smaller of a memory limit and a compute limit. Memory then only binds on
-small-memory machines, which is the correct behaviour: that is where getting it
-wrong means an OOM rather than a few lost percent.
-
-Generational differences (M2 vs M3 vs M4 at equal memory and cores) still need
-measuring: the M4 encoder is compute-bound and eats 36% of wall clock, which
-changes the best chunk length in a way core count alone does not reveal. Those
-stay in profiles.json. Run `mlx-asr-bench` and open an issue to add one.
+well, and the largest one that fits is the default.
 """
 
 import functools
@@ -78,29 +63,19 @@ PROFILES_PATH = Path(__file__).with_name("profiles.json")
 # and 96 (measured regressions). See the module docstring.
 FAST_BATCHES = (1, 12, 16, 24, 32, 64, 128)
 
-# GB of KV cache per decoded row per second of chunk audio, from the asymptote of
-# both batch sweeps. Rounded up, since running out of memory is worse than
-# leaving some unused.
-GB_PER_ROW_SECOND = 0.0020
+# GB of peak memory per decoded row per second of chunk audio. The two corpus fits
+# give 0.0014 (Ultra) and 0.0015 (M4); 0.0018 is what it takes to cover every
+# measured peak, including the Ultra's steeper B=48-64 step. See the module docstring.
+GB_PER_ROW_SECOND = 0.0018
 
-# Fraction of the GPU working set to plan for. MLX peaks above its steady state
-# during the encoder pass and the OS wants headroom, so half is the safe share.
-# The measured profiles sit at 54% (M4) and 8% (Ultra) of working set, so this
-# only binds on small-memory machines, which is exactly where it matters.
-USABLE_FRACTION = 0.50
+# Fixed peak beyond the weights: encoder activations, mel buffers, framework
+# overhead. Rounded up from the two fits (3.4 Ultra, 2.6 M4).
+FIXED_OVERHEAD_GB = 3.4
 
-# Non-weight fixed cost: encoder activations, mel buffers, framework overhead.
-FIXED_OVERHEAD_GB = 0.6
-
-# Rows per GPU core beyond which throughput stops improving. Both sweeps reach
-# 90% of their peak at 1.1 (Ultra) and 3.2 (M4) rows/core, so 3 covers the
-# small-GPU case without chasing the flat tail on large ones.
-ROWS_PER_GPU_CORE = 3.0
-
-# Assumed core count when detection fails (system_profiler can be slow or
-# unavailable). A mid-range GPU, so the compute cap neither dominates nor
-# disappears.
-DEFAULT_GPU_CORES = 16
+# Fraction of the GPU working set a decode may plan to use. Fitted on the M4, the
+# only machine where memory binds: on a 12.7GB working set it admits B=32 (8.08GB
+# measured, 9.36 predicted) and excludes B=48 (11.1 predicted).
+USABLE_FRACTION = 0.78
 
 
 def _sh(cmd: str) -> str:
@@ -168,26 +143,30 @@ def snap_batch(want: int) -> int:
     return max(ok) if ok else 1
 
 
-def derive_batch(gpu_gb: float, weights_gb: float, chunk_seconds: float,
-                 gpu_cores: int | None = None) -> int:
-    """Batch size for hardware with no measured profile.
+def predicted_peak_gb(batch: int, weights_gb: float, chunk_seconds: float) -> float:
+    """Peak MLX memory for one decode, from the measured fit in the module docstring."""
+    return (weights_gb + FIXED_OVERHEAD_GB
+            + GB_PER_ROW_SECOND * max(chunk_seconds, 1.0) * max(batch, 1))
 
-    The smaller of two caps, then snapped onto a batch size that measured well:
 
-      memory   how many rows of KV cache fit in the planning budget
-      compute  how many rows the GPU can actually keep busy (rows/core)
+def batch_budget_gb(gpu_gb: float) -> float:
+    """Memory a decode may plan to use on a GPU with this working set."""
+    return gpu_gb * USABLE_FRACTION
 
+
+def derive_batch(gpu_gb: float, weights_gb: float, chunk_seconds: float) -> int:
+    """Largest measured-good batch whose predicted peak fits the memory budget.
+
+    Memory is the only input: batch size is memory-bound, and more rows than memory
+    allows is the failure that matters (an OOM or a swap storm, not a few percent).
     Never returns 2-11: that range is the measured valley, so the real choice is
     "12 or more" versus "1".
     """
-    usable = max(gpu_gb * USABLE_FRACTION - weights_gb - FIXED_OVERHEAD_GB, 0.0)
-    per_row = GB_PER_ROW_SECOND * max(chunk_seconds, 1.0)
-    mem_cap = int(usable / per_row) if per_row > 0 else 0
-    compute_cap = int(ROWS_PER_GPU_CORE * (gpu_cores or DEFAULT_GPU_CORES))
-    want = min(mem_cap, compute_cap)
-    if want < 12:
-        return 1
-    return snap_batch(want)
+    budget = batch_budget_gb(gpu_gb)
+    fits = [b for b in FAST_BATCHES
+            if predicted_peak_gb(b, weights_gb, chunk_seconds) <= budget]
+    best = max(fits, default=1)
+    return best if best >= 12 else 1
 
 
 def _load_profiles() -> dict:
@@ -202,15 +181,16 @@ def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
                     chunk_seconds: float | None = None) -> dict:
     """Pick a decode config for this machine.
 
-    ``matched`` says where the numbers came from ("profile" for a benchmarked
-    machine, "derived" for the formula), so the CLI can tell the user whether it
-    is reporting a measurement or an estimate. Keeping that honest is the point
-    of having both paths.
+    Batch is always sized from memory (``derive_batch``). ``matched`` says where the
+    rest came from ("profile" for a benchmarked chip, "derived" for the defaults), so
+    the CLI can tell the user whether chunk length is a measurement or an estimate.
     """
     info = info or machine_info()
     data = _load_profiles()
     chip = (info.get("chip") or "").strip()
     ram = info.get("ram_gb") or 0
+    # Batch comes from memory on every path, profiled or not.
+    gpu_gb = info.get("gpu_working_set_gb") or 10.0
 
     for prof in data.get("profiles", []):
         m = prof.get("match", {})
@@ -218,8 +198,9 @@ def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
             continue
         if ram < m.get("ram_gb_min", 0) or ram > m.get("ram_gb_max", 10**9):
             continue
+        chunk = chunk_seconds or float(prof["chunk_seconds"])
         return {
-            "batch": prof["batch"],
+            "batch": derive_batch(gpu_gb, weights_gb, chunk),
             "chunk_seconds": prof["chunk_seconds"],
             "kv_bits": prof.get("kv_bits"),
             "overlap_seconds": prof.get("overlap_seconds", 0.0),
@@ -228,8 +209,7 @@ def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
             "source": prof.get("source", ""),
         }
 
-    # No measured profile: derive from what can be detected at runtime.
-    gpu_gb = info.get("gpu_working_set_gb") or 10.0
+    # No measured profile: derive chunk length from what can be detected at runtime.
     cores = info.get("gpu_cores") or 0
     derived = data.get("derived", {})
     # Both values are currently 60s, so this branch is deliberately a no-op: on a
@@ -242,17 +222,16 @@ def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
         derived.get("chunk_seconds_low_core", 60.0) if cores and cores <= 12
         else derived.get("chunk_seconds_default", 60.0)
     )
-    batch = derive_batch(gpu_gb, weights_gb, chunk, cores or None)
+    batch = derive_batch(gpu_gb, weights_gb, chunk)
     return {
         "batch": batch,
         "chunk_seconds": chunk,
         "kv_bits": derived.get("kv_bits", 8),
         "overlap_seconds": 0.0,
         "matched": "derived",
-        "notes": (f"no measured profile for {chip or 'this machine'}; batch "
-                  f"{batch} derived from {gpu_gb:.1f}GB GPU working set and "
-                  f"{cores or DEFAULT_GPU_CORES} GPU cores at {chunk:.0f}s "
-                  f"chunks, snapped to a measured-good size. "
-                  f"Run mlx-asr-bench to contribute a real profile."),
+        "notes": (f"no measured profile for {chip or 'this machine'}; chunk length "
+                  f"{chunk:.0f}s is the unprofiled default, and batch {batch} is the "
+                  f"largest measured-good size that fits {gpu_gb:.1f}GB of GPU "
+                  f"working set. Run mlx-asr-bench to contribute a real profile."),
         "source": "",
     }

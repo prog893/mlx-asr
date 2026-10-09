@@ -115,7 +115,7 @@ conversion is deterministic.
   recommended working set (12.71GB), which is close enough to the voxtral fp16 figure
   (12.98GB) that fp16 is not usable there.
 - **Default config at measurement time.** Voxtral's figures were measured at the earlier
-  60s/B16 profile; the current Ultra profile is 30s/B32 ([chunking.md](../chunking.md)). A
+  60s/B16 profile; the current Ultra default is 30s/B128 ([chunking.md](../chunking.md#experiment-batch-size-end-to-end)), which peaks at 11.33GB on 4-bit. A
   different `--chunk-seconds`/`--max-batch` pair moves them: `quantization.md` reports
   9.36GB and 15.28GB for the same two builds at a different pair, on a different clip.
   Both are correct for what they measured.
@@ -142,6 +142,6 @@ mlx-asr audio.wav --stats-json stats.json      # peak_memory_gb in the JSON
 
 - [MODELS.md](../../MODELS.md): the per-model table these figures populate.
 - [quantization.md](../quantization.md): peak memory per Voxtral precision, at a fixed config.
-- [chunking.md](../chunking.md): the chunk length and batch per machine profile.
+- [chunking.md](../chunking.md): chunk length per chip and batch sized from memory.
 - [determinism.md](determinism.md): how far results move across machines.
 - [corpus.md](corpus.md): the corpus every cell is measured over.

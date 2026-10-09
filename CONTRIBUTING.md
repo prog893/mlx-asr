@@ -3,9 +3,10 @@
 ## Hardware profiles, which need no audio
 
 The most useful contribution is a measured profile for a Mac that is not yet in
-`mlx_asr/profiles.json`. Good batch sizes cannot be calculated: decode throughput is not
-monotonic in batch size, and on every machine measured so far batch 2-8 is *slower per
-step* than batch 1. So defaults come from measurements.
+`mlx_asr/profiles.json`. A profile sets chunk length, which depends on how expensive the
+encoder is on a given GPU and cannot be calculated. Batch is sized from GPU memory on every
+machine, from a peak-memory model fitted on two machines, so a third machine's peak memory
+at each batch is what tests that model.
 
 ```bash
 uv run mlx-asr-bench

@@ -1,6 +1,6 @@
 """Sweep and comparison charts for docs/benchmarks/chunking.md.
 
-The chunk/batch default is per machine (30s/B32 on the M2 Ultra, 60s/B16 on the M4), so
+The chunk/batch default is per machine (30s/B128 on the M2 Ultra, 60s/B32 on the M4), so
 a chart drawn from one machine rings that machine's default and says which machine.
 Difference panels plot the paired differences and 95% CIs exactly as the page prints
 them, with the sign convention the page uses for that table named in the axis label.
@@ -11,7 +11,7 @@ SWEEPS = {
         "doc": "docs/benchmarks/chunking.md",
         "title": "Voxtral: chunk length (batch shrinks as chunks grow)",
         "basis": "One 935s clip, plain CER, M2 Ultra, 4-bit, no overlap; batch changes "
-                 "with chunk length. The M2 Ultra default is 30s/B32 because the corpus "
+                 "with chunk length. The M2 Ultra uses 30s chunks because the corpus "
                  "ties 30s and 60s, so throughput decides, and 30s is fastest here.",
         "xlabel": "chunk length / batch", "ylabel": "",
         "scale": "category",
@@ -25,7 +25,7 @@ SWEEPS = {
             ("180s / B8", "| 180s | 8 |", ("11.6x", "7.56%")),
         ],
         "chosen": "30s / B32", "chosen_series": "x realtime",
-        "chosen_label": "default (M2 Ultra)",
+        "chosen_label": "30s chosen (M2 Ultra)",
         "width": 10.4,
         "panels": [
             {"series": [1], "ylabel": "CER % (lower is better)", "title": "accuracy"},
@@ -52,18 +52,18 @@ SWEEPS = {
         "doc": "docs/benchmarks/chunking.md",
         "title": "Voxtral: 30s/B32 against 60s/B16 on the corpus (M4)",
         "basis": "20-file corpus, M4 16GB, sequential, delay 2400ms, kv8. Both paired CIs "
-                 "span zero, so the M4 default 60s/B16 is set by throughput on that machine.",
+                 "span zero, so the M4 chunk length (60s) is set by throughput on that machine.",
         "xlabel": "config", "ylabel": "",
         "scale": "category", "connect": False,
         "series": ["JP coverage CER", "EN coverage WER (3 files)",
                    "JP: 60s minus 30s", "EN: 60s minus 30s"],
         "rows": [
-            ("60s / B16", "| 60s / b16 (default on M4) |", ("16.29%", "26.14%", None, None)),
+            ("60s / B16", "| 60s / b16 (M4 chunk length) |", ("16.29%", "26.14%", None, None)),
             ("30s / B32", "| 30s / b32 |", ("16.19%", "25.24%", "+0.10", "+0.90"),
              (None, None, "[-1.89, +2.03]", "[-0.27, +1.69]")),
         ],
         "chosen": "60s / B16", "chosen_series": "JP coverage CER",
-        "chosen_label": "default (M4)",
+        "chosen_label": "60s chosen (M4)",
         "width": 9.0,
         "panels": [
             {"series": [0, 1], "ylabel": "error % (lower is better)", "title": "accuracy",
@@ -249,8 +249,8 @@ SWEEPS = {
         "doc": "docs/benchmarks/chunking.md",
         "title": "Voxtral: the --fast bundle and its parts",
         "basis": "20-file corpus, idle M2 Ultra, JP coverage CER. Every arm ties on "
-                 "accuracy (every CI spans zero), so the fastest arm, 30s/B32/ov0, is the "
-                 "M2 Ultra default.",
+                 "accuracy (every CI spans zero), so the fastest arm, 30s/B32/ov0, set the "
+                 "M2 Ultra chunk length; its batch was later raised to 128.",
         "xlabel": "chunk / batch / overlap", "ylabel": "",
         "scale": "category", "connect": False,
         "series": ["JP coverage CER", "x realtime"],
@@ -263,7 +263,7 @@ SWEEPS = {
             ("30s/B32\nov0", "| **30s / B32 / ov0** |", ("16.22%", "28.9x")),
         ],
         "chosen": "30s/B32\nov0", "chosen_series": "x realtime",
-        "chosen_label": "default (M2 Ultra)",
+        "chosen_label": "30s chosen (M2 Ultra)",
         "width": 11.0,
         "panels": [
             {"series": [0], "ylabel": "JP coverage CER % (lower is better)",
@@ -276,8 +276,8 @@ SWEEPS = {
         "doc": "docs/benchmarks/chunking.md",
         "title": "Voxtral: the faster chunk/batch pair depends on the machine",
         "basis": "M2 Ultra from the 20-file corpus; M4 printed as a range, drawn as its "
-                 "two ends. Each machine defaults to its faster pair: 30s/B32 on the "
-                 "Ultra, 60s/B16 on the M4.",
+                 "two ends. Each machine takes the chunk length of its faster pair: 30s "
+                 "on the Ultra, 60s on the M4.",
         "xlabel": "chunk / batch", "ylabel": "x realtime",
         "scale": "category", "connect": False,
         "layout": "columns",
@@ -289,13 +289,13 @@ SWEEPS = {
             ("30s / B32", "", ("28.9x", "1.5", "1.9x")),
         ],
         "chosen": "30s / B32", "chosen_series": "M2 Ultra 128GB",
-        "chosen_label": "default (M2 Ultra)",
+        "chosen_label": "30s chosen (M2 Ultra)",
         "width": 9.0,
         "panels": [
             {"series": [0], "ylabel": "x realtime (higher is faster)",
              "title": "M2 Ultra, 60 GPU cores", "zero": True},
             {"series": [1, 2], "ylabel": "x realtime (higher is faster)",
-             "title": "M4, 10 GPU cores (default 60s/B16)", "min_span": 1.5},
+             "title": "M4, 10 GPU cores (60s chosen)", "min_span": 1.5},
         ],
     },
     "chunking-seams": {
@@ -313,5 +313,56 @@ SWEEPS = {
         ],
         "zero": True,
         "width": 6.6,
+    },
+    "chunking-batch": {
+        "doc": "docs/benchmarks/chunking.md",
+        "title": "Voxtral: batch size end to end at 30s chunks (M2 Ultra)",
+        "basis": "20-file corpus, M2 Ultra 128GB, 30s chunks, kv8, delay 2400ms, one run "
+                 "per batch. A file of 32 chunks or fewer fits in one batch from B32 up, "
+                 "so only the 8 longer files can gain; accuracy is unchanged throughout.",
+        "xlabel": "max batch (log scale)", "ylabel": "",
+        "scale": "log",
+        "series": ["all 20 files", "12 files of 32 chunks or fewer",
+                   "8 files over 32 chunks", "peak memory"],
+        "rows": [
+            (16, "| 16 |", ("19.3x", "19.7x", "19.2x", "6.56GB")),
+            (32, "| 32 |", ("28.0x", "27.9x", "28.0x", "7.23GB")),
+            (48, "| 48 |", ("26.4x", "24.2x", "27.4x", "8.14GB")),
+            (64, "| 64 |", ("31.9x", "25.7x", "35.2x", "9.17GB")),
+            (128, "| **128** |", ("33.6x", "28.1x", "36.3x", "11.33GB")),
+        ],
+        "chosen": 128, "chosen_series": "all 20 files",
+        "chosen_label": "default (M2 Ultra)",
+        "width": 10.4,
+        "panels": [
+            {"series": [0, 1, 2], "ylabel": "x realtime (higher is faster)",
+             "title": "speed", "zero": True},
+            {"series": [3], "ylabel": "peak GB", "title": "memory", "zero": True},
+        ],
+    },
+    "chunking-batch-m4": {
+        "doc": "docs/benchmarks/chunking.md",
+        "title": "Voxtral: batch size end to end at 60s chunks (M4)",
+        "basis": "20-file corpus, M4 16GB, 60s chunks, kv8, delay 2400ms, one run per "
+                 "batch on AC power. A file of 16 chunks or fewer fits in one batch from "
+                 "B16 up; B48 exceeds the M4's ~8.4GB KV wall, so B32 is the largest batch "
+                 "that runs reliably.",
+        "xlabel": "max batch", "ylabel": "",
+        "scale": "category",
+        "series": ["all 20 files", "12 files of 16 chunks or fewer",
+                   "8 files over 16 chunks", "peak memory"],
+        "rows": [
+            ("16", "| 16 |", ("4.66x", "4.14x", "4.89x", "6.60GB")),
+            ("24", "| 24 |", ("5.62x", "4.27x", "6.42x", "7.34GB")),
+            ("32", "| **32** |", ("5.46x", "4.08x", "6.30x", "8.08GB")),
+        ],
+        "chosen": "32", "chosen_series": "all 20 files",
+        "chosen_label": "default (M4)",
+        "width": 10.4,
+        "panels": [
+            {"series": [0, 1, 2], "ylabel": "x realtime (higher is faster)",
+             "title": "speed", "zero": True},
+            {"series": [3], "ylabel": "peak GB", "title": "memory", "zero": True},
+        ],
     },
 }

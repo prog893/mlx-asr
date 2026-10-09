@@ -73,8 +73,8 @@ here, so do not carry one model's ladder over to another.
 
 | default | why | detail |
 |---|---|---|
-| `voxtral --chunk-seconds` / `--max-batch` per machine | both tie on accuracy, so the pair is purely a throughput choice, and the right values **reverse across hardware**: a wide batch with short chunks is 46% faster on a 60-core GPU and slower on a 10-core one. Exactly what a per-machine profile is for | [chunking.md](benchmarks/chunking.md) |
-| ...and the batch is the half that matters | throughput is also not monotonic in batch size, so the profile avoids the middle of the range entirely rather than interpolating | [decode-throughput.md](benchmarks/decode-throughput.md) |
+| `voxtral --chunk-seconds` per chip | ties on accuracy, so it is purely a throughput choice, and the right value **reverses across hardware**: short chunks are faster on a 60-core GPU and slower on a 10-core one, where the encoder is the bottleneck. Exactly what a per-chip profile is for | [chunking.md](benchmarks/chunking.md) |
+| `voxtral --max-batch` from memory | batch is memory-bound: speed rises with it until memory runs out, at unchanged accuracy, so the default is the largest well-measured batch that fits the GPU working set (128 on 128GB, 32 on 16GB). Batch 2-11 is skipped, since it is slower per step than batch 1 | [decode-throughput.md](benchmarks/decode-throughput.md#how-the-default-is-chosen) |
 | `voxtral --overlap-seconds 0` | won on one clip at short chunks, then reversed sign on the corpus, where it cost both speed and accuracy. Zero on every profile | [chunking.md](benchmarks/chunking.md) |
 | `kotoba --chunk-seconds 10` | this model's largest lever, and 10s clearly won on spontaneous Japanese. Material-dependent, so sweep it on your own audio | [kotoba.md](benchmarks/engines/kotoba.md) |
 | `voxtral-v1 --chunk-seconds 30` | best on Japanese, and Japanese collapses above 60s for the same reason as on qwen3-asr. English prefers 60s by about a point on two files, which does not pay for it | [voxtral-v1.md](benchmarks/engines/voxtral-v1.md) |
