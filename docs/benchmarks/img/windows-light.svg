@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="900.381797pt" height="474.383625pt" viewBox="0 0 900.381797 474.383625" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="652.32pt" height="483.145598pt" viewBox="0 0 652.32 483.145598" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
@@ -15,10 +15,10 @@
  </defs>
  <g id="figure_1">
   <g id="patch_1">
-   <path d="M 0 474.383625 
-L 900.381797 474.383625 
-L 900.381797 0 
-L 0 0 
+   <path d="M 0 483.145598 
+L 652.32 483.145598 
+L 652.32 -0 
+L 0 -0 
 z
 " style="fill: #fcfcfb"/>
   </g>
@@ -427,7 +427,7 @@ z
      <g id="line2d_44">
       <path d="M 60.50646 422.900781 
 L 60.50646 258.725 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_45"/>
      <g id="text_28">
@@ -438,7 +438,7 @@ L 60.50646 258.725
      <g id="line2d_46">
       <path d="M 142.255226 422.900781 
 L 142.255226 258.725 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_47"/>
      <g id="text_29">
@@ -449,7 +449,7 @@ L 142.255226 258.725
      <g id="line2d_48">
       <path d="M 224.003993 422.900781 
 L 224.003993 258.725 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_49"/>
      <g id="text_30">
@@ -460,7 +460,7 @@ L 224.003993 258.725
      <g id="line2d_50">
       <path d="M 305.752759 422.900781 
 L 305.752759 258.725 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_51"/>
      <g id="text_31">
@@ -473,7 +473,7 @@ L 305.752759 258.725
      <g id="line2d_52">
       <path d="M 43.339219 405.4328 
 L 322.92 405.4328 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_53"/>
      <g id="text_32">
@@ -484,7 +484,7 @@ L 322.92 405.4328
      <g id="line2d_54">
       <path d="M 43.339219 371.653443 
 L 322.92 371.653443 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_55"/>
      <g id="text_33">
@@ -495,7 +495,7 @@ L 322.92 371.653443
      <g id="line2d_56">
       <path d="M 43.339219 337.874087 
 L 322.92 337.874087 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_57"/>
      <g id="text_34">
@@ -506,7 +506,7 @@ L 322.92 337.874087
      <g id="line2d_58">
       <path d="M 43.339219 304.09473 
 L 322.92 304.09473 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_59"/>
      <g id="text_35">
@@ -517,7 +517,7 @@ L 322.92 304.09473
      <g id="line2d_60">
       <path d="M 43.339219 270.315373 
 L 322.92 270.315373 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_61"/>
      <g id="text_36">
@@ -543,8 +543,8 @@ L 322.92 422.900781
 L 142.255226 323.450301 
 L 224.003993 317.707811 
 L 305.752759 278.625095 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: round"/>
-    <g clip-path="url(#paca06626b5)">
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: round"/>
+    <g clip-path="url(#pc446404076)">
      <use xlink:href="#m18ba76b1aa" x="60.50646" y="318.24828" style="fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2"/>
      <use xlink:href="#m18ba76b1aa" x="142.255226" y="323.450301" style="fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2"/>
      <use xlink:href="#m18ba76b1aa" x="224.003993" y="317.707811" style="fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2"/>
@@ -556,8 +556,8 @@ L 305.752759 278.625095
 L 142.255226 399.69031 
 L 224.003993 403.000687 
 L 305.752759 401.480615 
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: round"/>
-    <g clip-path="url(#paca06626b5)">
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: round"/>
+    <g clip-path="url(#pc446404076)">
      <use xlink:href="#mdab91e5291" x="60.50646" y="397.089299" style="fill: #eb6834; stroke: #fcfcfb; stroke-width: 2; stroke-linejoin: miter"/>
      <use xlink:href="#mdab91e5291" x="142.255226" y="399.69031" style="fill: #eb6834; stroke: #fcfcfb; stroke-width: 2; stroke-linejoin: miter"/>
      <use xlink:href="#mdab91e5291" x="224.003993" y="403.000687" style="fill: #eb6834; stroke: #fcfcfb; stroke-width: 2; stroke-linejoin: miter"/>
@@ -582,7 +582,7 @@ C 136.131502 325.074332 136.776736 326.632065 137.925099 327.780428
 C 139.073462 328.928791 140.631195 329.574026 142.255226 329.574026 
 L 142.255226 329.574026 
 z
-" clip-path="url(#paca06626b5)" style="fill: none; stroke: #0b0b0b; stroke-width: 1.5"/>
+" clip-path="url(#pc446404076)" style="fill: none; stroke: #0b0b0b; stroke-width: 1.5"/>
    </g>
    <g id="legend_2">
     <g id="line2d_64">
@@ -625,7 +625,7 @@ z
      <g id="line2d_66">
       <path d="M 379.10646 422.900781 
 L 379.10646 258.725 
-" clip-path="url(#pf24e75f90c)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pf06b4d0db3)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_67"/>
      <g id="text_42">
@@ -636,7 +636,7 @@ L 379.10646 258.725
      <g id="line2d_68">
       <path d="M 624.352759 422.900781 
 L 624.352759 258.725 
-" clip-path="url(#pf24e75f90c)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pf06b4d0db3)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_69"/>
      <g id="text_43">
@@ -649,7 +649,7 @@ L 624.352759 258.725
      <g id="line2d_70">
       <path d="M 361.939219 406.687327 
 L 641.52 406.687327 
-" clip-path="url(#pf24e75f90c)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pf06b4d0db3)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_71"/>
      <g id="text_44">
@@ -660,7 +660,7 @@ L 641.52 406.687327
      <g id="line2d_72">
       <path d="M 361.939219 367.88059 
 L 641.52 367.88059 
-" clip-path="url(#pf24e75f90c)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pf06b4d0db3)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_73"/>
      <g id="text_45">
@@ -671,7 +671,7 @@ L 641.52 367.88059
      <g id="line2d_74">
       <path d="M 361.939219 329.073853 
 L 641.52 329.073853 
-" clip-path="url(#pf24e75f90c)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pf06b4d0db3)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_75"/>
      <g id="text_46">
@@ -682,7 +682,7 @@ L 641.52 329.073853
      <g id="line2d_76">
       <path d="M 361.939219 290.267116 
 L 641.52 290.267116 
-" clip-path="url(#pf24e75f90c)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
+" clip-path="url(#pf06b4d0db3)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_77"/>
      <g id="text_47">
@@ -706,8 +706,8 @@ L 641.52 422.900781
    <g id="line2d_78">
     <path d="M 379.10646 403.000687 
 L 624.352759 278.625095 
-" clip-path="url(#pf24e75f90c)" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: round"/>
-    <g clip-path="url(#pf24e75f90c)">
+" clip-path="url(#pf06b4d0db3)" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: round"/>
+    <g clip-path="url(#pf06b4d0db3)">
      <use xlink:href="#m18ba76b1aa" x="379.10646" y="403.000687" style="fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2"/>
      <use xlink:href="#m18ba76b1aa" x="624.352759" y="278.625095" style="fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2"/>
     </g>
@@ -730,11 +730,12 @@ C 372.982735 404.624717 373.62797 406.18245 374.776333 407.330814
 C 375.924696 408.479177 377.482429 409.124411 379.10646 409.124411 
 L 379.10646 409.124411 
 z
-" clip-path="url(#pf24e75f90c)" style="fill: none; stroke: #0b0b0b; stroke-width: 1.5"/>
+" clip-path="url(#pf06b4d0db3)" style="fill: none; stroke: #0b0b0b; stroke-width: 1.5"/>
    </g>
   </g>
   <g id="text_51">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #898781" x="10.8" y="461.703" transform="rotate(-0 10.8 461.703)">Decode window length per engine. Longer windows let a repetition loop burn a bigger token budget, which is why most curves turn up. Sources: engines/kotoba.md, engines/qwen3-asr.md, engines/voxtral-v1.md, engines/parakeet.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 461.829587)">Decode window length per engine. Longer windows let a repetition loop burn a bigger token budget, which is why most curves turn up.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 470.338386)">Sources: engines/kotoba.md, engines/qwen3-asr.md, engines/voxtral-v1.md, engines/parakeet.md.</text>
   </g>
  </g>
  <defs>
@@ -744,10 +745,10 @@ z
   <clipPath id="p0099c0580b">
    <rect x="361.939219" y="40.925" width="279.580781" height="164.175781"/>
   </clipPath>
-  <clipPath id="paca06626b5">
+  <clipPath id="pc446404076">
    <rect x="43.339219" y="258.725" width="279.580781" height="164.175781"/>
   </clipPath>
-  <clipPath id="pf24e75f90c">
+  <clipPath id="pf06b4d0db3">
    <rect x="361.939219" y="258.725" width="279.580781" height="164.175781"/>
   </clipPath>
  </defs>

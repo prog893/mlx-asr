@@ -180,17 +180,17 @@ L 292.737825 193.805535
 L 444.886947 170.507003 
 " clip-path="url(#p7130e37392)" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: round"/>
     <defs>
-     <path id="mdab91e5291" d="M -3 3 
-L 3 3 
-L 3 -3 
-L -3 -3 
+     <path id="m658b94c491" d="M -4 4 
+L 4 4 
+L 4 -4 
+L -4 -4 
 z
-" style="stroke: #fcfcfb; stroke-width: 2; stroke-linejoin: miter"/>
+" style="stroke: #fcfcfb; stroke-linejoin: miter"/>
     </defs>
     <g clip-path="url(#p7130e37392)">
-     <use xlink:href="#mdab91e5291" x="79.729053" y="91.735775" style="fill: #eb6834; stroke: #fcfcfb; stroke-width: 2; stroke-linejoin: miter"/>
-     <use xlink:href="#mdab91e5291" x="292.737825" y="193.805535" style="fill: #eb6834; stroke: #fcfcfb; stroke-width: 2; stroke-linejoin: miter"/>
-     <use xlink:href="#mdab91e5291" x="444.886947" y="170.507003" style="fill: #eb6834; stroke: #fcfcfb; stroke-width: 2; stroke-linejoin: miter"/>
+     <use xlink:href="#m658b94c491" x="79.729053" y="91.735775" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
+     <use xlink:href="#m658b94c491" x="292.737825" y="193.805535" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
+     <use xlink:href="#m658b94c491" x="444.886947" y="170.507003" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
     </g>
    </g>
    <g id="text_12">
@@ -215,7 +215,7 @@ L 122.551828 29.682466
 L 130.201828 29.682466 
 " style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: round"/>
      <g>
-      <use xlink:href="#mdab91e5291" x="122.551828" y="29.682466" style="fill: #eb6834; stroke: #fcfcfb; stroke-width: 2; stroke-linejoin: miter"/>
+      <use xlink:href="#m658b94c491" x="122.551828" y="29.682466" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
      </g>
     </g>
     <g id="text_14">
@@ -224,9 +224,9 @@ L 130.201828 29.682466
    </g>
   </g>
   <g id="text_15">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 263.541587)">Japanese files only; Whisper is a mean of 6 or 3 runs, Voxtral one deterministic run.</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 271.991948)">The 17-file Whisper point is the 3-run mean measured 2026-08-06 (14.29 / 14.37 / 14.79),</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 280.391841)">the same runs as the Voxtral against Whisper table; an earlier session read 14.93%. Source: engines.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 263.541587)">Japanese files only; Whisper is a mean of 6 or 3 runs, Voxtral one deterministic run. The 17-file</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 271.991948)">Whisper point is the 3-run mean measured 2026-08-06 (14.29 / 14.37 / 14.79), the same runs as the</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 280.391841)">Voxtral against Whisper table; an earlier session read 14.93%. Source: engines.md.</text>
   </g>
  </g>
  <defs>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="693.920781pt" height="283.439625pt" viewBox="0 0 693.920781 283.439625" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="652.32pt" height="292.201598pt" viewBox="0 0 652.32 292.201598" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
@@ -15,9 +15,9 @@
  </defs>
  <g id="figure_1">
   <g id="patch_1">
-   <path d="M 0 283.439625 
-L 693.920781 283.439625 
-L 693.920781 0 
+   <path d="M 0 292.201598 
+L 652.32 292.201598 
+L 652.32 0 
 L 0 0 
 z
 " style="fill: #fcfcfb"/>
@@ -474,7 +474,8 @@ z
    </g>
   </g>
   <g id="text_35">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #898781" x="10.8" y="270.759" transform="rotate(-0 10.8 270.759)">Voxtral decode throughput by batch, synthetic inputs. Not monotonic: on the M4, throughput stalls from batch 2 to 8, so the profiles skip that range. Source: decode-throughput.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 270.885587)">Voxtral decode throughput by batch, synthetic inputs. Not monotonic: on the M4, throughput stalls from batch 2 to 8, so the profiles skip</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 279.394386)">that range. Source: decode-throughput.md.</text>
   </g>
  </g>
  <defs>
