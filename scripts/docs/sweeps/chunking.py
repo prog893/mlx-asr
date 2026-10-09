@@ -218,7 +218,7 @@ SWEEPS = {
         "title": "Voxtral: silence compaction at four precisions",
         "basis": "20-file corpus, M2 Ultra, JP coverage CER. Every precision is a tie and "
                  "every one is faster on; the default stays off because removing input "
-                 "should be opted into. The 4-bit CI is not drawn (see the page).",
+                 "should be opted into.",
         "xlabel": "precision", "ylabel": "",
         "scale": "category", "connect": False,
         "series": ["compaction off", "compaction on", "off minus on",
@@ -226,7 +226,7 @@ SWEEPS = {
         "rows": [
             ("4-bit", "| 4-bit (default) |",
              ("16.21%", "16.00%", "+0.21", "19.8x", "20.5x"),
-             (None, None, None, None, None)),
+             (None, None, "[-0.22, +0.70]", None, None)),
             ("8-bit", "| 8-bit |", ("15.27%", "15.30%", "-0.03", "19.8x", "20.4x"),
              (None, None, "[-0.63, +0.42]", None, None)),
             ("mxfp8", "| mxfp8 |", ("15.86%", "15.78%", "+0.08", "19.4x", "20.7x"),

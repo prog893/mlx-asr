@@ -235,10 +235,10 @@ L 358.2 305.437969
     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="187.670054" y="238.55261" transform="rotate(-0 187.670054 238.55261)">whisper turbo (floor)</text>
    </g>
    <g id="text_20">
-    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="183.053289" y="205.631003" transform="rotate(-0 183.053289 205.631003)">qwen3-asr 1.7B</text>
+    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="181.250178" y="203.002495" transform="rotate(-0 181.250178 203.002495)">qwen3-asr 1.7B</text>
    </g>
    <g id="text_21">
-    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="205.622937" y="180.041513" transform="rotate(-0 205.622937 180.041513)">qwen3-asr 0.6B</text>
+    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="203.738342" y="179.440711" transform="rotate(-0 203.738342 179.440711)">qwen3-asr 0.6B</text>
    </g>
    <g id="text_22">
     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="154.065858" y="80.552302" transform="rotate(-0 154.065858 80.552302)">voxtral-v1 3B (shared GPU)</text>
@@ -300,12 +300,12 @@ z
    </g>
    <g id="PathCollection_7">
     <g clip-path="url(#pf00a44fb41)">
-     <use xlink:href="#md857b09aa1" x="175.053289" y="205.329362" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#md857b09aa1" x="173.250178" y="202.700854" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
     </g>
    </g>
    <g id="PathCollection_8">
     <g clip-path="url(#pf00a44fb41)">
-     <use xlink:href="#md857b09aa1" x="197.622937" y="175.739872" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#md857b09aa1" x="195.738342" y="175.13907" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
     </g>
    </g>
    <g id="PathCollection_9">
@@ -518,10 +518,10 @@ L 712.8 305.437969
     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="595.961972" y="231.308111" transform="rotate(-0 595.961972 231.308111)">whisper turbo (floor)</text>
    </g>
    <g id="text_46">
-    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="589.530411" y="83.380346" transform="rotate(-0 589.530411 83.380346)">qwen3-asr 1.7B</text>
+    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="587.018519" y="81.678074" transform="rotate(-0 587.018519 81.678074)">qwen3-asr 1.7B</text>
    </g>
    <g id="text_47">
-    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="620.971918" y="112.70164" transform="rotate(-0 620.971918 112.70164)">qwen3-asr 0.6B</text>
+    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="618.346511" y="112.488856" transform="rotate(-0 618.346511 112.488856)">qwen3-asr 0.6B</text>
    </g>
    <g id="text_48">
     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="549.148368" y="255.901984" transform="rotate(-0 549.148368 255.901984)">voxtral-v1 3B (shared GPU)</text>
@@ -561,12 +561,12 @@ L 697.00637 295.503568
    </g>
    <g id="PathCollection_17">
     <g clip-path="url(#p7a40298109)">
-     <use xlink:href="#md857b09aa1" x="581.530411" y="83.078705" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#md857b09aa1" x="579.018519" y="81.376433" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
     </g>
    </g>
    <g id="PathCollection_18">
     <g clip-path="url(#p7a40298109)">
-     <use xlink:href="#md857b09aa1" x="612.971918" y="108.399999" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#md857b09aa1" x="610.346511" y="108.187215" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
     </g>
    </g>
    <g id="PathCollection_19">

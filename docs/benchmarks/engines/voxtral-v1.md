@@ -5,7 +5,7 @@ the 3B, 8bit on both sizes, and 30s decode windows. At those settings the 3B sco
 Japanese coverage CER and 17.86% English coverage WER at 12.9x realtime in 7.28GB, and
 the 24B scores 27.56% and 16.86% at 3.1x in 27.92GB. On Japanese both are behind every
 other multilingual engine here (voxtral 16.22%, whisper turbo 14.49%, qwen3-asr 1.7B
-19.33%); on English the 24B's 16.86% is the lowest figure measured in this project with
+19.68%); on English the 24B's 16.86% is the lowest figure measured in this project with
 the language given, against 18.34% for whisper turbo and 21.50% for voxtral, but that is
 three files, and the 24B costs 28GB and runs at 3.1x.
 
@@ -72,7 +72,7 @@ repetition loop in a longer window writes more text before it is cut off.
 8bit ties bf16: -0.64 points on Japanese, CI [-1.56, +0.32], and +0.09 on English, CI
 [-0.06, +0.19]. 4bit does not tie 8bit: **+8.01 points on Japanese, CI [+4.77, +11.73],
 worse on 16 of 17 files** (English +0.21, not resolvable). That is the same shape as
-Qwen3-ASR 0.6B at 4bit (-7.02) and unlike the 1.7B, so small models are where 4bit is
+Qwen3-ASR 0.6B at 4bit (-5.00) and unlike the 1.7B, so small models are where 4bit is
 costly here. 8bit is the default because it is the cheapest build that loses nothing.
 
 ## Experiment: Small 24B

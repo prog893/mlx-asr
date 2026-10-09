@@ -1,19 +1,19 @@
 # Engine: Qwen3-ASR
 
 Qwen3-ASR is available as two sizes and neither becomes the default engine: on the 20-file
-corpus the 1.7B scores 19.33% Japanese coverage CER at 21.8x realtime, behind Voxtral
+corpus the 1.7B scores 19.68% Japanese coverage CER at 21.1x realtime, behind Voxtral
 (16.22%, 29.6x) and Whisper turbo-nocond (14.49%), so it is last of the three on accuracy
-and slower than Voxtral. Within the family the default size is the 1.7B, 3.9 points ahead
-of the 0.6B (23.27%); the 0.6B is the fastest multilingual engine measured in this project
-(32.8x in 2.36GB). The default precision is 8bit, which the 1.7B ties at every rung and the
+and slower than Voxtral. Within the family the default size is the 1.7B, 3.7 points ahead
+of the 0.6B (23.35%; paired 3.68, CI [+2.91, +4.35]); the 0.6B is the fastest multilingual
+engine measured in this project (31.7x in 2.36GB). The default precision is 8bit, which the 1.7B ties at every rung and the
 0.6B needs, and the default window is 30s, where accuracy, speed and memory are all at or
 near their best.
 
 | setting | default | why |
 |---|---|---|
-| size (`--size`) | `1.7B` | 19.33% against 23.27% Japanese coverage CER on the 20-file corpus. The `0.6B` is the speed option: 32.8x in 2.36GB |
-| precision (`--quantization`) | `8bit` | the 1.7B ties across all five rungs, so a tie does not move the default; the 0.6B's 8bit beats every lower rung with the interval clear of zero, by 7 points over 4bit |
-| window (`--chunk-seconds`) | `30` | shorter is better on accuracy, speed and memory down to 30s; 15s ties on accuracy, so this is a plateau. The library default of 1200s makes any ordinary file one window |
+| size (`--size`) | `1.7B` | 19.68% against 23.35% Japanese coverage CER on the 20-file corpus, paired 3.68 points, CI [+2.91, +4.35]. The `0.6B` is the speed option: 31.7x in 2.36GB |
+| precision (`--quantization`) | `8bit` | the 1.7B ties across all five rungs, so a tie does not move the default; on the 0.6B no rung beats 8bit, and 4bit (5.00 points) and 6bit (0.98) are resolved worse |
+| window (`--chunk-seconds`) | `30` | shorter is better on accuracy, speed and memory down to 30s; 15s ties on accuracy, so this is a plateau. The library default of 1200s was not swept |
 | output format (`-f`) | `txt` or `json` only | its timestamps are decode-window boundaries, so `srt`, `vtt` and `all` exit 2 |
 | language (`--language`) | forced to English when not passed | the upstream autodetect path leaks a prompt prefix into the transcript from the second window onward |
 | `--max-batch` | refused | swept, and batching loses monotonically ([qwen3-batch.md](../qwen3-batch.md)) |
@@ -32,9 +32,8 @@ One run per arm, run sequentially with `machine_state` confirming `busy: false` 
 each arm; the 300s arm waited out a load spike before starting.
 `scripts/benchmarks/sweep_qwen3_chunk.py`.
 
-The library's 1200s is not an arm because it is not a candidate: at that value every file
-in this corpus is one window, so it measures nothing about window length and disables
-batching by construction.
+The library's 1200s was not included in this sweep, so it is unmeasured. At that length
+the 7 files would split into 1 to 5 windows each.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../img/qwen3-asr-window-dark.svg">
@@ -81,38 +80,39 @@ precisely because the library's unmeasured 1200s would otherwise have set it.
 
 ## Experiment: precision ladder
 
-**Basis:** the [20-file corpus](../reference/corpus.md#the-20-file-corpus), idle M2 Ultra 128GB (Mac14,14), both sizes at 4bit/5bit/6bit/8bit/bf16, window fixed at 30s.
+**Basis:** the [20-file corpus](../reference/corpus.md#the-20-file-corpus), M2 Ultra 128GB (Mac14,14), both sizes at 4bit/5bit/6bit/8bit/bf16, window fixed at 30s, re-measured 2026-10-08.
 
-Every rung, both sizes, 20 files, window fixed at 30s, one harness, idle M2 Ultra. Only
+Every rung, both sizes, 20 files, window fixed at 30s, one harness, M2 Ultra. Only
 the weights change. This closes the gap where the lower rungs were exposed with no
 accuracy figure at all.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../img/qwen3-asr-precision-dark.svg">
-  <img alt="Japanese CER by precision on one scale: the 1.7B stays within one point across all five rungs, while the 0.6B rises from 23% at 8bit and bf16 to 30% at 4bit. A second panel plots each rung paired against 8bit with its 95% interval: every 1.7B interval spans zero, and every lower 0.6B rung sits below zero, so 8bit is better there." src="../img/qwen3-asr-precision-light.svg">
+  <img alt="Japanese CER by precision on one scale: the 1.7B stays within one point across all five rungs, while the 0.6B rises from 23% at 8bit and bf16 to 28% at 4bit. A second panel plots each rung paired against 8bit with its 95% interval: every 1.7B interval spans zero; on the 0.6B, 4bit and 6bit sit below zero, so 8bit is better than both, while 5bit and bf16 span zero." src="../img/qwen3-asr-precision-light.svg">
 </picture>
 
 **Table:** Japanese CER, the per-file paired difference against 8bit with its 95% CI, speed and peak memory for every precision rung of both sizes.
 
 | size | quant | JP coverage CER | paired against 8bit | x realtime | peak |
 |---|---|---|---|---|---|
-| 1.7B | 4bit | 20.06% | -0.73, CI [-1.76, +0.31] | **26.3x** | **3.19GB** |
-| 1.7B | 5bit | 19.19% | +0.15, CI [-0.37, +0.78] | 23.3x | 3.40GB |
-| 1.7B | 6bit | 19.45% | -0.11, CI [-0.53, +0.29] | 24.2x | 3.62GB |
-| 1.7B | **8bit (default)** | 19.33% | | 21.9x | 4.05GB |
-| 1.7B | bf16 | 19.40% | -0.07, CI [-0.23, +0.10] | 16.2x | 5.66GB |
-| 0.6B | 4bit | 30.29% | **-7.02**, CI [-8.82, -5.30] | 26.9x | **2.06GB** |
-| 0.6B | 5bit | 24.84% | **-1.57**, CI [-2.16, -1.06] | 32.0x | 2.14GB |
-| 0.6B | 6bit | 25.01% | **-1.74**, CI [-2.94, -0.86] | 33.5x | 2.21GB |
-| 0.6B | **8bit (default)** | 23.27% | | 31.9x | 2.36GB |
-| 0.6B | bf16 | 23.03% | -0.51, CI [-1.01, +0.13] | 30.3x | 2.92GB |
+| 1.7B | 4bit | 20.03% | -0.35, CI [-1.57, +0.80] | **24.0x** | **3.19GB** |
+| 1.7B | 5bit | 19.44% | +0.24, CI [-0.91, +1.48] | 23.3x | 3.40GB |
+| 1.7B | 6bit | 19.63% | +0.05, CI [-1.02, +1.10] | 21.7x | 3.62GB |
+| 1.7B | **8bit (default)** | 19.68% | | 21.1x | 4.05GB |
+| 1.7B | bf16 | 19.51% | +0.17, CI [-0.56, +0.88] | 16.1x | 5.66GB |
+| 0.6B | 4bit | 28.36% | **-5.00**, CI [-6.96, -3.60] | 26.2x | **2.06GB** |
+| 0.6B | 5bit | 24.11% | -0.76, CI [-2.08, +0.76] | 30.3x | 2.14GB |
+| 0.6B | 6bit | 24.33% | **-0.98**, CI [-1.76, -0.24] | **32.1x** | 2.21GB |
+| 0.6B | **8bit (default)** | 23.35% | | 31.7x | 2.36GB |
+| 0.6B | bf16 | 23.40% | -0.04, CI [-0.46, +0.33] | 25.3x | 2.92GB |
 
 **The 1.7B does not care about precision.** All five rungs tie, 4bit against bf16 included,
-across a 2.5x range in weight bytes. So on that size 4bit is a free 20% throughput
+across a 2.5x range in weight bytes. So on that size 4bit is a free 14% throughput
 gain and 0.86GB saving over the default.
 
-**The 0.6B cares intensely.** 8bit beats every lower rung with the interval clear of zero,
-and 4bit by **7 points**. Same architecture, same corpus, same harness, same window.
+**The 0.6B cares.** 8bit beats 4bit by **5.00 points** and 6bit by 0.98, both intervals
+clear of zero; 5bit (-0.76) and bf16 (-0.04) do not resolve. Same architecture, same
+corpus, same harness, same window.
 
 That split is the main result of the ladder. Precision sensitivity here is a property of
 the *checkpoint*, not of the architecture or the workload, so it cannot be read off one
@@ -120,7 +120,8 @@ model and applied to another. Voxtral's ladder is monotonic with 4bit last
 ([quantization.md](../quantization.md)); the 1.7B here is flat; the 0.6B is steep. Three
 ladders, three shapes.
 
-**Neither default changes.** The 0.6B's is now proven correct rather than assumed. The
+**Neither default changes.** On the 0.6B no rung beats 8bit, and the two lower rungs that
+resolve are worse. The
 1.7B's is a tie with three cheaper rungs, and by this project's rule a tie does not move a
 default, so 4bit is documented as the speed option rather than promoted. The intermediate
 rungs are no longer "a memory choice made blind".
@@ -177,20 +178,20 @@ M2 Ultra 128GB with the same scorers and the same cached audio as the rows above
 |---|---|---|---|---|
 | whisper-turbo, no-condition | **14.49%** ±0.27 | **18.34%** ±0.69 | 18.0-22.0x | |
 | voxtral (default) | 16.22% | 21.50% | 29.6x | |
-| qwen3-asr (1.7B) | 19.33% | 25.45% | 21.8x | 4.05 |
-| qwen3-asr-small (0.6B) | 23.27% | **24.26%** | **32.8x** | **2.36** |
+| qwen3-asr (1.7B) | 19.68% | 25.53% | 21.1x | 4.05 |
+| qwen3-asr-small (0.6B) | 23.35% | **24.27%** | **31.7x** | **2.36** |
 
-Both runs: 20 files, complete, `busy: false`, no truncated files. The Whisper default has
+Both runs: 20 files, complete, re-measured 2026-10-08. The Whisper default has
 since moved to large-v3, which scores 14.55% / 18.26% on the same corpus
 ([engines.md](../engines.md)); the comparison below is unchanged by that.
 
-**Neither size displaces either default on Japanese.** The 1.7B is 3.1 points behind
-Voxtral and 4.8 behind Whisper; the 0.6B is 7.1 and 8.8 behind. Nothing in this table
+**Neither size displaces either default on Japanese.** The 1.7B is 3.5 points behind
+Voxtral and 5.2 behind Whisper; the 0.6B is 7.1 and 8.9 behind. Nothing in this table
 recommends the 1.7B as an engine: it is third of three on accuracy and slower than Voxtral.
 
 The 0.6B is the more useful row, and only on two axes it was not being judged on. It is
-**the fastest multilingual engine measured in this project** (32.8x against Voxtral's
-29.6x) in **2.36GB**, and its English WER (24.26%) beats the 1.7B's (25.45%) while using a
+**the fastest multilingual engine measured in this project** (31.7x against Voxtral's
+29.6x) in **2.36GB**, and its English WER (24.27%) beats the 1.7B's (25.53%) while using a
 third of the weights. That is a narrow niche (a 16GB machine, English, speed over
 accuracy), and the English side of this corpus is n=3, so the ordering of two engines
 1.2 points apart there should not be quoted as a fact.
@@ -446,8 +447,8 @@ points, which is close to this corpus's resolution at n=7 but comfortable at n=2
 that the timestamp limitation is structural and not a tuning problem, which is why
 `-f srt` is refused whatever the CER.
 
-*The English ordering.* `qwen3-asr-small` beating `qwen3-asr` on English WER (24.26%
-against 25.45%) rests on **three recordings**. Do not quote it as a fact about the two
+*The English ordering.* `qwen3-asr-small` beating `qwen3-asr` on English WER (24.27%
+against 25.53%) rests on **three recordings**. Do not quote it as a fact about the two
 model sizes.
 
 *Whether the loops are the material or the model.* Every looping file is close-mic

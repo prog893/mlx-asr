@@ -354,15 +354,13 @@ All four are ties on accuracy and all four are faster:
 
 | precision | off | on | difference | 95% CI | x realtime, off | x realtime, on |
 |---|---|---|---|---|---|---|
-| 4-bit (default) | 16.21% | 16.00% | +0.21 | [-0.70, +0.22] | 19.8x | **20.5x** |
+| 4-bit (default) | 16.21% | 16.00% | +0.21 | [-0.22, +0.70] | 19.8x | **20.5x** |
 | 8-bit | 15.27% | 15.30% | -0.03 | [-0.63, +0.42] | 19.8x | **20.4x** |
 | mxfp8 | 15.86% | 15.78% | +0.08 | [-0.63, +0.65] | 19.4x | **20.7x** |
 | nvfp4 | 16.07% | 16.05% | +0.02 | [-0.97, +0.78] | 19.4x | **20.2x** |
 
-The 4-bit row's interval is identical to the one printed in the previous experiment, where
-the same comparison is signed on minus off (-0.21). That interval is centred near -0.24, so
-it does not belong to this table's off minus on sign (+0.21), and the chart omits that one
-error bar until the interval is recomputed in this table's sign.
+The 4-bit row is the previous experiment's comparison with the sign reversed (on minus off
+there, -0.21, CI [-0.70, +0.22]), so its interval is that one negated.
 
 **nvfp4 is the headline**, because that is the arm the 4-point loss came from. On the corpus
 it is +0.02 points and splits 4 files to 4. Nothing survives of the effect, so the

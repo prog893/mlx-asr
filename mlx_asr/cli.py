@@ -374,7 +374,7 @@ def build_parser():
                         f"Per model: {quantization_help()}. 'none' means whichever "
                         f"unquantized build that model publishes (bf16 or fp16). "
                         f"The defaults are measured on the 20-file corpus. qwen3-asr: "
-                        f"every rung ties on 1.7B; on 0.6B 4bit costs 7 points. "
+                        f"every rung ties on 1.7B; on 0.6B 4bit costs 5 points. "
                         f"voxtral-v1: 8bit ties bf16; 3B at 4bit costs 8 points. "
                         f"voxtral: accuracy improves with bit width "
                         f"and 4bit is LAST of five over the 20-file corpus (16.34%%, "

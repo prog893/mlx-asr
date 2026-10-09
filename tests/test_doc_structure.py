@@ -87,8 +87,12 @@ def lint(path: Path) -> list[str]:
     tables = [l for l in head if l.startswith("| setting | default | why |")]
     if len(tables) != 1:
         errs.append("exactly one '| setting | default | why |' table before the first ##")
-    other = [l for l in head if l.startswith("|") and not l.startswith(("| setting |", "|---"))
-             and not tables]
+    # a table starts on a '|' line whose previous line is not one; only the defaults
+    # table may start before the first ##
+    starts = [l for n, l in enumerate(head)
+              if l.startswith("|") and not (n and head[n - 1].startswith("|"))]
+    if any(not l.startswith("| setting | default | why |") for l in starts):
+        errs.append("no table other than the defaults table before the first ##")
     setup = [n for n, l in enumerate(head) if l.startswith("**Setup:**")]
     if len(setup) != 1:
         errs.append("exactly one '**Setup:**' paragraph before the first ##")
@@ -107,7 +111,6 @@ def lint(path: Path) -> list[str]:
                              len(head))
         if any(l.strip() for l in head[setup_par_end:]):
             errs.append("nothing may follow the Setup paragraph before the first ##")
-    del other
 
     names = [n for _, n in h2]
     exps = [n for n in names if n.startswith("Experiment: ")]

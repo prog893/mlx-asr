@@ -342,8 +342,10 @@ def _sweep_axis(ax, t, spec, panel, xs, pos):
                      color=t["ink"])
     chosen_series = spec.get("chosen_series", spec["series"][idxs[0]])
     if spec.get("chosen") is not None and spec["series"].index(chosen_series) in idxs:
-        ci = xs.index(spec["chosen"])
         si = spec["series"].index(chosen_series)
+        # the first row at the chosen x that has a value on the chosen series
+        ci = next(n for n, r in enumerate(spec["rows"])
+                  if r[0] == spec["chosen"] and r[2][si] is not None)
         mark_chosen(ax, pos[ci], cd.value(spec["rows"][ci][2][si]), t,
                     label=spec.get("chosen_label", "default"),
                     dy=spec.get("label_dy", 12))

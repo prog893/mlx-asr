@@ -68,9 +68,9 @@ decoding reproduces byte-identically on one machine, which is also why its colum
 run rather than three. See [determinism.md](reference/determinism.md).
 
 Qwen3-ASR was added as a fourth engine on 2026-08-19 and is measured on the same 20 files
-with the same scorers: 19.33% JP / 25.45% EN at 21.8x for the 1.7B, 23.27% / 24.26% at
-32.8x for the 0.6B. Both are behind the two rows above on Japanese, so neither changes the
-verdict here; the 0.6B is the fastest engine this project has measured. It gets one run
+with the same scorers: 19.68% JP / 25.53% EN at 21.1x for the 1.7B, 23.35% / 24.27% at
+31.7x for the 0.6B. Both are behind the two rows above on Japanese, so neither changes the
+verdict here; the 0.6B is the fastest multilingual engine this project has measured. It gets one run
 each, being greedy, and it writes no subtitles. See [qwen3-asr.md](engines/qwen3-asr.md).
 
 Voxtral v1 (Mini 3B and Small 24B, 2507) was added on 2026-09-25, same 20 files, same
@@ -265,7 +265,7 @@ timestamps ([timestamps.md](timestamps.md)), and reproduces on a given machine
 accuracy.
 
 The two `qwen3-asr` aliases are available without displacing anything. The 1.7B is last of
-the four on accuracy; the 0.6B is the fastest here (32.8x in 2.36GB), which is the case for
+the four on accuracy; the 0.6B is the fastest multilingual engine here (31.7x in 2.36GB), which is the case for
 keeping it. Both refuse `-f srt`.
 
 ### Domain match and the Japanese-only engines

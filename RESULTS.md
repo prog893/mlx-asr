@@ -18,8 +18,8 @@ re-measured 2026-08-19 after a reference-loading fix (see below):
 |---|---|---|---|
 | voxtral (default) | 16.22% | 21.50% | 29.6x |
 | whisper-turbo, no-condition | **14.49%** ±0.27 | 18.34% ±0.69 | 18.0-22.0x |
-| qwen3-asr (1.7B) | 19.33% | 25.45% | 21.8x |
-| qwen3-asr-small (0.6B) | 23.27% | 24.26% | **32.8x** |
+| qwen3-asr (1.7B) | 19.68% | 25.53% | 21.1x |
+| qwen3-asr-small (0.6B) | 23.35% | 24.27% | **31.7x** |
 | voxtral-v1 3B (8bit) | 36.52% | 17.86% | 12.9x |
 | voxtral-v1 24B (8bit) | 27.56% | **16.86%** | 3.1x |
 | parakeet-ja (17 JP files)* | 26.19% | n/a, ja-only | **244.6x*** |
@@ -55,8 +55,8 @@ is a run distribution, not a confidence interval on the audio: it samples, so it
 while Voxtral gets one.
 
 The two Qwen3-ASR rows were added on 2026-08-19 and change no default: the 1.7B is last on
-accuracy and slower than Voxtral. The 0.6B is the fastest engine measured here (32.8x, in
-2.36GB) and the only reason either ships. Both **write no subtitles**, since their
+accuracy and slower than Voxtral. The 0.6B is the fastest multilingual engine measured here
+(31.7x, in 2.36GB) and the only reason either ships. Both **write no subtitles**, since their
 timestamps are decode-window boundaries. See
 [qwen3-asr.md](docs/benchmarks/engines/qwen3-asr.md).
 

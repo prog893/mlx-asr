@@ -59,7 +59,7 @@ weeks.
 
 Going below a default is measured on every model that offers it, and the sizes disagree.
 On `qwen3-asr 1.7B` every rung ties, so 4bit is a free speed and memory option there. On
-`qwen3-asr 0.6B` 4bit costs 7 points and 5bit/6bit 1.6 to 1.7, and on `voxtral-v1 3B` 4bit
+`qwen3-asr 0.6B` 4bit costs 5 points and 6bit 1, with 5bit unresolved, and on `voxtral-v1 3B` 4bit
 costs 8 points ([qwen3-asr.md](benchmarks/engines/qwen3-asr.md),
 [voxtral-v1.md](benchmarks/engines/voxtral-v1.md)). Small models are where low precision costs
 here, so do not carry one model's ladder over to another.

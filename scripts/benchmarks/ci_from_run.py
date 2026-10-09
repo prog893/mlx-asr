@@ -19,11 +19,29 @@ import sys
 import numpy as np
 
 
-def rows(path):
+def rows(path, allow_partial=False):
+    """Per-file rows of a run, refusing a partial one unless asked.
+
+    An interval over the files that happened to finish looks as plausible as one over
+    the whole corpus, so a run that is marked incomplete, has error rows, or scored
+    fewer files than it expected is an error by default.
+    """
     d = json.load(open(path))
+    results = d.get("results", [])
+    errors = [r.get("file") for r in results if "error" in r]
+    problems = []
     if d.get("complete") is False:
-        print(f"WARNING: {path} is incomplete", file=sys.stderr)
-    return d.get("label") or path, [r for r in d.get("results", []) if "error" not in r]
+        problems.append("marked incomplete")
+    if errors:
+        problems.append(f"{len(errors)} error rows ({', '.join(map(str, errors[:3]))})")
+    if d.get("files_expected") and d.get("files_scored") != d.get("files_expected"):
+        problems.append(f"scored {d.get('files_scored')} of {d['files_expected']} files")
+    if problems:
+        msg = f"{path}: " + "; ".join(problems)
+        if not allow_partial:
+            sys.exit(f"ERROR: {msg}. Pass --allow-partial to compute intervals anyway.")
+        print(f"WARNING: {msg}", file=sys.stderr)
+    return d.get("label") or path, [r for r in results if "error" not in r]
 
 
 def interval(values, weights, n_boot, rng):
@@ -41,10 +59,12 @@ def main():
     p.add_argument("runs", nargs="+")
     p.add_argument("--boot", type=int, default=20000)
     p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--allow-partial", action="store_true",
+                   help="compute intervals for an incomplete run instead of refusing")
     a = p.parse_args()
     rng = np.random.default_rng(a.seed)
     for path in a.runs:
-        label, rs = rows(path)
+        label, rs = rows(path, a.allow_partial)
         print(f"== {label} ({len(rs)} files)")
         for unit, name in (("char", "JP coverage CER"), ("word", "EN coverage WER")):
             sel = [r for r in rs if r.get("unit") == unit and "coverage_cer" in r]

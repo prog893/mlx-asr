@@ -2,8 +2,8 @@
 
 The default is `--gain auto`: boost a file whose peak is below -6 dBFS up to -1 dBFS,
 never attenuate, never clip. Quiet input is damaging and fails silently: attenuating the
-corpus by 12 dB cost 3.78 points of coverage error with no other symptom, while amplifying
-audio that was already healthy was close to a wash. `auto` encodes that asymmetry, is a
+corpus by 12 dB cost 2.97 points of Japanese CER and 7.69 points of English WER with no
+other symptom, while amplifying audio that was already healthy was close to a wash. `auto` encodes that asymmetry, is a
 byte-identical no-op on well-recorded material, and recovered essentially all of a 2.2-point
 loss on a clip attenuated by 14 dB.
 
@@ -79,19 +79,22 @@ Paired across files, against unity:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/input-level-paired-dark.svg">
-  <img alt="Paired difference against unity with 95% CIs: attenuation by 20 and 12 dB is clearly worse, +6 dB and peak normalization overall straddle zero, +6 dB helps the two English files and marginally hurts the five Japanese ones" src="img/input-level-paired-light.svg">
+  <img alt="Paired difference against unity with 95% CIs, Japanese CER and English WER as separate series: attenuation by 20 and 12 dB is worse on both, +6 dB marginally hurts the five Japanese files and helps the two English ones, and peak normalization is near zero on both" src="img/input-level-paired-light.svg">
 </picture>
 
-**Table:** paired difference in coverage error against unity gain, with its 95% CI, per arm and language split.
+**Table:** paired difference against unity gain, Japanese coverage CER (5 files) and English coverage WER (2 files) kept separate, with 95% CIs; positive means worse than unity.
 
-| comparison | diff | 95% CI | verdict |
-|---|---|---|---|
-| -20dB vs unity | +7.79 | [+5.39, +12.08] | **attenuation hurts badly** |
-| -12dB vs unity | +3.78 | [+1.82, +7.83] | **attenuation hurts** |
-| +6dB vs unity, all files | +0.09 | [-1.21, +0.94] | not resolvable |
-| +6dB vs unity, English only | **-2.59** | [-3.19, -1.18] | **amplifying helps** |
-| +6dB vs unity, Japanese only | +0.65 | [+0.00, +1.08] | marginally hurts |
-| peak-normalize vs unity | +0.21 | [-0.19, +0.64] | not resolvable |
+| comparison | JP diff | JP 95% CI | EN diff | EN 95% CI | verdict |
+|---|---|---|---|---|---|
+| -20dB vs unity | +7.32 | [+4.64, +12.56] | +10.10 | [+10.10, +10.12] | **attenuation hurts badly** |
+| -12dB vs unity | +2.97 | [+1.17, +7.71] | +7.69 | [+6.98, +9.33] | **attenuation hurts** |
+| +6dB vs unity | +0.65 | [-0.02, +1.09] | **-2.59** | [-3.19, -1.18] | marginal harm on JP, **helps EN** |
+| peak-normalize vs unity | +0.30 | not kept | -0.17 | not kept | not resolvable |
+
+Each language is aggregated on its own unit and never pooled. With 2 English files the
+English intervals are close to meaningless (issue #12). The peak-normalize arm predates
+per-file output, so its differences are exact (paired over the same files and weights,
+they equal the difference of the aggregates above) but have no interval.
 
 Two readings, one solid and one a lead:
 

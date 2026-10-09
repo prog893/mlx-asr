@@ -3,7 +3,7 @@
 On Voxtral, 4-bit weights are last of the five precisions on the 20-file corpus, 1.30 points
 behind fp16 and 1.07 behind 8-bit, and 4-bit is still the default because fp16 needs 13GB
 of peak GPU memory and no loadable 8-bit build is published. Qwen3-ASR 1.7B ties at every
-rung; the 0.6B loses 7 points at 4bit, so both default to 8bit. Voxtral-v1 at 8bit ties
+rung; the 0.6B loses 5 points at 4bit, so both default to 8bit. Voxtral-v1 at 8bit ties
 bf16, and the 3B at 4bit loses 8 points, so 8bit is its default. `--kv-bits 8` ties
 unquantized KV on the corpus and is on by default.
 
@@ -11,7 +11,7 @@ unquantized KV on the corpus and is on by default.
 |---|---|---|
 | `--quantization` on `voxtral` | `4bit` | last of five on the corpus, but fp16 peaks at 12.98GB and 1.65x the wall clock, and the 8-bit that ties fp16 is not published in a loadable form |
 | `--quantization` on `qwen3-asr` 1.7B | `8bit` | all five rungs tie; a tie does not move a default ([qwen3-asr.md](engines/qwen3-asr.md)) |
-| `--quantization` on `qwen3-asr` 0.6B | `8bit` | 4bit is 7.02 points worse, 5bit and 6bit 1.57 and 1.74 ([qwen3-asr.md](engines/qwen3-asr.md)) |
+| `--quantization` on `qwen3-asr` 0.6B | `8bit` | 4bit is 5.00 points worse and 6bit 0.98, both resolved; 5bit (-0.76) does not resolve ([qwen3-asr.md](engines/qwen3-asr.md)) |
 | `--quantization` on `voxtral-v1` | `8bit` | ties bf16 on both sizes; the 3B at 4bit loses 8.01 points ([voxtral-v1.md](engines/voxtral-v1.md)) |
 | `--quantization` on `whisper`, `kotoba` | fp16 | one build each, so the flag errors |
 | `--quantization` on `parakeet` | its one build | one published build, so the flag errors |
@@ -43,16 +43,16 @@ Voxtral: five precisions, one config. Every arm through `run_corpus.py`, paired 
 | `voxtral` | 4B | mxfp8 | 15.86% | +0.48, CI [-0.43, +1.45] | 19.4x | 7.14GB | 4.6GB |
 | `voxtral` | 4B | nvfp4 | 16.07% | +0.27, CI [-0.47, +1.23] | 19.6x | **5.09GB** | 2.5GB |
 | `voxtral` | 4B | 4-bit (default) | 16.34% | | 18.5x | 6.77GB | 2.9GB |
-| `qwen3-asr` | 1.7B | 4bit | 20.06% | -0.73, CI [-1.76, +0.31] | **26.3x** | **3.19GB** | |
-| `qwen3-asr` | 1.7B | 5bit | 19.19% | +0.15, CI [-0.37, +0.78] | 23.3x | 3.40GB | |
-| `qwen3-asr` | 1.7B | 6bit | 19.45% | -0.11, CI [-0.53, +0.29] | 24.2x | 3.62GB | |
-| `qwen3-asr` | 1.7B | **8bit (default)** | 19.33% | | 21.9x | 4.05GB | |
-| `qwen3-asr` | 1.7B | bf16 | 19.40% | -0.07, CI [-0.23, +0.10] | 16.2x | 5.66GB | |
-| `qwen3-asr` | 0.6B | 4bit | 30.29% | **-7.02**, CI [-8.82, -5.30] | 26.9x | **2.06GB** | |
-| `qwen3-asr` | 0.6B | 5bit | 24.84% | **-1.57**, CI [-2.16, -1.06] | 32.0x | 2.14GB | |
-| `qwen3-asr` | 0.6B | 6bit | 25.01% | **-1.74**, CI [-2.94, -0.86] | 33.5x | 2.21GB | |
-| `qwen3-asr` | 0.6B | **8bit (default)** | 23.27% | | 31.9x | 2.36GB | |
-| `qwen3-asr` | 0.6B | bf16 | 23.03% | -0.51, CI [-1.01, +0.13] | 30.3x | 2.92GB | |
+| `qwen3-asr` | 1.7B | 4bit | 20.03% | -0.35, CI [-1.57, +0.80] | **24.0x** | **3.19GB** | |
+| `qwen3-asr` | 1.7B | 5bit | 19.44% | +0.24, CI [-0.91, +1.48] | 23.3x | 3.40GB | |
+| `qwen3-asr` | 1.7B | 6bit | 19.63% | +0.05, CI [-1.02, +1.10] | 21.7x | 3.62GB | |
+| `qwen3-asr` | 1.7B | **8bit (default)** | 19.68% | | 21.1x | 4.05GB | |
+| `qwen3-asr` | 1.7B | bf16 | 19.51% | +0.17, CI [-0.56, +0.88] | 16.1x | 5.66GB | |
+| `qwen3-asr` | 0.6B | 4bit | 28.36% | **-5.00**, CI [-6.96, -3.60] | 26.2x | **2.06GB** | |
+| `qwen3-asr` | 0.6B | 5bit | 24.11% | -0.76, CI [-2.08, +0.76] | 30.3x | 2.14GB | |
+| `qwen3-asr` | 0.6B | 6bit | 24.33% | **-0.98**, CI [-1.76, -0.24] | **32.1x** | 2.21GB | |
+| `qwen3-asr` | 0.6B | **8bit (default)** | 23.35% | | 31.7x | 2.36GB | |
+| `qwen3-asr` | 0.6B | bf16 | 23.40% | -0.04, CI [-0.46, +0.33] | 25.3x | 2.92GB | |
 | `voxtral-v1` | 3B | 4bit | 44.54% | +8.01, CI [+4.77, +11.73] (4bit minus 8bit) | 14.0x | 5.25GB | 3.55GB |
 | `voxtral-v1` | 3B | **8bit (default)** | **36.52%** | | 12.9x | 7.28GB | 5.57GB |
 | `voxtral-v1` | 3B | bf16 | 37.16% | -0.64, CI [-1.56, +0.32] | 10.0x | 10.91GB | 9.37GB |
@@ -189,7 +189,7 @@ default is picked by this rule, in this order:
 
 The two `qwen3-asr` rows quote the earlier 8-bit against bf16 measurement. The full
 five-rung ladder in [qwen3-asr.md](engines/qwen3-asr.md) reaches the same defaults with different
-figures (1.7B bf16 19.40% against 8bit 19.33%; 0.6B bf16 23.03% against 23.27%, a tie), and
+figures (1.7B bf16 19.51% against 8bit 19.68%; 0.6B bf16 23.40% against 23.35%, a tie), and
 `qwen3-asr-small` is now `--model qwen3-asr --size 0.6B`.
 
 So the shorthand is a precision name rather than a repo id:

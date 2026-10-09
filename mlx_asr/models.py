@@ -542,8 +542,8 @@ REGISTRY: dict[str, Model] = {
                 "8bit": "mlx-community/Qwen3-ASR-0.6B-8bit",
                 "bf16": "mlx-community/Qwen3-ASR-0.6B-bf16",
             },
-            notes="the fastest engine measured in this project (32.8x), and "
-                  "7.1 points behind voxtral on Japanese. Same caveats as 1.7B",
+            notes="the fastest multilingual engine measured in this project (31.7x), "
+                  "and 7.1 points behind voxtral on Japanese. Same caveats as 1.7B",
         ),
         Model(
             alias="parakeet",
@@ -601,8 +601,8 @@ DEFAULT_ALIAS = "voxtral"
 #              untested language or recording condition would show a loss. Turbo is
 #              the speed option (2.1x, 1.5GB less memory). An older 7-file table had
 #              turbo ahead; it measured large-v3 at library defaults and is superseded.
-#   qwen3-asr  `1.7B`, which beats 0.6B by 3.9 points on the 20-file corpus (19.33%
-#              against 23.27%). The 0.6B is the speed option, not the default.
+#   qwen3-asr  `1.7B`, which beats 0.6B by 3.7 points on the 20-file corpus (19.68%
+#              against 23.35%). The 0.6B is the speed option, not the default.
 DEFAULT_SIZE = {"whisper": "large-v3", "qwen3-asr": "1.7B", "voxtral-v1": "3B"}
 
 # Display order per family: smallest/weakest first, so a list reads as a ladder.

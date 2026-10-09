@@ -34,29 +34,24 @@ SWEEPS = {
     "input-level-paired": {
         "doc": "docs/benchmarks/input-level.md",
         "title": "Paired difference against unity gain, with 95% CIs",
-        "basis": "7-file subset, Voxtral, coverage CER/WER, paired across files; above "
-                 "zero is worse than unity.\nAttenuation is the one resolved harm and "
-                 "boosting is a wash overall, so auto lifts only quiet files and leaves "
-                 "the rest at unity.",
+        "basis": "7-file subset, Voxtral, paired across files, each language on its own "
+                 "unit; above zero is worse than unity.\nAttenuation is the one resolved "
+                 "harm and boosting splits by language, so auto lifts only quiet files "
+                 "and leaves the rest at unity.",
         "xlabel": "arm against unity (as recorded)", "ylabel": "",
         "scale": "category", "connect": False, "unit": "",
-        "series": ["all files", "English only (2 files)", "Japanese only (5 files)"],
+        "series": ["JP coverage CER (5 files)", "EN coverage WER (2 files)"],
         "rows": [
-            ("-20 dB", "| -20dB vs unity |", ("+7.79", None, None),
-             ("[+5.39, +12.08]", None, None)),
-            ("-12 dB", "| -12dB vs unity |", ("+3.78", None, None),
-             ("[+1.82, +7.83]", None, None)),
-            ("+6 dB\nall", "| +6dB vs unity, all files |", ("+0.09", None, None),
-             ("[-1.21, +0.94]", None, None)),
-            ("+6 dB\nEnglish", "| +6dB vs unity, English only |", (None, "-2.59", None),
-             (None, "[-3.19, -1.18]", None)),
-            ("+6 dB\nJapanese", "| +6dB vs unity, Japanese only |", (None, None, "+0.65"),
-             (None, None, "[+0.00, +1.08]")),
-            ("peak to\n-1 dBFS", "| peak-normalize vs unity |", ("+0.21", None, None),
-             ("[-0.19, +0.64]", None, None)),
+            ("-20 dB", "| -20dB vs unity |", ("+7.32", "+10.10"),
+             ("[+4.64, +12.56]", "[+10.10, +10.12]")),
+            ("-12 dB", "| -12dB vs unity |", ("+2.97", "+7.69"),
+             ("[+1.17, +7.71]", "[+6.98, +9.33]")),
+            ("+6 dB", "| +6dB vs unity |", ("+0.65", "-2.59"),
+             ("[-0.02, +1.09]", "[-3.19, -1.18]")),
+            ("peak to\n-1 dBFS", "| peak-normalize vs unity |", ("+0.30", "-0.17")),
         ],
         "panels": [
-            {"series": [0, 1, 2], "ylabel": "difference vs unity (points)",
+            {"series": [0, 1], "ylabel": "difference vs unity (points)",
              "zero_line": True},
         ],
         "chosen": None,
