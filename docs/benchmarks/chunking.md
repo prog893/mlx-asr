@@ -475,8 +475,11 @@ alone. This one runs the whole pipeline over real audio, with the batch as the o
 | 64 | 31.9x | 25.7x | 35.2x | 9.17GB |
 | **128** | **33.6x** | 28.1x | **36.3x** | 11.33GB |
 
-Accuracy does not move with batch: JP coverage CER is 16.22% to 16.29% across all five arms
-and EN coverage WER is 21.50% in every one.
+Accuracy barely moves with batch: JP coverage CER is 16.22% to 16.29% across all five arms
+and EN coverage WER is 21.50% in every one. Paired over the 17 Japanese files, B128 against
+B32 is 0.07 points worse, CI [-0.01, +0.18], lower on 2 of 17 files: a cost too small to
+resolve on this corpus, and an order of magnitude below the precision effects in
+[quantization.md](quantization.md).
 
 A file of 32 chunks or fewer is decoded in one batch from B32 up, so for those 12 files B32,
 B48, B64 and B128 do identical work and their spread (24.2x to 28.1x) is machine noise. The
