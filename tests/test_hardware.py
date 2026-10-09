@@ -66,6 +66,16 @@ def test_memory_model_is_at_or_above_every_measured_peak(batch, chunk, measured)
     assert predicted_peak_gb(batch, 2.5, chunk) >= measured
 
 
+def test_overlap_counts_toward_the_decoded_chunk_length():
+    """Each chunk after the first decodes its warm-up overlap as well, so 60s chunks
+    with 30s of overlap must be sized as 90s rows (B32 there is predicted at 11.1GB,
+    over the M4's 9.9GB budget)."""
+    assert resolve_profile(M4)["batch"] == 32
+    assert resolve_profile(M4, overlap_seconds=30)["batch"] == 24
+    assert resolve_profile(UNTESTED, overlap_seconds=30)["batch"] <= \
+        resolve_profile(UNTESTED)["batch"]
+
+
 def test_m4_budget_admits_b32_and_excludes_b48():
     budget = batch_budget_gb(12.7)
     assert predicted_peak_gb(32, 2.5, 60) <= budget

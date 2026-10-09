@@ -319,7 +319,7 @@ SWEEPS = {
         "title": "Voxtral: batch size end to end at 30s chunks (M2 Ultra)",
         "basis": "20-file corpus, M2 Ultra 128GB, 30s chunks, kv8, delay 2400ms, one run "
                  "per batch. A file of 32 chunks or fewer fits in one batch from B32 up, "
-                 "so only the 8 longer files can gain; accuracy is unchanged throughout.",
+                 "so only the 8 longer files can gain; accuracy moves under 0.1 point.",
         "xlabel": "max batch (log scale)", "ylabel": "",
         "scale": "log",
         "series": ["all 20 files", "12 files of 32 chunks or fewer",

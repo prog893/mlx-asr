@@ -137,7 +137,6 @@ def main(argv=None):
             "match": {"chip": info["chip"],
                       "ram_gb_min": max(0, (info["ram_gb"] or 0) - 2),
                       "ram_gb_max": (info["ram_gb"] or 0) + 2},
-            "batch": best["batch"],
             "chunk_seconds": chunk,
             "peak_gb": best["peak_gb"],
             "model_id": info.get("model_id"),

@@ -475,7 +475,7 @@ z
   </g>
   <g id="text_33">
    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 269.301587)">20-file corpus, M2 Ultra 128GB, 30s chunks, kv8, delay 2400ms, one run per batch. A file of 32 chunks or fewer fits in one batch from B32 up, so only the 8</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 277.751948)">longer files can gain; accuracy is unchanged throughout. Source: chunking.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 277.751948)">longer files can gain; accuracy moves under 0.1 point. Source: chunking.md.</text>
   </g>
  </g>
  <defs>

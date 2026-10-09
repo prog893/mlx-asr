@@ -517,7 +517,8 @@ def main(argv=None):
 
     info = machine_info()
     prof = resolve_profile(info, weights_gb=spec.weights_gb,
-                           chunk_seconds=a.chunk_seconds)
+                           chunk_seconds=a.chunk_seconds,
+                           overlap_seconds=a.overlap_seconds)
     # Three independent levers, each resolved the same way: your value if you gave one,
     # otherwise this machine's profile. There is deliberately no composite flag bundling
     # them. A `--fast` used to exist and it was a mistake: the chunk/batch trade it
@@ -554,11 +555,12 @@ def main(argv=None):
         + (f", kv {kv_bits}-bit" if kv_bits else "")
         + f" ({prof['matched']})")
     if a.max_batch and info.get("gpu_working_set_gb"):
-        need = predicted_peak_gb(batch, spec.weights_gb, chunk_s)
+        need = predicted_peak_gb(batch, spec.weights_gb, chunk_s + overlap_s)
         budget = batch_budget_gb(info["gpu_working_set_gb"])
         if need > budget:
-            log(f"[machine] warning: --max-batch {batch} at {chunk_s:.0f}s chunks is "
-                f"predicted to peak at {need:.1f}GB, over this machine's {budget:.1f}GB "
+            log(f"[machine] warning: --max-batch {batch} at {chunk_s:.0f}s chunks"
+                + (f" plus {overlap_s:.0f}s overlap" if overlap_s else "")
+                + f" is predicted to peak at {need:.1f}GB, over this machine's {budget:.1f}GB "
                 f"budget; expect swapping or an out-of-memory failure on long audio "
                 f"(the default here is batch {prof['batch']})")
     if prof["matched"] != "profile" and not a.max_batch:

@@ -12,7 +12,7 @@ around.
 
 | setting | default | why |
 |---|---|---|
-| `--max-batch` | the largest of 1, 12, 16, 24, 32, 64, 128 whose predicted peak fits 78% of the GPU working set: 32 on a 16GB Mac at 60s chunks, 128 from about 27GB of working set up | batch is memory-bound: on both benchmarked machines speed rises with batch until memory runs out, at unchanged accuracy; see [How the default is chosen](#how-the-default-is-chosen) |
+| `--max-batch` | the largest of 1, 12, 16, 24, 32, 64, 128 whose predicted peak fits 78% of the GPU working set: 32 on a 16GB Mac at 60s chunks, 128 from about 27GB of working set up | batch is memory-bound: on both benchmarked machines speed rises with batch until memory runs out, while accuracy shifts by about 0.1 point, unresolved ([chunking.md](chunking.md#experiment-batch-size-end-to-end)); see [How the default is chosen](#how-the-default-is-chosen) |
 | `--max-batch` given explicitly | used as given; a warning if its predicted peak exceeds the budget | an explicit value is respected, but a batch the machine cannot hold should not fail silently on long audio |
 | `--kv-bits` | 8 | halves KV cache reads; faster and no less accurate on both machines ([quantization.md](quantization.md)) |
 | encoder | one chunk at a time | a batched encoder measured 0.84-0.91x |
@@ -339,7 +339,8 @@ whose predicted peak fits the budget:
   where memory binds: it admits B32 (8.08GB measured) and excludes B48, which is past
   the M4's memory wall. Two machines is a thin fit, and a third RAM size would test it.
 
-Anything landing in the 2-11 range falls back to 1, because the real choice there is
+Anything landing in the 2-11 range falls back to 1 (2-8 measured slower per step than 1;
+9-11 were not measured), because the real choice there is
 "12 or more" versus "1", not a point on a smooth curve. Model weights enter the
 prediction, so fp16 gets a smaller batch than 4-bit on the same machine.
 

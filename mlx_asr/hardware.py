@@ -4,7 +4,8 @@ Two decisions, made on different inputs because they have different causes:
 
   batch          sized from memory on every machine (``derive_batch``). Batch is
                  memory-bound: on both benchmarked machines end-to-end speed rises
-                 with batch until memory runs out, accuracy does not move, and
+                 with batch until memory runs out, accuracy shifts by about 0.1 point
+                 (unresolved on both machines), and
                  larger batches only speed up files longer than one batch.
   chunk length   per chip, from profiles.json. It is a throughput choice set by
                  how expensive the encoder is on a given GPU, so it has to be
@@ -159,8 +160,8 @@ def derive_batch(gpu_gb: float, weights_gb: float, chunk_seconds: float) -> int:
 
     Memory is the only input: batch size is memory-bound, and more rows than memory
     allows is the failure that matters (an OOM or a swap storm, not a few percent).
-    Never returns 2-11: that range is the measured valley, so the real choice is
-    "12 or more" versus "1".
+    Never returns 2-11 (2-8 measured slower per step than 1, 9-11 unmeasured), so the
+    real choice is "12 or more" versus "1".
     """
     budget = batch_budget_gb(gpu_gb)
     fits = [b for b in FAST_BATCHES
@@ -178,7 +179,8 @@ def _load_profiles() -> dict:
 
 
 def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
-                    chunk_seconds: float | None = None) -> dict:
+                    chunk_seconds: float | None = None,
+                    overlap_seconds: float | None = None) -> dict:
     """Pick a decode config for this machine.
 
     Batch is always sized from memory (``derive_batch``). ``matched`` says where the
@@ -199,8 +201,11 @@ def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
         if ram < m.get("ram_gb_min", 0) or ram > m.get("ram_gb_max", 10**9):
             continue
         chunk = chunk_seconds or float(prof["chunk_seconds"])
+        overlap = (overlap_seconds if overlap_seconds is not None
+                   else prof.get("overlap_seconds", 0.0))
         return {
-            "batch": derive_batch(gpu_gb, weights_gb, chunk),
+            # every chunk after the first decodes its warm-up overlap too
+            "batch": derive_batch(gpu_gb, weights_gb, chunk + overlap),
             "chunk_seconds": prof["chunk_seconds"],
             "kv_bits": prof.get("kv_bits"),
             "overlap_seconds": prof.get("overlap_seconds", 0.0),
@@ -222,7 +227,7 @@ def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
         derived.get("chunk_seconds_low_core", 60.0) if cores and cores <= 12
         else derived.get("chunk_seconds_default", 60.0)
     )
-    batch = derive_batch(gpu_gb, weights_gb, chunk)
+    batch = derive_batch(gpu_gb, weights_gb, chunk + (overlap_seconds or 0.0))
     return {
         "batch": batch,
         "chunk_seconds": chunk,

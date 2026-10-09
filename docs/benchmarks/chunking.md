@@ -5,8 +5,8 @@ memory: 30s/B128 on the M2 Ultra 128GB and 60s/B32 on the M4 16GB, overlap 0 on 
 is +0.10 points with a CI of [-1.89, +2.03], so the pair is chosen on throughput, and the
 `--fast` decomposition showed 30s/B32 is faster on the 60-core Ultra (28.9x against 19.8x)
 and slower on the 10-core M4. At 30s chunks on the Ultra, end-to-end speed keeps rising up to
-batch 128 (33.6x against 28.0x at B32) with accuracy unchanged, all of it on files longer
-than 32 chunks. Prefix overlap won 1.4-1.8 points at 30s chunks on a single
+batch 128 (33.6x against 28.0x at B32), all of it on files longer than 32 chunks, while
+accuracy moves by under 0.1 point (paired B128 against B32 is +0.07 points, CI [-0.01, +0.18]). Prefix overlap won 1.4-1.8 points at 30s chunks on a single
 clip but reversed sign on a real corpus, so it defaults to zero; cut points default to
 energy minima, which were never behind a VAD.
 
@@ -18,7 +18,7 @@ an engine that cannot honour it is an error, not a warning.
 | setting | default | why |
 |---|---|---|
 | `--chunk-seconds` | per machine: 30s on M2 Ultra, 60s on M4 | 30s and 60s are indistinguishable on the 20-file corpus; throughput decides, and it reverses across hardware |
-| batch | from memory, not chip: 128 on M2 Ultra 128GB, 32 on M4 16GB | the largest batch that fits the GPU memory; larger batches only speed up files longer than one batch, and accuracy does not move ([decode-throughput.md](decode-throughput.md#how-the-default-is-chosen)) |
+| batch | from memory, not chip: 128 on M2 Ultra 128GB, 32 on M4 16GB | the largest batch that fits the GPU memory; larger batches only speed up files longer than one batch; accuracy shifts by about 0.1 point, unresolved on both machines ([decode-throughput.md](decode-throughput.md#how-the-default-is-chosen)) |
 | `--overlap-seconds` | 0 | won on one clip at 30s chunks, reversed sign on the 7-file corpus, and is the only arm slower than the old default |
 | cut points | energy minima; `--vad` opt-in | energy is never behind; VAD ties on Japanese at n=17 and loses all 3 English files |
 | `--compact-silence` | off | accuracy ties on all four precisions; the 3-5% speed gain does not justify silently discarding input |
@@ -508,7 +508,9 @@ The same sweep on the M4, at its 60s chunks:
 | **32** | 5.46x | 4.08x | 6.30x | 8.08GB |
 
 JP coverage CER is 16.29% at B16 and 16.17% at B24 and B32; EN coverage WER is 22.43% in all
-three. The shape matches the Ultra: the 12 shorter files run at the same speed at every batch,
+three. Paired over the 17 Japanese files, B32 against B16 is -0.12 points, CI [-0.28, +0.00],
+with 2 files changed, both for the better: the opposite direction to the Ultra and, like it,
+unresolved. The shape matches the Ultra: the 12 shorter files run at the same speed at every batch,
 and the 8 longer ones gain about 30% from B16 to B24 or B32. B24 and B32 tie within this
 machine's noise (the B24 run started at load 6.7).
 
