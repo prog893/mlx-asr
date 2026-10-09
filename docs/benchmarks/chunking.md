@@ -517,7 +517,10 @@ machine's noise (the B24 run started at load 6.7).
 B32 is what the M4's memory resolves to, as the largest batch that runs reliably there: it completed the full
 corpus twice with no errors at an 8.08GB peak, both times starting with 7.4-7.6GB of swap
 already in use, and B48 exceeds the ~8.4GB KV wall that [decode-throughput.md](decode-throughput.md) shows as a
-throughput cliff.
+throughput cliff. A batch is padded to its longest row, and a file's last chunk can reach
+90s at 60s chunks, so the corpus never hit B32's worst case. It was measured separately: a
+32-minute cut of a corpus file whose 32 rows all pad to an 89.4s last chunk (99% of the
+theoretical worst) peaked at 8.31GB, 0.23GB above the corpus peak and inside the budget.
 
 ## How it works
 

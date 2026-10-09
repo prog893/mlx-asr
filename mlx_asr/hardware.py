@@ -26,6 +26,13 @@ constants below are set to cover every measured peak rather than to fit the mean
 the tightest is the Ultra at B=64 (9.36GB predicted, 9.17 measured), and the M4 at
 B=32 is over-predicted by 16% (9.36 against 8.08).
 
+Rows are sized on the nominal chunk length, although a batch is padded to its longest
+row and a file's last chunk can reach 1.5x the target. That padding is inside the fit:
+the corpus runs it was fitted on decoded padded batches (worst on the M4 at B=32: 25
+rows x 84.1s against 32 x 60s nominal). The worst case itself was measured too: a file
+cut so that all 32 rows pad to an 89.4s last chunk peaked at 8.31GB on the M4, under the
+9.36 predicted from the nominal length. Overlap is not in the fit, so it is added.
+
 The budget is a fraction of the GPU working set, fitted to the one machine where
 memory binds: on the M4 (12.7GB working set) B=32 completed the corpus twice with
 no errors at 8.08GB, while B=48 is past the ~8.4GB wall where synthetic decode

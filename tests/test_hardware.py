@@ -76,6 +76,15 @@ def test_overlap_counts_toward_the_decoded_chunk_length():
         resolve_profile(UNTESTED)["batch"]
 
 
+def test_nominal_sizing_covers_the_measured_padded_worst_case():
+    """A batch pads to its longest row, and the last chunk can reach 1.5x the target.
+    On the M4 a 32-row batch padded to an 89.4s last chunk (99% of the worst case)
+    peaked at 8.31GB; sizing on the nominal 60s must still predict at least that, and
+    the M4 must still resolve to the batch that was measured."""
+    assert predicted_peak_gb(32, 2.5, 60) >= 8.31
+    assert resolve_profile(M4)["batch"] == 32
+
+
 def test_m4_budget_admits_b32_and_excludes_b48():
     budget = batch_budget_gb(12.7)
     assert predicted_peak_gb(32, 2.5, 60) <= budget
