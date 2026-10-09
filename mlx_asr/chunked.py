@@ -5,7 +5,7 @@ each conditioned on the last one's text and timestamps. That is correct for full
 Whisper and wrong for distil models, which keep 2 decoder layers instead of 32 and
 cannot maintain state across windows. kotoba-whisper measured 94.23% coverage CER
 through the sequential driver versus 26.16% through transformers' *chunked* driver,
-on identical weights (docs/benchmarks/engines.md).
+on identical weights (docs/benchmarks/engines/kotoba.md).
 
 The important part: chunked long-form is a property of the **driver**, not the
 model or the framework. Slice the audio, transcribe each slice independently,

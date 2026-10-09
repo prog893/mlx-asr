@@ -1,16 +1,32 @@
-# Does batching help the Qwen3-ASR decoder? (issue #1)
+# Lever: batching the Qwen3-ASR decoder
 
-**No.** Throughput falls monotonically with batch size and accuracy does not move, so
-`--max-batch` stays refused on `qwen3-asr`. This closes
+Batch 1 is the default and `--max-batch` stays refused on `qwen3-asr`. On the 20-file
+corpus, throughput falls monotonically with batch size (2.3x slower by batch 8) while
+accuracy stays within 0.65 CER points, inside this corpus's noise. This closes
 [#1](https://github.com/prog893/mlx-asr/issues/1).
 
-## Result
+| setting | default | why |
+|---|---|---|
+| decoder batch size | 1 | fastest arm at every size tested, with no accuracy cost; `--max-batch` is refused |
 
-20 files, 7.95h, 15s windows, `Qwen3-ASR-1.7B-8bit`, `--language ja`, M2 Ultra.
+**Setup:** [20-file corpus](reference/corpus.md#the-20-file-corpus) (7.95h), `Qwen3-ASR-1.7B-8bit`,
+`--language ja`, 15s windows, M2 Ultra (a shared machine, which affects the x-realtime
+column; see the caveat below), scored by coverage CER/WER ([metrics.md](reference/metrics.md)).
+
+## Experiment: batch size
+
+**Basis:** [20-file corpus](reference/corpus.md#the-20-file-corpus), M2 Ultra (shared, not idle), `Qwen3-ASR-1.7B-8bit` with `--language ja` and 15s windows, batch 1, 2, 4 and 8.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/qwen3-batch-batch-dark.svg">
+  <img alt="Qwen3-ASR throughput falls from 23.18x realtime at batch 1 to 9.91x at batch 8 while Japanese CER and English WER stay flat." src="img/qwen3-batch-batch-light.svg">
+</picture>
+
+**Table:** throughput, accuracy and peak GPU memory at each decoder batch size on the 20-file corpus.
 
 | batch | x realtime | JP coverage CER | EN coverage WER | peak GPU |
 |---|---|---|---|---|
-| **1 (ships)** | **23.18x** | **19.51%** | **27.93%** | 3.73GB |
+| **1 (default)** | **23.18x** | **19.51%** | **27.93%** | 3.73GB |
 | 2 | 20.72x | 20.16% | 28.68% | 3.77GB |
 | 4 | 14.75x | 19.92% | 28.58% | 3.82GB |
 | 8 | 9.91x | 19.79% | 28.49% | 6.16GB |
@@ -23,7 +39,33 @@ Batch 16 was killed by memory pressure partway through (the machine reached 16.1
 17.4GB swap). Its one completed file scored 4.1x against 36.2x for batch 1 on the same
 file, consistent with the trend, but it is one file and is not in the table.
 
-## Why batching loses here, when it wins on Voxtral
+This table uses the per-group token budget described under
+[the shared token budget](#the-shared-token-budget-which-is-a-separate-bug), which is the
+fairest version of batching available. Batching loses even then.
+
+**Method.** `scripts/benchmarks/sweep_qwen3_batch.py`. The batch-1 arm calls
+`qwen3_decode`, the default code path, so the baseline is not a reimplementation. Batch > 1
+has to call upstream's `generate(batch_size=)` directly because `mlx_asr`'s loop is
+per-chunk by construction; that asymmetry is the thing being measured.
+
+15s windows rather than the default 30s, so that a file yields enough chunks to fill
+several groups at batch 8 and 16. 15s ties 30s on accuracy
+([qwen3-asr.md](engines/qwen3-asr.md)), so the baseline is comparable.
+
+**Caveat on the throughput figures.** This is a shared machine and two arms began with
+another process holding GPU memory (48.8GB at the start of batch 2, 8.9GB at batch 4), which
+the harness recorded per arm. Wall clock is therefore not clean. Two things make the
+conclusion hold anyway:
+
+- Accuracy is unaffected by contention, because decode is greedy. The paired per-file
+  comparison shows batch 2 **worse on 18 of 20 files**, which is the robust signal.
+- The slowdown is monotonic and large (2.3x by batch 8), while the contention was worst
+  during batch 2, the arm that lost *least*. Contention cannot explain a trend that runs
+  opposite to it.
+
+## How it works
+
+### Why batching loses here, when it wins on Voxtral
 
 Voxtral batches **decode steps**: rows share one weight read per step, which is the whole
 point on a bandwidth-bound decoder. The Qwen3-ASR path batches **whole chunks**, and two
@@ -42,7 +84,7 @@ Batch 1 has neither cost, and the decode it does is the same decode; there is no
 read to amortize across chunks because each chunk's decode is already sequential over its
 own tokens.
 
-## The shared token budget, which is a separate bug
+### The shared token budget, which is a separate bug
 
 Upstream's batched path decrements one budget across the whole file
 (`remaining_tokens -= group_tokens` in `_transcribe_batched`), so the per-window cap that
@@ -52,9 +94,16 @@ can then spend the budget its batch-mates needed.
 Measured on one 14.7-minute file at batch 4, with upstream's accounting against a
 per-group budget:
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/qwen3-batch-budget-dark.svg">
+  <img alt="On one file, batch 4 with a per-group budget ties batch 1 on CER but runs slower; with upstream's file-wide budget it emits 37.8 chars/s, scores 49.86% CER, runs at 1.8x realtime and peaks at 13.09GB." src="img/qwen3-batch-budget-light.svg">
+</picture>
+
+**Table:** output length, CER, speed and peak memory on one 14.7-minute file for batch 1 and for batch 4 under each token budget accounting.
+
 | | chars emitted | chars/s of audio | CER | x realtime | peak |
 |---|---|---|---|---|---|
-| batch 1 (ships) | 4,409 | 5.0 | 17.56% | 36.2x | 3.73GB |
+| batch 1 (default) | 4,409 | 5.0 | 17.56% | 36.2x | 3.73GB |
 | batch 4, budget per group | 5,950 | 6.7 | 17.40% | 26.2x | 3.77GB |
 | batch 4, upstream's file-wide budget | 33,389 | **37.8** | **49.86%** | 1.8x | 13.09GB |
 
@@ -63,32 +112,17 @@ a repetition loop running unchecked: 32 CER points worse and 20x slower than bat
 peak memory at 13.09GB against 3.73GB. The per-group arm sits at 6.7 chars/s, inside the
 range for real speech.
 
-**The table at the top of this document uses the per-group budget**, which is the fairest
-version of batching available. Batching loses even then, which is the finding. Had the
-sweep used upstream's accounting alone, the result would have looked like a catastrophe
-caused by batching rather than by budget accounting, and the two are worth separating.
+Had the sweep used upstream's accounting alone, the result would have looked like a
+catastrophe caused by batching rather than by budget accounting, and the two are worth
+separating.
 
-## Method
-
-`scripts/benchmarks/sweep_qwen3_batch.py`. The batch-1 arm calls `qwen3_decode`, the
-shipped code path, so the baseline is not a reimplementation. Batch > 1 has to call
-upstream's `generate(batch_size=)` directly because `mlx_asr`'s loop is per-chunk by
-construction; that asymmetry is the thing being measured.
-
-15s windows rather than the shipped 30s, so that a file yields enough chunks to fill
-several groups at batch 8 and 16. 15s ties 30s on accuracy
-([qwen3-asr.md](qwen3-asr.md)), so the baseline is comparable.
-
-**Caveat on the throughput figures.** This is a shared machine and two arms began with
-another process holding GPU memory (48.8GB at the start of batch 2, 8.9GB at batch 4), which
-the harness recorded per arm. Wall clock is therefore not clean. Two things make the
-conclusion hold anyway:
-
-- Accuracy is unaffected by contention, because decode is greedy. The paired per-file
-  comparison shows batch 2 **worse on 18 of 20 files**, which is the robust signal.
-- The slowdown is monotonic and large (2.3x by batch 8), while the contention was worst
-  during batch 2, the arm that lost *least*. Contention cannot explain a trend that runs
-  opposite to it.
+## Not settled
 
 A re-run on an idle machine would tighten the x-realtime column. It would not change the
 decision, which is to keep refusing the flag.
+
+## Related
+
+- [qwen3-asr.md](engines/qwen3-asr.md): the engine page, including the 15s and 30s window comparison.
+- [Issue #1](https://github.com/prog893/mlx-asr/issues/1): the request this page closes.
+- [metrics.md](reference/metrics.md): coverage CER/WER.

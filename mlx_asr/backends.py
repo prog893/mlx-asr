@@ -61,7 +61,7 @@ def transcribe_mlx_whisper(audio_path: str, model, language=None, log=print,
     ``model.opts`` carries `condition_on_previous_text=False` for the large
     models, which is not a stylistic default: leaving conditioning on lets a
     repetition loop feed itself across 30s windows and costs up to 22 points on
-    long audio (docs/benchmarks/engines.md). It is applied here rather than left to the user.
+    long audio (docs/benchmarks/engines/whisper.md). It is applied here rather than left to the user.
     """
     try:
         from mlx_whisper.transcribe import transcribe

@@ -201,13 +201,13 @@ def main():
     # A cold cache means a download and, for a quantized voxtral-v1 build, a one-time
     # conversion. Both happen here, outside the measured window: the conversion runs
     # through MLX, so get_peak_memory() would count it, and it is not what a user sees
-    # after the first run (the kotoba 3.03GB lesson in docs/benchmarks/peak-memory.md).
+    # after the first run (the kotoba 3.03GB lesson in docs/benchmarks/reference/peak-memory.md).
     if is_v1:
         from mlx_asr import voxtral_v1
         voxtral_v1.weights_dir(spec.repo)
     # Reset before the load, as the CLI does before `run()`, so that the published cell
     # (max of this and every file's decode peak) is the figure a CLI-per-file sweep with
-    # --stats-json reports. See docs/benchmarks/peak-memory.md.
+    # --stats-json reports. See docs/benchmarks/reference/peak-memory.md.
     mx.reset_peak_memory()
     t_load = time.perf_counter()
     if is_v1:

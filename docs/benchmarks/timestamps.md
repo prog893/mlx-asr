@@ -1,53 +1,43 @@
 # Lever: timestamp quality
 
-**Conclusion first.** Voxtral and Whisper fail in different directions, and the split is
-actionable. **Voxtral holds timing** (worst drift slope 25.3 ms/min against Whisper's
-122.7, lower p95 error on all 7 files) and **Whisper places cues better** (break F1 56.0%
-against 37.4%, better on 6 of 7 files). Voxtral is better where errors are hard to fix,
-since timestamps come from the model, and worse where they are easy, since cue grouping is
-our own heuristic and deliberately not fitted to these references.
+Voxtral and Whisper fail in different directions, and the split is actionable. **Voxtral
+holds timing** (worst drift slope 25.3 ms/min against Whisper's 122.7, lower p95 error on
+all 7 files) and **Whisper places cues better** (break F1 56.0% against 37.4%, better on 6
+of 7 files). Voxtral is better where errors are hard to fix, since timestamps come from the
+model, and worse where they are easy, since cue grouping is our own heuristic and
+deliberately not fitted to these references. That is why Voxtral is the default for
+subtitle output, with the cue knobs exposed so you can fit them to your own references.
 
-## Two failure modes, never combined into one score
+| setting | default | why |
+|---|---|---|
+| `--model` | `voxtral` | lower p95 error on all 7 files and the smallest worst drift slope; drift is the failure that makes a subtitle file unusable |
+| `--gap-seconds` | `1.2` | not the sweep optimum; costs 5.4 break-F1 points, see [cue-layout.md](cue-layout.md) |
+| `--max-chars` | `28` | paired with `--gap-seconds 1.2`, see [cue-layout.md](cue-layout.md) |
 
-A subtitle file can fail in two independent ways, and a single number would hide both:
+**Setup:** the 7 [timed references](reference/corpus.md#timed-references) (six published videos and
+the single clip), on a machine not recorded with this table, scored by drift and cue-break
+metrics reported separately by `eval_timing` ([metrics.md](reference/metrics.md)). n=7 is the
+smallest sample in the project, because no other recording here has an authored subtitle
+track.
 
-- **Drift**: words correct, times wrong. Fatal, and invisible to CER.
-- **Cue breaks**: times right, text chopped mid-phrase. Annoying but cosmetically fixable.
+## Experiment: Voxtral against Whisper at the default cue config
 
-`scripts/metrics/eval_timing.py` reports them separately and never averages them.
+**Basis:** the 7 [timed references](reference/corpus.md#timed-references), on a machine not recorded with this table, SRT output at the default cue config (`gap_s=1.2, max_chars=28`). The Whisper column is turbo-nocond, measured before large-v3 became the Whisper default.
 
-## Corpus
-
-The 7 recordings with author-written subtitle tracks. Plain-text references cannot support
-this at all. This is the smallest sample in the project, and none of the 13 recordings
-added in the final corpus growth had authored SRTs, so it stays at n=7.
-
-## Method
-
-Both engines are asked for SRT output on the same audio, then scored by `eval_timing`
-(`scripts/benchmarks/run_timing_sweep.py`).
-
-**Drift** is measured at *anchors*, not by comparing cue lists. The two texts are aligned
-character by character, and every run of at least 8 matched characters becomes an anchor,
-sampled at its midpoint. That is what stops cut material from masquerading as drift. It
-reports median and p95 absolute error at anchors, plus a least-squares regression of
-signed error on time. **Slope is separated from constant offset** because a whole file
-shifted 400ms is trivially correctable while error that grows through the file is not.
-
-**Cue breaks** are boundary F1 of hypothesis cue ends against the author's, within a 0.5s
-tolerance, plus the rate of hypothesis cue ends landing strictly inside a reference cue.
-
-`anchor_coverage` is reported alongside: below about 50% the timing estimate is weak and
-the row should be dropped rather than averaged in.
-
-Measured at the cue grouping the CLI actually ships (`gap_s=1.2, max_chars=28`) and with
-Whisper's language taken per file from its reference. Both of those were bugs once; see
-below.
-
-## Experiment
+Both engines are asked for SRT output on the same audio and scored by `eval_timing`
+(`scripts/benchmarks/run_timing_sweep.py`), at the cue grouping the CLI defaults to
+(`gap_s=1.2, max_chars=28`) and with Whisper's language taken per file from its reference.
+Both of those were bugs once; see [Superseded](#superseded).
 
 n=7, every row above the 50% anchor-coverage bar (lowest is 75.6%), so nothing is
-excluded:
+excluded.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/timestamps-engines-dark.svg">
+  <img alt="Voxtral has lower median p95 error (786 against 1908 ms) and worst drift slope (25.3 against 122.7 ms/min); Whisper turbo-nocond has higher break F1 (56.0% against 37.4%) and fewer mid-phrase splits." src="img/timestamps-engines-light.svg">
+</picture>
+
+**Table:** timing and cue-break metrics for Voxtral and Whisper turbo-nocond at the default cue config, n=7.
 
 | | Voxtral | whisper turbo-nocond |
 |---|---|---|
@@ -66,24 +56,62 @@ Whisper advantage: the median says nothing about the tail, and the p95 and slope
 are where a subtitle file becomes unusable. Whisper's 122.7 ms/min is over a second of
 accumulated drift on a ten-minute file.
 
-### Whisper's worst slope is unstable
+If you need timing accuracy, use Voxtral. If you need cue boundaries that read naturally
+and are willing to accept drift, Whisper's are better, or fit `--gap-seconds` to your own
+references.
 
-Read it as an order of magnitude, not a value. Two runs of the identical config gave 122.7
+## Experiment: stability of Whisper's worst slope
+
+**Basis:** the one [timed reference](reference/corpus.md#timed-references) that produces Whisper's worst slope, on a machine not recorded with this table, two runs of the identical default config.
+
+Read Whisper's worst slope as an order of magnitude, not a value. Two runs of the identical config gave 122.7
 and 180.7 ms/min on the file that produces it, because Whisper samples: its output on that
 file differed between runs, one cue splitting where the other did not. Every other Whisper
 row matched exactly across the two runs, so this is one file's instability rather than
 general noise. Both values are 5-7x Voxtral's worst, so the comparison is unaffected. See
-[determinism.md](determinism.md).
+[determinism.md](reference/determinism.md).
 
-## Two harness bugs this table used to contain
+## How it works
 
-Worth recording because both looked like model behaviour and neither was.
+A subtitle file can fail in two independent ways, and a single number would hide both, so
+they are never combined into one score:
 
-**Voxtral's figure described a config that does not ship.** The published 42.8% was
-measured at `gap_s=0.7, max_chars=32`; the CLI ships `1.2, 28`, which scores **37.4%**. So
-the published number flattered the default a user gets by 5.4 points. Root cause: the cue
-config was neither settable from the CLI nor recorded in any output, so a run could not be
-attributed to one. See [cue-layout.md](cue-layout.md).
+- **Drift**: words correct, times wrong. Fatal, and invisible to CER.
+- **Cue breaks**: times right, text chopped mid-phrase. Annoying but cosmetically fixable.
+
+`scripts/metrics/eval_timing.py` reports them separately and never averages them.
+Plain-text references cannot support either.
+
+**Drift** is measured at *anchors*, not by comparing cue lists. The two texts are aligned
+character by character, and every run of at least 8 matched characters becomes an anchor,
+sampled at its midpoint. That is what stops cut material from masquerading as drift. It
+reports median and p95 absolute error at anchors, plus a least-squares regression of
+signed error on time. **Slope is separated from constant offset** because a whole file
+shifted 400ms is trivially correctable while error that grows through the file is not.
+
+**Cue breaks** are boundary F1 of hypothesis cue ends against the author's, within a 0.5s
+tolerance, plus the rate of hypothesis cue ends landing strictly inside a reference cue.
+
+`anchor_coverage` is reported alongside: below about 50% the timing estimate is weak and
+the row should be dropped rather than averaged in.
+
+**Why the engines split.** Voxtral's timestamps come from the model: one token per decoder
+position, each covering 80ms of audio, so a timestamp is a position count rather than an
+estimate. That is why drift is small and why nothing in the cue knobs can improve it.
+Whisper emits segment-level timestamps from a model that was not trained to be precise
+about them, but its segments are chosen with more linguistic context than our gap-based
+heuristic uses, so its boundaries match a human editor better.
+
+## Superseded
+
+The table used to contain two harness bugs. Both looked like model behaviour and neither
+was.
+
+**Voxtral's figure described a config other than the default.** The published 42.8% was
+measured at `gap_s=0.7, max_chars=32`; the CLI default is `1.2, 28`, which scores
+**37.4%**. So the published number flattered the default a user gets by 5.4 points. Root
+cause: the cue config was neither settable from the CLI nor recorded in any output, so a
+run could not be attributed to one. See [cue-layout.md](cue-layout.md).
 
 **Whisper's language was hardcoded to `ja`.** One corpus file is English audio with an
 English reference (it is the English half of a dubbed pair). Transcribed as Japanese it
@@ -102,20 +130,6 @@ magnitudes moved: Whisper's break advantage is larger than published (18.6 point
 9.8) and Voxtral's drift advantage is larger too (worst slope 25.3, not 37.1, because that
 file's worst case came from the discarded cue config).
 
-## Reading the asymmetry
-
-Voxtral's timestamps come from the model: one token per decoder position, each covering
-80ms of audio, so a timestamp is a position count rather than an estimate. That is why
-drift is small and why nothing in the cue knobs can improve it.
-
-Whisper emits segment-level timestamps from a model that was not trained to be precise
-about them, but its segments are chosen with more linguistic context than our gap-based
-heuristic uses, so its boundaries match a human editor better.
-
-If you need timing accuracy, use Voxtral. If you need cue boundaries that read naturally
-and are willing to accept drift, Whisper's are better, or fit `--gap-seconds` to your own
-references.
-
 ## Reproducing
 
 ```bash
@@ -123,10 +137,11 @@ uv run python scripts/benchmarks/run_timing_sweep.py --corpus DIR --json out.jso
 ```
 
 Requires audio paired with same-stem `.srt` or `.vtt`. Add `--gap-seconds` /
-`--max-chars` to measure a cue config other than the shipped one, and `--language` to
+`--max-chars` to measure a cue config other than the default, and `--language` to
 override per-file detection.
 
 ## Related
 
-[cue-layout.md](cue-layout.md) for why the shipped cue defaults are not the sweep optimum.
-[determinism.md](determinism.md) for why Whisper needs a distribution.
+[cue-layout.md](cue-layout.md) for why the default cue settings are not the sweep optimum.
+[determinism.md](reference/determinism.md) for why Whisper needs a distribution.
+[metrics.md](reference/metrics.md) for `eval_timing` alongside the text metrics.

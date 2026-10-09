@@ -319,7 +319,7 @@ REGISTRY: dict[str, Model] = {
             # 30s and collapses above 60s (44.27 / 45.97 / 57.54%), for the same reason
             # as on qwen3-asr: a longer window gives a repetition loop a bigger budget.
             # English prefers 60s by about a point (20.72 vs 21.70%, two files), which
-            # is not worth the Japanese cost. See docs/benchmarks/voxtral-v1.md.
+            # is not worth the Japanese cost. See docs/benchmarks/engines/voxtral-v1.md.
             opts={"chunk_length_s": 30.0},
             no_speech_timestamps=True,
             # The authors publish bf16 only. bf16 loads from their shards directly;
@@ -495,7 +495,7 @@ REGISTRY: dict[str, Model] = {
             # loop a larger token budget to burn, so one loop wrecks more
             # transcript and costs more time. 15s ties on accuracy (20.04%) and
             # is faster, so this is a plateau rather than a boundary; 30s is the
-            # optimum. See docs/benchmarks/qwen3-asr.md.
+            # optimum. See docs/benchmarks/engines/qwen3-asr.md.
             opts={"chunk_length_s": 30.0},
             no_speech_timestamps=True,
             # 8-bit is the default because it is measured: bf16 scored 20.16%
@@ -542,8 +542,8 @@ REGISTRY: dict[str, Model] = {
                 "8bit": "mlx-community/Qwen3-ASR-0.6B-8bit",
                 "bf16": "mlx-community/Qwen3-ASR-0.6B-bf16",
             },
-            notes="the fastest engine measured in this project (32.8x), and "
-                  "7.1 points behind voxtral on Japanese. Same caveats as 1.7B",
+            notes="the fastest multilingual engine measured in this project (31.7x), "
+                  "and 7.1 points behind voxtral on Japanese. Same caveats as 1.7B",
         ),
         Model(
             alias="parakeet",
@@ -601,8 +601,8 @@ DEFAULT_ALIAS = "voxtral"
 #              untested language or recording condition would show a loss. Turbo is
 #              the speed option (2.1x, 1.5GB less memory). An older 7-file table had
 #              turbo ahead; it measured large-v3 at library defaults and is superseded.
-#   qwen3-asr  `1.7B`, which beats 0.6B by 3.9 points on the 20-file corpus (19.33%
-#              against 23.27%). The 0.6B is the speed option, not the default.
+#   qwen3-asr  `1.7B`, which beats 0.6B by 3.7 points on the 20-file corpus (19.68%
+#              against 23.35%). The 0.6B is the speed option, not the default.
 DEFAULT_SIZE = {"whisper": "large-v3", "qwen3-asr": "1.7B", "voxtral-v1": "3B"}
 
 # Display order per family: smallest/weakest first, so a list reads as a ladder.
@@ -706,7 +706,7 @@ def infer_backend(repo: str) -> str:
     if "reazon" in low and "k2" in low:
         return "sherpa-onnx"
     # distil derivatives keep few decoder layers and need the chunked driver;
-    # the sequential one costs kotoba 68 points (docs/benchmarks/engines.md)
+    # the sequential one costs kotoba 68 points (docs/benchmarks/engines/kotoba.md)
     if "kotoba" in low or "distil" in low:
         return "mlx-chunked"
     if "whisper" in low:
@@ -786,7 +786,7 @@ def resolve(name: str | None, size: str | None = None) -> Model:
     elif backend == "mlx-qwen3":
         # Same as the registry entries: measured best on this corpus, against a
         # library default of 1200s at which a sub-20-minute file is one chunk and
-        # one cue. See docs/benchmarks/qwen3-asr.md.
+        # one cue. See docs/benchmarks/engines/qwen3-asr.md.
         opts = {"chunk_length_s": 30.0}
     elif backend == "mlx-voxtral-v1":
         opts = {"chunk_length_s": 30.0}

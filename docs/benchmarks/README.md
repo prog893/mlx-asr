@@ -4,9 +4,18 @@ One document per **lever**: a thing you can change that might make the output be
 faster. Each states its corpus, its method, the experiments, and the conclusion, so a
 number can be read without reconstructing the run that produced it.
 
-Read [metrics.md](metrics.md) and [corpus.md](corpus.md) before quoting any figure. The
+Read [metrics.md](reference/metrics.md) and [corpus.md](reference/corpus.md) before quoting any figure. The
 metrics here are unusual for a reason, and most of the material has editorial references
 that make plain CER meaningless.
+
+## Picking a model
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/picker-dark.svg">
+  <img alt="Error against speed for every engine at its defaults, Japanese and English panels; filled points fit a 16GB Mac" src="img/picker-light.svg">
+</picture>
+
+Down and to the right is better: lower error, more speed. Filled points fit a 16GB Mac; the hollow one needs a large-memory machine. The two panels disagree, so pick on the language you transcribe: on Japanese the Whisper sizes and Voxtral lead, on English the voxtral-v1 models do, though English rests on three files. A label marked floor, shared GPU or CPU has a speed measured under different conditions from the rest; [engines.md](engines.md) and [MODELS.md](../MODELS.md) carry the numbers behind every point.
 
 ## The levers, largest effect first
 
@@ -15,13 +24,13 @@ that make plain CER meaningless.
 | [delay.md](delay.md) | transcription delay | `2400` is worth 9 points and is free. The strongest result here. |
 | [chunking.md](chunking.md) | chunk length, overlap, cut points | 30s vs 60s is indistinguishable at n=20, so it is a throughput choice. Overlap helps at short chunks on one clip but reversed on a corpus. VAD cut points and dropping silence both tie with the defaults. Throughput comes from the BATCH rather than the chunk length, and the right pair reverses across hardware (46% faster on a 60-core GPU, slower on a 10-core one), so both live in the per-machine profile and the composite `--fast` flag was removed. |
 | [engines.md](engines.md) | which model | Whisper turbo + no-condition is ~1.5 points more accurate; Voxtral is ~1.35x faster and reproducible, so it is the default. |
-| [qwen3-asr.md](qwen3-asr.md) | the Qwen3-ASR engine | Last on accuracy of the four engines; the 0.6B is the fastest here. Writes no subtitles (its timestamps are decode-window boundaries), and its library truncates long audio silently, which is why this project drives the chunk loop itself. Precision sensitivity differs by SIZE: the 1.7B ties across the whole ladder, the 0.6B does not. |
-| [voxtral-v1.md](voxtral-v1.md) | the Voxtral v1 engine (Mini 3B, Small 24B) | Behind every other multilingual engine on Japanese, which its card does not claim, largely through repetition loops; the 24B is the best English row measured. 8bit ships on both sizes. Writes no subtitles. Leaving the language to the model switches Japanese windows into other languages, which coverage CER does not charge. |
+| [qwen3-asr.md](engines/qwen3-asr.md) | the Qwen3-ASR engine | Last on accuracy of the four engines; the 0.6B is the fastest here. Writes no subtitles (its timestamps are decode-window boundaries), and its library truncates long audio silently, which is why this project drives the chunk loop itself. Precision sensitivity differs by SIZE: the 1.7B ties across the whole ladder, the 0.6B does not. |
+| [voxtral-v1.md](engines/voxtral-v1.md) | the Voxtral v1 engine (Mini 3B, Small 24B) | Behind every other multilingual engine on Japanese, which its card does not claim, largely through repetition loops; the 24B is the best English row measured. 8bit ships on both sizes. Writes no subtitles. Leaving the language to the model switches Japanese windows into other languages, which coverage CER does not charge. |
 | [decode-throughput.md](decode-throughput.md) | batch size | Not monotonic. Never use batch 2-8. The only lever anyone can reproduce without audio. |
 | [qwen3-batch.md](qwen3-batch.md) | batch size on qwen3-asr | Batching whole chunks loses monotonically (2.3x slower by batch 8) for no accuracy gain, so `--max-batch` stays refused there. |
 | [input-level.md](input-level.md) | `--gain` | Quiet input silently costs ~3.8 points. `auto` fixes it and is a no-op otherwise. |
 | [prompt.md](prompt.md) | `--prompt` | Weak and unreliable, except that an *instruction* there costs 6-14 points. |
-| [quantization.md](quantization.md) | weight and KV precision | **Voxtral:** costs accuracy monotonically in bit width, reversing the earlier single-clip tie. 4-bit is last of five, 1.07 behind 8-bit and 1.30 behind fp16; 8-bit matches fp16 at 7.3GB and full speed. **`qwen3-asr`: not swept**, one 7-file bf16 check only. `--kv-bits 8` is close to free. |
+| [quantization.md](quantization.md) | weight and KV precision | **Voxtral:** costs accuracy monotonically in bit width, reversing the earlier single-clip tie. 4-bit is last of five, 1.07 behind 8-bit and 1.30 behind fp16; 8-bit matches fp16 at 7.3GB and full speed. **`qwen3-asr`:** swept on the corpus; flat on the 1.7B, 4bit costs 7 points on the 0.6B. `--kv-bits 8` is close to free. |
 | [timestamps.md](timestamps.md) | timestamp quality | Voxtral holds timing, Whisper places cues better. Different failure modes, reported separately. |
 | [cue-layout.md](cue-layout.md) | subtitle grouping | Two sweeps run, neither adopted, on purpose. Costs 5.4 break-F1 points. |
 
@@ -29,10 +38,10 @@ that make plain CER meaningless.
 
 | document | what it covers |
 |---|---|
-| [corpus.md](corpus.md) | what the test material is, in general terms, and how to build your own |
-| [metrics.md](metrics.md) | why coverage CER exists, which metric to trust, how to compare two configs |
-| [determinism.md](determinism.md) | what reproduces (one machine) and what does not (across machines, and Whisper at all) |
-| [peak-memory.md](peak-memory.md) | what each model costs in GPU memory, and why Whisper's figure depends on how long your audio is |
+| [corpus.md](reference/corpus.md) | what the test material is, in general terms, and how to build your own |
+| [metrics.md](reference/metrics.md) | why coverage CER exists, which metric to trust, how to compare two configs |
+| [determinism.md](reference/determinism.md) | what reproduces (one machine) and what does not (across machines, and Whisper at all) |
+| [peak-memory.md](reference/peak-memory.md) | what each model costs in GPU memory, and why Whisper's figure depends on how long your audio is |
 
 ## Read this before quoting a number
 
@@ -48,7 +57,7 @@ Corrected where re-measured: Voxtral English 25.24% -> **21.50%**, Whisper turbo
 22.81% -> **18.34%** (see [engines.md](engines.md)). **Not** re-measured, so read the English
 column of these as "wrong by roughly 3 to 4 points, direction intact":
 [delay.md](delay.md), [input-level.md](input-level.md), [chunking.md](chunking.md),
-[prompt.md](prompt.md), [determinism.md](determinism.md).
+[prompt.md](prompt.md), [determinism.md](reference/determinism.md).
 
 Those are left rather than re-run because each would cost a full corpus pass per arm, and in
 every case the English side is n=3 and was already labelled directional. The offset is
@@ -75,7 +84,7 @@ always labelled as such.
 
 **A significant result on one clip means "real on this clip", not "real".** Two different
 methods answer two different questions; see the comparison section of
-[metrics.md](metrics.md).
+[metrics.md](reference/metrics.md).
 
 **Speed numbers require a quiesced machine.** A host doing other GPU work reports several
 times lower throughput, and one run here was voided for exactly that reason. Check GPU and
@@ -169,6 +178,15 @@ uv run python scripts/benchmarks/plot_evidence.py sensitivity --hyp-dir DIR \
 `paired` is the one to reach for first: it shows whether an aggregate is broad agreement
 or two files pulling against each other, which the point estimate cannot distinguish and
 which decides whether more audio would help.
+
+The charts embedded in these documents are drawn from the published tables, not from
+result files: `scripts/docs/chart_data.py` holds the figures with the document each came
+from, and `tests/test_charts.py` fails if a figure no longer appears in its document.
+After changing a table, update the figure there and regenerate:
+
+```bash
+uv run --extra eval python scripts/docs/gen_charts.py
+```
 
 Decode throughput, **no audio needed**, and the basis of the contributed-profile flow:
 

@@ -18,7 +18,7 @@ averaged, since they are different quantities.
 
 Bootstrap detail: resampling is length-weighted over files, matching how the
 aggregate is computed, so a 93-minute recording moves the interval more than a
-13-minute one. With n=7 the interval is wide by construction; docs/benchmarks/metrics.md puts the
+13-minute one. With n=7 the interval is wide by construction; docs/benchmarks/reference/metrics.md puts the
 resolution limit at about 3.2 points, and a difference inside that is reported as
 unresolved rather than as a tie.
 

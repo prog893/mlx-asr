@@ -18,7 +18,7 @@ Reported:
 
 This measures "is A better than B on THIS clip", which is a real and answerable
 question. It does NOT measure "is A better on other audio" -- only more clips can
-answer that. See docs/benchmarks/metrics.md.
+answer that. See docs/benchmarks/reference/metrics.md.
 
     uv run python scripts/benchmarks/compare_configs.py --reference ref.srt a.srt b.srt
 """

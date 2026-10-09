@@ -101,7 +101,7 @@ def main():
     p.add_argument("--limit", type=int, help="only the N shortest files")
     # Both of these shipped their defaults on a single-clip result and were never run
     # across the corpus, which is exactly the gap that let the precision conclusion
-    # stand wrong for weeks (docs/benchmarks/metrics.md). Exposed here so the corpus
+    # stand wrong for weeks (docs/benchmarks/reference/metrics.md). Exposed here so the corpus
     # can settle them.
     p.add_argument("--vad", action="store_true",
                    help="place chunk boundaries with Silero VAD instead of energy "

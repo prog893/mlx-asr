@@ -310,7 +310,7 @@ reference characters, so one flipped token is worth several points, while the sa
 9830-character file is worth hundredths. The qualitative claims stand (divergence is real,
 unpredictable per file, and a comparison must stay on one machine); only the magnitude was
 wrong, and it was wrong because it was extrapolated from n=1. See
-[docs/benchmarks/determinism.md](docs/benchmarks/determinism.md).
+[docs/benchmarks/reference/determinism.md](docs/benchmarks/reference/determinism.md).
 
 ### Why the quantization sweep was skipped
 

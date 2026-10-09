@@ -58,7 +58,7 @@ Background on why this lever behaves the way it does:
 ## Accuracy work, which needs a corpus
 
 Building one is the hard part, and the shape matters more than the size:
-[docs/benchmarks/corpus.md](docs/benchmarks/corpus.md). Short version: audio paired by
+[docs/benchmarks/reference/corpus.md](docs/benchmarks/reference/corpus.md). Short version: audio paired by
 stem with `<stem>.srt` or `<stem>.vtt` if you care about timings, or
 `<stem>_transcript.txt` for text only. Vet that the spoken language matches the reference
 before trusting any score; more than half of this project's candidate files failed that
@@ -91,11 +91,11 @@ The resolution depends on how many files you run: with a per-file paired SD of a
 Decoding is deterministic on a given machine, so **repeating a run adds no information**;
 only more audio does. It is *not* deterministic across machines, so do not compare a run
 on one chip against a run on another and attribute the difference to your change. See
-[docs/benchmarks/determinism.md](docs/benchmarks/determinism.md).
+[docs/benchmarks/reference/determinism.md](docs/benchmarks/reference/determinism.md).
 
 Scoring: use `scripts/metrics/eval_coverage.py` when a reference deliberately omits audio, and
 prefer `scripts/metrics/eval_cer_lenient.py` over `scripts/metrics/eval_cer_kana.py` as the fair Japanese
-number. [docs/benchmarks/metrics.md](docs/benchmarks/metrics.md) explains when each is the
+number. [docs/benchmarks/reference/metrics.md](docs/benchmarks/reference/metrics.md) explains when each is the
 wrong choice.
 
 ## Sharing results
