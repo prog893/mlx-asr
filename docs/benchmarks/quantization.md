@@ -183,13 +183,12 @@ default is picked by this rule, in this order:
 | `kotoba` | fp16 | none | 1.6GB, converted on first use |
 | `parakeet` | its one build | none | one published MLX build |
 | `reazon` | fp32 | none through `--quantization` | int8 drops whole phrases on this corpus (36.93% against 30.45%); see [reazon.md](engines/reazon.md) |
-| `qwen3-asr` | **8-bit** | 4bit, 5bit, 6bit, bf16 | bf16 **tied** it on accuracy (20.16% vs 19.98%) while costing **1.36x the wall clock** (14.1x vs 19.2x) and **1.4x the peak memory** (5.66 vs 4.05GB) |
-| `qwen3-asr-small` | **8-bit** | 4bit, 5bit, 6bit, bf16 | same, and the gap is wider: bf16 26.24% vs 23.27%, and 23.0x vs 32.8x, which would remove the only reason this model is offered |
+| `qwen3-asr` | **8-bit** | 4bit, 5bit, 6bit, bf16 | every rung ties on accuracy; bf16 (19.51% vs 19.68%) costs **1.31x the wall clock** (16.1x vs 21.1x) and **1.4x the peak memory** (5.66 vs 4.05GB) |
+| `qwen3-asr-small` | **8-bit** | 4bit, 5bit, 6bit, bf16 | 4bit (5.00 points) and 6bit (0.98) are resolved worse; bf16 ties (23.40% vs 23.35%) at **1.25x the wall clock** (25.3x vs 31.7x) and 1.24x the peak memory (2.92 vs 2.36GB), which would cut into the only reason this model is offered |
 | `voxtral-v1` | **8bit** | 4bit, bf16 | ties bf16 on both sizes at a fraction of the memory; the 3B at 4bit is 8.01 points worse. See [voxtral-v1.md](engines/voxtral-v1.md) |
 
-The two `qwen3-asr` rows quote the earlier 8-bit against bf16 measurement. The full
-five-rung ladder in [qwen3-asr.md](engines/qwen3-asr.md) reaches the same defaults with different
-figures (1.7B bf16 19.51% against 8bit 19.68%; 0.6B bf16 23.40% against 23.35%, a tie), and
+The two `qwen3-asr` rows quote the five-rung ladder in
+[qwen3-asr.md](engines/qwen3-asr.md#experiment-precision-ladder) (re-measured 2026-10-08), and
 `qwen3-asr-small` is now `--model qwen3-asr --size 0.6B`.
 
 So the shorthand is a precision name rather than a repo id:

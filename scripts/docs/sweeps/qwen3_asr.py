@@ -29,7 +29,7 @@ SWEEPS = {
         "label_dy": 14,
     },
     # Both sizes on ONE y scale, so the 1.7B's sub-point spread reads as the tie it is
-    # beside the 0.6B's 7-point slope. Each table line holds one size, so each row
+    # beside the 0.6B's 5-point slope. Each table line holds one size, so each row
     # carries a value for one series only. The second panel is the paired difference
     # the table prints ("8bit minus rung", negative means 8bit is better) with its 95%
     # CI; the default rows have no paired figure, they are the zero line.

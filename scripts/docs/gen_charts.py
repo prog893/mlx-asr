@@ -203,7 +203,7 @@ def precision(t):
         mark_chosen(ax, i, jp[i], t, dy=12)
         # Every panel spans at least 8 points, so a tie looks like a tie. Zooming each
         # panel to its own range made voxtral's 1.3-point ladder look as steep as the
-        # 0.6B's 7-point drop.
+        # 0.6B's 5-point drop.
         lo, hi = min(jp), max(jp)
         span = max(8.0, (hi - lo) * 1.3)
         mid = (lo + hi) / 2
