@@ -1,66 +1,59 @@
 # Run results, October 2026
 
-Every usable run behind the October 2026 benchmark pages, kept so intervals, paired tests
-and new comparisons can be recomputed without re-running anything. Each JSON is the
-runner's own output with files named by their stable corpus id (`rec-NN`); the
-stem-to-id map stays with the private corpus. No transcripts are kept.
+Raw results behind the October 2026 benchmark pages, so the published metrics can be
+derived again, and later runs added, without re-running what is here. One JSON per
+experiment run-group; each lists its runs.
 
-Corpus: the [20-file corpus](../../../docs/benchmarks/reference/corpus.md#the-20-file-corpus)
-(17 Japanese files scored by coverage CER, 3 English by coverage WER, 7.95h), or the
-[7-file subset](../../../docs/benchmarks/reference/corpus.md#the-7-file-subset) where a
-name starts `gain7_`, `mincut7_` or `qwen3w7_`. Each JSON records the machine and its
-state when the run started. Speed is the run's own `x_realtime`; accuracy is
-deterministic per machine except Whisper, which samples on fallback.
+## Format
 
-To recompute an interval: `uv run python scripts/benchmarks/ci_from_run.py FILE.json`.
-To archive a new run: `scripts/benchmarks/archive_results.py --ids <map> --out <folder> RUN.json`.
+A run-group JSON has `group`, `question` (what it measures), `docs` (pages it feeds) and
+`runs`. Each run has:
 
-Runs that were measured while other GPU work was resident and then re-measured are not
-kept; only the re-measurement is.
+- `run`: the run's name; `command`: the runner invocation, rebuilt from the recorded config
+- `params`: every input parameter the runner recorded
+- `machine`: chip, model id, RAM, GPU cores, macOS and mlx versions, and the machine's
+  state when the run started (load, GPU memory in use, swap, power)
+- `aggregate`: the run's own aggregates (`char` = Japanese coverage CER, `word` = English
+  coverage WER, length-weighted); `measures`: run-level results such as `x_realtime` and
+  peak memory
+- `files`: one row per corpus file with every per-file measure the runner wrote
+- `missing`: what the run did not record. A non-empty list marks a rerun candidate.
 
-## ultra-rerun
+Files are named by `sha256(source id)[:12]`, with any derived suffix kept after it. The
+source id is the filename stem for a recording and the video id for a downloaded public
+video. [`../corpus.json`](../corpus.json) maps each id to the only metadata that may be
+published (language, duration, codec, sample rate, bit depth, bitrate) and records every
+processing step between the corpus copy and the model, including how the derived
+worst-case inputs were cut. No transcripts and no other corpus details are kept.
 
-M2 Ultra 128GB (Mac14,14), mlx 0.32.0, mlx-audio 0.4.5, 2026-10-07 to 2026-10-11.
-Re-measurement of the published tables, one arm at a time, from
-`scripts/benchmarks/run_corpus.py`, `run_whisper.py`, `run_qwen3.py`, `sweep_gain.py`
-and `sweep_qwen3_batch.py`.
+Accuracy is deterministic per machine for every engine except Whisper, which samples on
+fallback; speed is the run's own measurement. Runs measured while other GPU work was
+resident and then re-measured are not kept; only the re-measurement is.
 
-| files | what | feeds |
+Per-file reference lengths are not included yet, so length-weighted aggregates can be
+read here but not recomputed from the per-file rows alone.
+
+## Run-groups
+
+| group | machine | what |
 |---|---|---|
-| `whisper_<size>_<libdef or nocond>.json`, `_r2`, `_r3` | every Whisper size at its default config, three runs each | engines/whisper.md sizes table |
-| `vox_w{4bit,8bit,fp16,mxfp8,nvfp4}_c60b16_kv8.json` | Voxtral weight ladder, 60s / batch 16 / kv8 / delay 2400 | quantization.md ladder |
-| `vox_kv{0,4,8}_c60b16_w4bit.json`, `vox_w8bit_kv0_c60b16.json` | KV cache precision with 4-bit weights, and unquantized KV with 8-bit weights | quantization.md KV table |
-| `vox_default_c30b32_kv8.json` | the former headline config, 30s / batch 32 | repeat of the batch sweep's B32 |
-| `vox_default_c30b128_kv8.json`, `_r2`, `_r3` | the headline config, 30s / batch 128, three runs | RESULTS.md headline, picker chart |
-| `gain7_*_c30b32_kv8.json` | input gain -20 / -12 / 0 / +6 dB, per-file rows in `results.<mode>.per_file` | input-level.md |
-| `qwen3_{1.7B,0.6B}_{4bit,5bit,6bit,8bit,bf16}_c30.json` | qwen3-asr precision ladder, 30s windows | engines/qwen3-asr.md ladder |
-| `qwen3w7_1.7B_8bit_c{15,30,60,120,300}.json` | qwen3-asr window length | engines/qwen3-asr.md window table |
-| `qwen3batch_1.7B_8bit_c15_b{1,2,4,8}.json` | qwen3-asr decoder batch, 15s windows, per-file rows in `arms.<b>.per_file` | qwen3-batch.md |
-| `mincut7_*.json` | inputs to the min_cut scoring tables | reference/metrics.md |
+| `ultra-whisper-sizes` | M2 Ultra 128GB | every Whisper size at its default config, 3 runs each |
+| `ultra-voxtral-precision` | M2 Ultra 128GB | Voxtral weight precision at 60s / batch 16 / kv8 |
+| `ultra-voxtral-kv` | M2 Ultra 128GB | KV cache precision with 4-bit weights, and unquantized KV with 8-bit weights |
+| `ultra-voxtral-headline` | M2 Ultra 128GB | the default config, 30s / batch 128, 3 runs; and the former 30s / batch 32 |
+| `ultra-input-gain` | M2 Ultra 128GB | input gain on the 7-file subset (no machine state or timing recorded: rerun candidate) |
+| `ultra-qwen3-precision` | M2 Ultra 128GB | qwen3-asr precision ladder, both sizes, 30s windows |
+| `ultra-qwen3-window` | M2 Ultra 128GB | qwen3-asr window length, 7-file subset |
+| `ultra-qwen3-batch` | M2 Ultra 128GB | qwen3-asr decoder batch, 15s windows |
+| `ultra-mincut-inputs` | M2 Ultra 128GB | run outputs that the min_cut scoring tables rescore, 7-file subset |
+| `ultra-voxtral-batch` | M2 Ultra 128GB | Voxtral end to end by max batch at 30s chunks |
+| `m4-voxtral-batch` | M4 16GB | Voxtral end to end by max batch at 60s chunks: first sweep, interleaved repeats of B24/B32, exploratory and repeated B48/B64 |
+| `m4-voxtral-worstcase` | M4 16GB | peak memory with every row padded to a 1.5x-target last chunk, on cut inputs |
 
-## ultra-batch
+## Tools
 
-M2 Ultra 128GB, 2026-10-07 to 2026-10-10. Voxtral end to end at 30s chunks, 4-bit, kv8,
-delay 2400, one file per max batch (`run_corpus.py --chunk-seconds 30 --max-batch B`).
-Feeds the batch experiment in chunking.md and the Ultra batch default.
-
-## m4-batch-r1
-
-M4 16GB (Mac16,1), on AC power, 2026-10-08. Voxtral end to end at 60s chunks, B16 / B24 /
-B32, the first clean sweep. Feeds chunking.md's M4 batch table.
-
-## m4-batch-repeat
-
-M4 16GB, 2026-10-09 to 2026-10-10. B32 and B24 runs 2 to 4, interleaved
-(B32, B24, B32, ...) so drift spreads over both arms.
-
-## m4-batch-explore
-
-M4 16GB, 2026-10-10. One exploratory run each of B48 and B64 at 60s chunks.
-
-## m4-worstcase
-
-M4 16GB, 2026-10-09. B32 at 60s on `worst32`: a 1949s cut of a corpus file whose 32 rows
-all pad to an 89.4s last chunk (2860 padded row-seconds, 99% of the theoretical worst).
-Only `peak_memory_gb` is meaningful; the reference is the uncut file's, so the score is
-not. Feeds the padded-worst-case note in chunking.md and `mlx_asr/hardware.py`.
+- Recompute an interval: `uv run python scripts/benchmarks/ci_from_run.py` on a runner's
+  own JSON; the run-group rows carry the same per-file fields.
+- Archive new runs: `scripts/benchmarks/archive_results.py` (one run-group) and
+  `scripts/benchmarks/archive_corpus.py` (corpus metadata). Both need the local corpus;
+  they refuse to write anything that still contains a filename or an absolute path.

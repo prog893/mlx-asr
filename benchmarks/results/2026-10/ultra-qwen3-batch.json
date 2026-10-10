@@ -1,0 +1,1028 @@
+{
+ "group": "ultra-qwen3-batch",
+ "question": "qwen3-asr decoder batch at 15s windows",
+ "docs": [
+  "docs/benchmarks/qwen3-batch.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "qwen3batch_1.7B_8bit_c15_b1 [batch 1]",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --model mlx-community/Qwen3-ASR-1.7B-8bit --chunk-seconds 15.0 --language ja  (batch 1)",
+   "params": {
+    "model": "mlx-community/Qwen3-ASR-1.7B-8bit",
+    "chunk_seconds": 15.0,
+    "language": "ja"
+   },
+   "machine": {
+    "busy": false,
+    "busy_reasons": [],
+    "load_1min": 2.4,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.03
+   },
+   "aggregate": {
+    "char": {
+     "error_rate": 0.198767,
+     "files": 17
+    },
+    "word": {
+     "error_rate": 0.277359,
+     "files": 3
+    }
+   },
+   "measures": {
+    "x_realtime": 26.74,
+    "peak_gb": 3.73,
+    "wall_s": 1070.7
+   },
+   "files": [
+    {
+     "file": "7f8150fdef0e.wav",
+     "duration_s": 883.0,
+     "wall_s": 25.18,
+     "x_realtime": 35.07,
+     "unit": "char",
+     "coverage_cer": 0.17648893046460867,
+     "chars": 4408,
+     "segments": 61,
+     "runaway_segments": 1
+    },
+    {
+     "file": "c18b2f5aa2a2.wav",
+     "duration_s": 3121.0,
+     "wall_s": 159.97,
+     "x_realtime": 19.51,
+     "unit": "char",
+     "coverage_cer": 0.23296529968454258,
+     "chars": 35008,
+     "segments": 205,
+     "runaway_segments": 40
+    },
+    {
+     "file": "9aefd8f2352e.wav",
+     "duration_s": 5592.0,
+     "wall_s": 220.79,
+     "x_realtime": 25.33,
+     "unit": "char",
+     "coverage_cer": 0.2399796541200407,
+     "chars": 41991,
+     "segments": 372,
+     "runaway_segments": 43
+    },
+    {
+     "file": "07fd66556725.wav",
+     "duration_s": 798.0,
+     "wall_s": 31.69,
+     "x_realtime": 25.18,
+     "unit": "char",
+     "coverage_cer": 0.17159763313609466,
+     "chars": 6300,
+     "segments": 53,
+     "runaway_segments": 6
+    },
+    {
+     "file": "c29657df52e9.wav",
+     "duration_s": 4175.0,
+     "wall_s": 191.67,
+     "x_realtime": 21.78,
+     "unit": "char",
+     "coverage_cer": 0.18617376217803283,
+     "chars": 39773,
+     "segments": 272,
+     "runaway_segments": 46
+    },
+    {
+     "file": "cbeb19543902.wav",
+     "duration_s": 1553.0,
+     "wall_s": 60.59,
+     "x_realtime": 25.63,
+     "unit": "char",
+     "coverage_cer": 0.1949848681366191,
+     "chars": 11249,
+     "segments": 102,
+     "runaway_segments": 14
+    },
+    {
+     "file": "b88caf8c0924.wav",
+     "duration_s": 330.0,
+     "wall_s": 17.94,
+     "x_realtime": 18.4,
+     "unit": "char",
+     "coverage_cer": 0.11038353601496725,
+     "chars": 4531,
+     "segments": 22,
+     "runaway_segments": 5
+    },
+    {
+     "file": "bbdabfabfb4f.wav",
+     "duration_s": 787.0,
+     "wall_s": 27.26,
+     "x_realtime": 28.87,
+     "unit": "char",
+     "coverage_cer": 0.18090787716955942,
+     "chars": 5196,
+     "segments": 54,
+     "runaway_segments": 2
+    },
+    {
+     "file": "1672083b2499.wav",
+     "duration_s": 797.0,
+     "wall_s": 26.09,
+     "x_realtime": 30.54,
+     "unit": "char",
+     "coverage_cer": 0.2383324593602517,
+     "chars": 5039,
+     "segments": 55,
+     "runaway_segments": 1
+    },
+    {
+     "file": "5b44e078553d.wav",
+     "duration_s": 687.0,
+     "wall_s": 23.19,
+     "x_realtime": 29.63,
+     "unit": "char",
+     "coverage_cer": 0.19784656796769853,
+     "chars": 4913,
+     "segments": 45,
+     "runaway_segments": 1
+    },
+    {
+     "file": "a73e94506f13.wav",
+     "duration_s": 606.0,
+     "wall_s": 24.16,
+     "x_realtime": 25.09,
+     "unit": "char",
+     "coverage_cer": 0.2278051787916153,
+     "chars": 5300,
+     "segments": 39,
+     "runaway_segments": 2
+    },
+    {
+     "file": "bb5cf5d5b247.wav",
+     "duration_s": 112.0,
+     "wall_s": 3.12,
+     "x_realtime": 35.9,
+     "unit": "char",
+     "coverage_cer": 0.2156398104265403,
+     "chars": 529,
+     "segments": 8,
+     "runaway_segments": 0
+    },
+    {
+     "file": "0c193bf7ced2.wav",
+     "duration_s": 2122.0,
+     "wall_s": 56.92,
+     "x_realtime": 37.28,
+     "unit": "word",
+     "coverage_cer": 0.3322058468229041,
+     "chars": 21038,
+     "segments": 144,
+     "runaway_segments": 1
+    },
+    {
+     "file": "57d841fe39b5.wav",
+     "duration_s": 1300.0,
+     "wall_s": 33.09,
+     "x_realtime": 39.29,
+     "unit": "word",
+     "coverage_cer": 0.34513771781899943,
+     "chars": 10284,
+     "segments": 88,
+     "runaway_segments": 0
+    },
+    {
+     "file": "a773a315fb42.wav",
+     "duration_s": 1193.1,
+     "wall_s": 36.6,
+     "x_realtime": 32.59,
+     "unit": "char",
+     "coverage_cer": 0.15347280334728033,
+     "chars": 6815,
+     "segments": 77,
+     "runaway_segments": 0
+    },
+    {
+     "file": "71bb5eba3baa.wav",
+     "duration_s": 558.2,
+     "wall_s": 17.85,
+     "x_realtime": 31.27,
+     "unit": "char",
+     "coverage_cer": 0.2687555163283319,
+     "chars": 2958,
+     "segments": 35,
+     "runaway_segments": 0
+    },
+    {
+     "file": "1da58e1b2b69.wav",
+     "duration_s": 778.3,
+     "wall_s": 20.92,
+     "x_realtime": 37.21,
+     "unit": "char",
+     "coverage_cer": 0.18032786885245902,
+     "chars": 3237,
+     "segments": 54,
+     "runaway_segments": 0
+    },
+    {
+     "file": "a1372c4d2900.wav",
+     "duration_s": 1514.3,
+     "wall_s": 43.9,
+     "x_realtime": 34.49,
+     "unit": "char",
+     "coverage_cer": 0.19696576763485477,
+     "chars": 8245,
+     "segments": 103,
+     "runaway_segments": 0
+    },
+    {
+     "file": "c47ad127bc83.wav",
+     "duration_s": 939.8,
+     "wall_s": 28.11,
+     "x_realtime": 33.43,
+     "unit": "char",
+     "coverage_cer": 0.1304448563484708,
+     "chars": 4982,
+     "segments": 62,
+     "runaway_segments": 0
+    },
+    {
+     "file": "b3432b40c079.wav",
+     "duration_s": 778.3,
+     "wall_s": 21.61,
+     "x_realtime": 36.02,
+     "unit": "word",
+     "coverage_cer": 0.0652837095790116,
+     "chars": 8776,
+     "segments": 54,
+     "runaway_segments": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "qwen3batch_1.7B_8bit_c15_b2 [batch 2]",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --model mlx-community/Qwen3-ASR-1.7B-8bit --chunk-seconds 15.0 --language ja  (batch 2)",
+   "params": {
+    "model": "mlx-community/Qwen3-ASR-1.7B-8bit",
+    "chunk_seconds": 15.0,
+    "language": "ja"
+   },
+   "machine": {
+    "busy": false,
+    "busy_reasons": [],
+    "load_1min": 5.23,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.28
+   },
+   "aggregate": {
+    "char": {
+     "error_rate": 0.201054,
+     "files": 17
+    },
+    "word": {
+     "error_rate": 0.285695,
+     "files": 3
+    }
+   },
+   "measures": {
+    "x_realtime": 19.61,
+    "peak_gb": 3.77,
+    "wall_s": 1459.6
+   },
+   "files": [
+    {
+     "file": "7f8150fdef0e.wav",
+     "duration_s": 883.0,
+     "wall_s": 26.29,
+     "x_realtime": 33.58,
+     "unit": "char",
+     "coverage_cer": 0.18054256314312442,
+     "chars": 4900,
+     "segments": 61,
+     "runaway_segments": null
+    },
+    {
+     "file": "c18b2f5aa2a2.wav",
+     "duration_s": 3121.0,
+     "wall_s": 220.64,
+     "x_realtime": 14.14,
+     "unit": "char",
+     "coverage_cer": 0.25141955835962143,
+     "chars": 44229,
+     "segments": 205,
+     "runaway_segments": null
+    },
+    {
+     "file": "9aefd8f2352e.wav",
+     "duration_s": 5592.0,
+     "wall_s": 324.11,
+     "x_realtime": 17.25,
+     "unit": "char",
+     "coverage_cer": 0.23163784333672433,
+     "chars": 60372,
+     "segments": 372,
+     "runaway_segments": null
+    },
+    {
+     "file": "07fd66556725.wav",
+     "duration_s": 798.0,
+     "wall_s": 38.54,
+     "x_realtime": 20.71,
+     "unit": "char",
+     "coverage_cer": 0.17317554240631164,
+     "chars": 7863,
+     "segments": 53,
+     "runaway_segments": null
+    },
+    {
+     "file": "c29657df52e9.wav",
+     "duration_s": 4175.0,
+     "wall_s": 269.84,
+     "x_realtime": 15.47,
+     "unit": "char",
+     "coverage_cer": 0.1872414253303083,
+     "chars": 55617,
+     "segments": 272,
+     "runaway_segments": null
+    },
+    {
+     "file": "cbeb19543902.wav",
+     "duration_s": 1553.0,
+     "wall_s": 141.4,
+     "x_realtime": 10.98,
+     "unit": "char",
+     "coverage_cer": 0.1975789018590575,
+     "chars": 17219,
+     "segments": 102,
+     "runaway_segments": null
+    },
+    {
+     "file": "b88caf8c0924.wav",
+     "duration_s": 330.0,
+     "wall_s": 31.05,
+     "x_realtime": 10.63,
+     "unit": "char",
+     "coverage_cer": 0.13189897100093545,
+     "chars": 6219,
+     "segments": 22,
+     "runaway_segments": null
+    },
+    {
+     "file": "bbdabfabfb4f.wav",
+     "duration_s": 787.0,
+     "wall_s": 34.45,
+     "x_realtime": 22.84,
+     "unit": "char",
+     "coverage_cer": 0.18057409879839786,
+     "chars": 5953,
+     "segments": 54,
+     "runaway_segments": null
+    },
+    {
+     "file": "1672083b2499.wav",
+     "duration_s": 797.0,
+     "wall_s": 30.3,
+     "x_realtime": 26.3,
+     "unit": "char",
+     "coverage_cer": 0.2393812270582066,
+     "chars": 5373,
+     "segments": 55,
+     "runaway_segments": null
+    },
+    {
+     "file": "5b44e078553d.wav",
+     "duration_s": 687.0,
+     "wall_s": 23.16,
+     "x_realtime": 29.66,
+     "unit": "char",
+     "coverage_cer": 0.19569313593539703,
+     "chars": 5227,
+     "segments": 45,
+     "runaway_segments": null
+    },
+    {
+     "file": "a73e94506f13.wav",
+     "duration_s": 606.0,
+     "wall_s": 22.43,
+     "x_realtime": 27.01,
+     "unit": "char",
+     "coverage_cer": 0.2311960542540074,
+     "chars": 4759,
+     "segments": 39,
+     "runaway_segments": null
+    },
+    {
+     "file": "bb5cf5d5b247.wav",
+     "duration_s": 112.0,
+     "wall_s": 2.85,
+     "x_realtime": 39.29,
+     "unit": "char",
+     "coverage_cer": 0.15165876777251186,
+     "chars": 533,
+     "segments": 8,
+     "runaway_segments": null
+    },
+    {
+     "file": "0c193bf7ced2.wav",
+     "duration_s": 2122.0,
+     "wall_s": 65.08,
+     "x_realtime": 32.6,
+     "unit": "word",
+     "coverage_cer": 0.3389707658854796,
+     "chars": 22701,
+     "segments": 144,
+     "runaway_segments": null
+    },
+    {
+     "file": "57d841fe39b5.wav",
+     "duration_s": 1300.0,
+     "wall_s": 64.99,
+     "x_realtime": 20.0,
+     "unit": "word",
+     "coverage_cer": 0.3614390106801574,
+     "chars": 11351,
+     "segments": 88,
+     "runaway_segments": null
+    },
+    {
+     "file": "a773a315fb42.wav",
+     "duration_s": 1193.1,
+     "wall_s": 41.97,
+     "x_realtime": 28.42,
+     "unit": "char",
+     "coverage_cer": 0.15866108786610877,
+     "chars": 7154,
+     "segments": 77,
+     "runaway_segments": null
+    },
+    {
+     "file": "71bb5eba3baa.wav",
+     "duration_s": 558.2,
+     "wall_s": 16.03,
+     "x_realtime": 34.82,
+     "unit": "char",
+     "coverage_cer": 0.2722859664607237,
+     "chars": 2980,
+     "segments": 35,
+     "runaway_segments": null
+    },
+    {
+     "file": "1da58e1b2b69.wav",
+     "duration_s": 778.3,
+     "wall_s": 19.3,
+     "x_realtime": 40.33,
+     "unit": "char",
+     "coverage_cer": 0.1841109709962169,
+     "chars": 3271,
+     "segments": 54,
+     "runaway_segments": null
+    },
+    {
+     "file": "a1372c4d2900.wav",
+     "duration_s": 1514.3,
+     "wall_s": 39.61,
+     "x_realtime": 38.23,
+     "unit": "char",
+     "coverage_cer": 0.19929979253112035,
+     "chars": 8307,
+     "segments": 103,
+     "runaway_segments": null
+    },
+    {
+     "file": "c47ad127bc83.wav",
+     "duration_s": 939.8,
+     "wall_s": 28.2,
+     "x_realtime": 33.33,
+     "unit": "char",
+     "coverage_cer": 0.13600556070435588,
+     "chars": 5279,
+     "segments": 62,
+     "runaway_segments": null
+    },
+    {
+     "file": "b3432b40c079.wav",
+     "duration_s": 778.3,
+     "wall_s": 19.36,
+     "x_realtime": 40.2,
+     "unit": "word",
+     "coverage_cer": 0.06894447834045149,
+     "chars": 8806,
+     "segments": 54,
+     "runaway_segments": null
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "qwen3batch_1.7B_8bit_c15_b4 [batch 4]",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --model mlx-community/Qwen3-ASR-1.7B-8bit --chunk-seconds 15.0 --language ja  (batch 4)",
+   "params": {
+    "model": "mlx-community/Qwen3-ASR-1.7B-8bit",
+    "chunk_seconds": 15.0,
+    "language": "ja"
+   },
+   "machine": {
+    "busy": true,
+    "busy_reasons": [
+     "7.2GB GPU memory already in use"
+    ],
+    "load_1min": 2.9,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 7.21
+   },
+   "aggregate": {
+    "word": {
+     "error_rate": 0.290327,
+     "files": 3
+    },
+    "char": {
+     "error_rate": 0.200315,
+     "files": 17
+    }
+   },
+   "measures": {
+    "x_realtime": 15.37,
+    "peak_gb": 3.82,
+    "wall_s": 1861.8
+   },
+   "files": [
+    {
+     "file": "7f8150fdef0e.wav",
+     "duration_s": 883.0,
+     "wall_s": 34.51,
+     "x_realtime": 25.59,
+     "unit": "char",
+     "coverage_cer": 0.17430620517617712,
+     "chars": 5945,
+     "segments": 61,
+     "runaway_segments": null
+    },
+    {
+     "file": "c18b2f5aa2a2.wav",
+     "duration_s": 3121.0,
+     "wall_s": 347.35,
+     "x_realtime": 8.99,
+     "unit": "char",
+     "coverage_cer": 0.23675078864353313,
+     "chars": 68927,
+     "segments": 205,
+     "runaway_segments": null
+    },
+    {
+     "file": "9aefd8f2352e.wav",
+     "duration_s": 5592.0,
+     "wall_s": 448.89,
+     "x_realtime": 12.46,
+     "unit": "char",
+     "coverage_cer": 0.2323499491353001,
+     "chars": 81620,
+     "segments": 372,
+     "runaway_segments": null
+    },
+    {
+     "file": "07fd66556725.wav",
+     "duration_s": 798.0,
+     "wall_s": 56.72,
+     "x_realtime": 14.07,
+     "unit": "char",
+     "coverage_cer": 0.17001972386587771,
+     "chars": 9471,
+     "segments": 53,
+     "runaway_segments": null
+    },
+    {
+     "file": "c29657df52e9.wav",
+     "duration_s": 4175.0,
+     "wall_s": 390.63,
+     "x_realtime": 10.69,
+     "unit": "char",
+     "coverage_cer": 0.2117976778326438,
+     "chars": 72345,
+     "segments": 272,
+     "runaway_segments": null
+    },
+    {
+     "file": "cbeb19543902.wav",
+     "duration_s": 1553.0,
+     "wall_s": 158.97,
+     "x_realtime": 9.77,
+     "unit": "char",
+     "coverage_cer": 0.22006052745352356,
+     "chars": 25951,
+     "segments": 102,
+     "runaway_segments": null
+    },
+    {
+     "file": "b88caf8c0924.wav",
+     "duration_s": 330.0,
+     "wall_s": 23.5,
+     "x_realtime": 14.04,
+     "unit": "char",
+     "coverage_cer": 0.11412535079513564,
+     "chars": 6212,
+     "segments": 22,
+     "runaway_segments": null
+    },
+    {
+     "file": "bbdabfabfb4f.wav",
+     "duration_s": 787.0,
+     "wall_s": 59.57,
+     "x_realtime": 13.21,
+     "unit": "char",
+     "coverage_cer": 0.1829105473965287,
+     "chars": 9166,
+     "segments": 54,
+     "runaway_segments": null
+    },
+    {
+     "file": "1672083b2499.wav",
+     "duration_s": 797.0,
+     "wall_s": 28.22,
+     "x_realtime": 28.24,
+     "unit": "char",
+     "coverage_cer": 0.24095437860513896,
+     "chars": 5966,
+     "segments": 55,
+     "runaway_segments": null
+    },
+    {
+     "file": "5b44e078553d.wav",
+     "duration_s": 687.0,
+     "wall_s": 18.4,
+     "x_realtime": 37.34,
+     "unit": "char",
+     "coverage_cer": 0.1946164199192463,
+     "chars": 4533,
+     "segments": 45,
+     "runaway_segments": null
+    },
+    {
+     "file": "a73e94506f13.wav",
+     "duration_s": 606.0,
+     "wall_s": 30.87,
+     "x_realtime": 19.63,
+     "unit": "char",
+     "coverage_cer": 0.2127003699136868,
+     "chars": 5533,
+     "segments": 39,
+     "runaway_segments": null
+    },
+    {
+     "file": "bb5cf5d5b247.wav",
+     "duration_s": 112.0,
+     "wall_s": 2.75,
+     "x_realtime": 40.69,
+     "unit": "char",
+     "coverage_cer": 0.13981042654028436,
+     "chars": 564,
+     "segments": 8,
+     "runaway_segments": null
+    },
+    {
+     "file": "0c193bf7ced2.wav",
+     "duration_s": 2122.0,
+     "wall_s": 66.59,
+     "x_realtime": 31.87,
+     "unit": "word",
+     "coverage_cer": 0.3430780381734719,
+     "chars": 23513,
+     "segments": 144,
+     "runaway_segments": null
+    },
+    {
+     "file": "57d841fe39b5.wav",
+     "duration_s": 1300.0,
+     "wall_s": 35.35,
+     "x_realtime": 36.77,
+     "unit": "word",
+     "coverage_cer": 0.36930860033726814,
+     "chars": 11018,
+     "segments": 88,
+     "runaway_segments": null
+    },
+    {
+     "file": "a773a315fb42.wav",
+     "duration_s": 1193.1,
+     "wall_s": 30.71,
+     "x_realtime": 38.84,
+     "unit": "char",
+     "coverage_cer": 0.15447698744769875,
+     "chars": 6398,
+     "segments": 77,
+     "runaway_segments": null
+    },
+    {
+     "file": "71bb5eba3baa.wav",
+     "duration_s": 558.2,
+     "wall_s": 19.74,
+     "x_realtime": 28.28,
+     "unit": "char",
+     "coverage_cer": 0.2705207413945278,
+     "chars": 3699,
+     "segments": 35,
+     "runaway_segments": null
+    },
+    {
+     "file": "1da58e1b2b69.wav",
+     "duration_s": 778.3,
+     "wall_s": 18.35,
+     "x_realtime": 42.42,
+     "unit": "char",
+     "coverage_cer": 0.18095838587641866,
+     "chars": 3263,
+     "segments": 54,
+     "runaway_segments": null
+    },
+    {
+     "file": "a1372c4d2900.wav",
+     "duration_s": 1514.3,
+     "wall_s": 37.75,
+     "x_realtime": 40.11,
+     "unit": "char",
+     "coverage_cer": 0.19346473029045644,
+     "chars": 8265,
+     "segments": 103,
+     "runaway_segments": null
+    },
+    {
+     "file": "c47ad127bc83.wav",
+     "duration_s": 939.8,
+     "wall_s": 34.4,
+     "x_realtime": 27.32,
+     "unit": "char",
+     "coverage_cer": 0.13253012048192772,
+     "chars": 5913,
+     "segments": 62,
+     "runaway_segments": null
+    },
+    {
+     "file": "b3432b40c079.wav",
+     "duration_s": 778.3,
+     "wall_s": 18.53,
+     "x_realtime": 42.01,
+     "unit": "word",
+     "coverage_cer": 0.0713849908480781,
+     "chars": 8795,
+     "segments": 54,
+     "runaway_segments": null
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "qwen3batch_1.7B_8bit_c15_b8 [batch 8]",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --model mlx-community/Qwen3-ASR-1.7B-8bit --chunk-seconds 15.0 --language ja  (batch 8)",
+   "params": {
+    "model": "mlx-community/Qwen3-ASR-1.7B-8bit",
+    "chunk_seconds": 15.0,
+    "language": "ja"
+   },
+   "machine": {
+    "busy": false,
+    "busy_reasons": [],
+    "load_1min": 3.33,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.28
+   },
+   "aggregate": {
+    "word": {
+     "error_rate": 0.286754,
+     "files": 3
+    },
+    "char": {
+     "error_rate": 0.203297,
+     "files": 17
+    }
+   },
+   "measures": {
+    "x_realtime": 9.85,
+    "peak_gb": 6.01,
+    "wall_s": 2905.3
+   },
+   "files": [
+    {
+     "file": "7f8150fdef0e.wav",
+     "duration_s": 883.0,
+     "wall_s": 60.39,
+     "x_realtime": 14.62,
+     "unit": "char",
+     "coverage_cer": 0.1780480199563455,
+     "chars": 7691,
+     "segments": 61,
+     "runaway_segments": null
+    },
+    {
+     "file": "c18b2f5aa2a2.wav",
+     "duration_s": 3121.0,
+     "wall_s": 463.34,
+     "x_realtime": 6.74,
+     "unit": "char",
+     "coverage_cer": 0.25094637223974764,
+     "chars": 83956,
+     "segments": 205,
+     "runaway_segments": null
+    },
+    {
+     "file": "9aefd8f2352e.wav",
+     "duration_s": 5592.0,
+     "wall_s": 816.09,
+     "x_realtime": 6.85,
+     "unit": "char",
+     "coverage_cer": 0.23957273652085453,
+     "chars": 112696,
+     "segments": 372,
+     "runaway_segments": null
+    },
+    {
+     "file": "07fd66556725.wav",
+     "duration_s": 798.0,
+     "wall_s": 156.79,
+     "x_realtime": 5.09,
+     "unit": "char",
+     "coverage_cer": 0.17001972386587771,
+     "chars": 15843,
+     "segments": 53,
+     "runaway_segments": null
+    },
+    {
+     "file": "c29657df52e9.wav",
+     "duration_s": 4175.0,
+     "wall_s": 488.35,
+     "x_realtime": 8.55,
+     "unit": "char",
+     "coverage_cer": 0.187775256906446,
+     "chars": 92841,
+     "segments": 272,
+     "runaway_segments": null
+    },
+    {
+     "file": "cbeb19543902.wav",
+     "duration_s": 1553.0,
+     "wall_s": 237.01,
+     "x_realtime": 6.55,
+     "unit": "char",
+     "coverage_cer": 0.3151750972762646,
+     "chars": 31647,
+     "segments": 102,
+     "runaway_segments": null
+    },
+    {
+     "file": "b88caf8c0924.wav",
+     "duration_s": 330.0,
+     "wall_s": 40.0,
+     "x_realtime": 8.25,
+     "unit": "char",
+     "coverage_cer": 0.10851262862488306,
+     "chars": 7693,
+     "segments": 22,
+     "runaway_segments": null
+    },
+    {
+     "file": "bbdabfabfb4f.wav",
+     "duration_s": 787.0,
+     "wall_s": 80.55,
+     "x_realtime": 9.77,
+     "unit": "char",
+     "coverage_cer": 0.18124165554072097,
+     "chars": 10518,
+     "segments": 54,
+     "runaway_segments": null
+    },
+    {
+     "file": "1672083b2499.wav",
+     "duration_s": 797.0,
+     "wall_s": 58.4,
+     "x_realtime": 13.65,
+     "unit": "char",
+     "coverage_cer": 0.23990561090718407,
+     "chars": 7338,
+     "segments": 55,
+     "runaway_segments": null
+    },
+    {
+     "file": "5b44e078553d.wav",
+     "duration_s": 687.0,
+     "wall_s": 16.86,
+     "x_realtime": 40.76,
+     "unit": "char",
+     "coverage_cer": 0.19892328398384926,
+     "chars": 4533,
+     "segments": 45,
+     "runaway_segments": null
+    },
+    {
+     "file": "a73e94506f13.wav",
+     "duration_s": 606.0,
+     "wall_s": 82.33,
+     "x_realtime": 7.36,
+     "unit": "char",
+     "coverage_cer": 0.20530209617755857,
+     "chars": 7122,
+     "segments": 39,
+     "runaway_segments": null
+    },
+    {
+     "file": "bb5cf5d5b247.wav",
+     "duration_s": 112.0,
+     "wall_s": 3.13,
+     "x_realtime": 35.74,
+     "unit": "char",
+     "coverage_cer": 0.2037914691943128,
+     "chars": 534,
+     "segments": 8,
+     "runaway_segments": null
+    },
+    {
+     "file": "0c193bf7ced2.wav",
+     "duration_s": 2122.0,
+     "wall_s": 116.24,
+     "x_realtime": 18.26,
+     "unit": "word",
+     "coverage_cer": 0.3425948296690022,
+     "chars": 26322,
+     "segments": 144,
+     "runaway_segments": null
+    },
+    {
+     "file": "57d841fe39b5.wav",
+     "duration_s": 1300.0,
+     "wall_s": 31.13,
+     "x_realtime": 41.76,
+     "unit": "word",
+     "coverage_cer": 0.3614390106801574,
+     "chars": 9506,
+     "segments": 88,
+     "runaway_segments": null
+    },
+    {
+     "file": "a773a315fb42.wav",
+     "duration_s": 1193.1,
+     "wall_s": 31.9,
+     "x_realtime": 37.4,
+     "unit": "char",
+     "coverage_cer": 0.15213389121338913,
+     "chars": 6383,
+     "segments": 77,
+     "runaway_segments": null
+    },
+    {
+     "file": "71bb5eba3baa.wav",
+     "duration_s": 558.2,
+     "wall_s": 35.74,
+     "x_realtime": 15.62,
+     "unit": "char",
+     "coverage_cer": 0.27184466019417475,
+     "chars": 5018,
+     "segments": 35,
+     "runaway_segments": null
+    },
+    {
+     "file": "1da58e1b2b69.wav",
+     "duration_s": 778.3,
+     "wall_s": 18.72,
+     "x_realtime": 41.58,
+     "unit": "char",
+     "coverage_cer": 0.1800126103404792,
+     "chars": 3241,
+     "segments": 54,
+     "runaway_segments": null
+    },
+    {
+     "file": "a1372c4d2900.wav",
+     "duration_s": 1514.3,
+     "wall_s": 41.48,
+     "x_realtime": 36.51,
+     "unit": "char",
+     "coverage_cer": 0.19489107883817428,
+     "chars": 8263,
+     "segments": 103,
+     "runaway_segments": null
+    },
+    {
+     "file": "c47ad127bc83.wav",
+     "duration_s": 939.8,
+     "wall_s": 107.46,
+     "x_realtime": 8.75,
+     "unit": "char",
+     "coverage_cer": 0.13160333642261354,
+     "chars": 7112,
+     "segments": 62,
+     "runaway_segments": null
+    },
+    {
+     "file": "b3432b40c079.wav",
+     "duration_s": 778.3,
+     "wall_s": 19.43,
+     "x_realtime": 40.06,
+     "unit": "word",
+     "coverage_cer": 0.06467358145210494,
+     "chars": 8737,
+     "segments": 54,
+     "runaway_segments": null
+    }
+   ],
+   "missing": []
+  }
+ ]
+}
