@@ -119,7 +119,8 @@
      "dels": 431,
      "insertions_counted": 181,
      "insertions_excused": 103,
-     "excused_run_count": 2
+     "excused_run_count": 2,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -479,7 +480,11 @@
      "excused_run_count": 57
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_large-v2_nocond_r3",
@@ -596,7 +601,8 @@
      "dels": 422,
      "insertions_counted": 177,
      "insertions_excused": 103,
-     "excused_run_count": 2
+     "excused_run_count": 2,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -956,7 +962,11 @@
      "excused_run_count": 52
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_large-v2_nocond",
@@ -1071,7 +1081,8 @@
      "dels": 429,
      "insertions_counted": 171,
      "insertions_excused": 103,
-     "excused_run_count": 2
+     "excused_run_count": 2,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1431,7 +1442,11 @@
      "excused_run_count": 53
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_large-v3_nocond_r2",
@@ -1546,7 +1561,8 @@
      "dels": 417,
      "insertions_counted": 56,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1906,7 +1922,11 @@
      "excused_run_count": 44
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_large-v3_nocond_r3",
@@ -2021,7 +2041,8 @@
      "dels": 417,
      "insertions_counted": 56,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -2381,7 +2402,11 @@
      "excused_run_count": 39
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_large-v3_nocond",
@@ -2496,7 +2521,8 @@
      "dels": 417,
      "insertions_counted": 56,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -2856,7 +2882,11 @@
      "excused_run_count": 40
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_medium_nocond_r2",
@@ -2971,7 +3001,8 @@
      "dels": 530,
      "insertions_counted": 55,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3331,7 +3362,11 @@
      "excused_run_count": 58
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_medium_nocond_r3",
@@ -3446,7 +3481,8 @@
      "dels": 496,
      "insertions_counted": 84,
      "insertions_excused": 54,
-     "excused_run_count": 1
+     "excused_run_count": 1,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3806,7 +3842,11 @@
      "excused_run_count": 48
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_medium_nocond",
@@ -3921,7 +3961,8 @@
      "dels": 503,
      "insertions_counted": 99,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -4281,7 +4322,11 @@
      "excused_run_count": 47
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_small_nocond_r2",
@@ -4396,7 +4441,8 @@
      "dels": 403,
      "insertions_counted": 67,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -4756,7 +4802,11 @@
      "excused_run_count": 31
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_small_nocond_r3",
@@ -4871,7 +4921,8 @@
      "dels": 463,
      "insertions_counted": 73,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -5231,7 +5282,11 @@
      "excused_run_count": 40
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_small_nocond",
@@ -5346,7 +5401,8 @@
      "dels": 461,
      "insertions_counted": 64,
      "insertions_excused": 189,
-     "excused_run_count": 1
+     "excused_run_count": 1,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -5706,7 +5762,11 @@
      "excused_run_count": 40
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_turbo_nocond_r2",
@@ -5821,7 +5881,8 @@
      "dels": 421,
      "insertions_counted": 49,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -6181,7 +6242,11 @@
      "excused_run_count": 29
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_turbo_nocond_r3",
@@ -6296,7 +6361,8 @@
      "dels": 424,
      "insertions_counted": 46,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -6656,7 +6722,11 @@
      "excused_run_count": 19
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_turbo_nocond",
@@ -6771,7 +6841,8 @@
      "dels": 421,
      "insertions_counted": 49,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -7131,7 +7202,11 @@
      "excused_run_count": 27
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_base_libdef_r2",
@@ -7246,7 +7321,8 @@
      "dels": 537,
      "insertions_counted": 143,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -7606,7 +7682,11 @@
      "excused_run_count": 30
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_base_libdef_r3",
@@ -7723,7 +7803,8 @@
      "dels": 537,
      "insertions_counted": 143,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -8083,7 +8164,11 @@
      "excused_run_count": 29
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_base_libdef",
@@ -8198,7 +8283,8 @@
      "dels": 537,
      "insertions_counted": 143,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -8558,7 +8644,11 @@
      "excused_run_count": 33
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_tiny_libdef_r2",
@@ -8673,7 +8763,8 @@
      "dels": 509,
      "insertions_counted": 179,
      "insertions_excused": 329,
-     "excused_run_count": 2
+     "excused_run_count": 2,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -9033,7 +9124,11 @@
      "excused_run_count": 22
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_tiny_libdef_r3",
@@ -9150,7 +9245,8 @@
      "dels": 504,
      "insertions_counted": 179,
      "insertions_excused": 205,
-     "excused_run_count": 1
+     "excused_run_count": 1,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -9510,7 +9606,11 @@
      "excused_run_count": 12
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "whisper_tiny_libdef",
@@ -9625,7 +9725,8 @@
      "dels": 661,
      "insertions_counted": 126,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -9985,7 +10086,11 @@
      "excused_run_count": 17
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   }
  ]
 }

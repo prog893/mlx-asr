@@ -227,7 +227,8 @@
      "ref_chars": 2266,
      "chars": 2958,
      "segments": 35,
-     "runaway_segments": 0
+     "runaway_segments": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "1da58e1b2b69.wav",
@@ -278,7 +279,11 @@
      "runaway_segments": 0
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3batch_1.7B_8bit_c15_b2 [batch 2]",
@@ -501,7 +506,8 @@
      "ref_chars": 2266,
      "chars": 2980,
      "segments": 35,
-     "runaway_segments": null
+     "runaway_segments": null,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "1da58e1b2b69.wav",
@@ -552,7 +558,11 @@
      "runaway_segments": null
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3batch_1.7B_8bit_c15_b4 [batch 4]",
@@ -777,7 +787,8 @@
      "ref_chars": 2266,
      "chars": 3699,
      "segments": 35,
-     "runaway_segments": null
+     "runaway_segments": null,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "1da58e1b2b69.wav",
@@ -828,7 +839,11 @@
      "runaway_segments": null
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3batch_1.7B_8bit_c15_b8 [batch 8]",
@@ -1051,7 +1066,8 @@
      "ref_chars": 2266,
      "chars": 5018,
      "segments": 35,
-     "runaway_segments": null
+     "runaway_segments": null,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "1da58e1b2b69.wav",
@@ -1102,7 +1118,11 @@
      "runaway_segments": null
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   }
  ]
 }

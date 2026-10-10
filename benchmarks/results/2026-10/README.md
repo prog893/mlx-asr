@@ -34,6 +34,19 @@ Per-file rows keep the reference length each scorer used (`ref_chars`, and
 `kana_ref_chars` / `lenient_ref_chars` where a run reports those scorers), so every
 length-weighted aggregate can be recomputed from the rows.
 
+## Superseded audio and invalid rows
+
+[`../revisions.json`](../revisions.json) lists corpus files whose audio was replaced, with
+the reason and how the new copy was made. A per-file row that used a superseded copy
+(matched by its recorded `duration_s`) carries `"invalid"`, and its run lists the file in
+`invalid_files`. A run's `aggregate` and `measures` are exactly what the runner wrote, so
+they include invalid rows; recompute from the rows without an `invalid` key.
+
+So far one file: `71bb5eba3baa`. Every run here used its previous copy, which held only the
+first 558.2s of a 783.5s source while the reference runs to 661.2s. Leaving it out lowers
+each run's JP aggregate by about 0.2 points (Voxtral default: 16.29% to 16.07%). The runs
+that used it are rerun candidates on the new copy.
+
 ## Run-groups
 
 | group | machine | what |

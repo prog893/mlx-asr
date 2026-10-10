@@ -56,19 +56,27 @@ def main():
     p.add_argument("--languages", required=True, help="a run JSON covering every file")
     p.add_argument("--derived", action="append", default=[], help="NAME=STEM:SECONDS")
     p.add_argument("--source-ids", help="local JSON {stem: source identifier}")
+    p.add_argument("--revisions", help="committed revisions.json: replaced audio, by id")
+    p.add_argument("--probe-from", action="append", default=[],
+                   help="STEM=PATH: probe this file for STEM (a staged replacement)")
     p.add_argument("--out", required=True)
     a = p.parse_args()
     src = json.load(open(a.source_ids)) if a.source_ids else {}
+    revisions = json.load(open(a.revisions)) if a.revisions else {}
+    probe_from = dict(spec.split("=", 1) for spec in a.probe_from)
     rows = {Path(r["file"]).stem: r for r in json.load(open(a.languages))["results"]}
     units = {s: r["unit"] for s, r in rows.items()}
     files = {}
     for f in sorted(Path(a.corpus).iterdir()):
         if f.suffix.lower() != ".wav":
             continue
-        files[file_id(src.get(f.stem, f.stem))] = {
-            "language": UNIT_LANGUAGE[units[f.stem]], **probe(f),
+        fid = file_id(src.get(f.stem, f.stem))
+        files[fid] = {
+            "language": UNIT_LANGUAGE[units[f.stem]], **probe(Path(probe_from.get(f.stem, f))),
             "reference_length": rows[f.stem]["ref_chars"],
             "reference_unit": "characters" if units[f.stem] == "char" else "words"}
+        if fid in revisions:
+            files[fid]["revisions"] = revisions[fid]
     derived = {}
     for spec in a.derived:
         name, rest = spec.split("=", 1)

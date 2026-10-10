@@ -105,6 +105,26 @@ NEEDED = {"machine state": lambda r: bool(r["machine"]),
           "per-file timing": lambda r: all("x_realtime" in f or "wall_s" in f for f in r["files"])}
 
 
+def mark_invalid(run: dict, revisions: dict):
+    """Flag rows that used a superseded audio copy (see benchmarks/results/revisions.json).
+
+    A row is matched to a revision by its recorded duration, so no run date is needed; a
+    row of a revised file that records no duration is flagged too, being unverifiable.
+    """
+    bad = []
+    for row in run["files"]:
+        fid = Path(row.get("file", "")).name.split(".")[0]
+        for rev in revisions.get(fid, []):
+            dur = row.get("duration_s")
+            if dur is None or abs(dur - rev["previous"]["duration_s"]) < 1.0:
+                row["invalid"] = f"superseded audio revision ({rev['superseded']}): {rev['reason']}"
+                bad.append(fid)
+    if bad:
+        run["invalid_files"] = sorted(set(bad))
+        run["note"] = ("aggregate and measures include the invalid files; recompute from the "
+                       "rows without an 'invalid' key")
+
+
 def build_run(path: Path, keep_ref: bool):
     d = json.loads(path.read_text())
     script, cfg, subs = runner_and_rows(d)
@@ -134,6 +154,8 @@ def main():
     p.add_argument("--note", default="")
     p.add_argument("--source-ids", help="local JSON {stem: source identifier} for files whose "
                    "id hashes something other than the stem (a video id)")
+    p.add_argument("--revisions", help="committed revisions.json; flags rows that used "
+                   "a superseded audio copy")
     p.add_argument("--out", required=True)
     p.add_argument("--keep-ref-lengths", action="store_true",
                    help="keep per-file reference lengths (needed to recompute weighted metrics)")
@@ -144,7 +166,12 @@ def main():
     scrub = Scrubber(stems, json.load(open(a.source_ids)) if a.source_ids else None)
     group = {"group": a.group, "question": a.question, "docs": a.doc, "note": a.note,
              "runs": [r for run in a.runs for r in build_run(Path(run), a.keep_ref_lengths)]}
-    text = json.dumps(scrub(group), indent=1, ensure_ascii=False)
+    group = scrub(group)
+    if a.revisions:
+        revisions = json.load(open(a.revisions))
+        for run in group["runs"]:
+            mark_invalid(run, revisions)
+    text = json.dumps(group, indent=1, ensure_ascii=False)
     if scrub.leaks(text):
         print(f"REFUSED {a.group}: {scrub.leaks(text)} private strings survived", file=sys.stderr)
         return 1

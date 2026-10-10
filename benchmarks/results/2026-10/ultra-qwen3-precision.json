@@ -165,7 +165,8 @@
      "kana_coverage_cer": 0.29157,
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.31377,
-     "lenient_forgiven": 8
+     "lenient_forgiven": 8,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -666,7 +667,11 @@
      "lenient_forgiven": 26
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3_0.6B_5bit_c30",
@@ -823,7 +828,8 @@
      "kana_coverage_cer": 0.26825,
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.29082,
-     "lenient_forgiven": 1
+     "lenient_forgiven": 1,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1324,7 +1330,11 @@
      "lenient_forgiven": 16
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3_0.6B_6bit_c30",
@@ -1479,7 +1489,8 @@
      "kana_coverage_cer": 0.26411,
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.2895,
-     "lenient_forgiven": 2
+     "lenient_forgiven": 2,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1980,7 +1991,11 @@
      "lenient_forgiven": 16
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3_0.6B_8bit_c30",
@@ -2135,7 +2150,8 @@
      "kana_coverage_cer": 0.26975,
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.28817,
-     "lenient_forgiven": 2
+     "lenient_forgiven": 2,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -2636,7 +2652,11 @@
      "lenient_forgiven": 20
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3_0.6B_bf16_c30",
@@ -2789,7 +2809,8 @@
      "kana_coverage_cer": 0.26938,
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.28729,
-     "lenient_forgiven": 2
+     "lenient_forgiven": 2,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3290,7 +3311,11 @@
      "lenient_forgiven": 9
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3_1.7B_4bit_c30",
@@ -3445,7 +3470,8 @@
      "kana_coverage_cer": 0.25245,
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.27626,
-     "lenient_forgiven": 10
+     "lenient_forgiven": 10,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3946,7 +3972,11 @@
      "lenient_forgiven": 21
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3_1.7B_5bit_c30",
@@ -4101,7 +4131,8 @@
      "kana_coverage_cer": 0.24718,
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.26655,
-     "lenient_forgiven": 7
+     "lenient_forgiven": 7,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -4602,7 +4633,11 @@
      "lenient_forgiven": 12
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3_1.7B_6bit_c30",
@@ -4758,7 +4793,8 @@
      "kana_coverage_cer": 0.24755,
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.26787,
-     "lenient_forgiven": 15
+     "lenient_forgiven": 15,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -5259,7 +5295,11 @@
      "lenient_forgiven": 14
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3_1.7B_8bit_c30",
@@ -5411,7 +5451,8 @@
      "kana_coverage_cer": 0.24605,
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.26787,
-     "lenient_forgiven": 9
+     "lenient_forgiven": 9,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -5912,7 +5953,11 @@
      "lenient_forgiven": 17
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "qwen3_1.7B_bf16_c30",
@@ -6066,7 +6111,8 @@
      "kana_coverage_cer": 0.24454,
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.26567,
-     "lenient_forgiven": 13
+     "lenient_forgiven": 13,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -6567,7 +6613,11 @@
      "lenient_forgiven": 17
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   }
  ]
 }

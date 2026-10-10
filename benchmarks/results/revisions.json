@@ -1,0 +1,11 @@
+{
+ "_comment": "Corpus files whose audio was replaced. A run row is invalid when its recorded duration_s matches a superseded copy (within 1s), or records no duration. Read by scripts/benchmarks/archive_corpus.py and archive_results.py.",
+ "71bb5eba3baa": [
+  {
+   "superseded": "2026-10-11",
+   "previous": {"duration_s": 558.2},
+   "reason": "the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio",
+   "new_copy": "re-fetched with yt-dlp 2026.08.19, format 251 (opus, 48 kHz, 2 channels, about 134 kb/s), converted with ffmpeg 9.0.1: ffmpeg -ac 1 -ar 16000 -c:a pcm_s16le"
+  }
+ ]
+}

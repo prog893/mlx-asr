@@ -109,7 +109,8 @@
      "dels": 428,
      "insertions_counted": 28,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -435,7 +436,11 @@
      "excused_run_count": 20
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "vox_default_c30b128_kv8_r3",
@@ -541,7 +546,8 @@
      "dels": 428,
      "insertions_counted": 28,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -867,7 +873,11 @@
      "excused_run_count": 20
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "vox_default_c30b128_kv8",
@@ -973,7 +983,8 @@
      "dels": 428,
      "insertions_counted": 28,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1299,7 +1310,11 @@
      "excused_run_count": 20
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
    "run": "vox_default_c30b32_kv8",
@@ -1404,7 +1419,8 @@
      "dels": 428,
      "insertions_counted": 28,
      "insertions_excused": 0,
-     "excused_run_count": 0
+     "excused_run_count": 0,
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1730,7 +1746,11 @@
      "excused_run_count": 20
     }
    ],
-   "missing": []
+   "missing": [],
+   "invalid_files": [
+    "71bb5eba3baa"
+   ],
+   "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   }
  ]
 }

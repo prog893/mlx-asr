@@ -18,14 +18,16 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS = ROOT / "benchmarks" / "results"
 CORPUS = json.loads((RESULTS / "corpus.json").read_text(encoding="utf-8"))
-GROUPS = sorted(p for p in RESULTS.rglob("*.json") if p.name != "corpus.json")
+GROUPS = sorted(p for p in RESULTS.rglob("*.json") if p.name not in ("corpus.json", "revisions.json"))
 NAME_KEYS = {"file", "files", "looped_files", "skipped_files", "truncated_files"}
 FILE_ID = re.compile(r"^(?P<id>[0-9a-f]{12}|worst\d+)(\.16k)?(\.wav)?$")
 ABS = re.compile(r"/(?:Users|private|tmp|home|var/folders)/")
 DATE_STAMPED = re.compile(r"\d{6}_\d{3}")
 RUN_KEYS = {"run", "command", "params", "machine", "aggregate", "measures", "files", "missing"}
 ALLOWED_META = {"language", "duration_s", "codec", "sample_rate", "bit_depth", "bitrate",
-                "reference_length", "reference_unit"}
+                "reference_length", "reference_unit", "revisions"}
+REVISIONS = {k: v for k, v in json.loads((RESULTS / "revisions.json").read_text(
+    encoding="utf-8")).items() if not k.startswith("_")}
 
 
 def _strings(obj, key=None):
@@ -68,3 +70,51 @@ def test_every_run_group_is_described():
         readme = path.parent / "README.md"
         assert readme.exists(), f"{path.parent} has no README.md"
         assert path.stem in readme.read_text(encoding="utf-8"), f"{path.stem} not in README"
+
+
+def _rows(run, unit="char"):
+    return [f for f in run["files"] if f.get("unit") == unit
+            and f.get("coverage_cer") is not None and f.get("ref_chars")]
+
+
+def _weighted(rows):
+    return sum(f["coverage_cer"] * f["ref_chars"] for f in rows) / sum(f["ref_chars"] for f in rows)
+
+
+@pytest.mark.parametrize("path", GROUPS, ids=[p.stem for p in GROUPS])
+def test_superseded_audio_rows_are_flagged(path):
+    """Every row of a revised file whose duration matches a superseded copy is invalid."""
+    for run in json.loads(path.read_text(encoding="utf-8"))["runs"]:
+        for f in run["files"]:
+            fid = f.get("file", "").split(".")[0]
+            for rev in REVISIONS.get(fid, []):
+                d = f.get("duration_s")
+                if d is None or abs(d - rev["previous"]["duration_s"]) < 1.0:
+                    assert "invalid" in f, (path.stem, run["run"])
+                    assert fid in run.get("invalid_files", []), (path.stem, run["run"])
+
+
+@pytest.mark.parametrize("path", GROUPS, ids=[p.stem for p in GROUPS])
+def test_published_aggregate_recomputes_from_rows(path):
+    """The raw rows are enough: each run's own JP aggregate is reproduced from them."""
+    for run in json.loads(path.read_text(encoding="utf-8"))["runs"]:
+        agg = (run.get("aggregate") or {}).get("char")
+        if isinstance(agg, dict):              # sweep_qwen3_batch.py: {"error_rate": ...}
+            agg = agg.get("error_rate")
+        rows = _rows(run)
+        if agg is None or not rows or len(rows) != len([f for f in run["files"]
+                                                         if f.get("unit") == "char"]):
+            continue
+        assert abs(_weighted(rows) - agg) < 5e-4, (path.stem, run["run"], _weighted(rows), agg)
+
+
+def test_excluding_invalid_rows_matches_the_rescore():
+    """Voxtral at the default config: 16.29% with the truncated file, 15.84% when that file
+    is rescored against a reference cut to its audio. Dropping the file entirely must land
+    below the published figure."""
+    g = json.loads((RESULTS / "2026-10" / "ultra-voxtral-headline.json").read_text(encoding="utf-8"))
+    run = next(r for r in g["runs"] if r["run"] == "vox_default_c30b128_kv8")
+    rows = _rows(run)
+    assert abs(_weighted(rows) - 0.16287) < 5e-4
+    valid = [f for f in rows if "invalid" not in f]
+    assert len(valid) == len(rows) - 1 and _weighted(valid) < _weighted(rows)

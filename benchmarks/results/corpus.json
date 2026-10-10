@@ -70,13 +70,23 @@
   },
   "71bb5eba3baa": {
    "language": "Japanese",
-   "duration_s": 558.193,
+   "duration_s": 783.531,
    "codec": "pcm_s16le",
    "sample_rate": 16000,
    "bit_depth": 16,
    "bitrate": 256000,
    "reference_length": 2266,
-   "reference_unit": "characters"
+   "reference_unit": "characters",
+   "revisions": [
+    {
+     "superseded": "2026-10-11",
+     "previous": {
+      "duration_s": 558.2
+     },
+     "reason": "the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio",
+     "new_copy": "re-fetched with yt-dlp 2026.08.19, format 251 (opus, 48 kHz, 2 channels, about 134 kb/s), converted with ffmpeg 9.0.1: ffmpeg -ac 1 -ar 16000 -c:a pcm_s16le"
+    }
+   ]
   },
   "7f8150fdef0e": {
    "language": "Japanese",
