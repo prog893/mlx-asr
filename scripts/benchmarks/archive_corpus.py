@@ -19,7 +19,7 @@ import av
 import re
 import sys
 
-from archive_results import ABS_PATH, file_id
+from archive_results import ABS_PATH, file_id, token_pattern
 
 DERIVED_NAME = re.compile(r"^[a-z][a-z0-9_-]{0,31}$")
 
@@ -88,7 +88,8 @@ def main():
         name, rest = spec.split("=", 1)
         stem, secs = rest.rsplit(":", 1)
         # a derived input is published by NAME, so NAME must be a generic label
-        if not DERIVED_NAME.match(name) or any(p in name or name in p for p in private):
+        if not DERIVED_NAME.match(name) or any(token_pattern(p).search(name) or
+                                               token_pattern(name).search(p) for p in private):
             sys.exit(f"REFUSED: derived name {name!r} is not a generic label or overlaps a "
                      f"private name; use something like 'worst32'")
         derived[name] = {"derived_from": file_id(src.get(stem, stem)), "cut_first_s": float(secs),
@@ -102,7 +103,8 @@ def main():
     # sorted by id, not by filename: the order of names would itself leak information
     out["files"] = dict(sorted(files.items()))
     text = json.dumps(out, indent=1)
-    leaked = sum(p in text for p in private) + len(ABS_PATH.findall(text))
+    leaked = (sum(bool(token_pattern(p).search(text)) for p in private)
+              + len(ABS_PATH.findall(text)))
     if leaked:
         sys.exit(f"REFUSED: {leaked} private names or absolute paths in the catalog")
     Path(a.out).write_text(text + "\n", encoding="utf-8")

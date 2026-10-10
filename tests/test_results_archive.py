@@ -141,3 +141,16 @@ def test_rebuilt_commands_are_runnable_shapes():
     for path in GROUPS:
         for run in json.loads(path.read_text(encoding="utf-8"))["runs"]:
             assert "(" not in run["command"] and ")" not in run["command"], run["command"]
+
+
+def test_short_stem_does_not_rewrite_ordinary_text():
+    scrub = Scrubber(["a", "rec"])
+    out = scrub({"files": [{"file": "a", "unit": "char"}], "params": {"label": "data"}})
+    assert out["files"][0]["file"] != "a" and out["files"][0]["unit"] == "char"
+    assert "files" in out and out["params"]["label"] == "data"
+    assert scrub.leaks('{"data": "char"}') == 0
+
+
+def test_values_with_spaces_stay_one_argument():
+    assert command("run_corpus.py", {"prompt": "two words"}) == \
+        "scripts/benchmarks/run_corpus.py --prompt 'two words'"

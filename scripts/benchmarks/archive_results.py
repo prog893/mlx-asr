@@ -26,6 +26,7 @@ import argparse
 import hashlib
 import json
 import re
+import shlex
 import sys
 from pathlib import Path
 
@@ -39,6 +40,11 @@ QWEN3_REPO = re.compile(r"Qwen3-ASR-(?P<size>[\d.]+B)-(?P<quant>\w+)$")
 RUN_DROP = {"json", "keep_hyp"}            # local output paths, not inputs
 
 
+def token_pattern(name: str) -> re.Pattern:
+    """`name` as a whole token: not preceded or followed by a letter or digit."""
+    return re.compile(r"(?<![A-Za-z0-9])" + re.escape(name) + r"(?![A-Za-z0-9])")
+
+
 def file_id(stem: str) -> str:
     return hashlib.sha256(stem.encode()).hexdigest()[:12]
 
@@ -50,6 +56,9 @@ class Scrubber:
         src = source_ids or {}
         # longest first so one stem that prefixes another cannot be half-replaced
         self.map = {s: file_id(src.get(s, s)) for s in sorted(stems, key=len, reverse=True)}
+        # a stem counts only as a whole token (not inside a longer word), so a short stem
+        # cannot rewrite schema keys or ordinary text
+        self.pattern = {s: token_pattern(s) for s in self.map}
 
     def __call__(self, obj):
         if isinstance(obj, dict):
@@ -61,12 +70,13 @@ class Scrubber:
             # any absolute path, also inside a command line, keeps only its last part
             s = ABS_PATH.sub(lambda m: m.group(0).rstrip("/").rsplit("/", 1)[-1], s)
             for stem, h in self.map.items():
-                s = s.replace(stem, h)
+                s = self.pattern[stem].sub(h, s)
             return s
         return obj
 
     def leaks(self, text: str) -> int:
-        return sum(stem in text for stem in self.map) + len(ABS_PATH.findall(text))
+        return (sum(bool(p.search(text)) for p in self.pattern.values())
+                + len(ABS_PATH.findall(text)))
 
 
 def runner_and_rows(d: dict):
@@ -111,9 +121,12 @@ def command(script: str, cfg: dict) -> str:
         if k in RUN_DROP or v is None or v is False or v == "":
             continue
         flag = "--" + k.replace("_", "-")
-        v = str(v) if v is not True else v
+        if v is True:
+            parts.append(flag)
+            continue
+        v = shlex.quote(str(v))
         # a value that starts with "-" (a negative gain) must be attached to its flag
-        parts.append(flag if v is True else (f"{flag}={v}" if v.startswith("-") else f"{flag} {v}"))
+        parts.append(f"{flag}={v}" if v.startswith("-") else f"{flag} {v}")
     return " ".join(parts)
 
 
