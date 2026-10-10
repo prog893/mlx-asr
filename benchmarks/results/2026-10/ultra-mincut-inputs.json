@@ -374,7 +374,10 @@
      "excused_run_count": 20
     }
    ],
-   "missing": []
+   "missing": [],
+   "caveats": [
+    "other GPU work at start: 7.3GB GPU memory already in use"
+   ]
   },
   {
    "run": "mincut7_vox_c60b16_kv8",

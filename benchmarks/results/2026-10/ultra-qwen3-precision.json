@@ -2653,6 +2653,9 @@
     }
    ],
    "missing": [],
+   "caveats": [
+    "other GPU work at start: 7.2GB GPU memory already in use"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],

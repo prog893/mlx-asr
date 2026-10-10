@@ -11,17 +11,19 @@ exact check against the real names when a group is written.
 
 import json
 import re
+import sys
 from pathlib import Path
 
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts" / "benchmarks"))
+from archive_results import ABS_PATH, Scrubber, command  # noqa: E402
 RESULTS = ROOT / "benchmarks" / "results"
 CORPUS = json.loads((RESULTS / "corpus.json").read_text(encoding="utf-8"))
 GROUPS = sorted(p for p in RESULTS.rglob("*.json") if p.name not in ("corpus.json", "revisions.json"))
 NAME_KEYS = {"file", "files", "looped_files", "skipped_files", "truncated_files"}
-FILE_ID = re.compile(r"^(?P<id>[0-9a-f]{12}|worst\d+)(\.16k)?(\.wav)?$")
-ABS = re.compile(r"/(?:Users|private|tmp|home|var/folders)/")
+FILE_ID = re.compile(r"^(?P<id>[0-9a-f]{12}|worst\d+)$")
 DATE_STAMPED = re.compile(r"\d{6}_\d{3}")
 RUN_KEYS = {"run", "command", "params", "machine", "aggregate", "measures", "files", "missing"}
 ALLOWED_META = {"language", "duration_s", "codec", "sample_rate", "bit_depth", "bitrate",
@@ -61,7 +63,7 @@ def test_run_group_is_scrubbed_and_complete(path):
         if key in NAME_KEYS:
             m = FILE_ID.match(s)
             assert m and m.group("id") in known, f"{key}={s!r} is not a known file id"
-        assert not ABS.search(s), f"absolute path in {key}"
+        assert not ABS_PATH.search(s), f"absolute path in {key}"
         assert not DATE_STAMPED.search(s), f"date-stamped name in {key}"
 
 
@@ -118,3 +120,24 @@ def test_excluding_invalid_rows_matches_the_rescore():
     assert abs(_weighted(rows) - 0.16287) < 5e-4
     valid = [f for f in rows if "invalid" not in f]
     assert len(valid) == len(rows) - 1 and _weighted(valid) < _weighted(rows)
+
+
+@pytest.mark.parametrize("path", ["/mnt/private/input.wav", "/Volumes/disk/a/b.wav",
+                                  "/Users/x/corpus_all", "/opt/data/set/rec.wav"])
+def test_any_absolute_path_is_scrubbed_and_detected(path):
+    """Not only a fixed list of top-level directories: any absolute path counts."""
+    scrub = Scrubber([])
+    out = scrub(f"run.py --corpus {path} --model mlx-community/x https://h/y bench_out/z")
+    assert not ABS_PATH.search(out), out
+    assert "mlx-community/x" in out and "https://h/y" in out and "bench_out/z" in out
+    assert scrub.leaks(f'"{path}"') == 1
+
+
+def test_rebuilt_commands_are_runnable_shapes():
+    """A sweep arm is selected by its own argument, never by a label appended to the
+    command; a negative value is attached to its flag so argparse does not read an option."""
+    cmd = command("sweep_gain.py", {"modes": "-12", "max_batch": 32, "vad": False, "x": None})
+    assert cmd == "scripts/benchmarks/sweep_gain.py --modes=-12 --max-batch 32"
+    for path in GROUPS:
+        for run in json.loads(path.read_text(encoding="utf-8"))["runs"]:
+            assert "(" not in run["command"] and ")" not in run["command"], run["command"]

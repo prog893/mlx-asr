@@ -874,6 +874,9 @@
     }
    ],
    "missing": [],
+   "caveats": [
+    "other GPU work at start: load 6.71 over 10 cpus"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],
@@ -1746,6 +1749,9 @@
     }
    ],
    "missing": [],
+   "caveats": [
+    "other GPU work at start: load 6.07 over 10 cpus"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],
@@ -2618,6 +2624,9 @@
     }
    ],
    "missing": [],
+   "caveats": [
+    "other GPU work at start: load 3.59 over 10 cpus"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],
@@ -3055,6 +3064,9 @@
     }
    ],
    "missing": [],
+   "caveats": [
+    "other GPU work at start: load 3.58 over 10 cpus"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],

@@ -7,19 +7,36 @@
  "note": "",
  "runs": [
   {
-   "run": "qwen3batch_1.7B_8bit_c15_b1 [batch 1]",
-   "command": "scripts/benchmarks/sweep_qwen3_batch.py --model mlx-community/Qwen3-ASR-1.7B-8bit --chunk-seconds 15.0 --language ja  (batch 1)",
+   "run": "qwen3batch_1.7B_8bit_c15_b1",
+   "arm": "batch 1",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 1",
    "params": {
-    "model": "mlx-community/Qwen3-ASR-1.7B-8bit",
+    "corpus": "bench_out/corpus_all",
     "chunk_seconds": 15.0,
-    "language": "ja"
+    "size": "1.7B",
+    "quantization": "8bit",
+    "language": "ja",
+    "group_budget": true,
+    "batches": "1"
    },
    "machine": {
-    "busy": false,
-    "busy_reasons": [],
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
     "load_1min": 2.4,
+    "cpu_count": 24,
+    "swap_used_mb": 7507.38,
     "swapout_pages_per_s": 0.0,
-    "gpu_in_use_gb": 0.03
+    "gpu_in_use_gb": 0.03,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
    },
    "aggregate": {
     "char": {
@@ -38,7 +55,7 @@
    },
    "files": [
     {
-     "file": "7f8150fdef0e.wav",
+     "file": "7f8150fdef0e",
      "duration_s": 883.0,
      "wall_s": 25.18,
      "x_realtime": 35.07,
@@ -50,7 +67,7 @@
      "runaway_segments": 1
     },
     {
-     "file": "c18b2f5aa2a2.wav",
+     "file": "c18b2f5aa2a2",
      "duration_s": 3121.0,
      "wall_s": 159.97,
      "x_realtime": 19.51,
@@ -62,7 +79,7 @@
      "runaway_segments": 40
     },
     {
-     "file": "9aefd8f2352e.wav",
+     "file": "9aefd8f2352e",
      "duration_s": 5592.0,
      "wall_s": 220.79,
      "x_realtime": 25.33,
@@ -74,7 +91,7 @@
      "runaway_segments": 43
     },
     {
-     "file": "07fd66556725.wav",
+     "file": "07fd66556725",
      "duration_s": 798.0,
      "wall_s": 31.69,
      "x_realtime": 25.18,
@@ -86,7 +103,7 @@
      "runaway_segments": 6
     },
     {
-     "file": "c29657df52e9.wav",
+     "file": "c29657df52e9",
      "duration_s": 4175.0,
      "wall_s": 191.67,
      "x_realtime": 21.78,
@@ -98,7 +115,7 @@
      "runaway_segments": 46
     },
     {
-     "file": "cbeb19543902.wav",
+     "file": "cbeb19543902",
      "duration_s": 1553.0,
      "wall_s": 60.59,
      "x_realtime": 25.63,
@@ -110,7 +127,7 @@
      "runaway_segments": 14
     },
     {
-     "file": "b88caf8c0924.wav",
+     "file": "b88caf8c0924",
      "duration_s": 330.0,
      "wall_s": 17.94,
      "x_realtime": 18.4,
@@ -122,7 +139,7 @@
      "runaway_segments": 5
     },
     {
-     "file": "bbdabfabfb4f.wav",
+     "file": "bbdabfabfb4f",
      "duration_s": 787.0,
      "wall_s": 27.26,
      "x_realtime": 28.87,
@@ -134,7 +151,7 @@
      "runaway_segments": 2
     },
     {
-     "file": "1672083b2499.wav",
+     "file": "1672083b2499",
      "duration_s": 797.0,
      "wall_s": 26.09,
      "x_realtime": 30.54,
@@ -146,7 +163,7 @@
      "runaway_segments": 1
     },
     {
-     "file": "5b44e078553d.wav",
+     "file": "5b44e078553d",
      "duration_s": 687.0,
      "wall_s": 23.19,
      "x_realtime": 29.63,
@@ -158,7 +175,7 @@
      "runaway_segments": 1
     },
     {
-     "file": "a73e94506f13.wav",
+     "file": "a73e94506f13",
      "duration_s": 606.0,
      "wall_s": 24.16,
      "x_realtime": 25.09,
@@ -170,7 +187,7 @@
      "runaway_segments": 2
     },
     {
-     "file": "bb5cf5d5b247.wav",
+     "file": "bb5cf5d5b247",
      "duration_s": 112.0,
      "wall_s": 3.12,
      "x_realtime": 35.9,
@@ -182,7 +199,7 @@
      "runaway_segments": 0
     },
     {
-     "file": "0c193bf7ced2.wav",
+     "file": "0c193bf7ced2",
      "duration_s": 2122.0,
      "wall_s": 56.92,
      "x_realtime": 37.28,
@@ -194,7 +211,7 @@
      "runaway_segments": 1
     },
     {
-     "file": "57d841fe39b5.wav",
+     "file": "57d841fe39b5",
      "duration_s": 1300.0,
      "wall_s": 33.09,
      "x_realtime": 39.29,
@@ -206,7 +223,7 @@
      "runaway_segments": 0
     },
     {
-     "file": "a773a315fb42.wav",
+     "file": "a773a315fb42",
      "duration_s": 1193.1,
      "wall_s": 36.6,
      "x_realtime": 32.59,
@@ -218,7 +235,7 @@
      "runaway_segments": 0
     },
     {
-     "file": "71bb5eba3baa.wav",
+     "file": "71bb5eba3baa",
      "duration_s": 558.2,
      "wall_s": 17.85,
      "x_realtime": 31.27,
@@ -231,7 +248,7 @@
      "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
-     "file": "1da58e1b2b69.wav",
+     "file": "1da58e1b2b69",
      "duration_s": 778.3,
      "wall_s": 20.92,
      "x_realtime": 37.21,
@@ -243,7 +260,7 @@
      "runaway_segments": 0
     },
     {
-     "file": "a1372c4d2900.wav",
+     "file": "a1372c4d2900",
      "duration_s": 1514.3,
      "wall_s": 43.9,
      "x_realtime": 34.49,
@@ -255,7 +272,7 @@
      "runaway_segments": 0
     },
     {
-     "file": "c47ad127bc83.wav",
+     "file": "c47ad127bc83",
      "duration_s": 939.8,
      "wall_s": 28.11,
      "x_realtime": 33.43,
@@ -267,7 +284,7 @@
      "runaway_segments": 0
     },
     {
-     "file": "b3432b40c079.wav",
+     "file": "b3432b40c079",
      "duration_s": 778.3,
      "wall_s": 21.61,
      "x_realtime": 36.02,
@@ -279,26 +296,45 @@
      "runaway_segments": 0
     }
    ],
-   "missing": [],
+   "missing": [
+    "corpus and group budget not recorded by the runner (taken from the queue)"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],
    "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
-   "run": "qwen3batch_1.7B_8bit_c15_b2 [batch 2]",
-   "command": "scripts/benchmarks/sweep_qwen3_batch.py --model mlx-community/Qwen3-ASR-1.7B-8bit --chunk-seconds 15.0 --language ja  (batch 2)",
+   "run": "qwen3batch_1.7B_8bit_c15_b2",
+   "arm": "batch 2",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 2",
    "params": {
-    "model": "mlx-community/Qwen3-ASR-1.7B-8bit",
+    "corpus": "bench_out/corpus_all",
     "chunk_seconds": 15.0,
-    "language": "ja"
+    "size": "1.7B",
+    "quantization": "8bit",
+    "language": "ja",
+    "group_budget": true,
+    "batches": "2"
    },
    "machine": {
-    "busy": false,
-    "busy_reasons": [],
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
     "load_1min": 5.23,
+    "cpu_count": 24,
+    "swap_used_mb": 21457.69,
     "swapout_pages_per_s": 0.0,
-    "gpu_in_use_gb": 0.28
+    "gpu_in_use_gb": 0.28,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
    },
    "aggregate": {
     "char": {
@@ -317,7 +353,7 @@
    },
    "files": [
     {
-     "file": "7f8150fdef0e.wav",
+     "file": "7f8150fdef0e",
      "duration_s": 883.0,
      "wall_s": 26.29,
      "x_realtime": 33.58,
@@ -329,7 +365,7 @@
      "runaway_segments": null
     },
     {
-     "file": "c18b2f5aa2a2.wav",
+     "file": "c18b2f5aa2a2",
      "duration_s": 3121.0,
      "wall_s": 220.64,
      "x_realtime": 14.14,
@@ -341,7 +377,7 @@
      "runaway_segments": null
     },
     {
-     "file": "9aefd8f2352e.wav",
+     "file": "9aefd8f2352e",
      "duration_s": 5592.0,
      "wall_s": 324.11,
      "x_realtime": 17.25,
@@ -353,7 +389,7 @@
      "runaway_segments": null
     },
     {
-     "file": "07fd66556725.wav",
+     "file": "07fd66556725",
      "duration_s": 798.0,
      "wall_s": 38.54,
      "x_realtime": 20.71,
@@ -365,7 +401,7 @@
      "runaway_segments": null
     },
     {
-     "file": "c29657df52e9.wav",
+     "file": "c29657df52e9",
      "duration_s": 4175.0,
      "wall_s": 269.84,
      "x_realtime": 15.47,
@@ -377,7 +413,7 @@
      "runaway_segments": null
     },
     {
-     "file": "cbeb19543902.wav",
+     "file": "cbeb19543902",
      "duration_s": 1553.0,
      "wall_s": 141.4,
      "x_realtime": 10.98,
@@ -389,7 +425,7 @@
      "runaway_segments": null
     },
     {
-     "file": "b88caf8c0924.wav",
+     "file": "b88caf8c0924",
      "duration_s": 330.0,
      "wall_s": 31.05,
      "x_realtime": 10.63,
@@ -401,7 +437,7 @@
      "runaway_segments": null
     },
     {
-     "file": "bbdabfabfb4f.wav",
+     "file": "bbdabfabfb4f",
      "duration_s": 787.0,
      "wall_s": 34.45,
      "x_realtime": 22.84,
@@ -413,7 +449,7 @@
      "runaway_segments": null
     },
     {
-     "file": "1672083b2499.wav",
+     "file": "1672083b2499",
      "duration_s": 797.0,
      "wall_s": 30.3,
      "x_realtime": 26.3,
@@ -425,7 +461,7 @@
      "runaway_segments": null
     },
     {
-     "file": "5b44e078553d.wav",
+     "file": "5b44e078553d",
      "duration_s": 687.0,
      "wall_s": 23.16,
      "x_realtime": 29.66,
@@ -437,7 +473,7 @@
      "runaway_segments": null
     },
     {
-     "file": "a73e94506f13.wav",
+     "file": "a73e94506f13",
      "duration_s": 606.0,
      "wall_s": 22.43,
      "x_realtime": 27.01,
@@ -449,7 +485,7 @@
      "runaway_segments": null
     },
     {
-     "file": "bb5cf5d5b247.wav",
+     "file": "bb5cf5d5b247",
      "duration_s": 112.0,
      "wall_s": 2.85,
      "x_realtime": 39.29,
@@ -461,7 +497,7 @@
      "runaway_segments": null
     },
     {
-     "file": "0c193bf7ced2.wav",
+     "file": "0c193bf7ced2",
      "duration_s": 2122.0,
      "wall_s": 65.08,
      "x_realtime": 32.6,
@@ -473,7 +509,7 @@
      "runaway_segments": null
     },
     {
-     "file": "57d841fe39b5.wav",
+     "file": "57d841fe39b5",
      "duration_s": 1300.0,
      "wall_s": 64.99,
      "x_realtime": 20.0,
@@ -485,7 +521,7 @@
      "runaway_segments": null
     },
     {
-     "file": "a773a315fb42.wav",
+     "file": "a773a315fb42",
      "duration_s": 1193.1,
      "wall_s": 41.97,
      "x_realtime": 28.42,
@@ -497,7 +533,7 @@
      "runaway_segments": null
     },
     {
-     "file": "71bb5eba3baa.wav",
+     "file": "71bb5eba3baa",
      "duration_s": 558.2,
      "wall_s": 16.03,
      "x_realtime": 34.82,
@@ -510,7 +546,7 @@
      "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
-     "file": "1da58e1b2b69.wav",
+     "file": "1da58e1b2b69",
      "duration_s": 778.3,
      "wall_s": 19.3,
      "x_realtime": 40.33,
@@ -522,7 +558,7 @@
      "runaway_segments": null
     },
     {
-     "file": "a1372c4d2900.wav",
+     "file": "a1372c4d2900",
      "duration_s": 1514.3,
      "wall_s": 39.61,
      "x_realtime": 38.23,
@@ -534,7 +570,7 @@
      "runaway_segments": null
     },
     {
-     "file": "c47ad127bc83.wav",
+     "file": "c47ad127bc83",
      "duration_s": 939.8,
      "wall_s": 28.2,
      "x_realtime": 33.33,
@@ -546,7 +582,7 @@
      "runaway_segments": null
     },
     {
-     "file": "b3432b40c079.wav",
+     "file": "b3432b40c079",
      "duration_s": 778.3,
      "wall_s": 19.36,
      "x_realtime": 40.2,
@@ -558,28 +594,47 @@
      "runaway_segments": null
     }
    ],
-   "missing": [],
+   "missing": [
+    "corpus and group budget not recorded by the runner (taken from the queue)"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],
    "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
-   "run": "qwen3batch_1.7B_8bit_c15_b4 [batch 4]",
-   "command": "scripts/benchmarks/sweep_qwen3_batch.py --model mlx-community/Qwen3-ASR-1.7B-8bit --chunk-seconds 15.0 --language ja  (batch 4)",
+   "run": "qwen3batch_1.7B_8bit_c15_b4",
+   "arm": "batch 4",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 4",
    "params": {
-    "model": "mlx-community/Qwen3-ASR-1.7B-8bit",
+    "corpus": "bench_out/corpus_all",
     "chunk_seconds": 15.0,
-    "language": "ja"
+    "size": "1.7B",
+    "quantization": "8bit",
+    "language": "ja",
+    "group_budget": true,
+    "batches": "4"
    },
    "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.9,
+    "cpu_count": 24,
+    "swap_used_mb": 7507.38,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 7.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
     "busy": true,
     "busy_reasons": [
      "7.2GB GPU memory already in use"
-    ],
-    "load_1min": 2.9,
-    "swapout_pages_per_s": 0.0,
-    "gpu_in_use_gb": 7.21
+    ]
    },
    "aggregate": {
     "word": {
@@ -598,7 +653,7 @@
    },
    "files": [
     {
-     "file": "7f8150fdef0e.wav",
+     "file": "7f8150fdef0e",
      "duration_s": 883.0,
      "wall_s": 34.51,
      "x_realtime": 25.59,
@@ -610,7 +665,7 @@
      "runaway_segments": null
     },
     {
-     "file": "c18b2f5aa2a2.wav",
+     "file": "c18b2f5aa2a2",
      "duration_s": 3121.0,
      "wall_s": 347.35,
      "x_realtime": 8.99,
@@ -622,7 +677,7 @@
      "runaway_segments": null
     },
     {
-     "file": "9aefd8f2352e.wav",
+     "file": "9aefd8f2352e",
      "duration_s": 5592.0,
      "wall_s": 448.89,
      "x_realtime": 12.46,
@@ -634,7 +689,7 @@
      "runaway_segments": null
     },
     {
-     "file": "07fd66556725.wav",
+     "file": "07fd66556725",
      "duration_s": 798.0,
      "wall_s": 56.72,
      "x_realtime": 14.07,
@@ -646,7 +701,7 @@
      "runaway_segments": null
     },
     {
-     "file": "c29657df52e9.wav",
+     "file": "c29657df52e9",
      "duration_s": 4175.0,
      "wall_s": 390.63,
      "x_realtime": 10.69,
@@ -658,7 +713,7 @@
      "runaway_segments": null
     },
     {
-     "file": "cbeb19543902.wav",
+     "file": "cbeb19543902",
      "duration_s": 1553.0,
      "wall_s": 158.97,
      "x_realtime": 9.77,
@@ -670,7 +725,7 @@
      "runaway_segments": null
     },
     {
-     "file": "b88caf8c0924.wav",
+     "file": "b88caf8c0924",
      "duration_s": 330.0,
      "wall_s": 23.5,
      "x_realtime": 14.04,
@@ -682,7 +737,7 @@
      "runaway_segments": null
     },
     {
-     "file": "bbdabfabfb4f.wav",
+     "file": "bbdabfabfb4f",
      "duration_s": 787.0,
      "wall_s": 59.57,
      "x_realtime": 13.21,
@@ -694,7 +749,7 @@
      "runaway_segments": null
     },
     {
-     "file": "1672083b2499.wav",
+     "file": "1672083b2499",
      "duration_s": 797.0,
      "wall_s": 28.22,
      "x_realtime": 28.24,
@@ -706,7 +761,7 @@
      "runaway_segments": null
     },
     {
-     "file": "5b44e078553d.wav",
+     "file": "5b44e078553d",
      "duration_s": 687.0,
      "wall_s": 18.4,
      "x_realtime": 37.34,
@@ -718,7 +773,7 @@
      "runaway_segments": null
     },
     {
-     "file": "a73e94506f13.wav",
+     "file": "a73e94506f13",
      "duration_s": 606.0,
      "wall_s": 30.87,
      "x_realtime": 19.63,
@@ -730,7 +785,7 @@
      "runaway_segments": null
     },
     {
-     "file": "bb5cf5d5b247.wav",
+     "file": "bb5cf5d5b247",
      "duration_s": 112.0,
      "wall_s": 2.75,
      "x_realtime": 40.69,
@@ -742,7 +797,7 @@
      "runaway_segments": null
     },
     {
-     "file": "0c193bf7ced2.wav",
+     "file": "0c193bf7ced2",
      "duration_s": 2122.0,
      "wall_s": 66.59,
      "x_realtime": 31.87,
@@ -754,7 +809,7 @@
      "runaway_segments": null
     },
     {
-     "file": "57d841fe39b5.wav",
+     "file": "57d841fe39b5",
      "duration_s": 1300.0,
      "wall_s": 35.35,
      "x_realtime": 36.77,
@@ -766,7 +821,7 @@
      "runaway_segments": null
     },
     {
-     "file": "a773a315fb42.wav",
+     "file": "a773a315fb42",
      "duration_s": 1193.1,
      "wall_s": 30.71,
      "x_realtime": 38.84,
@@ -778,7 +833,7 @@
      "runaway_segments": null
     },
     {
-     "file": "71bb5eba3baa.wav",
+     "file": "71bb5eba3baa",
      "duration_s": 558.2,
      "wall_s": 19.74,
      "x_realtime": 28.28,
@@ -791,7 +846,7 @@
      "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
-     "file": "1da58e1b2b69.wav",
+     "file": "1da58e1b2b69",
      "duration_s": 778.3,
      "wall_s": 18.35,
      "x_realtime": 42.42,
@@ -803,7 +858,7 @@
      "runaway_segments": null
     },
     {
-     "file": "a1372c4d2900.wav",
+     "file": "a1372c4d2900",
      "duration_s": 1514.3,
      "wall_s": 37.75,
      "x_realtime": 40.11,
@@ -815,7 +870,7 @@
      "runaway_segments": null
     },
     {
-     "file": "c47ad127bc83.wav",
+     "file": "c47ad127bc83",
      "duration_s": 939.8,
      "wall_s": 34.4,
      "x_realtime": 27.32,
@@ -827,7 +882,7 @@
      "runaway_segments": null
     },
     {
-     "file": "b3432b40c079.wav",
+     "file": "b3432b40c079",
      "duration_s": 778.3,
      "wall_s": 18.53,
      "x_realtime": 42.01,
@@ -839,26 +894,48 @@
      "runaway_segments": null
     }
    ],
-   "missing": [],
+   "missing": [
+    "corpus and group budget not recorded by the runner (taken from the queue)"
+   ],
+   "caveats": [
+    "other GPU work at start: 7.2GB GPU memory already in use"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],
    "note": "aggregate and measures include the invalid files; recompute from the rows without an 'invalid' key"
   },
   {
-   "run": "qwen3batch_1.7B_8bit_c15_b8 [batch 8]",
-   "command": "scripts/benchmarks/sweep_qwen3_batch.py --model mlx-community/Qwen3-ASR-1.7B-8bit --chunk-seconds 15.0 --language ja  (batch 8)",
+   "run": "qwen3batch_1.7B_8bit_c15_b8",
+   "arm": "batch 8",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 8",
    "params": {
-    "model": "mlx-community/Qwen3-ASR-1.7B-8bit",
+    "corpus": "bench_out/corpus_all",
     "chunk_seconds": 15.0,
-    "language": "ja"
+    "size": "1.7B",
+    "quantization": "8bit",
+    "language": "ja",
+    "group_budget": true,
+    "batches": "8"
    },
    "machine": {
-    "busy": false,
-    "busy_reasons": [],
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
     "load_1min": 3.33,
+    "cpu_count": 24,
+    "swap_used_mb": 34144.94,
     "swapout_pages_per_s": 0.0,
-    "gpu_in_use_gb": 0.28
+    "gpu_in_use_gb": 0.28,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
    },
    "aggregate": {
     "word": {
@@ -877,7 +954,7 @@
    },
    "files": [
     {
-     "file": "7f8150fdef0e.wav",
+     "file": "7f8150fdef0e",
      "duration_s": 883.0,
      "wall_s": 60.39,
      "x_realtime": 14.62,
@@ -889,7 +966,7 @@
      "runaway_segments": null
     },
     {
-     "file": "c18b2f5aa2a2.wav",
+     "file": "c18b2f5aa2a2",
      "duration_s": 3121.0,
      "wall_s": 463.34,
      "x_realtime": 6.74,
@@ -901,7 +978,7 @@
      "runaway_segments": null
     },
     {
-     "file": "9aefd8f2352e.wav",
+     "file": "9aefd8f2352e",
      "duration_s": 5592.0,
      "wall_s": 816.09,
      "x_realtime": 6.85,
@@ -913,7 +990,7 @@
      "runaway_segments": null
     },
     {
-     "file": "07fd66556725.wav",
+     "file": "07fd66556725",
      "duration_s": 798.0,
      "wall_s": 156.79,
      "x_realtime": 5.09,
@@ -925,7 +1002,7 @@
      "runaway_segments": null
     },
     {
-     "file": "c29657df52e9.wav",
+     "file": "c29657df52e9",
      "duration_s": 4175.0,
      "wall_s": 488.35,
      "x_realtime": 8.55,
@@ -937,7 +1014,7 @@
      "runaway_segments": null
     },
     {
-     "file": "cbeb19543902.wav",
+     "file": "cbeb19543902",
      "duration_s": 1553.0,
      "wall_s": 237.01,
      "x_realtime": 6.55,
@@ -949,7 +1026,7 @@
      "runaway_segments": null
     },
     {
-     "file": "b88caf8c0924.wav",
+     "file": "b88caf8c0924",
      "duration_s": 330.0,
      "wall_s": 40.0,
      "x_realtime": 8.25,
@@ -961,7 +1038,7 @@
      "runaway_segments": null
     },
     {
-     "file": "bbdabfabfb4f.wav",
+     "file": "bbdabfabfb4f",
      "duration_s": 787.0,
      "wall_s": 80.55,
      "x_realtime": 9.77,
@@ -973,7 +1050,7 @@
      "runaway_segments": null
     },
     {
-     "file": "1672083b2499.wav",
+     "file": "1672083b2499",
      "duration_s": 797.0,
      "wall_s": 58.4,
      "x_realtime": 13.65,
@@ -985,7 +1062,7 @@
      "runaway_segments": null
     },
     {
-     "file": "5b44e078553d.wav",
+     "file": "5b44e078553d",
      "duration_s": 687.0,
      "wall_s": 16.86,
      "x_realtime": 40.76,
@@ -997,7 +1074,7 @@
      "runaway_segments": null
     },
     {
-     "file": "a73e94506f13.wav",
+     "file": "a73e94506f13",
      "duration_s": 606.0,
      "wall_s": 82.33,
      "x_realtime": 7.36,
@@ -1009,7 +1086,7 @@
      "runaway_segments": null
     },
     {
-     "file": "bb5cf5d5b247.wav",
+     "file": "bb5cf5d5b247",
      "duration_s": 112.0,
      "wall_s": 3.13,
      "x_realtime": 35.74,
@@ -1021,7 +1098,7 @@
      "runaway_segments": null
     },
     {
-     "file": "0c193bf7ced2.wav",
+     "file": "0c193bf7ced2",
      "duration_s": 2122.0,
      "wall_s": 116.24,
      "x_realtime": 18.26,
@@ -1033,7 +1110,7 @@
      "runaway_segments": null
     },
     {
-     "file": "57d841fe39b5.wav",
+     "file": "57d841fe39b5",
      "duration_s": 1300.0,
      "wall_s": 31.13,
      "x_realtime": 41.76,
@@ -1045,7 +1122,7 @@
      "runaway_segments": null
     },
     {
-     "file": "a773a315fb42.wav",
+     "file": "a773a315fb42",
      "duration_s": 1193.1,
      "wall_s": 31.9,
      "x_realtime": 37.4,
@@ -1057,7 +1134,7 @@
      "runaway_segments": null
     },
     {
-     "file": "71bb5eba3baa.wav",
+     "file": "71bb5eba3baa",
      "duration_s": 558.2,
      "wall_s": 35.74,
      "x_realtime": 15.62,
@@ -1070,7 +1147,7 @@
      "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
-     "file": "1da58e1b2b69.wav",
+     "file": "1da58e1b2b69",
      "duration_s": 778.3,
      "wall_s": 18.72,
      "x_realtime": 41.58,
@@ -1082,7 +1159,7 @@
      "runaway_segments": null
     },
     {
-     "file": "a1372c4d2900.wav",
+     "file": "a1372c4d2900",
      "duration_s": 1514.3,
      "wall_s": 41.48,
      "x_realtime": 36.51,
@@ -1094,7 +1171,7 @@
      "runaway_segments": null
     },
     {
-     "file": "c47ad127bc83.wav",
+     "file": "c47ad127bc83",
      "duration_s": 939.8,
      "wall_s": 107.46,
      "x_realtime": 8.75,
@@ -1106,7 +1183,7 @@
      "runaway_segments": null
     },
     {
-     "file": "b3432b40c079.wav",
+     "file": "b3432b40c079",
      "duration_s": 778.3,
      "wall_s": 19.43,
      "x_realtime": 40.06,
@@ -1118,7 +1195,9 @@
      "runaway_segments": null
     }
    ],
-   "missing": [],
+   "missing": [
+    "corpus and group budget not recorded by the runner (taken from the queue)"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],

@@ -16,7 +16,12 @@ from pathlib import Path
 
 import av
 
-from archive_results import file_id
+import re
+import sys
+
+from archive_results import ABS_PATH, file_id
+
+DERIVED_NAME = re.compile(r"^[a-z][a-z0-9_-]{0,31}$")
 
 UNIT_LANGUAGE = {"char": "Japanese", "word": "English"}
 
@@ -77,10 +82,15 @@ def main():
             "reference_unit": "characters" if units[f.stem] == "char" else "words"}
         if fid in revisions:
             files[fid]["revisions"] = revisions[fid]
+    private = set(rows) | set(src.values())          # every name that must not be published
     derived = {}
     for spec in a.derived:
         name, rest = spec.split("=", 1)
         stem, secs = rest.rsplit(":", 1)
+        # a derived input is published by NAME, so NAME must be a generic label
+        if not DERIVED_NAME.match(name) or any(p in name or name in p for p in private):
+            sys.exit(f"REFUSED: derived name {name!r} is not a generic label or overlaps a "
+                     f"private name; use something like 'worst32'")
         derived[name] = {"derived_from": file_id(src.get(stem, stem)), "cut_first_s": float(secs),
                          "language": UNIT_LANGUAGE[units[stem]], "codec": "pcm_s16le",
                          "sample_rate": 16000, "bit_depth": 16}
@@ -91,7 +101,11 @@ def main():
            "processing": PROCESSING, "files": files, "derived": derived}
     # sorted by id, not by filename: the order of names would itself leak information
     out["files"] = dict(sorted(files.items()))
-    Path(a.out).write_text(json.dumps(out, indent=1) + "\n", encoding="utf-8")
+    text = json.dumps(out, indent=1)
+    leaked = sum(p in text for p in private) + len(ABS_PATH.findall(text))
+    if leaked:
+        sys.exit(f"REFUSED: {leaked} private names or absolute paths in the catalog")
+    Path(a.out).write_text(text + "\n", encoding="utf-8")
     print(f"{len(files)} files, {len(derived)} derived -> {a.out}")
 
 

@@ -963,6 +963,9 @@
     }
    ],
    "missing": [],
+   "caveats": [
+    "other GPU work at start: 7.4GB GPU memory already in use"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],
@@ -8165,6 +8168,9 @@
     }
    ],
    "missing": [],
+   "caveats": [
+    "other GPU work at start: 7.4GB GPU memory already in use"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],
@@ -9607,6 +9613,9 @@
     }
    ],
    "missing": [],
+   "caveats": [
+    "other GPU work at start: 7.4GB GPU memory already in use"
+   ],
    "invalid_files": [
     "71bb5eba3baa"
    ],

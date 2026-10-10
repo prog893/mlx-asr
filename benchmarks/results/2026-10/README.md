@@ -18,6 +18,10 @@ A run-group JSON has `group`, `question` (what it measures), `docs` (pages it fe
   peak memory
 - `files`: one row per corpus file with every per-file measure the runner wrote
 - `missing`: what the run did not record. A non-empty list marks a rerun candidate.
+- `arm`: for a sweep that writes several arms into one file, which arm this is; the
+  `command` selects it by its own argument, so it reruns exactly that arm
+- `caveats`: recorded conditions that qualify the run's timing, e.g. other GPU work
+  already resident when it started (taken from `machine`)
 
 Files are named by `sha256(source id)[:12]`, with any derived suffix kept after it. The
 source id is the filename stem for a recording and the video id for a downloaded public
