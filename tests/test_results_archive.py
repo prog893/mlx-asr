@@ -167,7 +167,7 @@ def test_parameter_path_with_spaces_is_cut_whole_and_detected():
     ar = _archiver()
     params = {"corpus": "/mnt/private data/recordings", "max_batch": 32}
     cleaned = {k: ar.last_component(v) for k, v in params.items()}
-    assert cleaned["corpus"] == "recordings"
+    assert cleaned["corpus"] == "<local>/recordings"
     cmd = ar.command("run_corpus.py", cleaned, "x.json")
     assert "private data" not in cmd and cmd.endswith("--json x.json")
     assert ar.Scrubber([]).leaks('"--corpus /mnt/private data/x"') > 0

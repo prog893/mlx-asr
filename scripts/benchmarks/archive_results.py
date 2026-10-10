@@ -43,11 +43,17 @@ RUN_DROP = {"json", "keep_hyp"}            # local output paths, not inputs
 LOCAL_ROOT = re.compile(r"/(?:Users|private|tmp|home|var/folders|Volumes|mnt)/")
 
 
+LOCAL = "<local>"   # documented placeholder for a removed machine-local parent directory
+
+
 def last_component(value):
-    """A parameter value that is an absolute path keeps only its last component. The whole
-    value is one path, so a directory name with spaces is cut with it."""
+    """A parameter value that is an absolute path becomes `<local>/<last component>`: the
+    private parent directories go, the placeholder says the path must be resolved against
+    the reader's own copy (see the archive README). The whole value is one path, so a
+    directory name with spaces is cut with it. Relative paths replay from the repo root and
+    are kept."""
     if isinstance(value, str) and value.startswith("/") and "/" in value.strip("/"):
-        return value.rstrip("/").rsplit("/", 1)[-1]
+        return f"{LOCAL}/" + value.rstrip("/").rsplit("/", 1)[-1]
     return value
 
 

@@ -9,7 +9,10 @@ experiment run-group; each lists its runs.
 A run-group JSON has `group`, `question` (what it measures), `docs` (pages it feeds) and
 `runs`. Each run has:
 
-- `run`: the run's name; `command`: the runner invocation, rebuilt from the recorded config
+- `run`: the run's name; `command`: the runner invocation, rebuilt from the recorded config,
+  ending with a relative `--json` output. Paths relative to the repo root (such as
+  `bench_out/corpus_all`) replay as written; `<local>/` stands for a machine-local parent
+  directory that was removed, so point it at your own copy before replaying
 - `params`: every input parameter the runner recorded
 - `machine`: chip, model id, RAM, GPU cores, macOS and mlx versions, and the machine's
   state when the run started (load, GPU memory in use, swap, power)
