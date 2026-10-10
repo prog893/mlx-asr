@@ -55,7 +55,7 @@ that used it are rerun candidates on the new copy.
 
 | group | machine | what |
 |---|---|---|
-| `ultra-whisper-sizes` | M2 Ultra 128GB | every Whisper size at its default config, 3 runs each |
+| `ultra-whisper-sizes` | M2 Ultra 128GB | every Whisper size at its default config, 3 runs each; large-v3 and turbo 6 runs each |
 | `ultra-voxtral-precision` | M2 Ultra 128GB | Voxtral weight precision at 60s / batch 16 / kv8 |
 | `ultra-voxtral-kv` | M2 Ultra 128GB | KV cache precision with 4-bit weights, and unquantized KV with 8-bit weights |
 | `ultra-voxtral-headline` | M2 Ultra 128GB | the default config, 30s / batch 128, 3 runs; and the former 30s / batch 32 |
@@ -64,9 +64,10 @@ that used it are rerun candidates on the new copy.
 | `ultra-qwen3-window` | M2 Ultra 128GB | qwen3-asr window length, 7-file subset |
 | `ultra-qwen3-batch` | M2 Ultra 128GB | qwen3-asr decoder batch, 15s windows |
 | `ultra-mincut-inputs` | M2 Ultra 128GB | run outputs that the min_cut scoring tables rescore, 7-file subset |
-| `ultra-voxtral-batch` | M2 Ultra 128GB | Voxtral end to end by max batch at 30s chunks |
+| `ultra-voxtral-batch` | M2 Ultra 128GB | Voxtral end to end by max batch at 30s chunks; B32 and B64 3 runs each |
+| `ultra-voxtral-precision-default` | M2 Ultra 128GB | fp16 and 8-bit weights at the default 30s / batch 128 / kv8, with the three 4-bit default runs |
 | `m4-voxtral-batch` | M4 16GB | Voxtral end to end by max batch at 60s chunks: first sweep, interleaved repeats of B24/B32, exploratory and repeated B48/B64 |
-| `m4-voxtral-worstcase` | M4 16GB | peak memory with every row padded to a 1.5x-target last chunk, on cut inputs |
+| `m4-voxtral-worstcase` | M4 16GB | peak memory with every row padded to a 1.5x-target last chunk, at B32 (`worst32`) and B64 (`worst64`), on cut inputs |
 
 ## Tools
 
