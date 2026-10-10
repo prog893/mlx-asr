@@ -9,7 +9,7 @@
   {
    "run": "gain7_asrecorded_c30b32_kv8",
    "arm": "mode 0",
-   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes 0 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes 0 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_asrecorded_c30b32_kv8.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -90,7 +90,7 @@
   {
    "run": "gain7_m12db_c30b32_kv8",
    "arm": "mode -12",
-   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes=-12 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes=-12 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_m12db_c30b32_kv8.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -171,7 +171,7 @@
   {
    "run": "gain7_m20db_c30b32_kv8",
    "arm": "mode -20",
-   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes=-20 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes=-20 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_m20db_c30b32_kv8.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -252,7 +252,7 @@
   {
    "run": "gain7_p6db_c30b32_kv8",
    "arm": "mode +6",
-   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes +6 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes +6 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_p6db_c30b32_kv8.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",

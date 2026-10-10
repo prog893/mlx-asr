@@ -8,7 +8,7 @@
  "runs": [
   {
    "run": "whisper_large-v2_nocond_r2",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v2-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v2_nocond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v2-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v2_nocond_r2 --json whisper_large-v2_nocond_r2.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -488,7 +488,7 @@
   },
   {
    "run": "whisper_large-v2_nocond_r3",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v2-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v2_nocond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v2-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v2_nocond_r3 --json whisper_large-v2_nocond_r3.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -973,7 +973,7 @@
   },
   {
    "run": "whisper_large-v2_nocond",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v2-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v2_nocond",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v2-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v2_nocond --json whisper_large-v2_nocond.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -1453,7 +1453,7 @@
   },
   {
    "run": "whisper_large-v3_nocond_r2",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r2 --json whisper_large-v3_nocond_r2.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -1933,7 +1933,7 @@
   },
   {
    "run": "whisper_large-v3_nocond_r3",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r3 --json whisper_large-v3_nocond_r3.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -2413,7 +2413,7 @@
   },
   {
    "run": "whisper_large-v3_nocond",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond --json whisper_large-v3_nocond.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -2893,7 +2893,7 @@
   },
   {
    "run": "whisper_medium_nocond_r2",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-medium-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_medium_nocond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-medium-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_medium_nocond_r2 --json whisper_medium_nocond_r2.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -3373,7 +3373,7 @@
   },
   {
    "run": "whisper_medium_nocond_r3",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-medium-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_medium_nocond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-medium-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_medium_nocond_r3 --json whisper_medium_nocond_r3.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -3853,7 +3853,7 @@
   },
   {
    "run": "whisper_medium_nocond",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-medium-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_medium_nocond",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-medium-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_medium_nocond --json whisper_medium_nocond.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -4333,7 +4333,7 @@
   },
   {
    "run": "whisper_small_nocond_r2",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-small-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_small_nocond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-small-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_small_nocond_r2 --json whisper_small_nocond_r2.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -4813,7 +4813,7 @@
   },
   {
    "run": "whisper_small_nocond_r3",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-small-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_small_nocond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-small-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_small_nocond_r3 --json whisper_small_nocond_r3.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -5293,7 +5293,7 @@
   },
   {
    "run": "whisper_small_nocond",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-small-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_small_nocond",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-small-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_small_nocond --json whisper_small_nocond.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -5773,7 +5773,7 @@
   },
   {
    "run": "whisper_turbo_nocond_r2",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r2 --json whisper_turbo_nocond_r2.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -6253,7 +6253,7 @@
   },
   {
    "run": "whisper_turbo_nocond_r3",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r3 --json whisper_turbo_nocond_r3.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -6733,7 +6733,7 @@
   },
   {
    "run": "whisper_turbo_nocond",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond --json whisper_turbo_nocond.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -7213,7 +7213,7 @@
   },
   {
    "run": "whisper_base_libdef_r2",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-base-mlx --min-cut 30 --min-cut-words 6 --label whisper_base_libdef_r2",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-base-mlx --min-cut 30 --min-cut-words 6 --label whisper_base_libdef_r2 --json whisper_base_libdef_r2.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -7693,7 +7693,7 @@
   },
   {
    "run": "whisper_base_libdef_r3",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-base-mlx --min-cut 30 --min-cut-words 6 --label whisper_base_libdef_r3",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-base-mlx --min-cut 30 --min-cut-words 6 --label whisper_base_libdef_r3 --json whisper_base_libdef_r3.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -8178,7 +8178,7 @@
   },
   {
    "run": "whisper_base_libdef",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-base-mlx --min-cut 30 --min-cut-words 6 --label whisper_base_libdef",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-base-mlx --min-cut 30 --min-cut-words 6 --label whisper_base_libdef --json whisper_base_libdef.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -8658,7 +8658,7 @@
   },
   {
    "run": "whisper_tiny_libdef_r2",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-tiny-mlx --min-cut 30 --min-cut-words 6 --label whisper_tiny_libdef_r2",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-tiny-mlx --min-cut 30 --min-cut-words 6 --label whisper_tiny_libdef_r2 --json whisper_tiny_libdef_r2.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -9138,7 +9138,7 @@
   },
   {
    "run": "whisper_tiny_libdef_r3",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-tiny-mlx --min-cut 30 --min-cut-words 6 --label whisper_tiny_libdef_r3",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-tiny-mlx --min-cut 30 --min-cut-words 6 --label whisper_tiny_libdef_r3 --json whisper_tiny_libdef_r3.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -9623,7 +9623,7 @@
   },
   {
    "run": "whisper_tiny_libdef",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-tiny-mlx --min-cut 30 --min-cut-words 6 --label whisper_tiny_libdef",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-tiny-mlx --min-cut 30 --min-cut-words 6 --label whisper_tiny_libdef --json whisper_tiny_libdef.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -10103,7 +10103,7 @@
   },
   {
    "run": "whisper_large-v3_nocond_r4",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r4",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r4 --json whisper_large-v3_nocond_r4.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -10588,7 +10588,7 @@
   },
   {
    "run": "whisper_large-v3_nocond_r5",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r5",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r5 --json whisper_large-v3_nocond_r5.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -11068,7 +11068,7 @@
   },
   {
    "run": "whisper_large-v3_nocond_r6",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r6",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r6 --json whisper_large-v3_nocond_r6.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -11548,7 +11548,7 @@
   },
   {
    "run": "whisper_turbo_nocond_r4",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r4",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r4 --json whisper_turbo_nocond_r4.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -12028,7 +12028,7 @@
   },
   {
    "run": "whisper_turbo_nocond_r5",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r5",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r5 --json whisper_turbo_nocond_r5.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,
@@ -12508,7 +12508,7 @@
   },
   {
    "run": "whisper_turbo_nocond_r6",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r6",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r6 --json whisper_turbo_nocond_r6.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "pair": null,

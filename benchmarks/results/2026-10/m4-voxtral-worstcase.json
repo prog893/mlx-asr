@@ -9,7 +9,7 @@
  "runs": [
   {
    "run": "worst32_c60b32",
-   "command": "scripts/benchmarks/run_corpus.py --corpus worstcase-b32-20261009 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label worst32_c60b32",
+   "command": "scripts/benchmarks/run_corpus.py --corpus worstcase-b32-20261009 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label worst32_c60b32 --json worst32_c60b32.json",
    "params": {
     "corpus": "worstcase-b32-20261009",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -77,7 +77,7 @@
   },
   {
    "run": "worst64_c60b64",
-   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/batch_m4_b64_20261010/worst64 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label worst64_c60b64",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/batch_m4_b64_20261010/worst64 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label worst64_c60b64 --json worst64_c60b64.json",
    "params": {
     "corpus": "bench_out/batch_m4_b64_20261010/worst64",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",

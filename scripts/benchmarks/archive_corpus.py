@@ -76,6 +76,8 @@ def main():
         if f.suffix.lower() != ".wav":
             continue
         fid = file_id(src.get(f.stem, f.stem))
+        if fid in files:   # same source id twice, or a truncated-hash collision
+            sys.exit("REFUSED: two corpus files map to the same id")
         files[fid] = {
             "language": UNIT_LANGUAGE[units[f.stem]], **probe(Path(probe_from.get(f.stem, f))),
             "reference_length": rows[f.stem]["ref_chars"],

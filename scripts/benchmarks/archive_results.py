@@ -38,6 +38,17 @@ AUDIO_SUFFIX = re.compile(r"(\.16k)?\.(wav|flac|mp3|m4a|mp4)$")
 PER_FILE_DROP = {"ref_chars", "kana_ref_chars", "lenient_ref_chars"}   # see --drop-ref-lengths
 QWEN3_REPO = re.compile(r"Qwen3-ASR-(?P<size>[\d.]+B)-(?P<quant>\w+)$")
 RUN_DROP = {"json", "keep_hyp"}            # local output paths, not inputs
+# Directories whose names may say something about the machine or its owner. Used to cut a
+# whole parameter value (which may contain spaces) and as a last-resort leak check.
+LOCAL_ROOT = re.compile(r"/(?:Users|private|tmp|home|var/folders|Volumes|mnt)/")
+
+
+def last_component(value):
+    """A parameter value that is an absolute path keeps only its last component. The whole
+    value is one path, so a directory name with spaces is cut with it."""
+    if isinstance(value, str) and value.startswith("/") and "/" in value.strip("/"):
+        return value.rstrip("/").rsplit("/", 1)[-1]
+    return value
 
 
 def token_pattern(name: str) -> re.Pattern:
@@ -56,6 +67,10 @@ class Scrubber:
         src = source_ids or {}
         # longest first so one stem that prefixes another cannot be half-replaced
         self.map = {s: file_id(src.get(s, s)) for s in sorted(stems, key=len, reverse=True)}
+        # two files sharing an id (same source id, or a truncated-hash collision) would make
+        # archived rows ambiguous, so refuse rather than merge them
+        if len(set(self.map.values())) != len(self.map):
+            sys.exit("REFUSED: two corpus files map to the same id")
         # a stem counts only as a whole token (not inside a longer word), so a short stem
         # cannot rewrite schema keys or ordinary text
         self.pattern = {s: token_pattern(s) for s in self.map}
@@ -75,8 +90,12 @@ class Scrubber:
         return obj
 
     def leaks(self, text: str) -> int:
+        spans = [m.span() for m in ABS_PATH.finditer(text)]
+        # a local root the path pattern missed (e.g. a directory name with spaces) counts too
+        extra = [m for m in LOCAL_ROOT.finditer(text)
+                 if not any(a <= m.start() < b for a, b in spans)]
         return (sum(bool(p.search(text)) for p in self.pattern.values())
-                + len(ABS_PATH.findall(text)))
+                + len(spans) + len(extra))
 
 
 def runner_and_rows(d: dict):
@@ -115,7 +134,9 @@ def runner_and_rows(d: dict):
     raise ValueError("unrecognised run JSON")
 
 
-def command(script: str, cfg: dict) -> str:
+def command(script: str, cfg: dict, out: str = "") -> str:
+    """The runner invocation, ending with a relative `--json` destination so it can be
+    replayed (sweep_qwen3_batch.py requires one; the others would otherwise save nothing)."""
     parts = [f"scripts/benchmarks/{script}"]
     for k, v in cfg.items():
         if k in RUN_DROP or v is None or v is False or v == "":
@@ -127,6 +148,8 @@ def command(script: str, cfg: dict) -> str:
         v = shlex.quote(str(v))
         # a value that starts with "-" (a negative gain) must be attached to its flag
         parts.append(f"{flag}={v}" if v.startswith("-") else f"{flag} {v}")
+    if out:
+        parts.append(f"--json {shlex.quote(out)}")
     return " ".join(parts)
 
 
@@ -173,9 +196,10 @@ def build_run(path: Path, keep_ref: bool):
             if isinstance(r.get("file"), str):        # bare file id, no audio suffix
                 r["file"] = AUDIO_SUFFIX.sub("", r["file"])
             files.append(r)
-        params = {**{k: v for k, v in cfg.items() if k not in RUN_DROP}, **arm_params}
+        params = {k: last_component(v) for k, v in
+                  {**{k: v for k, v in cfg.items() if k not in RUN_DROP}, **arm_params}.items()}
         run = {"run": path.stem, **({"arm": arm} if arm else {}),
-               "command": command(script, params),
+               "command": command(script, params, f"{path.stem}.json"),
                "params": params,
                "machine": machine or {},
                "aggregate": agg,

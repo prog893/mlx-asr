@@ -9,7 +9,7 @@
  "runs": [
   {
    "run": "c60b16",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b16",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b16 --json c60b16.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -444,7 +444,7 @@
   },
   {
    "run": "c60b24",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 24 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b24",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 24 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b24 --json c60b24.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -884,7 +884,7 @@
   },
   {
    "run": "c60b32",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32 --json c60b32.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -1319,7 +1319,7 @@
   },
   {
    "run": "c60b24_r2",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 24 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b24_r2",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 24 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b24_r2 --json c60b24_r2.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -1759,7 +1759,7 @@
   },
   {
    "run": "c60b24_r3",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 24 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b24_r3",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 24 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b24_r3 --json c60b24_r3.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -2194,7 +2194,7 @@
   },
   {
    "run": "c60b24_r4",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 24 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b24_r4",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 24 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b24_r4 --json c60b24_r4.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -2634,7 +2634,7 @@
   },
   {
    "run": "c60b32_r2",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r2",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r2 --json c60b32_r2.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -3074,7 +3074,7 @@
   },
   {
    "run": "c60b32_r3",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r3",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r3 --json c60b32_r3.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -3509,7 +3509,7 @@
   },
   {
    "run": "c60b32_r4",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r4",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r4 --json c60b32_r4.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -3944,7 +3944,7 @@
   },
   {
    "run": "c60b48",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 48 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b48",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 48 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b48 --json c60b48.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -4379,7 +4379,7 @@
   },
   {
    "run": "c60b64",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b64",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b64 --json c60b64.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -4814,7 +4814,7 @@
   },
   {
    "run": "c60b32_r1",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r1",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r1 --json c60b32_r1.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -5249,7 +5249,7 @@
   },
   {
    "run": "c60b32_r2",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r2",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r2 --json c60b32_r2.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -5684,7 +5684,7 @@
   },
   {
    "run": "c60b32_r3",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r3",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b32_r3 --json c60b32_r3.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -6119,7 +6119,7 @@
   },
   {
    "run": "c60b48_r1",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 48 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b48_r1",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 48 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b48_r1 --json c60b48_r1.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -6554,7 +6554,7 @@
   },
   {
    "run": "c60b48_r2",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 48 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b48_r2",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 48 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b48_r2 --json c60b48_r2.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -6989,7 +6989,7 @@
   },
   {
    "run": "c60b48_r3",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 48 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b48_r3",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 48 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b48_r3 --json c60b48_r3.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -7424,7 +7424,7 @@
   },
   {
    "run": "c60b64_r1",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b64_r1",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b64_r1 --json c60b64_r1.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -7859,7 +7859,7 @@
   },
   {
    "run": "c60b64_r2",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b64_r2",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b64_r2 --json c60b64_r2.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -8294,7 +8294,7 @@
   },
   {
    "run": "c60b64_r3",
-   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b64_r3",
+   "command": "scripts/benchmarks/run_corpus.py --corpus corpus_all --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b64_r3 --json c60b64_r3.json",
    "params": {
     "corpus": "corpus_all",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",

@@ -8,7 +8,7 @@
  "runs": [
   {
    "run": "qwen3w7_1.7B_8bit_c120",
-   "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus7 --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 120.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3w7_1.7B_8bit_c120 --wait-for-idle 0.0",
+   "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus7 --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 120.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3w7_1.7B_8bit_c120 --wait-for-idle 0.0 --json qwen3w7_1.7B_8bit_c120.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "qwen3-asr",
@@ -274,7 +274,7 @@
   },
   {
    "run": "qwen3w7_1.7B_8bit_c15",
-   "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus7 --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 15.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3w7_1.7B_8bit_c15 --wait-for-idle 0.0",
+   "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus7 --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 15.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3w7_1.7B_8bit_c15 --wait-for-idle 0.0 --json qwen3w7_1.7B_8bit_c15.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "qwen3-asr",
@@ -538,7 +538,7 @@
   },
   {
    "run": "qwen3w7_1.7B_8bit_c30",
-   "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus7 --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3w7_1.7B_8bit_c30 --wait-for-idle 0.0",
+   "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus7 --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3w7_1.7B_8bit_c30 --wait-for-idle 0.0 --json qwen3w7_1.7B_8bit_c30.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "qwen3-asr",
@@ -802,7 +802,7 @@
   },
   {
    "run": "qwen3w7_1.7B_8bit_c300",
-   "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus7 --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 300.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3w7_1.7B_8bit_c300 --wait-for-idle 0.0",
+   "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus7 --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 300.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3w7_1.7B_8bit_c300 --wait-for-idle 0.0 --json qwen3w7_1.7B_8bit_c300.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "qwen3-asr",
@@ -1068,7 +1068,7 @@
   },
   {
    "run": "qwen3w7_1.7B_8bit_c60",
-   "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus7 --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 60.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3w7_1.7B_8bit_c60 --wait-for-idle 0.0",
+   "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus7 --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 60.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3w7_1.7B_8bit_c60 --wait-for-idle 0.0 --json qwen3w7_1.7B_8bit_c60.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "qwen3-asr",

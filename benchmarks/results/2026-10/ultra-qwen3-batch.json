@@ -4,12 +4,12 @@
  "docs": [
   "docs/benchmarks/qwen3-batch.md"
  ],
- "note": "",
+ "note": "Every arm forces --language ja, including the three English files, as published; their word-level figures therefore measure a different language condition from run_qwen3.py's per-file languages and are not comparable with the other benchmarks' English results. Rerun with per-file language selection before comparing English.",
  "runs": [
   {
    "run": "qwen3batch_1.7B_8bit_c15_b1",
    "arm": "batch 1",
-   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 1",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 1 --json qwen3batch_1.7B_8bit_c15_b1.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "chunk_seconds": 15.0,
@@ -307,7 +307,7 @@
   {
    "run": "qwen3batch_1.7B_8bit_c15_b2",
    "arm": "batch 2",
-   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 2",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 2 --json qwen3batch_1.7B_8bit_c15_b2.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "chunk_seconds": 15.0,
@@ -605,7 +605,7 @@
   {
    "run": "qwen3batch_1.7B_8bit_c15_b4",
    "arm": "batch 4",
-   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 4",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 4 --json qwen3batch_1.7B_8bit_c15_b4.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "chunk_seconds": 15.0,
@@ -908,7 +908,7 @@
   {
    "run": "qwen3batch_1.7B_8bit_c15_b8",
    "arm": "batch 8",
-   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 8",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 8 --json qwen3batch_1.7B_8bit_c15_b8.json",
    "params": {
     "corpus": "bench_out/corpus_all",
     "chunk_seconds": 15.0,

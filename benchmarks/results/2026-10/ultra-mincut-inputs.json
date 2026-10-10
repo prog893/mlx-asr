@@ -8,7 +8,7 @@
  "runs": [
   {
    "run": "mincut7_vox_c30b32_kv8_ov8",
-   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 8.0 --min-cut 30 --min-cut-words 6 --label c30b32_kv8_ov8",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 8.0 --min-cut 30 --min-cut-words 6 --label c30b32_kv8_ov8 --json mincut7_vox_c30b32_kv8_ov8.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -192,7 +192,7 @@
   },
   {
    "run": "mincut7_vox_c30b32_kv8",
-   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b32_kv8",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b32_kv8 --json mincut7_vox_c30b32_kv8.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -381,7 +381,7 @@
   },
   {
    "run": "mincut7_vox_c60b16_kv8",
-   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b16_kv8",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c60b16_kv8 --json mincut7_vox_c60b16_kv8.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -565,7 +565,7 @@
   },
   {
    "run": "mincut7_whisper_large-v3_libdef",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus7 --model mlx-community/whisper-large-v3-mlx --min-cut 30 --min-cut-words 6 --label large-v3",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus7 --model mlx-community/whisper-large-v3-mlx --min-cut 30 --min-cut-words 6 --label large-v3 --json mincut7_whisper_large-v3_libdef.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "pair": null,
@@ -767,7 +767,7 @@
   },
   {
    "run": "mincut7_whisper_large-v3_nocond",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus7 --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label large-v3-nocond",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus7 --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label large-v3-nocond --json mincut7_whisper_large-v3_nocond.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "pair": null,
@@ -969,7 +969,7 @@
   },
   {
    "run": "mincut7_whisper_medium_libdef",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus7 --model mlx-community/whisper-medium-mlx --min-cut 30 --min-cut-words 6 --label medium",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus7 --model mlx-community/whisper-medium-mlx --min-cut 30 --min-cut-words 6 --label medium --json mincut7_whisper_medium_libdef.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "pair": null,
@@ -1171,7 +1171,7 @@
   },
   {
    "run": "mincut7_whisper_turbo_libdef",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus7 --model mlx-community/whisper-large-v3-turbo --min-cut 30 --min-cut-words 6 --label large-v3-turbo",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus7 --model mlx-community/whisper-large-v3-turbo --min-cut 30 --min-cut-words 6 --label large-v3-turbo --json mincut7_whisper_turbo_libdef.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "pair": null,
@@ -1373,7 +1373,7 @@
   },
   {
    "run": "mincut7_whisper_turbo_nocond",
-   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus7 --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label turbo-nocond",
+   "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus7 --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label turbo-nocond --json mincut7_whisper_turbo_nocond.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "pair": null,

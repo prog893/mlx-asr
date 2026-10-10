@@ -46,10 +46,11 @@ the reason and how the new copy was made. A per-file row that used a superseded 
 `invalid_files`. A run's `aggregate` and `measures` are exactly what the runner wrote, so
 they include invalid rows; recompute from the rows without an `invalid` key.
 
-So far one file: `71bb5eba3baa`. Every run here used its previous copy, which held only the
+So far one file: `71bb5eba3baa`. Every run that contains it used its previous copy (the
+7-file groups do not contain it), which held only the
 first 558.2s of a 783.5s source while the reference runs to 661.2s. Leaving it out lowers
 each run's JP aggregate by about 0.2 points (Voxtral default: 16.29% to 16.07%). The runs
-that used it are rerun candidates on the new copy.
+that contain it are rerun candidates on the new copy.
 
 ## Run-groups
 

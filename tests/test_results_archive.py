@@ -154,3 +154,33 @@ def test_short_stem_does_not_rewrite_ordinary_text():
 def test_values_with_spaces_stay_one_argument():
     assert command("run_corpus.py", {"prompt": "two words"}) == \
         "scripts/benchmarks/run_corpus.py --prompt 'two words'"
+
+
+def _archiver():
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts" / "benchmarks"))
+    import archive_results
+    return archive_results
+
+
+def test_parameter_path_with_spaces_is_cut_whole_and_detected():
+    ar = _archiver()
+    params = {"corpus": "/mnt/private data/recordings", "max_batch": 32}
+    cleaned = {k: ar.last_component(v) for k, v in params.items()}
+    assert cleaned["corpus"] == "recordings"
+    cmd = ar.command("run_corpus.py", cleaned, "x.json")
+    assert "private data" not in cmd and cmd.endswith("--json x.json")
+    assert ar.Scrubber([]).leaks('"--corpus /mnt/private data/x"') > 0
+
+
+def test_every_rebuilt_command_names_a_relative_json_output():
+    for path in GROUPS:
+        for run in json.loads(path.read_text(encoding="utf-8"))["runs"]:
+            assert "--json " in run["command"], run["run"]
+            assert not _archiver().ABS_PATH.search(run["command"].split("--json ", 1)[1])
+
+
+def test_duplicate_file_ids_are_refused():
+    ar = _archiver()
+    with pytest.raises(SystemExit):
+        ar.Scrubber(["a_drive", "a"], {"a_drive": "a"})
