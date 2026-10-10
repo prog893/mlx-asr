@@ -60,6 +60,7 @@
      "x_realtime": 6.4,
      "chunks": 32,
      "peak_memory_gb": 8.31,
+     "ref_chars": 4139,
      "hyp_chars": 3549,
      "extra_ratio": 0.8574534911814448,
      "coverage": 0.7093500845614883,

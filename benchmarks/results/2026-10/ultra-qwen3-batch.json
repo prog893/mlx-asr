@@ -44,6 +44,7 @@
      "x_realtime": 35.07,
      "unit": "char",
      "coverage_cer": 0.17648893046460867,
+     "ref_chars": 3207,
      "chars": 4408,
      "segments": 61,
      "runaway_segments": 1
@@ -55,6 +56,7 @@
      "x_realtime": 19.51,
      "unit": "char",
      "coverage_cer": 0.23296529968454258,
+     "ref_chars": 6340,
      "chars": 35008,
      "segments": 205,
      "runaway_segments": 40
@@ -66,6 +68,7 @@
      "x_realtime": 25.33,
      "unit": "char",
      "coverage_cer": 0.2399796541200407,
+     "ref_chars": 9830,
      "chars": 41991,
      "segments": 372,
      "runaway_segments": 43
@@ -77,6 +80,7 @@
      "x_realtime": 25.18,
      "unit": "char",
      "coverage_cer": 0.17159763313609466,
+     "ref_chars": 2535,
      "chars": 6300,
      "segments": 53,
      "runaway_segments": 6
@@ -88,6 +92,7 @@
      "x_realtime": 21.78,
      "unit": "char",
      "coverage_cer": 0.18617376217803283,
+     "ref_chars": 7493,
      "chars": 39773,
      "segments": 272,
      "runaway_segments": 46
@@ -99,6 +104,7 @@
      "x_realtime": 25.63,
      "unit": "char",
      "coverage_cer": 0.1949848681366191,
+     "ref_chars": 2313,
      "chars": 11249,
      "segments": 102,
      "runaway_segments": 14
@@ -110,6 +116,7 @@
      "x_realtime": 18.4,
      "unit": "char",
      "coverage_cer": 0.11038353601496725,
+     "ref_chars": 1069,
      "chars": 4531,
      "segments": 22,
      "runaway_segments": 5
@@ -121,6 +128,7 @@
      "x_realtime": 28.87,
      "unit": "char",
      "coverage_cer": 0.18090787716955942,
+     "ref_chars": 2996,
      "chars": 5196,
      "segments": 54,
      "runaway_segments": 2
@@ -132,6 +140,7 @@
      "x_realtime": 30.54,
      "unit": "char",
      "coverage_cer": 0.2383324593602517,
+     "ref_chars": 3814,
      "chars": 5039,
      "segments": 55,
      "runaway_segments": 1
@@ -143,6 +152,7 @@
      "x_realtime": 29.63,
      "unit": "char",
      "coverage_cer": 0.19784656796769853,
+     "ref_chars": 3715,
      "chars": 4913,
      "segments": 45,
      "runaway_segments": 1
@@ -154,6 +164,7 @@
      "x_realtime": 25.09,
      "unit": "char",
      "coverage_cer": 0.2278051787916153,
+     "ref_chars": 3244,
      "chars": 5300,
      "segments": 39,
      "runaway_segments": 2
@@ -165,6 +176,7 @@
      "x_realtime": 35.9,
      "unit": "char",
      "coverage_cer": 0.2156398104265403,
+     "ref_chars": 422,
      "chars": 529,
      "segments": 8,
      "runaway_segments": 0
@@ -176,6 +188,7 @@
      "x_realtime": 37.28,
      "unit": "word",
      "coverage_cer": 0.3322058468229041,
+     "ref_chars": 4139,
      "chars": 21038,
      "segments": 144,
      "runaway_segments": 1
@@ -187,6 +200,7 @@
      "x_realtime": 39.29,
      "unit": "word",
      "coverage_cer": 0.34513771781899943,
+     "ref_chars": 1779,
      "chars": 10284,
      "segments": 88,
      "runaway_segments": 0
@@ -198,6 +212,7 @@
      "x_realtime": 32.59,
      "unit": "char",
      "coverage_cer": 0.15347280334728033,
+     "ref_chars": 5975,
      "chars": 6815,
      "segments": 77,
      "runaway_segments": 0
@@ -209,6 +224,7 @@
      "x_realtime": 31.27,
      "unit": "char",
      "coverage_cer": 0.2687555163283319,
+     "ref_chars": 2266,
      "chars": 2958,
      "segments": 35,
      "runaway_segments": 0
@@ -220,6 +236,7 @@
      "x_realtime": 37.21,
      "unit": "char",
      "coverage_cer": 0.18032786885245902,
+     "ref_chars": 3172,
      "chars": 3237,
      "segments": 54,
      "runaway_segments": 0
@@ -231,6 +248,7 @@
      "x_realtime": 34.49,
      "unit": "char",
      "coverage_cer": 0.19696576763485477,
+     "ref_chars": 7712,
      "chars": 8245,
      "segments": 103,
      "runaway_segments": 0
@@ -242,6 +260,7 @@
      "x_realtime": 33.43,
      "unit": "char",
      "coverage_cer": 0.1304448563484708,
+     "ref_chars": 4316,
      "chars": 4982,
      "segments": 62,
      "runaway_segments": 0
@@ -253,6 +272,7 @@
      "x_realtime": 36.02,
      "unit": "word",
      "coverage_cer": 0.0652837095790116,
+     "ref_chars": 1639,
      "chars": 8776,
      "segments": 54,
      "runaway_segments": 0
@@ -298,6 +318,7 @@
      "x_realtime": 33.58,
      "unit": "char",
      "coverage_cer": 0.18054256314312442,
+     "ref_chars": 3207,
      "chars": 4900,
      "segments": 61,
      "runaway_segments": null
@@ -309,6 +330,7 @@
      "x_realtime": 14.14,
      "unit": "char",
      "coverage_cer": 0.25141955835962143,
+     "ref_chars": 6340,
      "chars": 44229,
      "segments": 205,
      "runaway_segments": null
@@ -320,6 +342,7 @@
      "x_realtime": 17.25,
      "unit": "char",
      "coverage_cer": 0.23163784333672433,
+     "ref_chars": 9830,
      "chars": 60372,
      "segments": 372,
      "runaway_segments": null
@@ -331,6 +354,7 @@
      "x_realtime": 20.71,
      "unit": "char",
      "coverage_cer": 0.17317554240631164,
+     "ref_chars": 2535,
      "chars": 7863,
      "segments": 53,
      "runaway_segments": null
@@ -342,6 +366,7 @@
      "x_realtime": 15.47,
      "unit": "char",
      "coverage_cer": 0.1872414253303083,
+     "ref_chars": 7493,
      "chars": 55617,
      "segments": 272,
      "runaway_segments": null
@@ -353,6 +378,7 @@
      "x_realtime": 10.98,
      "unit": "char",
      "coverage_cer": 0.1975789018590575,
+     "ref_chars": 2313,
      "chars": 17219,
      "segments": 102,
      "runaway_segments": null
@@ -364,6 +390,7 @@
      "x_realtime": 10.63,
      "unit": "char",
      "coverage_cer": 0.13189897100093545,
+     "ref_chars": 1069,
      "chars": 6219,
      "segments": 22,
      "runaway_segments": null
@@ -375,6 +402,7 @@
      "x_realtime": 22.84,
      "unit": "char",
      "coverage_cer": 0.18057409879839786,
+     "ref_chars": 2996,
      "chars": 5953,
      "segments": 54,
      "runaway_segments": null
@@ -386,6 +414,7 @@
      "x_realtime": 26.3,
      "unit": "char",
      "coverage_cer": 0.2393812270582066,
+     "ref_chars": 3814,
      "chars": 5373,
      "segments": 55,
      "runaway_segments": null
@@ -397,6 +426,7 @@
      "x_realtime": 29.66,
      "unit": "char",
      "coverage_cer": 0.19569313593539703,
+     "ref_chars": 3715,
      "chars": 5227,
      "segments": 45,
      "runaway_segments": null
@@ -408,6 +438,7 @@
      "x_realtime": 27.01,
      "unit": "char",
      "coverage_cer": 0.2311960542540074,
+     "ref_chars": 3244,
      "chars": 4759,
      "segments": 39,
      "runaway_segments": null
@@ -419,6 +450,7 @@
      "x_realtime": 39.29,
      "unit": "char",
      "coverage_cer": 0.15165876777251186,
+     "ref_chars": 422,
      "chars": 533,
      "segments": 8,
      "runaway_segments": null
@@ -430,6 +462,7 @@
      "x_realtime": 32.6,
      "unit": "word",
      "coverage_cer": 0.3389707658854796,
+     "ref_chars": 4139,
      "chars": 22701,
      "segments": 144,
      "runaway_segments": null
@@ -441,6 +474,7 @@
      "x_realtime": 20.0,
      "unit": "word",
      "coverage_cer": 0.3614390106801574,
+     "ref_chars": 1779,
      "chars": 11351,
      "segments": 88,
      "runaway_segments": null
@@ -452,6 +486,7 @@
      "x_realtime": 28.42,
      "unit": "char",
      "coverage_cer": 0.15866108786610877,
+     "ref_chars": 5975,
      "chars": 7154,
      "segments": 77,
      "runaway_segments": null
@@ -463,6 +498,7 @@
      "x_realtime": 34.82,
      "unit": "char",
      "coverage_cer": 0.2722859664607237,
+     "ref_chars": 2266,
      "chars": 2980,
      "segments": 35,
      "runaway_segments": null
@@ -474,6 +510,7 @@
      "x_realtime": 40.33,
      "unit": "char",
      "coverage_cer": 0.1841109709962169,
+     "ref_chars": 3172,
      "chars": 3271,
      "segments": 54,
      "runaway_segments": null
@@ -485,6 +522,7 @@
      "x_realtime": 38.23,
      "unit": "char",
      "coverage_cer": 0.19929979253112035,
+     "ref_chars": 7712,
      "chars": 8307,
      "segments": 103,
      "runaway_segments": null
@@ -496,6 +534,7 @@
      "x_realtime": 33.33,
      "unit": "char",
      "coverage_cer": 0.13600556070435588,
+     "ref_chars": 4316,
      "chars": 5279,
      "segments": 62,
      "runaway_segments": null
@@ -507,6 +546,7 @@
      "x_realtime": 40.2,
      "unit": "word",
      "coverage_cer": 0.06894447834045149,
+     "ref_chars": 1639,
      "chars": 8806,
      "segments": 54,
      "runaway_segments": null
@@ -554,6 +594,7 @@
      "x_realtime": 25.59,
      "unit": "char",
      "coverage_cer": 0.17430620517617712,
+     "ref_chars": 3207,
      "chars": 5945,
      "segments": 61,
      "runaway_segments": null
@@ -565,6 +606,7 @@
      "x_realtime": 8.99,
      "unit": "char",
      "coverage_cer": 0.23675078864353313,
+     "ref_chars": 6340,
      "chars": 68927,
      "segments": 205,
      "runaway_segments": null
@@ -576,6 +618,7 @@
      "x_realtime": 12.46,
      "unit": "char",
      "coverage_cer": 0.2323499491353001,
+     "ref_chars": 9830,
      "chars": 81620,
      "segments": 372,
      "runaway_segments": null
@@ -587,6 +630,7 @@
      "x_realtime": 14.07,
      "unit": "char",
      "coverage_cer": 0.17001972386587771,
+     "ref_chars": 2535,
      "chars": 9471,
      "segments": 53,
      "runaway_segments": null
@@ -598,6 +642,7 @@
      "x_realtime": 10.69,
      "unit": "char",
      "coverage_cer": 0.2117976778326438,
+     "ref_chars": 7493,
      "chars": 72345,
      "segments": 272,
      "runaway_segments": null
@@ -609,6 +654,7 @@
      "x_realtime": 9.77,
      "unit": "char",
      "coverage_cer": 0.22006052745352356,
+     "ref_chars": 2313,
      "chars": 25951,
      "segments": 102,
      "runaway_segments": null
@@ -620,6 +666,7 @@
      "x_realtime": 14.04,
      "unit": "char",
      "coverage_cer": 0.11412535079513564,
+     "ref_chars": 1069,
      "chars": 6212,
      "segments": 22,
      "runaway_segments": null
@@ -631,6 +678,7 @@
      "x_realtime": 13.21,
      "unit": "char",
      "coverage_cer": 0.1829105473965287,
+     "ref_chars": 2996,
      "chars": 9166,
      "segments": 54,
      "runaway_segments": null
@@ -642,6 +690,7 @@
      "x_realtime": 28.24,
      "unit": "char",
      "coverage_cer": 0.24095437860513896,
+     "ref_chars": 3814,
      "chars": 5966,
      "segments": 55,
      "runaway_segments": null
@@ -653,6 +702,7 @@
      "x_realtime": 37.34,
      "unit": "char",
      "coverage_cer": 0.1946164199192463,
+     "ref_chars": 3715,
      "chars": 4533,
      "segments": 45,
      "runaway_segments": null
@@ -664,6 +714,7 @@
      "x_realtime": 19.63,
      "unit": "char",
      "coverage_cer": 0.2127003699136868,
+     "ref_chars": 3244,
      "chars": 5533,
      "segments": 39,
      "runaway_segments": null
@@ -675,6 +726,7 @@
      "x_realtime": 40.69,
      "unit": "char",
      "coverage_cer": 0.13981042654028436,
+     "ref_chars": 422,
      "chars": 564,
      "segments": 8,
      "runaway_segments": null
@@ -686,6 +738,7 @@
      "x_realtime": 31.87,
      "unit": "word",
      "coverage_cer": 0.3430780381734719,
+     "ref_chars": 4139,
      "chars": 23513,
      "segments": 144,
      "runaway_segments": null
@@ -697,6 +750,7 @@
      "x_realtime": 36.77,
      "unit": "word",
      "coverage_cer": 0.36930860033726814,
+     "ref_chars": 1779,
      "chars": 11018,
      "segments": 88,
      "runaway_segments": null
@@ -708,6 +762,7 @@
      "x_realtime": 38.84,
      "unit": "char",
      "coverage_cer": 0.15447698744769875,
+     "ref_chars": 5975,
      "chars": 6398,
      "segments": 77,
      "runaway_segments": null
@@ -719,6 +774,7 @@
      "x_realtime": 28.28,
      "unit": "char",
      "coverage_cer": 0.2705207413945278,
+     "ref_chars": 2266,
      "chars": 3699,
      "segments": 35,
      "runaway_segments": null
@@ -730,6 +786,7 @@
      "x_realtime": 42.42,
      "unit": "char",
      "coverage_cer": 0.18095838587641866,
+     "ref_chars": 3172,
      "chars": 3263,
      "segments": 54,
      "runaway_segments": null
@@ -741,6 +798,7 @@
      "x_realtime": 40.11,
      "unit": "char",
      "coverage_cer": 0.19346473029045644,
+     "ref_chars": 7712,
      "chars": 8265,
      "segments": 103,
      "runaway_segments": null
@@ -752,6 +810,7 @@
      "x_realtime": 27.32,
      "unit": "char",
      "coverage_cer": 0.13253012048192772,
+     "ref_chars": 4316,
      "chars": 5913,
      "segments": 62,
      "runaway_segments": null
@@ -763,6 +822,7 @@
      "x_realtime": 42.01,
      "unit": "word",
      "coverage_cer": 0.0713849908480781,
+     "ref_chars": 1639,
      "chars": 8795,
      "segments": 54,
      "runaway_segments": null
@@ -808,6 +868,7 @@
      "x_realtime": 14.62,
      "unit": "char",
      "coverage_cer": 0.1780480199563455,
+     "ref_chars": 3207,
      "chars": 7691,
      "segments": 61,
      "runaway_segments": null
@@ -819,6 +880,7 @@
      "x_realtime": 6.74,
      "unit": "char",
      "coverage_cer": 0.25094637223974764,
+     "ref_chars": 6340,
      "chars": 83956,
      "segments": 205,
      "runaway_segments": null
@@ -830,6 +892,7 @@
      "x_realtime": 6.85,
      "unit": "char",
      "coverage_cer": 0.23957273652085453,
+     "ref_chars": 9830,
      "chars": 112696,
      "segments": 372,
      "runaway_segments": null
@@ -841,6 +904,7 @@
      "x_realtime": 5.09,
      "unit": "char",
      "coverage_cer": 0.17001972386587771,
+     "ref_chars": 2535,
      "chars": 15843,
      "segments": 53,
      "runaway_segments": null
@@ -852,6 +916,7 @@
      "x_realtime": 8.55,
      "unit": "char",
      "coverage_cer": 0.187775256906446,
+     "ref_chars": 7493,
      "chars": 92841,
      "segments": 272,
      "runaway_segments": null
@@ -863,6 +928,7 @@
      "x_realtime": 6.55,
      "unit": "char",
      "coverage_cer": 0.3151750972762646,
+     "ref_chars": 2313,
      "chars": 31647,
      "segments": 102,
      "runaway_segments": null
@@ -874,6 +940,7 @@
      "x_realtime": 8.25,
      "unit": "char",
      "coverage_cer": 0.10851262862488306,
+     "ref_chars": 1069,
      "chars": 7693,
      "segments": 22,
      "runaway_segments": null
@@ -885,6 +952,7 @@
      "x_realtime": 9.77,
      "unit": "char",
      "coverage_cer": 0.18124165554072097,
+     "ref_chars": 2996,
      "chars": 10518,
      "segments": 54,
      "runaway_segments": null
@@ -896,6 +964,7 @@
      "x_realtime": 13.65,
      "unit": "char",
      "coverage_cer": 0.23990561090718407,
+     "ref_chars": 3814,
      "chars": 7338,
      "segments": 55,
      "runaway_segments": null
@@ -907,6 +976,7 @@
      "x_realtime": 40.76,
      "unit": "char",
      "coverage_cer": 0.19892328398384926,
+     "ref_chars": 3715,
      "chars": 4533,
      "segments": 45,
      "runaway_segments": null
@@ -918,6 +988,7 @@
      "x_realtime": 7.36,
      "unit": "char",
      "coverage_cer": 0.20530209617755857,
+     "ref_chars": 3244,
      "chars": 7122,
      "segments": 39,
      "runaway_segments": null
@@ -929,6 +1000,7 @@
      "x_realtime": 35.74,
      "unit": "char",
      "coverage_cer": 0.2037914691943128,
+     "ref_chars": 422,
      "chars": 534,
      "segments": 8,
      "runaway_segments": null
@@ -940,6 +1012,7 @@
      "x_realtime": 18.26,
      "unit": "word",
      "coverage_cer": 0.3425948296690022,
+     "ref_chars": 4139,
      "chars": 26322,
      "segments": 144,
      "runaway_segments": null
@@ -951,6 +1024,7 @@
      "x_realtime": 41.76,
      "unit": "word",
      "coverage_cer": 0.3614390106801574,
+     "ref_chars": 1779,
      "chars": 9506,
      "segments": 88,
      "runaway_segments": null
@@ -962,6 +1036,7 @@
      "x_realtime": 37.4,
      "unit": "char",
      "coverage_cer": 0.15213389121338913,
+     "ref_chars": 5975,
      "chars": 6383,
      "segments": 77,
      "runaway_segments": null
@@ -973,6 +1048,7 @@
      "x_realtime": 15.62,
      "unit": "char",
      "coverage_cer": 0.27184466019417475,
+     "ref_chars": 2266,
      "chars": 5018,
      "segments": 35,
      "runaway_segments": null
@@ -984,6 +1060,7 @@
      "x_realtime": 41.58,
      "unit": "char",
      "coverage_cer": 0.1800126103404792,
+     "ref_chars": 3172,
      "chars": 3241,
      "segments": 54,
      "runaway_segments": null
@@ -995,6 +1072,7 @@
      "x_realtime": 36.51,
      "unit": "char",
      "coverage_cer": 0.19489107883817428,
+     "ref_chars": 7712,
      "chars": 8263,
      "segments": 103,
      "runaway_segments": null
@@ -1006,6 +1084,7 @@
      "x_realtime": 8.75,
      "unit": "char",
      "coverage_cer": 0.13160333642261354,
+     "ref_chars": 4316,
      "chars": 7112,
      "segments": 62,
      "runaway_segments": null
@@ -1017,6 +1096,7 @@
      "x_realtime": 40.06,
      "unit": "word",
      "coverage_cer": 0.06467358145210494,
+     "ref_chars": 1639,
      "chars": 8737,
      "segments": 54,
      "runaway_segments": null

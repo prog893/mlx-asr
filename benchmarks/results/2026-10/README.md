@@ -22,7 +22,7 @@ A run-group JSON has `group`, `question` (what it measures), `docs` (pages it fe
 Files are named by `sha256(source id)[:12]`, with any derived suffix kept after it. The
 source id is the filename stem for a recording and the video id for a downloaded public
 video. [`../corpus.json`](../corpus.json) maps each id to the only metadata that may be
-published (language, duration, codec, sample rate, bit depth, bitrate) and records every
+published (language, duration, codec, sample rate, bit depth, bitrate, reference length) and records every
 processing step between the corpus copy and the model, including how the derived
 worst-case inputs were cut. No transcripts and no other corpus details are kept.
 
@@ -30,8 +30,9 @@ Accuracy is deterministic per machine for every engine except Whisper, which sam
 fallback; speed is the run's own measurement. Runs measured while other GPU work was
 resident and then re-measured are not kept; only the re-measurement is.
 
-Per-file reference lengths are not included yet, so length-weighted aggregates can be
-read here but not recomputed from the per-file rows alone.
+Per-file rows keep the reference length each scorer used (`ref_chars`, and
+`kana_ref_chars` / `lenient_ref_chars` where a run reports those scorers), so every
+length-weighted aggregate can be recomputed from the rows.
 
 ## Run-groups
 

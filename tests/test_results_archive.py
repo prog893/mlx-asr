@@ -24,7 +24,8 @@ FILE_ID = re.compile(r"^(?P<id>[0-9a-f]{12}|worst\d+)(\.16k)?(\.wav)?$")
 ABS = re.compile(r"/(?:Users|private|tmp|home|var/folders)/")
 DATE_STAMPED = re.compile(r"\d{6}_\d{3}")
 RUN_KEYS = {"run", "command", "params", "machine", "aggregate", "measures", "files", "missing"}
-ALLOWED_META = {"language", "duration_s", "codec", "sample_rate", "bit_depth", "bitrate"}
+ALLOWED_META = {"language", "duration_s", "codec", "sample_rate", "bit_depth", "bitrate",
+                "reference_length", "reference_unit"}
 
 
 def _strings(obj, key=None):

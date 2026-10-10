@@ -24,9 +24,11 @@ UNIT_LANGUAGE = {"char": "Japanese", "word": "English"}
 # under "files" describes step 1's output, which is what every run read.
 PROCESSING = {
     "1_corpus_copy": "The corpus copies every run read: the per-file metadata below "
-                     "(16 kHz mono 16-bit PCM WAV). How they were derived from the "
-                     "original recordings (original rate, bit depth, float or integer) "
-                     "is not recorded here.",
+                     "(16 kHz mono 16-bit PCM WAV). The recordings were 96 kHz mono WAV, "
+                     "converted with `ffmpeg -ac 1 -ar 16000 -c:a pcm_s16le` (ffmpeg's "
+                     "default resampler). Not recorded: the recordings' original bit depth "
+                     "(integer or float), and the original format of the downloaded public "
+                     "videos before their 16 kHz copies.",
     "2_runner_cache": "Each runner (run_corpus.py, run_whisper.py, run_qwen3.py) converts "
                       "with `ffmpeg -ac 1 -ar 16000 -c:a pcm_s16le` into a temp cache. For "
                       "these 16 kHz mono 16-bit copies that is a re-encode with no change; "
@@ -57,13 +59,16 @@ def main():
     p.add_argument("--out", required=True)
     a = p.parse_args()
     src = json.load(open(a.source_ids)) if a.source_ids else {}
-    units = {Path(r["file"]).stem: r["unit"]
-             for r in json.load(open(a.languages))["results"]}
+    rows = {Path(r["file"]).stem: r for r in json.load(open(a.languages))["results"]}
+    units = {s: r["unit"] for s, r in rows.items()}
     files = {}
     for f in sorted(Path(a.corpus).iterdir()):
         if f.suffix.lower() != ".wav":
             continue
-        files[file_id(src.get(f.stem, f.stem))] = {"language": UNIT_LANGUAGE[units[f.stem]], **probe(f)}
+        files[file_id(src.get(f.stem, f.stem))] = {
+            "language": UNIT_LANGUAGE[units[f.stem]], **probe(f),
+            "reference_length": rows[f.stem]["ref_chars"],
+            "reference_unit": "characters" if units[f.stem] == "char" else "words"}
     derived = {}
     for spec in a.derived:
         name, rest = spec.split("=", 1)
@@ -73,7 +78,8 @@ def main():
                          "sample_rate": 16000, "bit_depth": 16}
     out = {"id": "sha256(source id)[:12]; the source id is the filename stem for a recording "
                  "and the video id for a downloaded public video",
-           "fields": "language, duration_s, codec, sample_rate, bit_depth, bitrate only",
+           "fields": "language, duration_s, codec, sample_rate, bit_depth, bitrate, and the "
+              "reference transcript's length (reference_length, in reference_unit)",
            "processing": PROCESSING, "files": files, "derived": derived}
     # sorted by id, not by filename: the order of names would itself leak information
     out["files"] = dict(sorted(files.items()))
