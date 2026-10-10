@@ -1,0 +1,76 @@
+{
+ "config": {
+  "corpus": "bench_out/corpus7",
+  "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+  "modes": "-12",
+  "chunk_seconds": 30.0,
+  "max_batch": 32,
+  "delay_ms": 2400,
+  "kv_bits": 8,
+  "peak_dbfs": -1.0,
+  "rms_dbfs": -23.0,
+  "limit": null,
+  "json": "bench_out/rerun/gain7_m12db_c30b32_kv8.json"
+ },
+ "results": {
+  "-12": {
+   "aggregate": {
+    "char": 0.19417,
+    "word": 0.34235
+   },
+   "per_file": [
+    {
+     "file": "rec-04",
+     "unit": "char",
+     "peak_dbfs": -17.3,
+     "mel_floor_share": 0.5813,
+     "coverage_cer": 0.13925
+    },
+    {
+     "file": "rec-22",
+     "unit": "word",
+     "peak_dbfs": -12.5,
+     "mel_floor_share": 0.4146,
+     "coverage_cer": 0.37324
+    },
+    {
+     "file": "rec-06",
+     "unit": "char",
+     "peak_dbfs": -16.2,
+     "mel_floor_share": 0.1562,
+     "coverage_cer": 0.36446
+    },
+    {
+     "file": "rec-23",
+     "unit": "word",
+     "peak_dbfs": -15.4,
+     "mel_floor_share": 0.5115,
+     "coverage_cer": 0.32906
+    },
+    {
+     "file": "rec-02",
+     "unit": "char",
+     "peak_dbfs": -14.9,
+     "mel_floor_share": 0.6077,
+     "coverage_cer": 0.18044
+    },
+    {
+     "file": "rec-05",
+     "unit": "char",
+     "peak_dbfs": -14.8,
+     "mel_floor_share": 0.2051,
+     "coverage_cer": 0.19552
+    },
+    {
+     "file": "rec-03",
+     "unit": "char",
+     "peak_dbfs": -16.7,
+     "mel_floor_share": 0.5091,
+     "coverage_cer": 0.17609
+    }
+   ]
+  }
+ },
+ "complete": true,
+ "complete_marked_by": "rerun_queue.sh"
+}

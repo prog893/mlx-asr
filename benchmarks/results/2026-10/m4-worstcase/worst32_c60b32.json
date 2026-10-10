@@ -1,0 +1,70 @@
+{
+ "config": {
+  "corpus": "worstcase-b32-20261009",
+  "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+  "chunk_seconds": 60.0,
+  "max_batch": 32,
+  "delay_ms": 2400,
+  "kv_bits": 8,
+  "overlap_seconds": 0.0,
+  "min_cut": 30,
+  "min_cut_words": 6,
+  "limit": null,
+  "vad": false,
+  "compact_silence": false,
+  "prompt": "",
+  "label": "worst32_c60b32",
+  "keep_hyp": null,
+  "json": "worst32_c60b32.json"
+ },
+ "label": "worst32_c60b32",
+ "machine": {
+  "label": "Apple M4 16GB (Mac16,1)",
+  "chip": "Apple M4",
+  "model_id": "Mac16,1",
+  "ram_gb": 16,
+  "gpu_cores": 10,
+  "macos": "26.7.1",
+  "mlx": "0.32.0",
+  "load_1min": 3.43,
+  "cpu_count": 10,
+  "swap_used_mb": 4939.62,
+  "swapout_pages_per_s": 0.0,
+  "gpu_in_use_gb": 0.53,
+  "ac_power": true,
+  "battery_percent": 75,
+  "low_power_mode": false,
+  "busy": false,
+  "busy_reasons": []
+ },
+ "aggregate": {
+  "word": 0.32689
+ },
+ "ref_units": {
+  "char": 0,
+  "word": 4139
+ },
+ "x_realtime": 6.39,
+ "peak_memory_gb": 8.31,
+ "results": [
+  {
+   "file": "worst32",
+   "duration_s": 1949.0,
+   "unit": "word",
+   "x_realtime": 6.4,
+   "chunks": 32,
+   "peak_memory_gb": 8.31,
+   "ref_chars": 4139,
+   "hyp_chars": 3549,
+   "extra_ratio": 0.8574534911814448,
+   "coverage": 0.7093500845614883,
+   "cer": 0.36530562937907707,
+   "coverage_cer": 0.3268905532737376,
+   "subs": 304,
+   "dels": 899,
+   "insertions_counted": 150,
+   "insertions_excused": 159,
+   "excused_run_count": 8
+  }
+ ]
+}
