@@ -168,6 +168,9 @@ def test_parameter_path_with_spaces_is_cut_whole_and_detected():
     params = {"corpus": "/mnt/private data/recordings", "max_batch": 32}
     cleaned = {k: ar.last_component(v) for k, v in params.items()}
     assert cleaned["corpus"] == "<local>/recordings"
+    assert ar.last_component("/data") == "<local>/data"
+    assert ar.last_component("/data/") == "<local>/data"
+    assert ar.last_component("bench_out/corpus_all") == "bench_out/corpus_all"
     cmd = ar.command("run_corpus.py", cleaned, "x.json")
     assert "private data" not in cmd and cmd.endswith("--json x.json")
     assert ar.Scrubber([]).leaks('"--corpus /mnt/private data/x"') > 0

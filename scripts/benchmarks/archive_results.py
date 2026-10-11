@@ -52,7 +52,8 @@ def last_component(value):
     the reader's own copy (see the archive README). The whole value is one path, so a
     directory name with spaces is cut with it. Relative paths replay from the repo root and
     are kept."""
-    if isinstance(value, str) and value.startswith("/") and "/" in value.strip("/"):
+    # any absolute path, root-level ones such as "/data" included; a bare "/" names nothing
+    if isinstance(value, str) and value.startswith("/") and value.strip("/"):
         return f"{LOCAL}/" + value.rstrip("/").rsplit("/", 1)[-1]
     return value
 
