@@ -1,0 +1,334 @@
+{
+ "group": "ultra-input-gain",
+ "question": "Input gain on the 7-file subset",
+ "docs": [
+  "docs/benchmarks/input-level.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "gain7_asrecorded_c30b32_kv8",
+   "arm": "mode 0",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes 0 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_asrecorded_c30b32_kv8.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "modes": "0",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "peak_dbfs": -1.0,
+    "rms_dbfs": -23.0,
+    "limit": null
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.16443,
+    "word": 0.26546
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "peak_dbfs": -5.3,
+     "mel_floor_share": 0.2233,
+     "coverage_cer": 0.11677
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "peak_dbfs": -0.5,
+     "mel_floor_share": 0.0993,
+     "coverage_cer": 0.27993
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "peak_dbfs": -4.2,
+     "mel_floor_share": 0.029,
+     "coverage_cer": 0.19758
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "peak_dbfs": -3.4,
+     "mel_floor_share": 0.1438,
+     "coverage_cer": 0.25924
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "peak_dbfs": -2.9,
+     "mel_floor_share": 0.2381,
+     "coverage_cer": 0.17366
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "peak_dbfs": -2.8,
+     "mel_floor_share": 0.0173,
+     "coverage_cer": 0.16495
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "peak_dbfs": -4.7,
+     "mel_floor_share": 0.1792,
+     "coverage_cer": 0.16256
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing"
+   ]
+  },
+  {
+   "run": "gain7_m12db_c30b32_kv8",
+   "arm": "mode -12",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes=-12 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_m12db_c30b32_kv8.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "modes": "-12",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "peak_dbfs": -1.0,
+    "rms_dbfs": -23.0,
+    "limit": null
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.19417,
+    "word": 0.34235
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "peak_dbfs": -17.3,
+     "mel_floor_share": 0.5813,
+     "coverage_cer": 0.13925
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "peak_dbfs": -12.5,
+     "mel_floor_share": 0.4146,
+     "coverage_cer": 0.37324
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "peak_dbfs": -16.2,
+     "mel_floor_share": 0.1562,
+     "coverage_cer": 0.36446
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "peak_dbfs": -15.4,
+     "mel_floor_share": 0.5115,
+     "coverage_cer": 0.32906
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "peak_dbfs": -14.9,
+     "mel_floor_share": 0.6077,
+     "coverage_cer": 0.18044
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "peak_dbfs": -14.8,
+     "mel_floor_share": 0.2051,
+     "coverage_cer": 0.19552
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "peak_dbfs": -16.7,
+     "mel_floor_share": 0.5091,
+     "coverage_cer": 0.17609
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing"
+   ]
+  },
+  {
+   "run": "gain7_m20db_c30b32_kv8",
+   "arm": "mode -20",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes=-20 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_m20db_c30b32_kv8.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "modes": "-20",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "peak_dbfs": -1.0,
+    "rms_dbfs": -23.0,
+    "limit": null
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.23759,
+    "word": 0.36651
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "peak_dbfs": -25.3,
+     "mel_floor_share": 0.7961,
+     "coverage_cer": 0.21499
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "peak_dbfs": -20.5,
+     "mel_floor_share": 0.6549,
+     "coverage_cer": 0.38111
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "peak_dbfs": -24.2,
+     "mel_floor_share": 0.403,
+     "coverage_cer": 0.42153
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "peak_dbfs": -23.4,
+     "mel_floor_share": 0.7577,
+     "coverage_cer": 0.36023
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "peak_dbfs": -22.9,
+     "mel_floor_share": 0.7949,
+     "coverage_cer": 0.20252
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "peak_dbfs": -22.8,
+     "mel_floor_share": 0.4735,
+     "coverage_cer": 0.24716
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "peak_dbfs": -24.7,
+     "mel_floor_share": 0.7079,
+     "coverage_cer": 0.21546
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing"
+   ]
+  },
+  {
+   "run": "gain7_p6db_c30b32_kv8",
+   "arm": "mode +6",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes +6 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_p6db_c30b32_kv8.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "modes": "+6",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "peak_dbfs": -1.0,
+    "rms_dbfs": -23.0,
+    "limit": null
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.17092,
+    "word": 0.23961
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0862,
+     "coverage_cer": 0.12623
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0277,
+     "coverage_cer": 0.26813
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0108,
+     "coverage_cer": 0.20536
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0473,
+     "coverage_cer": 0.22735
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0978,
+     "coverage_cer": 0.18281
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0031,
+     "coverage_cer": 0.16135
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0783,
+     "coverage_cer": 0.17396
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing"
+   ]
+  }
+ ]
+}

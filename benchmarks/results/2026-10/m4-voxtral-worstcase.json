@@ -1,0 +1,152 @@
+{
+ "group": "m4-voxtral-worstcase",
+ "question": "Peak memory with every row padded to a 1.5x-target last chunk (cut inputs, see corpus.json derived)",
+ "docs": [
+  "docs/benchmarks/chunking.md",
+  "mlx_asr/hardware.py"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "worst32_c60b32",
+   "command": "scripts/benchmarks/run_corpus.py --corpus '<local>/worstcase-b32-20261009' --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label worst32_c60b32 --json worst32_c60b32.json",
+   "params": {
+    "corpus": "<local>/worstcase-b32-20261009",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "worst32_c60b32"
+   },
+   "machine": {
+    "label": "Apple M4 16GB (Mac16,1)",
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "macos": "26.7.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.43,
+    "cpu_count": 10,
+    "swap_used_mb": 4939.62,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.53,
+    "ac_power": true,
+    "battery_percent": 75,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "word": 0.32689
+   },
+   "measures": {
+    "x_realtime": 6.39,
+    "peak_memory_gb": 8.31
+   },
+   "files": [
+    {
+     "file": "worst32",
+     "duration_s": 1949.0,
+     "unit": "word",
+     "x_realtime": 6.4,
+     "chunks": 32,
+     "peak_memory_gb": 8.31,
+     "ref_chars": 4139,
+     "hyp_chars": 3549,
+     "extra_ratio": 0.8574534911814448,
+     "coverage": 0.7093500845614883,
+     "cer": 0.36530562937907707,
+     "coverage_cer": 0.3268905532737376,
+     "subs": 304,
+     "dels": 899,
+     "insertions_counted": 150,
+     "insertions_excused": 159,
+     "excused_run_count": 8
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "worst64_c60b64",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/batch_m4_b64_20261010/worst64 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label worst64_c60b64 --json worst64_c60b64.json",
+   "params": {
+    "corpus": "bench_out/batch_m4_b64_20261010/worst64",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 64,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "worst64_c60b64"
+   },
+   "machine": {
+    "label": "Apple M4 16GB (Mac16,1)",
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "macos": "26.7.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.91,
+    "cpu_count": 10,
+    "swap_used_mb": 7021.69,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.68,
+    "ac_power": true,
+    "battery_percent": 100,
+    "low_power_mode": false,
+    "busy": true,
+    "busy_reasons": [
+     "load 4.91 over 10 cpus"
+    ]
+   },
+   "aggregate": {
+    "char": 0.4235
+   },
+   "measures": {
+    "x_realtime": 7.46,
+    "peak_memory_gb": 11.87
+   },
+   "files": [
+    {
+     "file": "worst64",
+     "duration_s": 3856.0,
+     "unit": "char",
+     "x_realtime": 7.5,
+     "chunks": 64,
+     "peak_memory_gb": 11.87,
+     "ref_chars": 9830,
+     "hyp_chars": 14253,
+     "extra_ratio": 1.4499491353001017,
+     "coverage": 0.6047812817904374,
+     "cer": 0.903560528992879,
+     "coverage_cer": 0.423499491353001,
+     "subs": 3311,
+     "dels": 574,
+     "insertions_counted": 278,
+     "insertions_excused": 4719,
+     "excused_run_count": 12
+    }
+   ],
+   "missing": [],
+   "caveats": [
+    "other GPU work at start: load 4.91 over 10 cpus"
+   ]
+  }
+ ]
+}
