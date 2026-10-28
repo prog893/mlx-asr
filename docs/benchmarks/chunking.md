@@ -69,17 +69,17 @@ Paired testing is stricter than the point estimates suggest:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/chunking-length-paired-dark.svg">
-  <img alt="Paired CER differences on one clip with 95% CIs: 60s beats 30s by 1.37 points with a CI clear of zero, and 60s against 90s is 0.67 points with a CI that crosses zero." src="img/chunking-length-paired-light.svg">
+  <img alt="Paired CER differences on one clip with 95% CIs: 60s beats 30s by 1.35 points with a CI clear of zero, and 60s against 90s is 0.67 points with a CI that crosses zero." src="img/chunking-length-paired-light.svg">
 </picture>
 
 **Table:** paired CER difference between chunk lengths on one clip, 40 regions, positive meaning 60s is better.
 
 | comparison | diff | 95% CI | verdict |
 |---|---|---|---|
-| 60s beats 30s | 1.37 | [+0.12, +2.89] | significant |
+| 60s beats 30s | 1.35 | [+0.10, +2.86] | significant |
 | 60s beats 90s | 0.67 | [-0.33, +1.76] | **not supported** |
 
-Source: [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_len_30v60`, `cmp_len_90v60` (30s at batch 32 with KV unquantized, 60s and 90s at batch 16 with kv8)
+Source: [ultra-voxtral-clip-recheck.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-recheck.json) runs `cmp_len_30v60_kv8` (30s at batch 32, 60s at batch 16, kv8 on both); [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_len_90v60` (60s and 90s at batch 16 with kv8)
 
 So on this clip **60s is the right choice because it is simultaneously the fastest of the <!-- not-measured: 60s is a chunk length setting -->
 long options and never measurably worse**, which is a weaker justification than "longer

@@ -42,10 +42,10 @@ SWEEPS = {
         "scale": "category", "connect": False,
         "series": ["60s minus the other arm"],
         "rows": [
-            ("60s vs 30s", "| 60s beats 30s |", ("1.37",), ("[+0.12, +2.89]",)),
+            ("60s vs 30s", "| 60s beats 30s |", ("1.35",), ("[+0.10, +2.86]",)),
             ("60s vs 90s", "| 60s beats 90s |", ("0.67",), ("[-0.33, +1.76]",)),
         ],
-        "source": "ultra-voxtral-clip-paired.json#cmp_len_30v60,cmp_len_90v60",
+        "source": "ultra-voxtral-clip-recheck.json#cmp_len_30v60_kv8;ultra-voxtral-clip-paired.json#cmp_len_90v60",
         "panels": [{"series": [0], "ylabel": "CER points saved by 60s",
                     "title": "paired difference, 95% CI", "zero_line": True}],
         "width": 6.0,
