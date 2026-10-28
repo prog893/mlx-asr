@@ -5,7 +5,7 @@
   "docs/benchmarks/chunking.md",
   "docs/benchmarks/input-level.md"
  ],
- "note": "In the commands $PY is the repo venv python, $H the queue-7 hypothesis directory bench_out/q7_20261015/hyp (the decodes of ultra-voxtral-clip-cli) and $REF the clip reference subtitles; hypotheses are not saved.",
+ "note": "In the commands $PY is the repo venv python, $H the queue-7 hypothesis directory bench_out/q7_20261015/hyp (the decodes of ultra-voxtral-clip-cli) and $REF the clip reference subtitles. The hypotheses and the reference contain corpus text, so they are not published: the paired difference, its interval and the region counts reproduce only from those files, which are kept on the benchmark machine, as for every clip comparison in ultra-voxtral-clip-paired.",
  "runs": [
   {
    "run": "cmp_len_30v60_kv8",

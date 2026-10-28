@@ -472,7 +472,12 @@ def main():
         if key not in rec.get("params", {}):
             return False
         rec["params"][key] = PROMPT_PLACEHOLDER
-        rec["command"] = command(Path(rec["command"].split()[0]).name, rec["params"],
+        # keep the runner's path below scripts/benchmarks/ (e.g. probes/), which
+        # command() prepends again
+        script = rec["command"].split()[0]
+        script = script.split("scripts/benchmarks/", 1)[-1] if "scripts/benchmarks/" in script \
+            else Path(script).name
+        rec["command"] = command(script, rec["params"],
                                  rec["command"].rsplit("--json ", 1)[-1])
         return True
 

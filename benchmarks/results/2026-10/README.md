@@ -59,7 +59,7 @@ So far one file: `71bb5eba3baa`. Runs made before its revision (2026-10-11) used
 copy (the 7-file groups do not contain it), which held only the first 558.2s of a 783.5s
 source while the reference runs to 661.2s; their rows for it are flagged `invalid`, and
 leaving them out lowers such a run's JP aggregate by about 0.2 points (Voxtral at 4-bit:
-16.29% to 16.07%). Runs made after the revision, whose rows record the file at 783.5s,
+16.29% to 16.07%[^r1]). Runs made after the revision, whose rows record the file at 783.5s,
 used the current copy and are valid. Pre-revision runs that contain it are rerun
 candidates on the new copy.
 
@@ -95,7 +95,7 @@ candidates on the new copy.
 | `ultra-voxtral-delay` | M2 Ultra 128GB | streaming delay 480 and 960ms at 30s / batch 32, 7-file subset |
 | `ultra-whisper-condition` | M2 Ultra 128GB | large-v3 and turbo, condition on previous text on and off, runs r2 and r3, 7-file subset |
 | `ultra-voxtral-prompt` | M2 Ultra 128GB | prompt content and language arms that run without topic or term text, 20-file corpus |
-| `ultra-qwen3-loops` | M2 Ultra 128GB | qwen3-asr 1.7B bf16 on the 7-file subset; token budget with and without the per-group cap; the per-window budget on the 1553s file, and the library's whole-file budget (8192, 19950) on it |
+| `ultra-qwen3-loops` | M2 Ultra 128GB | qwen3-asr 1.7B bf16 on the 7-file subset; the batch-1 per-window token budget; the per-window budget on the 1553s file, and the library's whole-file budget (8192, 19950) on it |
 | `ultra-kotoba-windows` | M2 Ultra 128GB | kotoba-whisper on the MLX chunked driver at 10s (3 runs), 20s and 30s windows (3 runs each); kotoba samples on fallback like Whisper |
 | `ultra-whisper-runners` | M2 Ultra 128GB | competing Whisper runners on the 935s clip, 3 runs each (whisper.cpp 1.9.5 turbo and large-v3, faster-whisper 1.2.1 on CPU, batched and unbatched), plain CER |
 | `ultra-voxtral-clip` | M2 Ultra 128GB | the 935s clip: chunk length, overlap, VAD, carry-context, silence compaction, weight-precision ladder; plain CER (the clip's reference is complete); the clip runners record no machine state |
@@ -141,6 +141,8 @@ candidates on the new copy.
 | `ultra-voxtral-v1-conversion` | M2 Ultra 128GB | voxtral-v1 3B 8-bit, first-use conversion against convert_drop_source.py, tensor by tensor |
 | `ultra-voxtral-prompt-overlap-corpus` | M2 Ultra 128GB | prompt x overlap on the 935s clip through run_corpus.py: none, fixed description, derived term list (redacted), at 0s and 4s overlap |
 
+Source: [../corpus.json](../corpus.json) (file durations and derived cuts named in the table)
+
 ## Tools
 
 - Recompute an interval: `uv run python scripts/benchmarks/ci_from_run.py` on a runner's
@@ -148,3 +150,5 @@ candidates on the new copy.
 - Save new runs: `scripts/benchmarks/archive_results.py` (one run-group) and
   `scripts/benchmarks/archive_corpus.py` (corpus metadata). Both need the local corpus;
   they refuse to write anything that still contains a filename or an absolute path.
+
+[^r1]: [ultra-voxtral-headline.json](ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8` (the aggregate over its rows with and without the invalid rows of `71bb5eba3baa`, before its supplement)
