@@ -1,7 +1,8 @@
 {
-  "_comment": "Known-good chunk length and KV precision per machine, measured rather than calculated because the right chunk length depends on how expensive the encoder is on a given GPU. Batch is not stored here: it is sized from GPU memory on every machine (hardware.py: derive_batch). Add yours: run `mlx-asr-bench` and open an issue with its output. Keys are matched as substrings of `sysctl -n machdep.cpu.brand_string` plus a RAM window in nameplate GiB. Machines with no entry get a 60s chunk default.",
+  "_comment": "Known-good chunk length and KV precision per machine, measured rather than calculated because the right chunk length depends on how expensive the encoder is on a given GPU. Batch is not stored here: it is sized from GPU memory on every machine (hardware.py: derive_batch). Add yours: run `mlx-asr-bench` and open an issue with its output. Keys are matched as substrings of `sysctl -n machdep.cpu.brand_string` plus a RAM window in nameplate GiB. Machines with no entry get a 30s chunk default.",
   "_schema": {
-    "chunk_seconds": "audio per row; shorter = fewer decode steps per row but more chunk seams. 30s vs 60s is not resolvable on the 20-file corpus (+0.10, CI [-1.89, +2.03]), so this is a throughput choice, not an accuracy one",
+    "chunk_seconds": "audio per row; shorter = fewer decode steps per row but more chunk seams. 30s vs 60s is not resolvable on the 20-file corpus (+0.10, CI [-1.92, +2.06]), so this is a throughput choice, not an accuracy one",
+    "max_batch": "optional cap on the memory-derived batch: the largest batch measured reliable on this machine, where the formula admits a larger one",
     "measured_x_realtime": "end-to-end decode over the 20-file corpus at the batch this machine resolves to",
     "peak_gb": "GPU peak at the batch this machine resolves to, on the 20-file corpus; the batch budget is 78% of gpu_working_set_gb (hardware.py: USABLE_FRACTION)",
     "source": "who measured it and on what",
@@ -15,14 +16,16 @@
         "ram_gb_min": 16,
         "ram_gb_max": 16
       },
-      "chunk_seconds": 60,
+      "chunk_seconds": 30,
+      "max_batch": 32,
       "kv_bits": 8,
       "overlap_seconds": 0,
-      "notes": "10 GPU cores, ~120GB/s. 60s chunks because SHORTER chunks lose here: the encoder is 36% of wall clock and compute-bound, so doubling the chunk count costs more than the shorter decode rows save. Measured 30s/B32 slower than 60s/B16 on this chip, which is the opposite of the M2 Ultra and the reason chunk length is a profile value rather than a flag. Batch resolves to 32 from memory, the largest that runs reliably here: two full 20-file runs at 60s, no errors, 8.08GB peak; B48 exceeds the ~8.4GB KV wall. End to end at 60s: B16 4.66x, B24 5.62x, B32 5.46x, with accuracy unresolved (paired B32 against B16 -0.12 points, CI [-0.28, +0.00]), the gain only on files over 16 chunks. B=4..8 is a hard valley (110ms/step vs 22ms at B=1). Overlap stays 0: it won 1.8 CER points at 30s on one clip and did not reproduce on the 20-file corpus.",
-      "measured_x_realtime": 5.5,
-      "measured_cer": 0.1617,
-      "peak_gb": 8.1,
-      "source": "Apple M4, 16GB, 10 GPU cores (Mac16,1), mlx 0.32.0, nvfp4",
+      "notes": "10 GPU cores, ~120GB/s (not-measured: spec-sheet bandwidth). Weights: 8bit (converted on first use from the fp16 build), the first precision that fits here: the default ran 6.67x (mean of 3 runs, 6.61x to 6.76x) at 15.12% Japanese coverage CER and 21.17% English WER, 6.78GB peak; 8bit minus 4bit is -0.57 Japanese points (CI [-1.16, -0.13]). The chunk and batch figures below are 4bit. 30s chunks: 30s/B32 ran 6.37x (mean of 3 runs) against 4.66x for 60s/B16 and 5.80x for 60s/B32 (mean of 7 runs), with accuracy tied (60s/B16 against 30s/B32 +0.10 points, CI [-1.92, +2.06]) and a lower peak than 60s/B32 (6.87GB against 8.08GB). Batch is capped at 32: at 30s the memory formula admits 64, which has not run here, and at 60s B64 completed the corpus four times but a worst-case padded file peaked at 11.87GB, 93% of the 12.7GB working set, too close to the limit to call reliable. At 60s, B32 completed the corpus seven times with no errors at 8.08GB peak. End to end at 60s: B16 4.66x, B24 5.56x (mean of 4 runs), B32 5.80x (mean of 7 runs), with accuracy unresolved (paired B32 against B16 -0.12 points, CI [-0.28, +0.00]), the gain only on files over 16 chunks. B=4..8 is a hard valley (103ms/step at B=8 vs 21ms at B=1). Overlap stays 0: it won 1.5 CER points at 30s on one clip and did not reproduce on the 20-file corpus.",
+      "measured_x_realtime": 6.67,
+      "measured_cer": 0.1512,
+      "peak_gb": 6.8,
+      "source": "Apple M4, 16GB, 10 GPU cores (Mac16,1), mlx 0.32.0, 20-file corpus; the measured_* and peak figures are the 8bit default at 30s/B32, the chunk and batch sweeps 4bit affine (the per-step decode figures: nvfp4, synthetic)",
+      "runs": "m4-voxtral-8bit.json#m4_c30b32_w8bit_r1,m4_c30b32_w8bit_r2,m4_c30b32_w8bit_r3;m4-voxtral-batch.json#c60b16,c60b24,c60b24_r2,c60b24_r3,c60b24_r4,c60b32,c60b32_r1,batch_m4_repeat_20261009__c60b32_r2,batch_m4_b64_20261010__c60b32_r2,batch_m4_repeat_20261009__c60b32_r3,batch_m4_b64_20261010__c60b32_r3,c60b32_r4,c60b48,c60b48_r1,c60b48_r2,c60b48_r3,c60b64,c60b64_r1,c60b64_r2,c60b64_r3;m4-voxtral-worstcase.json#worst64_c60b64;m4-synthetic-decode.json#synth_nvfp4_r1,synth_nvfp4_r2,synth_nvfp4_r3;m4-voxtral-chunking.json#c30b32,c30b32_r2,c30b32_r3,c60b16;ultra-voxtral-clip.json#ov30_0s,ov30_8s",
       "model_id": "Mac16,1"
     },
     {
@@ -34,19 +37,20 @@
       "chunk_seconds": 30.0,
       "kv_bits": 8,
       "overlap_seconds": 0,
-      "notes": "60 GPU cores, ~800GB/s. 30s chunks measured 28.9x against 19.8x for 60s/B16 over the 20-file corpus at identical accuracy (16.22% vs 16.21%, paired -0.01 CI [-1.96, +1.87]), so short chunks are a free 46% here. That is the reverse of the low-core M4, where the same change loses. Batch resolves to 128 from memory; the end-to-end batch sweep at 30s chunks rose with batch size (B16 19.3x, B32 28.0x, B64 31.9x, B128 33.6x), with accuracy unresolved (paired B128 against B32 is +0.07 points, CI [-0.01, +0.18]), the gain coming only from files over 32 chunks; peak memory 11.33GB, under 10% of the working set. Overlap stays 0: adding 8s cost both speed and accuracy on this corpus (23.5x at 16.79%).",
-      "measured_x_realtime": 33.6,
-      "measured_cer": 0.1629,
-      "peak_gb": 11.3,
-      "source": "Apple M2 Ultra, 128GB, 60 GPU cores (Mac14,14), mlx 0.32.0, 4bit affine, 20-file corpus",
+      "notes": "60 GPU cores, ~800GB/s (not-measured: spec-sheet bandwidth). Weights: fp16, the first precision that fits here: the default (30s, B128) ran 23.86x (mean of 3 runs, 23.66x to 23.99x) at 15.20% Japanese coverage CER and 21.21% English WER, 17.14GB peak; 8bit ties it (fp16 minus 8bit +0.11 points, CI [-0.01, +0.25]) and fp16 minus 4bit is -0.60 points (CI [-1.07, -0.25]). The chunk and batch figures below are 4bit. 30s chunks measured 29.3x (B32, mean of 3 runs) against 20.4x for 60s/B16 (mean of 3 runs) over the 20-file corpus at identical accuracy (15.73% vs 15.72%, paired -0.01 CI [-1.99, +1.90]), so short chunks are a free 44% here. The M4 points the same way (30s/B32 6.37x, mean of 3 runs, against 60s/B16 4.66x) and also ships 30s. Batch resolves to 128 from memory; the end-to-end batch sweep at 30s chunks rose with batch size (B16 19.3x, B32 29.3x, B64 32.9x, B128 33.6x; B32, B64 and B128 means of 3 runs), with accuracy unresolved (paired B128 against B32 is +0.07 points, CI [-0.01, +0.18]), the gain coming only from files over 32 chunks; peak memory 11.33GB, under 10% of the working set. Overlap stays 0: adding 8s cost both speed and accuracy on this corpus (24.6x at 16.30%).",
+      "measured_x_realtime": 23.86,
+      "measured_cer": 0.152,
+      "peak_gb": 17.1,
+      "source": "Apple M2 Ultra, 128GB, 60 GPU cores (Mac14,14), mlx 0.32.0, 20-file corpus; the measured_* and peak figures are the fp16 default at 30s/B128, the chunk and batch sweeps 4bit affine",
+      "runs": "ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3,vox_w8bit_c30b128_kv8;ultra-voxtral-headline.json#vox_default_c30b128_kv8,vox_default_c30b128_kv8_r2,vox_default_c30b128_kv8_r3;ultra-voxtral-batch.json#c30b16,c30b32,c30b32_r2,c30b32_r3,c30b64,c30b64_r2,c30b64_r3,c30b128;ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit;ultra-voxtral-chunking.json#ch_c30b32_ov8;m4-voxtral-chunking.json#c30b32,c30b32_r2,c30b32_r3,c60b16",
       "model_id": "Mac14,14"
     }
   ],
   "derived": {
     "_comment": "Defaults for chips with no profile above. Batch is not set here on any machine: hardware.py:derive_batch sizes it from GPU working set, model weight size and chunk length, then snaps it onto FAST_BATCHES.",
-    "chunk_seconds_default": 60.0,
-    "chunk_seconds_low_core": 60.0,
-    "_chunk_note": "60s both ways for now. On a low-core GPU the compute-bound encoder makes short chunks a net loss on throughput; that is measured on the M4 but not yet on any other low-core part, so the two values are kept separate rather than collapsed. This is a speed argument, not an accuracy one: 30s and 60s are indistinguishable on accuracy over the 20-file corpus.",
+    "chunk_seconds_default": 30.0,
+    "chunk_seconds_low_core": 30.0,
+    "_chunk_note": "30s both ways. The split was made on the belief that on a low-core GPU the compute-bound encoder makes short chunks a net loss on throughput; both measured machines show the reverse (10-core M4: 30s/B32 6.37x against 4.66x for 60s/B16; 60-core M2 Ultra: 29.3x against 20.4x; means of 3 runs except the M4 60s/B16, one run), at tied accuracy. The two values are kept separate so a measurement on another low-core part can change one without the other.",
     "kv_bits": 8
   }
 }

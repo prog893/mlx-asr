@@ -447,11 +447,11 @@ class MlxAsr < Formula
 
   def caveats
     <<~EOS
-      Model weights are downloaded on first use (~1.5GB for the default) and
+      Model weights are downloaded on first use (about 9GB for the default, the fp16
+      Voxtral build, which 16GB Macs convert to 8bit once) and
       cached under ~/.cache/huggingface. Nothing is bundled with this formula.
 
-      `--model kotoba` additionally needs a local MLX conversion of the weights;
-      `mlx-asr --model kotoba` prints the conversion command if it is missing.
+      `--model kotoba` converts its weights to MLX on first use and caches the result.
     EOS
   end
 
