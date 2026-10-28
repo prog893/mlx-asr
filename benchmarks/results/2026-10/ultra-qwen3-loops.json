@@ -1,11 +1,11 @@
 {
  "group": "ultra-qwen3-loops",
- "question": "qwen3-asr 1.7B bf16 on the 7-file subset, and the token budget with and without the per-group cap at 15s windows",
+ "question": "qwen3-asr 1.7B bf16 on the 7-file subset, the batch-1 per-window token budget at 15s windows, and the whole-file and truncation budget probes",
  "docs": [
   "docs/benchmarks/engines/qwen3-asr.md",
   "docs/benchmarks/qwen3-batch.md"
  ],
- "note": "",
+ "note": "The two qwen3budget_*_b1 arms both ran with --group-budget at batch 1, where decode_batched hands each window to qwen3_decode before the group budget applies, so the pair does not compare budget modes: both measure the batch-1 per-window budget. The budget-mode comparison is the q3trunc_* and q3budget_wholefile_* runs.",
  "runs": [
   {
    "run": "qwen3loop7_1.7B_bf16_c30",

@@ -100,7 +100,10 @@ def main():
     derived = {}
 
     def generic(name):
-        # a derived input is published by NAME, so NAME must be a generic label
+        # a derived input is published by NAME, so NAME must be a generic label, and one
+        # label names one input: a repeat would silently replace the first entry
+        if name in derived:
+            sys.exit(f"REFUSED: derived name {name!r} is given twice")
         if not DERIVED_NAME.match(name) or any(token_pattern(p).search(name) or
                                                token_pattern(name).search(p) for p in private):
             sys.exit(f"REFUSED: derived name {name!r} is not a generic label or overlaps a "

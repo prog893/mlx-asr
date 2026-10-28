@@ -18,6 +18,12 @@ The one place a doc number is derived from raw rows, so every page computes it t
 
 GROUP is a run-group name (`ultra-voxtral-headline`) or a path to its JSON. RUN matches a
 run's `run`, or `run#arm` for a sweep arm.
+
+A row's error is its `coverage_cer`, or its plain `cer` where the run scored plain CER (the
+clip runs, whose reference is complete); the output names which. A row without `ref_chars`
+takes its file's `reference_length` from benchmarks/results/corpus.json, which is the same
+count. `--rows` prints the per-row tables of runs that are not per-file (`rows`: synthetic
+batch sweeps, text-against-SRT scores).
 """
 
 import argparse
@@ -28,6 +34,33 @@ from pathlib import Path
 import numpy as np
 
 RESULTS = Path(__file__).resolve().parents[2] / "benchmarks" / "results"
+UNIT_OF = {"char": "characters", "word": "words"}
+
+
+def _corpus() -> dict:
+    p = RESULTS / "corpus.json"
+    return json.loads(p.read_text(encoding="utf-8")).get("files", {}) if p.exists() else {}
+
+
+CORPUS = _corpus()
+
+
+def error_of(r: dict):
+    """(error, metric name) of one row: coverage CER where scored, else plain CER."""
+    if r.get("coverage_cer") is not None:
+        return r["coverage_cer"], "coverage"
+    if r.get("cer") is not None:
+        return r["cer"], "plain"
+    return None, ""
+
+
+def ref_of(r: dict):
+    if r.get("ref_chars"):
+        return r["ref_chars"]
+    meta = CORPUS.get(r.get("file"), {})
+    if meta.get("reference_unit") == UNIT_OF.get(r.get("unit")):
+        return meta.get("reference_length")
+    return None
 
 
 def load_group(group: str) -> dict:
@@ -61,13 +94,17 @@ def valid_rows(run: dict, unit: str = "char") -> dict:
     unit "both" pools Japanese CER and English WER rows, each weighted by its own reference
     length, which is how the 7-file paired tables were computed."""
     rows = {}
-    for r in run["files"]:
-        if (unit != "both" and r.get("unit") != unit) or r.get("coverage_cer") is None \
-                or not r.get("ref_chars"):
+    files = run["files"]
+    for r in files:
+        if (unit != "both" and r.get("unit") != unit) or error_of(r)[0] is None:
             continue
         if "invalid" in r:
             continue
-        rows[r["file"]] = r          # a supplement row is appended after the original
+        ref = ref_of(r) or (1 if len(files) == 1 else None)   # one row needs no weight
+        if not ref:
+            continue
+        err, _ = error_of(r)
+        rows[r["file"]] = {**r, "ref_chars": ref, "coverage_cer": err}
     return rows
 
 
@@ -83,6 +120,9 @@ def aggregate(run: dict, unit: str = "char"):
 def paired(a: dict, b: dict, unit: str = "char", n_boot: int = 20000, seed: int = 0):
     ra, rb = valid_rows(a, unit), valid_rows(b, unit)
     common = sorted(set(ra) & set(rb))
+    if not common:
+        sys.exit(f"no file is scored validly in both runs at unit {unit!r}; "
+                 f"check --unit and that the two runs cover the same files")
     for f in common:
         if ra[f]["ref_chars"] != rb[f]["ref_chars"]:
             sys.exit(f"file {f}: reference lengths differ ({ra[f]['ref_chars']} vs "
@@ -129,8 +169,15 @@ def main():
     p.add_argument("runs", nargs="*")
     p.add_argument("--unit", default="char", choices=["char", "word", "both"])
     p.add_argument("--paired", nargs=2, metavar=("RUN_A", "RUN_B"))
+    p.add_argument("--rows", action="store_true",
+                   help="print each selected run's per-row table (non-per-file runs)")
     a = p.parse_args()
     g = load_group(a.group)
+    if a.rows:
+        for r in select(g, a.runs):
+            for row in r.get("rows") or []:
+                print(run_key(r), json.dumps(row, ensure_ascii=False))
+        return 0
     if a.paired:
         ra, rb = side(a.paired[0], g), side(a.paired[1], g)
         r = paired(ra, rb, a.unit)
@@ -144,8 +191,12 @@ def main():
         v = aggregate(r, a.unit)
         m = r.get("measures") or {}
         x, pk = m.get("x_realtime"), m.get("peak_memory_gb", m.get("peak_gb"))
+        if x is None and len(r["files"]) == 1:     # a one-file run keeps speed on its row
+            x = r["files"][0].get("x_realtime")
         vals.append(v); xs.append(x); peaks.append(pk)
         flag = " (supplemented)" if r.get("supplements") else ""
+        kinds = {error_of(x)[1] for x in r["files"] if error_of(x)[1]}
+        flag += " (plain CER)" if kinds == {"plain"} else ""
         print(f"{run_key(r):<44} {a.unit} {v * 100 if v is not None else float('nan'):6.2f}%  "
               f"x {x}  peak {pk}{flag}")
     if len(runs) > 1:

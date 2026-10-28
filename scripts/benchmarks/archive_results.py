@@ -452,16 +452,39 @@ def main():
              "runs": [r for run in a.runs for r in build_run(
                  Path(run), not a.drop_ref_lengths, supplements.get(Path(run).resolve(), ()),
                  run_name(Path(run), a.runs), overrides.get(Path(run).stem))]}
+    # --redact names a run by its input JSON stem; a saved run may be renamed
+    # `<dir>__<stem>` when stems collide, so both spellings resolve, and every request
+    # must redact something: a silent miss would publish the private value.
+    saved_names = {}
+    for r in a.runs:
+        saved_names.setdefault(Path(r).stem, set()).add(run_name(Path(r), a.runs))
+        saved_names.setdefault(run_name(Path(r), a.runs), set()).add(run_name(Path(r), a.runs))
     redact = {}
     for x in a.redact:
         run, _, key = x.partition("=")
-        redact.setdefault(run, set()).add(key)
+        if run not in saved_names:
+            sys.exit(f"--redact {x}: no input run has stem or saved name {run!r}")
+        for name in saved_names[run]:
+            redact.setdefault(name, set()).add(key)
+    done = set()
+
+    def redact_record(rec, key):
+        if key not in rec.get("params", {}):
+            return False
+        rec["params"][key] = PROMPT_PLACEHOLDER
+        rec["command"] = command(Path(rec["command"].split()[0]).name, rec["params"],
+                                 rec["command"].rsplit("--json ", 1)[-1])
+        return True
+
     for run in group["runs"]:
         for key in redact.get(run["run"], ()):
-            if key in run["params"]:
-                run["params"][key] = PROMPT_PLACEHOLDER
-                run["command"] = command(Path(run["command"].split()[0]).name, run["params"],
-                                         run["command"].rsplit("--json ", 1)[-1])
+            # supplements carry their own params and command, so they are redacted too
+            hits = [redact_record(rec, key) for rec in [run, *run.get("supplements", [])]]
+            if any(hits):
+                done.add((run["run"], key))
+    missed = [f"{n}={k}" for n, ks in redact.items() for k in ks if (n, k) not in done]
+    if missed:
+        sys.exit(f"--redact: no parameter to redact for {', '.join(missed)}")
     prefixes = dict(x.split("=", 1) for x in a.command_prefix)
     for run in group["runs"]:
         if run["run"] in prefixes:

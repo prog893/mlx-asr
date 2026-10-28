@@ -45,6 +45,9 @@ list(runner.transcribe(np.zeros(16000, dtype=np.float32), **kw)[0])   # warm-up
 # Decoded here with `wave`, before timing: faster-whisper 1.2.1 passes PyAV an argument
 # (metadata_errors) that current PyAV rejects, so a file path cannot be handed over.
 with wave.open(audio) as w:
+    if (w.getsampwidth(), w.getnchannels(), w.getframerate()) != (2, 1, 16000):
+        sys.exit(f"{audio}: expected 16 kHz mono 16-bit PCM, got {w.getframerate()} Hz, "
+                 f"{w.getnchannels()} ch, {8 * w.getsampwidth()}-bit")
     pcm = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16)
 pcm = pcm.astype(np.float32) / 32768.0
 t = time.perf_counter()

@@ -146,7 +146,7 @@ def _py_unsourced(path: Path) -> list[str]:
         specs = obj.items() if name == "SWEEPS" and isinstance(obj, dict) else [(name, obj)]
         for key, spec in specs:
             if isinstance(spec, dict) and "rows" in spec and "source" not in spec:
-                bad.append(f"spec {key} has no \"runs\"")
+                bad.append(f"spec {key} has no \"source\"")
             if isinstance(spec, list) and spec and isinstance(spec[0], tuple) and \
                     any(measured(str(v)) for row in spec for v in row) and key not in sources:
                 bad.append(f"{key} has no entry in SOURCES")
@@ -168,3 +168,12 @@ def test_done_page_is_fully_sourced(page):
     bad = (_md_unsourced(path) if page.endswith(".md")
            else _profiles_unsourced(path) if page.endswith(".json") else _py_unsourced(path))
     assert not bad, f"{page}:\n  " + "\n  ".join(bad[:40])
+
+
+def test_fenced_code_follows_commonmark():
+    """A longer fence wrapping a shorter one, and tilde fences, are both skipped."""
+    from metrics.number_scan import md_blocks
+    text = "````\n```\n| 1.5% |\n```\n````\n~~~\n2.5%\n~~~\nreal 3.5%\n"
+    prose = [line for kind, *rest in md_blocks(text) if kind == "prose" for line in rest[1:]]
+    tables = [b for kind, b, *_ in md_blocks(text) if kind == "table"]
+    assert not tables and [p for p in prose if p.strip()] == ["real 3.5%"]

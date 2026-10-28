@@ -9,7 +9,7 @@
   {
    "run": "derive_worst32_chunks",
    "output": "stdout",
-   "command": "$PY -c \"",
+   "command": "$PY -c \"\nimport sys; sys.path.insert(0, '.')\nimport numpy as np\nfrom mlx_asr.audio import SAMPLE_RATE, load_audio_16k, split_at_silences\nx = load_audio_16k('bench_out/one_w32/0c193bf7ced2.wav')[: int(1949.0 * SAMPLE_RATE)]\nx = np.round(x * 32767).astype(np.int16).astype(np.float32) / 32768   # corpus.json processing.derived\nch = [len(c) / SAMPLE_RATE for c in split_at_silences(x, 60.0)]\nprint({'cut_first_s': 1949.0, 'chunks': len(ch), 'last_s': round(ch[-1], 2), 'max_s': round(max(ch), 2), 'worst_s': 90.0, 'max_over_worst': round(max(ch) / 90.0, 4)})\n\"",
    "params": {},
    "machine": {},
    "aggregate": null,

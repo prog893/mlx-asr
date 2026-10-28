@@ -29,15 +29,27 @@ VAR = re.compile(r"\$\{?(\w+)\}?")
 def queue_commands(path: Path):
     """[(name regex, variable names, command template)] for every run/arm line."""
     out = []
-    for line in path.read_text().splitlines():
+    lines = path.read_text().splitlines()
+    for i, line in enumerate(lines):
         m = re.search(r"\b(?:run|arm) (\S+) (.+?)(?:; *done.*)?$", line)
         if not m or line.lstrip().startswith("#"):
             continue
         tmpl, cmd = m.groups()
+        # A command that opens a double quote it does not close (`$PY -c "` followed by a
+        # script) continues on the next lines until the quote closes.
+        j = i
+        while _open_quote(cmd) and j + 1 < len(lines):
+            j += 1
+            cmd += "\n" + lines[j]
         names = VAR.findall(tmpl)
         pattern = "(.+?)".join(re.escape(piece) for piece in VAR.split(tmpl)[::2])
         out.append((re.compile(f"^{pattern}$"), names, cmd.strip()))
     return out
+
+
+def _open_quote(cmd: str) -> bool:
+    """True if `cmd` leaves a double quote open (backslash-escaped quotes do not count)."""
+    return len(re.findall(r'(?<!\\)"', re.sub(r"'[^']*'", "", cmd))) % 2 == 1
 
 
 def command_for(name: str, commands) -> str:

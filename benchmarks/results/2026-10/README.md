@@ -55,11 +55,13 @@ the reason and how the new copy was made. A per-file row that used a superseded 
 `invalid_files`. A run's `aggregate` and `measures` are exactly what the runner wrote, so
 they include invalid rows; recompute from the rows without an `invalid` key.
 
-So far one file: `71bb5eba3baa`. Every run that contains it used its previous copy (the
-7-file groups do not contain it), which held only the
-first 558.2s of a 783.5s source while the reference runs to 661.2s. Leaving it out lowers
-each run's JP aggregate by about 0.2 points (Voxtral default: 16.29% to 16.07%). The runs
-that contain it are rerun candidates on the new copy.
+So far one file: `71bb5eba3baa`. Runs made before its revision (2026-10-11) used the previous
+copy (the 7-file groups do not contain it), which held only the first 558.2s of a 783.5s
+source while the reference runs to 661.2s; their rows for it are flagged `invalid`, and
+leaving them out lowers such a run's JP aggregate by about 0.2 points (Voxtral at 4-bit:
+16.29% to 16.07%). Runs made after the revision, whose rows record the file at 783.5s,
+used the current copy and are valid. Pre-revision runs that contain it are rerun
+candidates on the new copy.
 
 ## Run-groups
 
@@ -133,6 +135,7 @@ that contain it are rerun candidates on the new copy.
 | `ultra-qwen3-determinism` | M2 Ultra 128GB | qwen3-asr 1.7B 8-bit at 30s, 7-file subset, every file decoded twice |
 | `ultra-qwen3-batch-budget` | M2 Ultra 128GB | qwen3-asr 1.7B 8-bit, batch 4, 15s windows, the library's file-wide token budget, on the 883s file |
 | `ultra-resolution-floor` | (computed) | per-file paired SD and 95% half-width by corpus size, from the saved Voxtral default and Whisper turbo-nocond runs (`scripts/metrics/resolution_floor.py`) |
+| `ultra-voxtral-clip-recheck` | M2 Ultra 128GB | model-free rechecks on the 935s clip (2026-10-28): 30s against 60s with kv8 on both sides, and the auto-gain no-op by `cmp` exit status and SHA-256 |
 | `ultra-worstcase-split` | M2 Ultra 128GB | the worst32 cut split at 60s: 32 chunks (canary), last and longest chunk against the 90s worst case |
 | `ultra-voxtral-clip-batch1` | M2 Ultra 128GB | Voxtral CLI on the 935s clip at 30s / kv8, batch 1 against a same-session batch 32 |
 | `ultra-voxtral-v1-conversion` | M2 Ultra 128GB | voxtral-v1 3B 8-bit, first-use conversion against convert_drop_source.py, tensor by tensor |

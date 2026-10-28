@@ -384,3 +384,36 @@ def test_redacted_parameter_leaves_params_and_command(tmp_path, monkeypatch):
     assert ar.main() == 0
     text = out.read_text()
     assert "SECRETTERMS" not in text and ar.PROMPT_PLACEHOLDER in text
+
+
+def _query():
+    sys.path.insert(0, str(ROOT / "scripts" / "metrics"))
+    import archive_query
+    return archive_query
+
+
+def test_query_reads_plain_cer_rows_and_corpus_reference_lengths():
+    """Clip runs score plain CER, and some sweeps omit ref_chars; both must still compute
+    (the reference length then comes from corpus.json, which is the same count)."""
+    q = _query()
+    clip = q.select(q.load_group("ultra-voxtral-clip"), ["ov30_0s#overlap 0"])[0]
+    assert q.aggregate(clip) is not None
+    gain = q.select(q.load_group("ultra-input-gain"), ["gain7_asrecorded_c30b32_kv8#mode 0"])[0]
+    assert round(q.aggregate(gain) * 100, 2) == 16.44  # source: ultra-input-gain.json#gain7_asrecorded_c30b32_kv8#mode 0
+
+
+def test_paired_with_no_common_file_is_a_clear_error():
+    q = _query()
+    a = {"run": "a", "files": [{"file": "x", "unit": "char", "coverage_cer": 0.1, "ref_chars": 9}]}
+    b = {"run": "b", "files": [{"file": "y", "unit": "char", "coverage_cer": 0.1, "ref_chars": 9}]}
+    with pytest.raises(SystemExit, match="no file is scored validly in both runs"):
+        q.paired(a, b)
+
+
+def test_queue_commands_keep_a_multi_line_quoted_command(tmp_path):
+    import archive_text
+    qf = tmp_path / "queue.zsh"
+    qf.write_text('run probe $PY -c "\nimport sys\nprint(1)\n"\nrun next echo hi\n')
+    cmds = archive_text.queue_commands(qf)
+    assert archive_text.command_for("probe", cmds) == '$PY -c "\nimport sys\nprint(1)\n"'
+    assert archive_text.command_for("next", cmds) == "echo hi"

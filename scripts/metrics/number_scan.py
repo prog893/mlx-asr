@@ -90,14 +90,19 @@ def md_blocks(text: str):
     """Yield ("table", [(lineno, line)], next_nonblank_line) and ("prose", lineno, line),
     skipping fenced code."""
     lines = text.split("\n")
-    i, fence = 0, False
+    i, fence = 0, ""             # the open fence's marker run, e.g. "```" or "~~~~"
     while i < len(lines):
         ln = lines[i]
-        if ln.lstrip().startswith("```"):
-            fence = not fence
+        m = re.match(r" {0,3}(`{3,}|~{3,})(.*)$", ln)
+        if m and not fence:
+            fence = m.group(1)
             i += 1
             continue
         if fence:
+            # CommonMark: closed by the same character, at least as long, nothing after it
+            if m and m.group(1)[0] == fence[0] and len(m.group(1)) >= len(fence) \
+                    and not m.group(2).strip():
+                fence = ""
             i += 1
             continue
         if ln.lstrip().startswith("|"):

@@ -17,6 +17,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -48,8 +49,7 @@ def main():
     a = p.parse_args()
 
     out_dir = Path(a.out_dir)
-    tmp = out_dir / "tmp16k"
-    tmp.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
     here = machine_state()
     runner = Path(__file__).with_name("run_corpus.py")
     for run in map(Path, a.runs):
@@ -69,9 +69,12 @@ def main():
         if a.dry_run:
             continue
         log = out.with_suffix(".log").open("w")
-        subprocess.run(cmd, check=True, stdout=log, stderr=subprocess.STDOUT,
-                       env={**os.environ, "TMPDIR": str(tmp.resolve())},
-                       cwd=Path(__file__).resolve().parents[2])
+        # A fresh conversion cache per replay: run_corpus.py reuses a 16k copy by stem, so
+        # a cache kept across replays could feed a replaced file's old audio.
+        with tempfile.TemporaryDirectory(dir=out_dir, prefix="tmp16k-") as tmp:
+            subprocess.run(cmd, check=True, stdout=log, stderr=subprocess.STDOUT,
+                           env={**os.environ, "TMPDIR": tmp},
+                           cwd=Path(__file__).resolve().parents[2])
     return 0
 
 
