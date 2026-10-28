@@ -1,13 +1,16 @@
 """Write benchmarks/results/corpus.json: the publishable metadata of every corpus file.
 
     uv run python scripts/benchmarks/archive_corpus.py --corpus DIR --languages RUN.json \\
-        [--derived NAME=STEM:SECONDS ...] --out benchmarks/results/corpus.json
+        [--derived NAME=STEM:SECONDS ...] [--filtered NAME=STEM:PATH:FILTER ...] \\
+        [--also PATH ...] --out benchmarks/results/corpus.json
 
 Keyed by `sha256(stem)[:12]`, the same id archive_results.py writes into run-groups. Only
 language, duration, codec, sample rate, bit depth and bitrate are recorded; nothing about
 the content. Language comes from a run JSON's scoring unit (char = Japanese, word =
 English). `--derived` records an input cut from a corpus file (for example the padded
-worst-case tests) by its parent id and cut length, so it is traceable without a name.
+worst-case tests) by its parent id and cut length, so it is traceable without a name;
+`--filtered` records a whole parent file passed through an ffmpeg audio filter (an
+attenuated or resampled copy) by its parent id and the filter, probing the copy at PATH.
 """
 
 import argparse
@@ -29,11 +32,11 @@ UNIT_LANGUAGE = {"char": "Japanese", "word": "English"}
 # under "files" describes step 1's output, which is what every run read.
 PROCESSING = {
     "1_corpus_copy": "The corpus copies every run read: the per-file metadata below "
-                     "(16 kHz mono 16-bit PCM WAV). The recordings were 96 kHz mono WAV, "
+                     "(16 kHz mono 16-bit PCM WAV). Sources that were 96 kHz mono WAV were "
                      "converted with `ffmpeg -ac 1 -ar 16000 -c:a pcm_s16le` (ffmpeg's "
-                     "default resampler). Not recorded: the recordings' original bit depth "
-                     "(integer or float), and the original format of the downloaded public "
-                     "videos before their 16 kHz copies.",
+                     "default resampler). Not recorded: those sources' original bit depth "
+                     "(integer or float), and the original format of the other sources "
+                     "before their 16 kHz copies.",
     "2_runner_cache": "Each runner (run_corpus.py, run_whisper.py, run_qwen3.py) converts "
                       "with `ffmpeg -ac 1 -ar 16000 -c:a pcm_s16le` into a temp cache. For "
                       "these 16 kHz mono 16-bit copies that is a re-encode with no change; "
@@ -43,6 +46,9 @@ PROCESSING = {
                "copy, decoded to float32 (divided by 32768), then written back as 16-bit "
                "PCM (multiplied by 32767, rounded): a gain change of 32767/32768 "
                "(-0.0003 dB) plus rounding, not a bit-exact cut.",
+    "filtered": "A filtered input is its parent's whole step-1 copy passed through "
+                "`ffmpeg -af <ffmpeg_af> -c:a pcm_s16le` (16 kHz out); its own duration and "
+                "format are probed from the written copy.",
 }
 
 
@@ -58,8 +64,13 @@ def probe(path: Path) -> dict:
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--corpus", required=True)
-    p.add_argument("--languages", required=True, help="a run JSON covering every file")
+    p.add_argument("--languages", action="append", required=True,
+                   help="run JSON(s) that together cover every file; repeatable")
+    p.add_argument("--also", action="append", default=[], metavar="PATH",
+                   help="an audio file outside --corpus to catalog too (e.g. the single clip)")
     p.add_argument("--derived", action="append", default=[], help="NAME=STEM:SECONDS")
+    p.add_argument("--filtered", action="append", default=[], metavar="NAME=STEM:PATH:FILTER",
+                   help="the whole STEM passed through ffmpeg -af FILTER, written to PATH")
     p.add_argument("--source-ids", help="local JSON {stem: source identifier}")
     p.add_argument("--revisions", help="committed revisions.json: replaced audio, by id")
     p.add_argument("--probe-from", action="append", default=[],
@@ -69,10 +80,11 @@ def main():
     src = json.load(open(a.source_ids)) if a.source_ids else {}
     revisions = json.load(open(a.revisions)) if a.revisions else {}
     probe_from = dict(spec.split("=", 1) for spec in a.probe_from)
-    rows = {Path(r["file"]).stem: r for r in json.load(open(a.languages))["results"]}
+    rows = {Path(r["file"]).stem: r for run in a.languages
+            for r in json.load(open(run))["results"]}
     units = {s: r["unit"] for s, r in rows.items()}
     files = {}
-    for f in sorted(Path(a.corpus).iterdir()):
+    for f in sorted(Path(a.corpus).iterdir()) + [Path(x) for x in a.also]:
         if f.suffix.lower() != ".wav":
             continue
         fid = file_id(src.get(f.stem, f.stem))
@@ -86,19 +98,29 @@ def main():
             files[fid]["revisions"] = revisions[fid]
     private = set(rows) | set(src.values())          # every name that must not be published
     derived = {}
-    for spec in a.derived:
-        name, rest = spec.split("=", 1)
-        stem, secs = rest.rsplit(":", 1)
+
+    def generic(name):
         # a derived input is published by NAME, so NAME must be a generic label
         if not DERIVED_NAME.match(name) or any(token_pattern(p).search(name) or
                                                token_pattern(name).search(p) for p in private):
             sys.exit(f"REFUSED: derived name {name!r} is not a generic label or overlaps a "
                      f"private name; use something like 'worst32'")
-        derived[name] = {"derived_from": file_id(src.get(stem, stem)), "cut_first_s": float(secs),
-                         "language": UNIT_LANGUAGE[units[stem]], "codec": "pcm_s16le",
-                         "sample_rate": 16000, "bit_depth": 16}
-    out = {"id": "sha256(source id)[:12]; the source id is the filename stem for a recording "
-                 "and the video id for a downloaded public video",
+        return name
+
+    for spec in a.derived:
+        name, rest = spec.split("=", 1)
+        stem, secs = rest.rsplit(":", 1)
+        derived[generic(name)] = {"derived_from": file_id(src.get(stem, stem)),
+                                  "cut_first_s": float(secs),
+                                  "language": UNIT_LANGUAGE[units[stem]], "codec": "pcm_s16le",
+                                  "sample_rate": 16000, "bit_depth": 16}
+    for spec in a.filtered:
+        name, rest = spec.split("=", 1)
+        stem, path, af = rest.split(":", 2)
+        derived[generic(name)] = {"derived_from": file_id(src.get(stem, stem)), "ffmpeg_af": af,
+                                  "language": UNIT_LANGUAGE[units[stem]], **probe(Path(path))}
+    out = {"id": "sha256(source id)[:12]; the source id is a private identifier kept "
+                 "with the local corpus (usually the filename stem)",
            "fields": "language, duration_s, codec, sample_rate, bit_depth, bitrate, and the "
               "reference transcript's length (reference_length, in reference_unit)",
            "processing": PROCESSING, "files": files, "derived": derived}

@@ -1,0 +1,76 @@
+{
+ "group": "ultra-qwen3-batch-budget",
+ "question": "qwen3-asr 1.7B 8-bit at batch 4 and 15s windows with the library's file-wide token budget (no per-group cap), on the 883s file",
+ "docs": [
+  "docs/benchmarks/qwen3-batch.md"
+ ],
+ "note": "Every run was made after every audio revision in revisions.json, so it used the current copies.",
+ "runs": [
+  {
+   "run": "qwen3batch_wholefilebudget_b4_q883",
+   "arm": "batch 4",
+   "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/one_q883 --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --batches 4 --json qwen3batch_wholefilebudget_b4_q883.json",
+   "params": {
+    "corpus": "bench_out/one_q883",
+    "chunk_seconds": 15.0,
+    "size": "1.7B",
+    "quantization": "8bit",
+    "language": "ja",
+    "group_budget": false,
+    "batches": "4"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 6.51,
+    "cpu_count": 24,
+    "swap_used_mb": 5211.06,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 8.05,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": true,
+    "busy_reasons": [
+     "8.1GB GPU memory already in use"
+    ]
+   },
+   "aggregate": {
+    "char": {
+     "error_rate": 0.498285,
+     "files": 1
+    }
+   },
+   "measures": {
+    "x_realtime": 1.89,
+    "peak_gb": 13.12,
+    "wall_s": 467.3
+   },
+   "files": [
+    {
+     "file": "7f8150fdef0e",
+     "duration_s": 883.0,
+     "wall_s": 467.28,
+     "x_realtime": 1.89,
+     "unit": "char",
+     "coverage_cer": 0.4982850015590895,
+     "ref_chars": 3207,
+     "chars": 33396,
+     "segments": 61,
+     "runaway_segments": null
+    }
+   ],
+   "missing": [
+    "corpus and group budget not recorded by the runner (taken from the queue)"
+   ],
+   "caveats": [
+    "other GPU work at start: 8.1GB GPU memory already in use"
+   ]
+  }
+ ]
+}

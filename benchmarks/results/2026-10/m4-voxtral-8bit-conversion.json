@@ -1,0 +1,24 @@
+{
+ "group": "m4-voxtral-8bit-conversion",
+ "question": "Voxtral first-use 8bit conversion against the CLI-recipe build, tensor by tensor",
+ "docs": [
+  "docs/benchmarks/quantization.md"
+ ],
+ "note": "The check script is bench_out/m4_20261028/conv_check.py (local): it converts with mlx_asr.convert.realtime_weights and compares every tensor against models/voxtral-8bit, made 2026-07-24 with mlx_audio.convert --quantize --q-bits 8 --q-group-size 64.",
+ "runs": [
+  {
+   "run": "m4_conv8_check",
+   "output": "stdout",
+   "command": "$PY bench_out/m4_20261028/conv_check.py",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "path mlx-community--Voxtral-Mini-4B-Realtime-2602-fp16-8bit 0.0 s\ntensors 1529 1529 same keys True\ndiffering tensors 0 []"
+  }
+ ]
+}

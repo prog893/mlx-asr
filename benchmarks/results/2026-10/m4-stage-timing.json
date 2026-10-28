@@ -1,0 +1,163 @@
+{
+ "group": "m4-stage-timing",
+ "question": "CLI wall-clock split (encode, decode, load) on the 935s clip at 60s / batch 16 / no KV quantization on the M4 16GB, nvfp4, 3 runs",
+ "docs": [
+  "docs/benchmarks/decode-throughput.md"
+ ],
+ "note": "In the commands $PY is the repo venv python, $NV the local nvfp4 conversion (models/voxtral-nvfp4), $M4B the 4-bit hub build, $CLIP the 935s clip (bench_out/corpus_timed/632a295d981d.wav), $REF its reference subtitles and $D the queue directory bench_out/m4_20261016/out; hypotheses are not saved. The queue was stopped once and resumed; the resumed copy waits 60s before each machine-state check.",
+ "runs": [
+  {
+   "run": "m4_stages_nvfp4_c60b16_r1",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --model $NV --delay-ms 2400 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --gain none -f txt -o $D/stages/m4_nvfp4_c60b16_r1.txt --stats-json $D/stages/m4_nvfp4_c60b16_r1.stats.json",
+   "params": {},
+   "machine": {
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "chip_family": "M4",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.7.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 141.62089383299462,
+    "x_realtime": 6.602845012422465,
+    "model": "models/voxtral-nvfp4",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 204,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.9056228749686852,
+    "peak_memory_gb": 6.92,
+    "encode_s": 47.639117874903604,
+    "decode_s": 79.31466845900286,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[machine] Apple M4 16GB, 12.7GB GPU -> batch 16, chunk 60s (profile)\n[audio] 935.1s -> 16 chunks of ~60s\n[model] loaded in 0.9s\n[encode] 16 chunks in 47.6s\n[decode] 816 steps in 79.3s (10.3 steps/s, 165 tok/s)\n[saved] bench_out/m4_20261016/out/stages/m4_nvfp4_c60b16_r1.txt\n[total] 935.1s audio in 141.6s (6.6x realtime, incl. 0.9s model load), peak 6.92GB GPU"
+  },
+  {
+   "run": "m4_stages_nvfp4_c60b16_r2",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --model $NV --delay-ms 2400 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --gain none -f txt -o $D/stages/m4_nvfp4_c60b16_r2.txt --stats-json $D/stages/m4_nvfp4_c60b16_r2.stats.json",
+   "params": {},
+   "machine": {
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "chip_family": "M4",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.7.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 133.9432483750861,
+    "x_realtime": 6.981320998587427,
+    "model": "models/voxtral-nvfp4",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 204,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.8751149580348283,
+    "peak_memory_gb": 6.92,
+    "encode_s": 47.887089124997146,
+    "decode_s": 80.09542904095724,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[machine] Apple M4 16GB, 12.7GB GPU -> batch 16, chunk 60s (profile)\n[audio] 935.1s -> 16 chunks of ~60s\n[model] loaded in 0.9s\n[encode] 16 chunks in 47.9s\n[decode] 816 steps in 80.1s (10.2 steps/s, 163 tok/s)\n[saved] bench_out/m4_20261016/out/stages/m4_nvfp4_c60b16_r2.txt\n[total] 935.1s audio in 133.9s (7.0x realtime, incl. 0.9s model load), peak 6.92GB GPU"
+  },
+  {
+   "run": "m4_stages_nvfp4_c60b16_r3",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --model $NV --delay-ms 2400 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --gain none -f txt -o $D/stages/m4_nvfp4_c60b16_r3.txt --stats-json $D/stages/m4_nvfp4_c60b16_r3.stats.json",
+   "params": {},
+   "machine": {
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "chip_family": "M4",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.7.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 136.09902591700666,
+    "x_realtime": 6.870738465609779,
+    "model": "models/voxtral-nvfp4",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 204,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.996256708051078,
+    "peak_memory_gb": 6.92,
+    "encode_s": 47.303308708942495,
+    "decode_s": 80.50890758296009,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[machine] Apple M4 16GB, 12.7GB GPU -> batch 16, chunk 60s (profile)\n[audio] 935.1s -> 16 chunks of ~60s\n[model] loaded in 1.0s\n[encode] 16 chunks in 47.3s\n[decode] 816 steps in 80.5s (10.1 steps/s, 162 tok/s)\n[saved] bench_out/m4_20261016/out/stages/m4_nvfp4_c60b16_r3.txt\n[total] 935.1s audio in 136.1s (6.9x realtime, incl. 1.0s model load), peak 6.92GB GPU"
+  }
+ ]
+}

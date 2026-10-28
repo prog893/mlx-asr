@@ -1,0 +1,122 @@
+{
+ "group": "ultra-decode-probes",
+ "question": "Decode-throughput probes on the Ultra (stdout tables): KV length, batch split, encoder batching, mx.compile; nvfp4 and 4-bit",
+ "docs": [
+  "docs/benchmarks/decode-throughput.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "probe_batch_split_ultra_4bit",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/probe_batch_split.py --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 150 --batches 4,8,12,16,24,32",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "\nfold vs plain max|diff| = 0.000000 (equivalent)\n\n   B     plain      fold    split2    split4  best (x realtime)\n   4      16.1      16.1      24.6      42.0  plain  19.9x\n   8      24.2      24.3      30.8      49.0  plain  26.4x\n  12      30.1      31.0      37.7      55.0  plain  31.9x\n  16      32.3      33.2      45.1      61.3  plain  39.6x\n  24      33.1      33.2      55.6      74.2  plain  58.0x\n  32      32.1      32.2      59.6      90.1  plain  79.7x"
+  },
+  {
+   "run": "probe_batch_split_ultra_nvfp4",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/probe_batch_split.py --model models/voxtral-nvfp4 --steps 150 --batches 4,8,12,16,24,32",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "fold vs plain max|diff| = 0.000000 (equivalent)\n\n   B     plain      fold    split2    split4  best (x realtime)\n   4      16.0      16.0      15.8      19.6  split2  20.2x\n   8      29.3      29.2      29.1      30.2  split2  22.0x\n  12      29.3      29.2      37.8      44.5  fold  32.8x\n  16      33.0      33.0      56.1      58.2  fold  38.8x\n  24      28.2      28.1      50.7      75.6  fold  68.3x\n  32      27.0      27.0      57.7     112.0  fold  94.9x"
+  },
+  {
+   "run": "probe_compile_ultra_4bit",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/probe_compile.py --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 150 --batches 1,16,32",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "\nmodel=mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit steps=150  ms/step\n   B          plain   plain_ffn_fn   compiled_ffn  compiled_norm\n   1           10.8           10.9           10.8           10.9\n  16           32.3           32.3           32.7           32.9\n  32           32.2           32.2           31.8           32.2"
+  },
+  {
+   "run": "probe_compile_ultra_nvfp4",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/probe_compile.py --model models/voxtral-nvfp4 --steps 150 --batches 1,16,32",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "model=models/voxtral-nvfp4 steps=150  ms/step\n   B          plain   plain_ffn_fn   compiled_ffn  compiled_norm\n   1            5.3            5.5            5.2            5.2\n  16           33.0           33.0           32.9           33.0\n  32           27.0           27.1           26.8           26.9"
+  },
+  {
+   "run": "probe_encoder_batch_ultra_4bit",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/probe_encoder_batch.py --audio bench_out/corpus_timed/632a295d981d.wav --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30 --batches 1,2,4,8 --delay-ms 2400",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "\n32 chunks of ~30.0s from bench_out/corpus_timed/632a295d981d.wav\n[per-chunk] 8 chunks in 2.74s (0.342s/chunk)\nconv out seq=1948, sliding_window=750, path=chunked\n[batched B=1] 0.37s total, 0.373s/chunk (speedup 0.92x)  max|diff| vs stock = 3.4829\n[batched B=2] 0.71s total, 0.355s/chunk (speedup 0.96x)  max|diff| vs stock = 3.4829\n[batched B=4] 1.40s total, 0.351s/chunk (speedup 0.97x)  max|diff| vs stock = 3.4829\n[batched B=8] 2.79s total, 0.348s/chunk (speedup 0.98x)  max|diff| vs stock = 3.4829"
+  },
+  {
+   "run": "probe_encoder_batch_ultra_nvfp4",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/probe_encoder_batch.py --audio bench_out/corpus_timed/632a295d981d.wav --model models/voxtral-nvfp4 --chunk-seconds 30 --batches 1,2,4,8 --delay-ms 2400",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "32 chunks of ~30.0s from bench_out/corpus_timed/632a295d981d.wav\n[per-chunk] 8 chunks in 2.86s (0.357s/chunk)\nconv out seq=1948, sliding_window=750, path=chunked\n[batched B=1] 0.39s total, 0.391s/chunk (speedup 0.91x)  max|diff| vs stock = 3.7581\n[batched B=2] 0.75s total, 0.373s/chunk (speedup 0.96x)  max|diff| vs stock = 3.7581\n[batched B=4] 1.48s total, 0.370s/chunk (speedup 0.97x)  max|diff| vs stock = 3.7581\n[batched B=8] 2.94s total, 0.368s/chunk (speedup 0.97x)  max|diff| vs stock = 3.7581"
+  },
+  {
+   "run": "probe_kvlen_ultra_4bit_b16",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/probe_kvlen.py --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --batch 16 --steps 800 --block 100",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "\nmodel=mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit B=16 quant_kv=None\n  kv_len   ms/step  steps/s    x rt  peak GB\n     138      32.4    30.82    39.5     6.72\n     238      32.5    30.81    39.4     6.72\n     338      34.6    28.89    37.0     7.43\n     438      35.1    28.51    36.5     7.43\n     538      36.3    27.56    35.3     8.21\n     638      36.4    27.44    35.1     8.21\n     738      37.1    26.92    34.5     8.21\n     838      38.6    25.93    33.2     9.02"
+  },
+  {
+   "run": "probe_kvlen_ultra_nvfp4_b16",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/probe_kvlen.py --model models/voxtral-nvfp4 --batch 16 --steps 800 --block 100",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "model=models/voxtral-nvfp4 B=16 quant_kv=None\n  kv_len   ms/step  steps/s    x rt  peak GB\n     138      33.0    30.30    38.8     4.49\n     238      33.6    29.80    38.1     4.49\n     338      34.4    29.10    37.3     5.05\n     438      35.1    28.52    36.5     5.05\n     538      36.2    27.62    35.4     6.07\n     638      36.4    27.48    35.2     6.07\n     738      37.1    26.95    34.5     6.07\n     838      38.3    26.13    33.5     6.84"
+  }
+ ]
+}

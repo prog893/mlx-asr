@@ -1,0 +1,1715 @@
+{
+ "group": "ultra-voxtral-clip",
+ "question": "Voxtral on the 935s clip: chunk length, overlap, VAD, carry-context, silence compaction, and the weight-precision ladder (plain CER, complete reference)",
+ "docs": [
+  "docs/benchmarks/chunking.md",
+  "docs/benchmarks/quantization.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "chunk_c120b8_kv8",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 120.0 --max-batch 8 --delay-ms 2400 --kv-bits 8 --overlaps 0 --json chunk_c120b8_kv8.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 120.0,
+    "max_batch": 8,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0744
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0744,
+     "x_realtime": 17.1,
+     "wall_s": 54.6,
+     "steps": 1566,
+     "extra_audio_s": 0.0,
+     "cues": 203
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "chunk_c180b8_kv8",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 180.0 --max-batch 8 --delay-ms 2400 --kv-bits 8 --overlaps 0 --json chunk_c180b8_kv8.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 180.0,
+    "max_batch": 8,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0749
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0749,
+     "x_realtime": 12.4,
+     "wall_s": 75.6,
+     "steps": 2872,
+     "extra_audio_s": 0.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "chunk_c20b48_kv0",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 20.0 --max-batch 48 --delay-ms 2400 --kv-bits 0 --overlaps 0 --json chunk_c20b48_kv0.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 20.0,
+    "max_batch": 48,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.1149
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.1149,
+     "x_realtime": 28.0,
+     "wall_s": 33.4,
+     "steps": 368,
+     "extra_audio_s": 0.0,
+     "cues": 196
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "chunk_c30b32_kv0",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 0 --overlaps 0 --json chunk_c30b32_kv0.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0866
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0866,
+     "x_realtime": 32.5,
+     "wall_s": 28.8,
+     "steps": 446,
+     "extra_audio_s": 0.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "chunk_c90b16_kv8",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 90.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlaps 0 --json chunk_c90b16_kv8.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 90.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0794
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0794,
+     "x_realtime": 18.4,
+     "wall_s": 50.7,
+     "steps": 1194,
+     "extra_audio_s": 0.0,
+     "cues": 205
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov30_0s",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 0 --json ov30_0s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0863
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0863,
+     "x_realtime": 33.8,
+     "wall_s": 27.6,
+     "steps": 446,
+     "extra_audio_s": 0.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov30_10s",
+   "arm": "overlap 10",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 10 --json ov30_10s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "10"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.074
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.074,
+     "x_realtime": 26.3,
+     "wall_s": 35.6,
+     "steps": 571,
+     "extra_audio_s": 310.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov30_12s",
+   "arm": "overlap 12",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 12 --json ov30_12s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "12"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0761
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0761,
+     "x_realtime": 25.3,
+     "wall_s": 37.0,
+     "steps": 596,
+     "extra_audio_s": 372.0,
+     "cues": 203
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov30_15s",
+   "arm": "overlap 15",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 15 --json ov30_15s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "15"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.1103
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.1103,
+     "x_realtime": 23.5,
+     "wall_s": 39.8,
+     "steps": 634,
+     "extra_audio_s": 466.2,
+     "cues": 207
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov30_4s",
+   "arm": "overlap 4",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 4 --json ov30_4s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "4"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0716
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0716,
+     "x_realtime": 30.5,
+     "wall_s": 30.6,
+     "steps": 496,
+     "extra_audio_s": 124.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov30_6s",
+   "arm": "overlap 6",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 6 --json ov30_6s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "6"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0744
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0744,
+     "x_realtime": 29.0,
+     "wall_s": 32.3,
+     "steps": 521,
+     "extra_audio_s": 186.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov30_7s",
+   "arm": "overlap 7",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 7 --json ov30_7s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "7"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0747
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0747,
+     "x_realtime": 28.2,
+     "wall_s": 33.2,
+     "steps": 534,
+     "extra_audio_s": 218.2,
+     "cues": 207
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov30_8s",
+   "arm": "overlap 8",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 8 --json ov30_8s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "8"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0713
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0713,
+     "x_realtime": 27.3,
+     "wall_s": 34.2,
+     "steps": 546,
+     "extra_audio_s": 248.0,
+     "cues": 207
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov60_0s",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlaps 0 --json ov60_0s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0728
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0728,
+     "x_realtime": 22.0,
+     "wall_s": 42.5,
+     "steps": 816,
+     "extra_audio_s": 0.0,
+     "cues": 207
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov60_4s",
+   "arm": "overlap 4",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlaps 4 --json ov60_4s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "4"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0742
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0742,
+     "x_realtime": 21.5,
+     "wall_s": 43.4,
+     "steps": 866,
+     "extra_audio_s": 60.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ov60_8s",
+   "arm": "overlap 8",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlaps 8 --json ov60_8s.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "8"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0794
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0794,
+     "x_realtime": 20.3,
+     "wall_s": 46.1,
+     "steps": 916,
+     "extra_audio_s": 120.0,
+     "cues": 205
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "vad_c30b32_kv8_energy",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label vad_c30b32_kv8_energy --json vad_c30b32_kv8_energy.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "vad_c30b32_kv8_energy"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 5.4,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 7.4,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": true,
+    "busy_reasons": [
+     "7.4GB GPU memory already in use"
+    ]
+   },
+   "aggregate": {
+    "char": 0.08633
+   },
+   "measures": {
+    "x_realtime": 33.73,
+    "peak_memory_gb": 7.22
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 33.7,
+     "chunks": 32,
+     "peak_memory_gb": 7.22,
+     "ref_chars": 4205,
+     "hyp_chars": 4179,
+     "extra_ratio": 0.9938168846611177,
+     "coverage": 0.9341260404280618,
+     "cer": 0.08632580261593341,
+     "coverage_cer": 0.08632580261593341,
+     "subs": 165,
+     "dels": 112,
+     "insertions_counted": 86,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [],
+   "caveats": [
+    "other GPU work at start: 7.4GB GPU memory already in use"
+   ]
+  },
+  {
+   "run": "vad_c30b32_kv8_ov8_energy",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 8.0 --min-cut 30 --min-cut-words 6 --label vad_c30b32_kv8_ov8_energy --json vad_c30b32_kv8_ov8_energy.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 8.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "vad_c30b32_kv8_ov8_energy"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.83,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.07134
+   },
+   "measures": {
+    "x_realtime": 27.18,
+    "peak_memory_gb": 7.43
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 27.2,
+     "chunks": 32,
+     "peak_memory_gb": 7.43,
+     "ref_chars": 4205,
+     "hyp_chars": 4164,
+     "extra_ratio": 0.9902497027348395,
+     "coverage": 0.9422116527942925,
+     "cer": 0.0713436385255648,
+     "coverage_cer": 0.0713436385255648,
+     "subs": 145,
+     "dels": 98,
+     "insertions_counted": 57,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "vad_c30b32_kv8_ov8_vad",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 8.0 --min-cut 30 --min-cut-words 6 --vad --label vad_c30b32_kv8_ov8_vad --json vad_c30b32_kv8_ov8_vad.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 8.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": true,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "vad_c30b32_kv8_ov8_vad"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 5.65,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.22,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.08205
+   },
+   "measures": {
+    "x_realtime": 26.71,
+    "peak_memory_gb": 7.42
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 26.7,
+     "chunks": 32,
+     "peak_memory_gb": 7.42,
+     "ref_chars": 4205,
+     "hyp_chars": 4180,
+     "extra_ratio": 0.9940546967895363,
+     "coverage": 0.9365041617122474,
+     "cer": 0.08204518430439953,
+     "coverage_cer": 0.08204518430439953,
+     "subs": 164,
+     "dels": 103,
+     "insertions_counted": 78,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "vad_c30b32_kv8_vad",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --vad --label vad_c30b32_kv8_vad --json vad_c30b32_kv8_vad.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": true,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "vad_c30b32_kv8_vad"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 5.04,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 7.4,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": true,
+    "busy_reasons": [
+     "7.4GB GPU memory already in use"
+    ]
+   },
+   "aggregate": {
+    "char": 0.10345
+   },
+   "measures": {
+    "x_realtime": 34.12,
+    "peak_memory_gb": 7.22
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 34.1,
+     "chunks": 32,
+     "peak_memory_gb": 7.22,
+     "ref_chars": 4205,
+     "hyp_chars": 4104,
+     "extra_ratio": 0.9759809750297265,
+     "coverage": 0.9110582639714625,
+     "cer": 0.10344827586206896,
+     "coverage_cer": 0.10344827586206896,
+     "subs": 212,
+     "dels": 162,
+     "insertions_counted": 61,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [],
+   "caveats": [
+    "other GPU work at start: 7.4GB GPU memory already in use"
+   ]
+  },
+  {
+   "run": "vad_c60b16_kv8_energy",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label vad_c60b16_kv8_energy --json vad_c60b16_kv8_energy.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "vad_c60b16_kv8_energy"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 5.53,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.07277
+   },
+   "measures": {
+    "x_realtime": 22.62,
+    "peak_memory_gb": 6.75
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 22.6,
+     "chunks": 16,
+     "peak_memory_gb": 6.75,
+     "ref_chars": 4205,
+     "hyp_chars": 4155,
+     "extra_ratio": 0.9881093935790726,
+     "coverage": 0.9400713436385255,
+     "cer": 0.0727705112960761,
+     "coverage_cer": 0.0727705112960761,
+     "subs": 148,
+     "dels": 104,
+     "insertions_counted": 54,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "vad_c60b16_kv8_vad",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --vad --label vad_c60b16_kv8_vad --json vad_c60b16_kv8_vad.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": true,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "vad_c60b16_kv8_vad"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 5.1,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.22,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.10012
+   },
+   "measures": {
+    "x_realtime": 22.97,
+    "peak_memory_gb": 6.75
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 23.0,
+     "chunks": 16,
+     "peak_memory_gb": 6.75,
+     "ref_chars": 4205,
+     "hyp_chars": 4155,
+     "extra_ratio": 0.9881093935790726,
+     "coverage": 0.9170035671819263,
+     "cer": 0.10011890606420927,
+     "coverage_cer": 0.10011890606420927,
+     "subs": 227,
+     "dels": 122,
+     "insertions_counted": 72,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "compact_c30b32_kv0_off",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label compact_c30b32_kv0_off --json compact_c30b32_kv0_off.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "compact_c30b32_kv0_off"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 6.11,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.08656
+   },
+   "measures": {
+    "x_realtime": 32.48,
+    "peak_memory_gb": 9.46
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 32.5,
+     "chunks": 32,
+     "peak_memory_gb": 9.46,
+     "ref_chars": 4205,
+     "hyp_chars": 4177,
+     "extra_ratio": 0.9933412604042806,
+     "coverage": 0.9338882282996432,
+     "cer": 0.08656361474435197,
+     "coverage_cer": 0.08656361474435197,
+     "subs": 164,
+     "dels": 114,
+     "insertions_counted": 86,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "compact_c30b32_kv0_on",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --compact-silence --label compact_c30b32_kv0_on --json compact_c30b32_kv0_on.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": true,
+    "prompt": "",
+    "label": "compact_c30b32_kv0_on"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 5.19,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.17,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.10678
+   },
+   "measures": {
+    "x_realtime": 31.9,
+    "peak_memory_gb": 10.34
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 31.9,
+     "chunks": 28,
+     "peak_memory_gb": 10.34,
+     "ref_chars": 4205,
+     "hyp_chars": 4107,
+     "extra_ratio": 0.9766944114149821,
+     "coverage": 0.9105826397146255,
+     "cer": 0.10677764565992866,
+     "coverage_cer": 0.10677764565992866,
+     "subs": 205,
+     "dels": 171,
+     "insertions_counted": 73,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "compact_c60b16_kv0_off",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label compact_c60b16_kv0_off --json compact_c60b16_kv0_off.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "compact_c60b16_kv0_off"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 5.99,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.07396
+   },
+   "measures": {
+    "x_realtime": 22.21,
+    "peak_memory_gb": 9.36
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 22.2,
+     "chunks": 16,
+     "peak_memory_gb": 9.36,
+     "ref_chars": 4205,
+     "hyp_chars": 4151,
+     "extra_ratio": 0.9871581450653983,
+     "coverage": 0.9388822829964328,
+     "cer": 0.07395957193816885,
+     "coverage_cer": 0.07395957193816885,
+     "subs": 149,
+     "dels": 108,
+     "insertions_counted": 54,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "compact_c60b16_kv0_on",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --compact-silence --label compact_c60b16_kv0_on --json compact_c60b16_kv0_on.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": true,
+    "prompt": "",
+    "label": "compact_c60b16_kv0_on"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.97,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.083
+   },
+   "measures": {
+    "x_realtime": 23.56,
+    "peak_memory_gb": 9.07
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 23.6,
+     "chunks": 14,
+     "peak_memory_gb": 9.07,
+     "ref_chars": 4205,
+     "hyp_chars": 4160,
+     "extra_ratio": 0.9892984542211652,
+     "coverage": 0.9326991676575506,
+     "cer": 0.08299643281807371,
+     "coverage_cer": 0.08299643281807371,
+     "subs": 172,
+     "dels": 111,
+     "insertions_counted": 66,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "carry_none",
+   "arm": "variant none",
+   "command": "scripts/benchmarks/ab_seam_context.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --variants none --json carry_none.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "terms": "",
+    "variants": "none"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0863
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "unit": "char",
+     "chunks": 32,
+     "cer": 0.0863,
+     "x_realtime": 33.8,
+     "wall_s": 27.7,
+     "note": ""
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "plain CER on one clip; ab_seam_context.py records no machine state or duration"
+   ]
+  },
+  {
+   "run": "carry_pair",
+   "arm": "variant carry_pair",
+   "command": "scripts/benchmarks/ab_seam_context.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --variants carry_pair --json carry_pair.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "terms": "",
+    "variants": "carry_pair"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0851
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "unit": "char",
+     "chunks": 32,
+     "cer": 0.0851,
+     "x_realtime": 16.7,
+     "wall_s": 56.1,
+     "note": "2 passes"
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "plain CER on one clip; ab_seam_context.py records no machine state or duration"
+   ]
+  },
+  {
+   "run": "carry_seq",
+   "arm": "variant carry",
+   "command": "scripts/benchmarks/ab_seam_context.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --variants carry --json carry_seq.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "terms": "",
+    "variants": "carry"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0851
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "unit": "char",
+     "chunks": 32,
+     "cer": 0.0851,
+     "x_realtime": 5.1,
+     "wall_s": 182.1,
+     "note": "sequential, batch=1"
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "plain CER on one clip; ab_seam_context.py records no machine state or duration"
+   ]
+  },
+  {
+   "run": "ladder_c30b32_kv8_ov8_fp16",
+   "arm": "overlap 8",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 8 --json ladder_c30b32_kv8_ov8_fp16.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "8"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0728
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0728,
+     "x_realtime": 17.1,
+     "wall_s": 54.6,
+     "steps": 546,
+     "extra_audio_s": 248.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ladder_c60b16_kv0_4bit",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlaps 0 --json ladder_c60b16_kv0_4bit.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.074
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.074,
+     "x_realtime": 22.7,
+     "wall_s": 41.3,
+     "steps": 816,
+     "extra_audio_s": 0.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ladder_c60b16_kv0_8bit",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model models/voxtral-8bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlaps 0 --json ladder_c60b16_kv0_8bit.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "models/voxtral-8bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0761
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0761,
+     "x_realtime": 22.8,
+     "wall_s": 41.1,
+     "steps": 816,
+     "extra_audio_s": 0.0,
+     "cues": 208
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ladder_c60b16_kv0_fp16",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16 --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlaps 0 --json ladder_c60b16_kv0_fp16.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0778
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0778,
+     "x_realtime": 14.2,
+     "wall_s": 65.6,
+     "steps": 816,
+     "extra_audio_s": 0.0,
+     "cues": 208
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ladder_c60b16_kv0_mxfp8",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model models/voxtral-mxfp8 --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlaps 0 --json ladder_c60b16_kv0_mxfp8.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "models/voxtral-mxfp8",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0751
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0751,
+     "x_realtime": 23.0,
+     "wall_s": 40.6,
+     "steps": 816,
+     "extra_audio_s": 0.0,
+     "cues": 207
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ladder_c60b16_kv0_nvfp4",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model models/voxtral-nvfp4 --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlaps 0 --json ladder_c60b16_kv0_nvfp4.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "models/voxtral-nvfp4",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0775
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0775,
+     "x_realtime": 22.6,
+     "wall_s": 41.4,
+     "steps": 816,
+     "extra_audio_s": 0.0,
+     "cues": 204
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "ladder_c60b16_kv8_fp16",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16 --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlaps 0 --json ladder_c60b16_kv8_fp16.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0778
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0778,
+     "x_realtime": 14.4,
+     "wall_s": 64.9,
+     "steps": 816,
+     "extra_audio_s": 0.0,
+     "cues": 208
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  }
+ ]
+}

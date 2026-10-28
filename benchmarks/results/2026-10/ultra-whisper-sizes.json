@@ -120,7 +120,7 @@
      "insertions_counted": 181,
      "insertions_excused": 103,
      "excused_run_count": 2,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -478,6 +478,103 @@
      "insertions_counted": 1013,
      "insertions_excused": 9873,
      "excused_run_count": 57
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 19.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 157,
+     "peak_memory_gb": 4.32,
+     "ref_chars": 2266,
+     "hyp_chars": 2582,
+     "extra_ratio": 1.1394527802294792,
+     "coverage": 0.9042365401588702,
+     "cer": 0.26081200353045014,
+     "coverage_cer": 0.18049426301853486,
+     "subs": 159,
+     "dels": 58,
+     "insertions_counted": 192,
+     "insertions_excused": 182,
+     "excused_run_count": 3,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_large-v2_nocond_r2",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v2-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v2_nocond_r2 --json rerun_ultra_retry_20261010__whisper_large-v2_nocond_r2.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v2-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_large-v2_nocond_r2"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.4,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.21,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 17.0,
+      "peak_memory_gb": 4.32,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        481,
+        472
+       ],
+       "cer": [
+        0.20853080568720378,
+        0.1872037914691943
+       ],
+       "coverage_cer": [
+        0.11611374407582939,
+        0.0947867298578199
+       ],
+       "insertions_counted": [
+        28,
+        19
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -602,7 +699,7 @@
      "insertions_counted": 177,
      "insertions_excused": 103,
      "excused_run_count": 2,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -960,6 +1057,103 @@
      "insertions_counted": 1097,
      "insertions_excused": 9880,
      "excused_run_count": 52
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 26.3,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 161,
+     "peak_memory_gb": 4.32,
+     "ref_chars": 2266,
+     "hyp_chars": 2779,
+     "extra_ratio": 1.2263901147396292,
+     "coverage": 0.9082082965578111,
+     "cer": 0.34024713150926744,
+     "coverage_cer": 0.17122683142100617,
+     "subs": 158,
+     "dels": 50,
+     "insertions_counted": 180,
+     "insertions_excused": 383,
+     "excused_run_count": 4,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_large-v2_nocond_r3",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v2-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v2_nocond_r3 --json rerun_ultra_retry_20261010__whisper_large-v2_nocond_r3.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v2-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_large-v2_nocond_r3"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.43,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 20.24,
+      "peak_memory_gb": 4.32,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        482,
+        765
+       ],
+       "cer": [
+        0.2109004739336493,
+        0.8815165876777251
+       ],
+       "coverage_cer": [
+        0.11848341232227488,
+        0.052132701421800945
+       ],
+       "insertions_counted": [
+        29,
+        1
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -1085,7 +1279,7 @@
      "insertions_counted": 171,
      "insertions_excused": 103,
      "excused_run_count": 2,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1443,6 +1637,103 @@
      "insertions_counted": 1245,
      "insertions_excused": 9306,
      "excused_run_count": 53
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 21.4,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 164,
+     "peak_memory_gb": 4.32,
+     "ref_chars": 2266,
+     "hyp_chars": 2629,
+     "extra_ratio": 1.1601941747572815,
+     "coverage": 0.8954104148278905,
+     "cer": 0.28949691085613416,
+     "coverage_cer": 0.19064430714916153,
+     "subs": 181,
+     "dels": 56,
+     "insertions_counted": 195,
+     "insertions_excused": 224,
+     "excused_run_count": 4,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_large-v2_nocond",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v2-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v2_nocond --json rerun_ultra_retry_20261010__whisper_large-v2_nocond.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v2-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_large-v2_nocond"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.32,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.21,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 20.71,
+      "peak_memory_gb": 4.32,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        481,
+        569
+       ],
+       "cer": [
+        0.20853080568720378,
+        0.41706161137440756
+       ],
+       "coverage_cer": [
+        0.11611374407582939,
+        0.052132701421800945
+       ],
+       "insertions_counted": [
+        28,
+        1
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -1565,7 +1856,7 @@
      "insertions_counted": 56,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1923,6 +2214,83 @@
      "insertions_counted": 656,
      "insertions_excused": 10354,
      "excused_run_count": 44
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 34.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 127,
+     "peak_memory_gb": 4.23,
+     "ref_chars": 2266,
+     "hyp_chars": 2340,
+     "extra_ratio": 1.0326566637246248,
+     "coverage": 0.9510150044130626,
+     "cer": 0.10150044130626655,
+     "coverage_cer": 0.07678729037952339,
+     "subs": 66,
+     "dels": 45,
+     "insertions_counted": 63,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_large-v3_nocond_r2",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r2 --json rerun_ultra_retry_20261010__whisper_large-v3_nocond_r2.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_large-v3_nocond_r2"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.2,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 32.9,
+      "peak_memory_gb": 4.23,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -2045,7 +2413,7 @@
      "insertions_counted": 56,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -2403,6 +2771,83 @@
      "insertions_counted": 537,
      "insertions_excused": 10936,
      "excused_run_count": 39
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 33.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 127,
+     "peak_memory_gb": 4.23,
+     "ref_chars": 2266,
+     "hyp_chars": 2340,
+     "extra_ratio": 1.0326566637246248,
+     "coverage": 0.9510150044130626,
+     "cer": 0.10150044130626655,
+     "coverage_cer": 0.07678729037952339,
+     "subs": 66,
+     "dels": 45,
+     "insertions_counted": 63,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_large-v3_nocond_r3",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r3 --json rerun_ultra_retry_20261010__whisper_large-v3_nocond_r3.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_large-v3_nocond_r3"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.63,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 32.83,
+      "peak_memory_gb": 4.23,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -2525,7 +2970,7 @@
      "insertions_counted": 56,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -2883,6 +3328,83 @@
      "insertions_counted": 594,
      "insertions_excused": 12234,
      "excused_run_count": 40
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 33.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 127,
+     "peak_memory_gb": 4.23,
+     "ref_chars": 2266,
+     "hyp_chars": 2340,
+     "extra_ratio": 1.0326566637246248,
+     "coverage": 0.9510150044130626,
+     "cer": 0.10150044130626655,
+     "coverage_cer": 0.07678729037952339,
+     "subs": 66,
+     "dels": 45,
+     "insertions_counted": 63,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_large-v3_nocond",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond --json rerun_ultra_retry_20261010__whisper_large-v3_nocond.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_large-v3_nocond"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.71,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 32.89,
+      "peak_memory_gb": 4.23,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -3005,7 +3527,7 @@
      "insertions_counted": 55,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3363,6 +3885,107 @@
      "insertions_counted": 1750,
      "insertions_excused": 7006,
      "excused_run_count": 58
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 23.2,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 132,
+     "peak_memory_gb": 2.63,
+     "ref_chars": 2266,
+     "hyp_chars": 2403,
+     "extra_ratio": 1.0604589585172108,
+     "coverage": 0.7599293909973521,
+     "cer": 0.40511915269196824,
+     "coverage_cer": 0.2758164165931156,
+     "subs": 307,
+     "dels": 237,
+     "insertions_counted": 81,
+     "insertions_excused": 293,
+     "excused_run_count": 2,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_medium_nocond_r2",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-medium-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_medium_nocond_r2 --json rerun_ultra_retry_20261010__whisper_medium_nocond_r2.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-medium-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_medium_nocond_r2"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.34,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 22.72,
+      "peak_memory_gb": 2.63,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        560,
+        631
+       ],
+       "cer": [
+        0.509478672985782,
+        0.6753554502369669
+       ],
+       "coverage_cer": [
+        0.3696682464454976,
+        0.3080568720379147
+       ],
+       "subs": [
+        61,
+        60
+       ],
+       "insertions_counted": [
+        87,
+        62
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -3485,7 +4108,7 @@
      "insertions_counted": 84,
      "insertions_excused": 54,
      "excused_run_count": 1,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3843,6 +4466,95 @@
      "insertions_counted": 1155,
      "insertions_excused": 8499,
      "excused_run_count": 48
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 26.2,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 195,
+     "peak_memory_gb": 2.63,
+     "ref_chars": 2266,
+     "hyp_chars": 2369,
+     "extra_ratio": 1.0454545454545454,
+     "coverage": 0.8795233892321271,
+     "cer": 0.23036187113857018,
+     "coverage_cer": 0.1968225948808473,
+     "subs": 127,
+     "dels": 146,
+     "insertions_counted": 173,
+     "insertions_excused": 76,
+     "excused_run_count": 2,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_medium_nocond_r3",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-medium-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_medium_nocond_r3 --json rerun_ultra_retry_20261010__whisper_medium_nocond_r3.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-medium-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_medium_nocond_r3"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.72,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.21,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 24.63,
+      "peak_memory_gb": 2.63,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        602,
+        620
+       ],
+       "cer": [
+        0.6066350710900474,
+        0.6492890995260664
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -3965,7 +4677,7 @@
      "insertions_counted": 99,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -4323,6 +5035,107 @@
      "insertions_counted": 1165,
      "insertions_excused": 10124,
      "excused_run_count": 47
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 39.2,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 158,
+     "peak_memory_gb": 2.63,
+     "ref_chars": 2266,
+     "hyp_chars": 2326,
+     "extra_ratio": 1.026478375992939,
+     "coverage": 0.881729920564872,
+     "cer": 0.2113857016769638,
+     "coverage_cer": 0.176081200353045,
+     "subs": 117,
+     "dels": 151,
+     "insertions_counted": 131,
+     "insertions_excused": 80,
+     "excused_run_count": 2,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_medium_nocond",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-medium-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_medium_nocond --json rerun_ultra_retry_20261010__whisper_medium_nocond.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-medium-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_medium_nocond"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.48,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.27,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 26.99,
+      "peak_memory_gb": 2.63,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        570,
+        559
+       ],
+       "cer": [
+        0.5308056872037915,
+        0.5071090047393365
+       ],
+       "coverage_cer": [
+        0.3080568720379147,
+        0.36729857819905215
+       ],
+       "subs": [
+        60,
+        61
+       ],
+       "insertions_counted": [
+        62,
+        86
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -4445,7 +5258,7 @@
      "insertions_counted": 67,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -4803,6 +5616,83 @@
      "insertions_counted": 739,
      "insertions_excused": 8439,
      "excused_run_count": 31
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 60.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 183,
+     "peak_memory_gb": 1.79,
+     "ref_chars": 2266,
+     "hyp_chars": 2386,
+     "extra_ratio": 1.0529567519858782,
+     "coverage": 0.8923212709620476,
+     "cer": 0.20167696381288613,
+     "coverage_cer": 0.14518976169461606,
+     "subs": 151,
+     "dels": 93,
+     "insertions_counted": 85,
+     "insertions_excused": 128,
+     "excused_run_count": 3,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_small_nocond_r2",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-small-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_small_nocond_r2 --json rerun_ultra_retry_20261010__whisper_small_nocond_r2.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-small-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_small_nocond_r2"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.98,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 60.66,
+      "peak_memory_gb": 1.79,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -4925,7 +5815,7 @@
      "insertions_counted": 73,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -5283,6 +6173,83 @@
      "insertions_counted": 712,
      "insertions_excused": 14399,
      "excused_run_count": 40
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 88.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 164,
+     "peak_memory_gb": 1.79,
+     "ref_chars": 2266,
+     "hyp_chars": 2407,
+     "extra_ratio": 1.062224183583407,
+     "coverage": 0.8305383936451898,
+     "cer": 0.2758164165931156,
+     "coverage_cer": 0.21712268314210062,
+     "subs": 284,
+     "dels": 100,
+     "insertions_counted": 108,
+     "insertions_excused": 133,
+     "excused_run_count": 2,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_small_nocond_r3",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-small-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_small_nocond_r3 --json rerun_ultra_retry_20261010__whisper_small_nocond_r3.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-small-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_small_nocond_r3"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.84,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 84.35,
+      "peak_memory_gb": 1.79,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -5405,7 +6372,7 @@
      "insertions_counted": 64,
      "insertions_excused": 189,
      "excused_run_count": 1,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -5763,6 +6730,83 @@
      "insertions_counted": 995,
      "insertions_excused": 17684,
      "excused_run_count": 40
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 45.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 242,
+     "peak_memory_gb": 1.79,
+     "ref_chars": 2266,
+     "hyp_chars": 2390,
+     "extra_ratio": 1.0547219770520742,
+     "coverage": 0.8799646954986761,
+     "cer": 0.21888790820829657,
+     "coverage_cer": 0.16019417475728157,
+     "subs": 172,
+     "dels": 100,
+     "insertions_counted": 91,
+     "insertions_excused": 133,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_small_nocond",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-small-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_small_nocond --json rerun_ultra_retry_20261010__whisper_small_nocond.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-small-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_small_nocond"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.62,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.21,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 47.56,
+      "peak_memory_gb": 1.79,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -5885,7 +6929,7 @@
      "insertions_counted": 49,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -6243,6 +7287,111 @@
      "insertions_counted": 571,
      "insertions_excused": 11463,
      "excused_run_count": 29
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 93.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 126,
+     "peak_memory_gb": 2.76,
+     "ref_chars": 2266,
+     "hyp_chars": 2324,
+     "extra_ratio": 1.0255957634598412,
+     "coverage": 0.9554280670785525,
+     "cer": 0.09355692850838482,
+     "coverage_cer": 0.06884377758164166,
+     "subs": 48,
+     "dels": 53,
+     "insertions_counted": 55,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_turbo_nocond_r2",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r2 --json rerun_ultra_retry_20261010__whisper_turbo_nocond_r2.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-turbo",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_turbo_nocond_r2"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.11,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 45.06,
+      "peak_memory_gb": 2.76,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        599,
+        868
+       ],
+       "cer": [
+        0.4881516587677725,
+        1.09478672985782
+       ],
+       "coverage_cer": [
+        0.04739336492890995,
+        0.026066350710900472
+       ],
+       "subs": [
+        9,
+        6
+       ],
+       "dels": [
+        10,
+        5
+       ],
+       "insertions_counted": [
+        1,
+        0
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -6365,7 +7514,7 @@
      "insertions_counted": 46,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -6723,6 +7872,103 @@
      "insertions_counted": 348,
      "insertions_excused": 26854,
      "excused_run_count": 19
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 89.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 128,
+     "peak_memory_gb": 2.76,
+     "ref_chars": 2266,
+     "hyp_chars": 2318,
+     "extra_ratio": 1.0229479258605472,
+     "coverage": 0.9527802294792586,
+     "cer": 0.09488084730803177,
+     "coverage_cer": 0.07016769638128861,
+     "subs": 51,
+     "dels": 56,
+     "insertions_counted": 52,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_turbo_nocond_r3",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r3 --json rerun_ultra_retry_20261010__whisper_turbo_nocond_r3.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-turbo",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_turbo_nocond_r3"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.39,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 37.53,
+      "peak_memory_gb": 2.76,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        1010,
+        1259
+       ],
+       "cer": [
+        1.6374407582938388,
+        2.234597156398104
+       ],
+       "subs": [
+        69,
+        72
+       ],
+       "insertions_counted": [
+        4,
+        1
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -6845,7 +8091,7 @@
      "insertions_counted": 49,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -7203,6 +8449,107 @@
      "insertions_counted": 377,
      "insertions_excused": 16713,
      "excused_run_count": 27
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 86.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 127,
+     "peak_memory_gb": 2.76,
+     "ref_chars": 2266,
+     "hyp_chars": 2328,
+     "extra_ratio": 1.027360988526037,
+     "coverage": 0.9571932921447485,
+     "cer": 0.09223300970873786,
+     "coverage_cer": 0.06751985878199471,
+     "subs": 47,
+     "dels": 50,
+     "insertions_counted": 56,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_turbo_nocond",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond --json rerun_ultra_retry_20261010__whisper_turbo_nocond.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-turbo",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_turbo_nocond"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.12,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 39.95,
+      "peak_memory_gb": 2.76,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        860,
+        571
+       ],
+       "cer": [
+        1.2843601895734598,
+        0.6042654028436019
+       ],
+       "coverage_cer": [
+        0.2109004739336493,
+        0.22748815165876776
+       ],
+       "subs": [
+        70,
+        72
+       ],
+       "insertions_counted": [
+        2,
+        7
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -7325,7 +8672,7 @@
      "insertions_counted": 143,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -7683,6 +9030,111 @@
      "insertions_counted": 942,
      "insertions_excused": 32461,
      "excused_run_count": 30
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 86.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 361,
+     "peak_memory_gb": 1.07,
+     "ref_chars": 2266,
+     "hyp_chars": 2357,
+     "extra_ratio": 1.0401588702559577,
+     "coverage": 0.7678729037952339,
+     "cer": 0.3755516328331862,
+     "coverage_cer": 0.30185348631950576,
+     "subs": 292,
+     "dels": 234,
+     "insertions_counted": 158,
+     "insertions_excused": 167,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_base_libdef_r2",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-base-mlx --min-cut 30 --min-cut-words 6 --label whisper_base_libdef_r2 --json rerun_ultra_retry_20261010__whisper_base_libdef_r2.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-base-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": false,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_base_libdef_r2"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.39,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.21,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 56.01,
+      "peak_memory_gb": 1.07,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        510,
+        739
+       ],
+       "cer": [
+        0.4028436018957346,
+        1.0687203791469195
+       ],
+       "coverage_cer": [
+        0.13981042654028436,
+        0.3767772511848341
+       ],
+       "subs": [
+        26,
+        98
+       ],
+       "dels": [
+        28,
+        18
+       ],
+       "insertions_counted": [
+        5,
+        43
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -7807,7 +9259,7 @@
      "insertions_counted": 143,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -8165,6 +9617,111 @@
      "insertions_counted": 972,
      "insertions_excused": 24811,
      "excused_run_count": 29
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 110.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 402,
+     "peak_memory_gb": 1.07,
+     "ref_chars": 2266,
+     "hyp_chars": 2523,
+     "extra_ratio": 1.113415710503089,
+     "coverage": 0.7925860547219771,
+     "cer": 0.4064430714916152,
+     "coverage_cer": 0.28375992939099737,
+     "subs": 276,
+     "dels": 194,
+     "insertions_counted": 173,
+     "insertions_excused": 278,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_base_libdef_r3",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-base-mlx --min-cut 30 --min-cut-words 6 --label whisper_base_libdef_r3 --json rerun_ultra_retry_20261010__whisper_base_libdef_r3.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-base-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": false,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_base_libdef_r3"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.82,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 81.33,
+      "peak_memory_gb": 1.07,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        473,
+        437
+       ],
+       "cer": [
+        0.34360189573459715,
+        0.28199052132701424
+       ],
+       "coverage_cer": [
+        0.26303317535545023,
+        0.28199052132701424
+       ],
+       "subs": [
+        42,
+        32
+       ],
+       "dels": [
+        26,
+        36
+       ],
+       "insertions_counted": [
+        43,
+        51
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -8290,7 +9847,7 @@
      "insertions_counted": 143,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -8648,6 +10205,111 @@
      "insertions_counted": 1317,
      "insertions_excused": 22247,
      "excused_run_count": 33
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 97.2,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 368,
+     "peak_memory_gb": 1.07,
+     "ref_chars": 2266,
+     "hyp_chars": 2366,
+     "extra_ratio": 1.0441306266548984,
+     "coverage": 0.767431597528685,
+     "cer": 0.37819947043248014,
+     "coverage_cer": 0.30229479258605474,
+     "subs": 297,
+     "dels": 230,
+     "insertions_counted": 158,
+     "insertions_excused": 172,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_base_libdef",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-base-mlx --min-cut 30 --min-cut-words 6 --label whisper_base_libdef --json rerun_ultra_retry_20261010__whisper_base_libdef.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-base-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": false,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_base_libdef"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.1,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 80.12,
+      "peak_memory_gb": 1.07,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        454,
+        458
+       ],
+       "cer": [
+        0.3104265402843602,
+        0.3815165876777251
+       ],
+       "coverage_cer": [
+        0.22274881516587677,
+        0.20853080568720378
+       ],
+       "subs": [
+        31,
+        35
+       ],
+       "dels": [
+        34,
+        45
+       ],
+       "insertions_counted": [
+        29,
+        8
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -8770,7 +10432,7 @@
      "insertions_counted": 179,
      "insertions_excused": 329,
      "excused_run_count": 2,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -9128,6 +10790,107 @@
      "insertions_counted": 2532,
      "insertions_excused": 5504,
      "excused_run_count": 22
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 90.2,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 227,
+     "peak_memory_gb": 0.82,
+     "ref_chars": 2266,
+     "hyp_chars": 2652,
+     "extra_ratio": 1.1703442188879083,
+     "coverage": 0.6310679611650486,
+     "cer": 0.5979699911738746,
+     "coverage_cer": 0.46646072374227715,
+     "subs": 703,
+     "dels": 133,
+     "insertions_counted": 221,
+     "insertions_excused": 298,
+     "excused_run_count": 2,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_tiny_libdef_r2",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-tiny-mlx --min-cut 30 --min-cut-words 6 --label whisper_tiny_libdef_r2 --json rerun_ultra_retry_20261010__whisper_tiny_libdef_r2.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-tiny-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": false,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_tiny_libdef_r2"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 4.63,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 69.71,
+      "peak_memory_gb": 0.82,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        592,
+        556
+       ],
+       "cer": [
+        1.3838862559241707,
+        1.3127962085308056
+       ],
+       "coverage_cer": [
+        0.990521327014218,
+        0.9976303317535545
+       ],
+       "subs": [
+        414,
+        420
+       ],
+       "insertions_counted": [
+        4,
+        1
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -9252,7 +11015,7 @@
      "insertions_counted": 179,
      "insertions_excused": 205,
      "excused_run_count": 1,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -9610,6 +11373,111 @@
      "insertions_counted": 2220,
      "insertions_excused": 3926,
      "excused_run_count": 12
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 95.5,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 424,
+     "peak_memory_gb": 0.82,
+     "ref_chars": 2266,
+     "hyp_chars": 2594,
+     "extra_ratio": 1.1447484554280671,
+     "coverage": 0.6160635481023831,
+     "cer": 0.618270079435128,
+     "coverage_cer": 0.49338040600176525,
+     "subs": 667,
+     "dels": 203,
+     "insertions_counted": 248,
+     "insertions_excused": 283,
+     "excused_run_count": 2,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_tiny_libdef_r3",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-tiny-mlx --min-cut 30 --min-cut-words 6 --label whisper_tiny_libdef_r3 --json rerun_ultra_retry_20261010__whisper_tiny_libdef_r3.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-tiny-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": false,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_tiny_libdef_r3"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.85,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 64.14,
+      "peak_memory_gb": 0.82,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        400,
+        909
+       ],
+       "cer": [
+        0.9644549763033176,
+        2.1066350710900474
+       ],
+       "coverage_cer": [
+        0.9644549763033176,
+        0.9976303317535545
+       ],
+       "subs": [
+        385,
+        402
+       ],
+       "dels": [
+        22,
+        0
+       ],
+       "insertions_counted": [
+        0,
+        19
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -9735,7 +11603,7 @@
      "insertions_counted": 126,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -10093,6 +11961,111 @@
      "insertions_counted": 2574,
      "insertions_excused": 2997,
      "excused_run_count": 17
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 67.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 157,
+     "peak_memory_gb": 0.82,
+     "ref_chars": 2266,
+     "hyp_chars": 3798,
+     "extra_ratio": 1.676081200353045,
+     "coverage": 0.5092674315975286,
+     "cer": 1.2524271844660195,
+     "coverage_cer": 0.5772285966460724,
+     "subs": 918,
+     "dels": 194,
+     "insertions_counted": 196,
+     "insertions_excused": 1530,
+     "excused_run_count": 5,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__whisper_tiny_libdef",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-tiny-mlx --min-cut 30 --min-cut-words 6 --label whisper_tiny_libdef --json rerun_ultra_retry_20261010__whisper_tiny_libdef.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-tiny-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": false,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_tiny_libdef"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.36,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 55.28,
+      "peak_memory_gb": 0.82,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        424,
+        666
+       ],
+       "cer": [
+        0.8933649289099526,
+        1.5734597156398105
+       ],
+       "coverage_cer": [
+        0.7890995260663507,
+        0.9976303317535545
+       ],
+       "subs": [
+        273,
+        420
+       ],
+       "dels": [
+        51,
+        0
+       ],
+       "insertions_counted": [
+        9,
+        1
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -10217,7 +12190,7 @@
      "insertions_counted": 56,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -10575,6 +12548,83 @@
      "insertions_counted": 442,
      "insertions_excused": 9408,
      "excused_run_count": 35
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 33.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 127,
+     "peak_memory_gb": 4.23,
+     "ref_chars": 2266,
+     "hyp_chars": 2340,
+     "extra_ratio": 1.0326566637246248,
+     "coverage": 0.9510150044130626,
+     "cer": 0.10150044130626655,
+     "coverage_cer": 0.07678729037952339,
+     "subs": 66,
+     "dels": 45,
+     "insertions_counted": 63,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_q3_20261011__whisper_large-v3_nocond_r4",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r4 --json rerun_ultra_q3_20261011__whisper_large-v3_nocond_r4.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_large-v3_nocond_r4"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 4.36,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.21,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 32.77,
+      "peak_memory_gb": 4.23,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -10700,7 +12750,7 @@
      "insertions_counted": 56,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -11058,6 +13108,83 @@
      "insertions_counted": 649,
      "insertions_excused": 9936,
      "excused_run_count": 46
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 33.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 127,
+     "peak_memory_gb": 4.23,
+     "ref_chars": 2266,
+     "hyp_chars": 2340,
+     "extra_ratio": 1.0326566637246248,
+     "coverage": 0.9510150044130626,
+     "cer": 0.10150044130626655,
+     "coverage_cer": 0.07678729037952339,
+     "subs": 66,
+     "dels": 45,
+     "insertions_counted": 63,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_q3_20261011__whisper_large-v3_nocond_r5",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r5 --json rerun_ultra_q3_20261011__whisper_large-v3_nocond_r5.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_large-v3_nocond_r5"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.68,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.21,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 32.72,
+      "peak_memory_gb": 4.23,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -11180,7 +13307,7 @@
      "insertions_counted": 56,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -11538,6 +13665,83 @@
      "insertions_counted": 516,
      "insertions_excused": 11369,
      "excused_run_count": 57
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 33.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 127,
+     "peak_memory_gb": 4.23,
+     "ref_chars": 2266,
+     "hyp_chars": 2340,
+     "extra_ratio": 1.0326566637246248,
+     "coverage": 0.9510150044130626,
+     "cer": 0.10150044130626655,
+     "coverage_cer": 0.07678729037952339,
+     "subs": 66,
+     "dels": 45,
+     "insertions_counted": 63,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_q3_20261011__whisper_large-v3_nocond_r6",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r6 --json rerun_ultra_q3_20261011__whisper_large-v3_nocond_r6.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-mlx",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_large-v3_nocond_r6"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.18,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 32.74,
+      "peak_memory_gb": 4.23,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -11660,7 +13864,7 @@
      "insertions_counted": 49,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -12018,6 +14222,111 @@
      "insertions_counted": 563,
      "insertions_excused": 12241,
      "excused_run_count": 30
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 93.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 126,
+     "peak_memory_gb": 2.76,
+     "ref_chars": 2266,
+     "hyp_chars": 2325,
+     "extra_ratio": 1.02603706972639,
+     "coverage": 0.9554280670785525,
+     "cer": 0.0939982347749338,
+     "coverage_cer": 0.06928508384819064,
+     "subs": 48,
+     "dels": 53,
+     "insertions_counted": 56,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_q3_20261011__whisper_turbo_nocond_r4",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r4 --json rerun_ultra_q3_20261011__whisper_turbo_nocond_r4.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-turbo",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_turbo_nocond_r4"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.46,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.21,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 46.65,
+      "peak_memory_gb": 2.76,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        608,
+        440
+       ],
+       "cer": [
+        0.6919431279620853,
+        0.12796208530805686
+       ],
+       "coverage_cer": [
+        0.2132701421800948,
+        0.12796208530805686
+       ],
+       "subs": [
+        72,
+        12
+       ],
+       "dels": [
+        17,
+        12
+       ],
+       "insertions_counted": [
+        1,
+        30
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -12140,7 +14449,7 @@
      "insertions_counted": 45,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -12498,6 +14807,111 @@
      "insertions_counted": 349,
      "insertions_excused": 14917,
      "excused_run_count": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 93.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 127,
+     "peak_memory_gb": 2.76,
+     "ref_chars": 2266,
+     "hyp_chars": 2328,
+     "extra_ratio": 1.027360988526037,
+     "coverage": 0.9571932921447485,
+     "cer": 0.09223300970873786,
+     "coverage_cer": 0.06751985878199471,
+     "subs": 47,
+     "dels": 50,
+     "insertions_counted": 56,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_q3_20261011__whisper_turbo_nocond_r5",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r5 --json rerun_ultra_q3_20261011__whisper_turbo_nocond_r5.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-turbo",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_turbo_nocond_r5"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 1.94,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 41.93,
+      "peak_memory_gb": 2.76,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        465,
+        354
+       ],
+       "cer": [
+        0.22985781990521326,
+        0.23222748815165878
+       ],
+       "coverage_cer": [
+        0.07819905213270142,
+        0.23222748815165878
+       ],
+       "subs": [
+        10,
+        12
+       ],
+       "dels": [
+        22,
+        77
+       ],
+       "insertions_counted": [
+        1,
+        9
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -12622,7 +15036,7 @@
      "insertions_counted": 49,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -12980,6 +15394,111 @@
      "insertions_counted": 507,
      "insertions_excused": 7104,
      "excused_run_count": 27
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 90.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 128,
+     "peak_memory_gb": 2.76,
+     "ref_chars": 2266,
+     "hyp_chars": 2322,
+     "extra_ratio": 1.024713150926743,
+     "coverage": 0.9532215357458076,
+     "cer": 0.09488084730803177,
+     "coverage_cer": 0.07016769638128861,
+     "subs": 53,
+     "dels": 53,
+     "insertions_counted": 53,
+     "insertions_excused": 56,
+     "excused_run_count": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_q3_20261011__whisper_turbo_nocond_r6",
+     "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r6 --json rerun_ultra_q3_20261011__whisper_turbo_nocond_r6.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "pair": null,
+      "model": "mlx-community/whisper-large-v3-turbo",
+      "language": null,
+      "autodetect": false,
+      "greedy": false,
+      "no_condition": true,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "all_files": false,
+      "label": "whisper_turbo_nocond_r6"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.27,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 54.28,
+      "peak_memory_gb": 2.76,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "languages": [
+       "ja"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "canary_drift": {
+      "bb5cf5d5b247": {
+       "hyp_chars": [
+        477,
+        422
+       ],
+       "cer": [
+        0.2014218009478673,
+        0.12085308056872038
+       ],
+       "coverage_cer": [
+        0.1018957345971564,
+        0.12085308056872038
+       ],
+       "subs": [
+        4,
+        13
+       ],
+       "dels": [
+        13,
+        19
+       ],
+       "insertions_counted": [
+        26,
+        19
+       ]
+      }
+     },
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],

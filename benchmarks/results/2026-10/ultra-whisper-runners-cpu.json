@@ -1,0 +1,94 @@
+{
+ "group": "ultra-whisper-runners-cpu",
+ "question": "CPU share of the unbatched faster-whisper runs on the 935s clip: time -p totals (real, user, sys) from each run's log, 3 runs each; the runs' results are in ultra-whisper-runners",
+ "docs": [
+  "docs/benchmarks/engines/whisper.md"
+ ],
+ "note": "In the commands $PY is the repo venv python and $RC is scripts/benchmarks/run_competitors.py --audio $CLIP --reference $REF, with $CLIP the 935s clip (bench_out/corpus_timed/632a295d981d.wav) and $REF its reference subtitles. CPU share is (user + sys) / real, which includes model load.",
+ "runs": [
+  {
+   "run": "rn_fw_large-v3_int8_b1_r1",
+   "output": "log",
+   "command": "time -p $PY ${=RC} --runner faster-whisper --model Systran/faster-whisper-large-v3 --compute-type int8 --batch-size 1 --label rn_fw_large-v3_int8_b1_r1",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "log": "rn_fw_large-v3_int8_b1_r1: 1.1x, plain CER 0.1284\nreal 876.15\nuser 3488.18\nsys 794.70"
+  },
+  {
+   "run": "rn_fw_large-v3_int8_b1_r2",
+   "output": "log",
+   "command": "time -p $PY ${=RC} --runner faster-whisper --model Systran/faster-whisper-large-v3 --compute-type int8 --batch-size 1 --label rn_fw_large-v3_int8_b1_r2",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "log": "rn_fw_large-v3_int8_b1_r2: 1.27x, plain CER 0.1203\nreal 749.14\nuser 2991.81\nsys 707.91"
+  },
+  {
+   "run": "rn_fw_large-v3_int8_b1_r3",
+   "output": "log",
+   "command": "time -p $PY ${=RC} --runner faster-whisper --model Systran/faster-whisper-large-v3 --compute-type int8 --batch-size 1 --label rn_fw_large-v3_int8_b1_r3",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "log": "rn_fw_large-v3_int8_b1_r3: 0.93x, plain CER 0.1467\nreal 1013.43\nuser 3993.73\nsys 927.32"
+  },
+  {
+   "run": "rn_fw_turbo_int8_b1_r1",
+   "output": "log",
+   "command": "time -p $PY ${=RC} --runner faster-whisper --model deepdml/faster-whisper-large-v3-turbo-ct2 --compute-type int8 --batch-size 1 --label rn_fw_turbo_int8_b1_r1",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "log": "rn_fw_turbo_int8_b1_r1: 3.62x, plain CER 0.0804\nreal 276.72\nuser 1106.80\nsys 44.15"
+  },
+  {
+   "run": "rn_fw_turbo_int8_b1_r2",
+   "output": "log",
+   "command": "time -p $PY ${=RC} --runner faster-whisper --model deepdml/faster-whisper-large-v3-turbo-ct2 --compute-type int8 --batch-size 1 --label rn_fw_turbo_int8_b1_r2",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "log": "rn_fw_turbo_int8_b1_r2: 3.62x, plain CER 0.0804\nreal 267.43\nuser 1105.47\nsys 40.81"
+  },
+  {
+   "run": "rn_fw_turbo_int8_b1_r3",
+   "output": "log",
+   "command": "time -p $PY ${=RC} --runner faster-whisper --model deepdml/faster-whisper-large-v3-turbo-ct2 --compute-type int8 --batch-size 1 --label rn_fw_turbo_int8_b1_r3",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "log": "rn_fw_turbo_int8_b1_r3: 3.61x, plain CER 0.0804\nreal 267.84\nuser 1108.27\nsys 41.74"
+  }
+ ]
+}

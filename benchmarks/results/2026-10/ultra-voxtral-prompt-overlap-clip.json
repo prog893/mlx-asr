@@ -1,0 +1,127 @@
+{
+ "group": "ultra-voxtral-prompt-overlap-clip",
+ "question": "Voxtral prompt and overlap on the 935s clip and on its first 180s (clip180)",
+ "docs": [
+  "docs/benchmarks/prompt.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "popov_full_none",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/corpus_timed/632a295d981d.wav --reference bench_out/corpus_timed/632a295d981d.srt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 0 --json popov_full_none.json",
+   "params": {
+    "audio": "bench_out/corpus_timed/632a295d981d.wav",
+    "reference": "bench_out/corpus_timed/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0863
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0863,
+     "x_realtime": 33.7,
+     "wall_s": 27.8,
+     "steps": 446,
+     "extra_audio_s": 0.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "popov_x180_none",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/clip180/clip180.wav --reference bench_out/clip180/clip180.txt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 0 --json popov_x180_none.json",
+   "params": {
+    "audio": "bench_out/clip180/clip180.wav",
+    "reference": "bench_out/clip180/clip180.txt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0892
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "clip180",
+     "duration_s": 180.0,
+     "unit": "char",
+     "cer": 0.0892,
+     "x_realtime": 13.4,
+     "wall_s": 13.4,
+     "steps": 472,
+     "extra_audio_s": 0.0,
+     "cues": 40
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "popov_x180_ov4",
+   "arm": "overlap 4",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio bench_out/clip180/clip180.wav --reference bench_out/clip180/clip180.txt --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 4 --json popov_x180_ov4.json",
+   "params": {
+    "audio": "bench_out/clip180/clip180.wav",
+    "reference": "bench_out/clip180/clip180.txt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "4"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0892
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "clip180",
+     "duration_s": 180.0,
+     "unit": "char",
+     "cer": 0.0892,
+     "x_realtime": 12.6,
+     "wall_s": 14.3,
+     "steps": 522,
+     "extra_audio_s": 20.0,
+     "cues": 39
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  }
+ ]
+}

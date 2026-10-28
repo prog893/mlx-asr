@@ -1,0 +1,94 @@
+{
+ "group": "ultra-kotoba-conversion",
+ "question": "kotoba-whisper first use through the CLI on the 112s file: peak memory with the conversion (cold) and without (warm); and v2.0 against v2.2 weights, every tensor",
+ "docs": [
+  "docs/benchmarks/reference/peak-memory.md",
+  "docs/benchmarks/engines/kotoba.md",
+  "docs/MODELS.md"
+ ],
+ "note": "pm_kotoba_cold_r112 ran with no conversion cache, so it includes the first-use conversion; pm_kotoba_warm_r112 ran right after it.",
+ "runs": [
+  {
+   "run": "pm_kotoba_cold_r112",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli bench_out/one_r112/bb5cf5d5b247.wav --model kotoba -f txt -o $D/hyp_k/pm_cold.txt --stats-json $D/pm_kotoba_cold_r112.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 112.0,
+    "wall_s": 7.859307124977931,
+    "x_realtime": 14.250620088894221,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 44,
+    "peak_memory_gb": 3.03,
+    "windows": 12,
+    "segments": 44
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "\n\n\n\n\n\n\n\n\n\n\n\n"
+  },
+  {
+   "run": "pm_kotoba_warm_r112",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli bench_out/one_r112/bb5cf5d5b247.wav --model kotoba -f txt -o $D/hyp_k/pm_warm.txt --stats-json $D/pm_kotoba_warm_r112.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 112.0,
+    "wall_s": 5.337452000007033,
+    "x_realtime": 20.983795264079642,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 47,
+    "peak_memory_gb": 2.38,
+    "windows": 12,
+    "segments": 47
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "\n\n\n\n\n\n\n\n\n\n\n"
+  },
+  {
+   "run": "kotoba_tensor_diff",
+   "output": "stdout",
+   "command": "$PY -c \"import mlx.core as mx; from huggingface_hub import hf_hub_download as h; a=mx.load(h('kotoba-tech/kotoba-whisper-v2.0','model.safetensors')); b=mx.load(h('kotoba-tech/kotoba-whisper-v2.2','model.safetensors')); print('tensors', len(a), len(b), 'same keys', set(a)==set(b)); print('max abs diff', max(float(mx.abs(a[k].astype(mx.float32)-b[k].astype(mx.float32)).max()) for k in a))\"",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "tensors 539 539 same keys True\nmax abs diff 0.0"
+  }
+ ]
+}

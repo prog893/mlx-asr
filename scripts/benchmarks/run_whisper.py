@@ -62,6 +62,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import mlx.core as mx
 from mlx_whisper.transcribe import transcribe
 
+from benchmarks.corpus_files import add_files_option, only_files
 from benchmarks.machine_state import machine_state, warn_if_busy
 from metrics.eval_coverage import is_space_delimited, load_reference, score_pair
 
@@ -119,6 +120,7 @@ def main():
     p.add_argument("--min-cut", type=int, default=30)
     p.add_argument("--min-cut-words", type=int, default=6)
     p.add_argument("--limit", type=int, help="only the N shortest files")
+    add_files_option(p)
     p.add_argument("--all-files", action="store_true",
                    help="run Japanese-only models on the English files too")
     p.add_argument("--label", default="")
@@ -129,7 +131,7 @@ def main():
     pairs = []
     if a.corpus:
         corpus = Path(a.corpus).expanduser()
-        pairs += find_pairs(corpus)
+        pairs += only_files(find_pairs(corpus), a.files)
         if not pairs:
             print(f"no pairs found in {corpus}", file=sys.stderr)
             return 2

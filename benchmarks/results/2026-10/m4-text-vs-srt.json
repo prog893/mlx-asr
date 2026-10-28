@@ -1,0 +1,134 @@
+{
+ "group": "m4-text-vs-srt",
+ "question": "Token text against joined SRT text, scored on the 935s clip for six CLI configs on the M4 16GB, 4-bit",
+ "docs": [
+  "docs/benchmarks/reference/metrics.md"
+ ],
+ "note": "In the commands $PY is the repo venv python, $NV the local nvfp4 conversion (models/voxtral-nvfp4), $M4B the 4-bit hub build, $CLIP the 935s clip (bench_out/corpus_timed/632a295d981d.wav), $REF its reference subtitles and $D the queue directory bench_out/m4_20261016/out; hypotheses are not saved. The queue was stopped once and resumed; the resumed copy waits 60s before each machine-state check.",
+ "runs": [
+  {
+   "run": "tvs_m4_score",
+   "command": "scripts/benchmarks/compare_text_vs_srt.py --reference bench_out/one_0816_local/632a295d981d.srt --json tvs_m4_score.json",
+   "params": {
+    "reference": "bench_out/one_0816_local/632a295d981d.srt"
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "run": "m4_c60b16",
+     "token_text": {
+      "chars": 4151,
+      "cer": 0.07395957193816885,
+      "kana_cer": 0.05490360435875943,
+      "lenient_cer": 0.0713436385255648,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4151,
+      "cer": 0.07395957193816885,
+      "kana_cer": 0.05490360435875943,
+      "lenient_cer": 0.0713436385255648,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    },
+    {
+     "run": "m4_c60b16_kv8",
+     "token_text": {
+      "chars": 4150,
+      "cer": 0.07443519619500595,
+      "kana_cer": 0.055322715842414084,
+      "lenient_cer": 0.0718192627824019,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4150,
+      "cer": 0.07443519619500595,
+      "kana_cer": 0.055322715842414084,
+      "lenient_cer": 0.0718192627824019,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    },
+    {
+     "run": "m4_c30b32_kv8",
+     "token_text": {
+      "chars": 4179,
+      "cer": 0.08632580261593341,
+      "kana_cer": 0.0626571668063705,
+      "lenient_cer": 0.08323424494649227,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4179,
+      "cer": 0.08632580261593341,
+      "kana_cer": 0.0626571668063705,
+      "lenient_cer": 0.08323424494649227,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    },
+    {
+     "run": "m4_c30b32_kv8_ov4",
+     "token_text": {
+      "chars": 4160,
+      "cer": 0.07110582639714626,
+      "kana_cer": 0.053436714165968145,
+      "lenient_cer": 0.06896551724137931,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4160,
+      "cer": 0.07110582639714626,
+      "kana_cer": 0.053436714165968145,
+      "lenient_cer": 0.06896551724137931,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    },
+    {
+     "run": "m4_c30b32_kv8_ov8",
+     "token_text": {
+      "chars": 4164,
+      "cer": 0.0713436385255648,
+      "kana_cer": 0.055113160100586756,
+      "lenient_cer": 0.06920332936979785,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4164,
+      "cer": 0.0713436385255648,
+      "kana_cer": 0.055113160100586756,
+      "lenient_cer": 0.06920332936979785,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    },
+    {
+     "run": "m4_c60b16_compact",
+     "token_text": {
+      "chars": 4161,
+      "cer": 0.08323424494649227,
+      "kana_cer": 0.06202849958088852,
+      "lenient_cer": 0.08014268727705114,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4161,
+      "cer": 0.08323424494649227,
+      "kana_cer": 0.06202849958088852,
+      "lenient_cer": 0.08014268727705114,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    }
+   ],
+   "missing": [
+    "compare_text_vs_srt.py scores CLI outputs made by the queue's run lines"
+   ]
+  }
+ ]
+}

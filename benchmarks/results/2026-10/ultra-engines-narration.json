@@ -1,0 +1,2209 @@
+{
+ "group": "ultra-engines-narration",
+ "question": "Every engine on the 935s narration clip: Voxtral 60s / batch 16 / kv8, every Whisper size, kotoba at 10s and 20s windows; 3 runs each",
+ "docs": [
+  "docs/benchmarks/engines.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "clip_vox_c60b16_kv8_r1",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/q5_20261013/clip1 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label clip_vox_c60b16_kv8_r1 --json clip_vox_c60b16_kv8_r1.json",
+   "params": {
+    "corpus": "bench_out/q5_20261013/clip1",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "clip_vox_c60b16_kv8_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.1,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.07277
+   },
+   "measures": {
+    "x_realtime": 22.05,
+    "peak_memory_gb": 6.75
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 22.1,
+     "chunks": 16,
+     "peak_memory_gb": 6.75,
+     "ref_chars": 4205,
+     "hyp_chars": 4155,
+     "extra_ratio": 0.9881093935790726,
+     "coverage": 0.9400713436385255,
+     "cer": 0.0727705112960761,
+     "coverage_cer": 0.0727705112960761,
+     "subs": 148,
+     "dels": 104,
+     "insertions_counted": 54,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_vox_c60b16_kv8_r2",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/q5_20261013/clip1 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label clip_vox_c60b16_kv8_r2 --json clip_vox_c60b16_kv8_r2.json",
+   "params": {
+    "corpus": "bench_out/q5_20261013/clip1",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "clip_vox_c60b16_kv8_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.48,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.22,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.07277
+   },
+   "measures": {
+    "x_realtime": 22.02,
+    "peak_memory_gb": 6.75
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 22.0,
+     "chunks": 16,
+     "peak_memory_gb": 6.75,
+     "ref_chars": 4205,
+     "hyp_chars": 4155,
+     "extra_ratio": 0.9881093935790726,
+     "coverage": 0.9400713436385255,
+     "cer": 0.0727705112960761,
+     "coverage_cer": 0.0727705112960761,
+     "subs": 148,
+     "dels": 104,
+     "insertions_counted": 54,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_vox_c60b16_kv8_r3",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/q5_20261013/clip1 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label clip_vox_c60b16_kv8_r3 --json clip_vox_c60b16_kv8_r3.json",
+   "params": {
+    "corpus": "bench_out/q5_20261013/clip1",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "clip_vox_c60b16_kv8_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.07,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.22,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.07277
+   },
+   "measures": {
+    "x_realtime": 22.01,
+    "peak_memory_gb": 6.75
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 22.0,
+     "chunks": 16,
+     "peak_memory_gb": 6.75,
+     "ref_chars": 4205,
+     "hyp_chars": 4155,
+     "extra_ratio": 0.9881093935790726,
+     "coverage": 0.9400713436385255,
+     "cer": 0.0727705112960761,
+     "coverage_cer": 0.0727705112960761,
+     "subs": 148,
+     "dels": 104,
+     "insertions_counted": 54,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_base_libdef_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-base-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_base_libdef_r1 --json clip_whisper_base_libdef_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-base-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_base_libdef_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.35,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.17,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.21617
+   },
+   "measures": {
+    "x_realtime": 95.26,
+    "peak_memory_gb": 1.32,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 95.3,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 222,
+     "peak_memory_gb": 1.32,
+     "ref_chars": 4205,
+     "hyp_chars": 4186,
+     "extra_ratio": 0.9954815695600475,
+     "coverage": 0.8249702734839477,
+     "cer": 0.22568370986920333,
+     "coverage_cer": 0.21617122473246136,
+     "subs": 504,
+     "dels": 232,
+     "insertions_counted": 173,
+     "insertions_excused": 40,
+     "excused_run_count": 1
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_base_libdef_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-base-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_base_libdef_r2 --json clip_whisper_base_libdef_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-base-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_base_libdef_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.94,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.17,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.25351
+   },
+   "measures": {
+    "x_realtime": 90.85,
+    "peak_memory_gb": 1.32,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 90.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 347,
+     "peak_memory_gb": 1.32,
+     "ref_chars": 4205,
+     "hyp_chars": 3972,
+     "extra_ratio": 0.944589774078478,
+     "coverage": 0.7890606420927467,
+     "cer": 0.2535077288941736,
+     "coverage_cer": 0.2535077288941736,
+     "subs": 475,
+     "dels": 412,
+     "insertions_counted": 179,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_base_libdef_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-base-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_base_libdef_r3 --json clip_whisper_base_libdef_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-base-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_base_libdef_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.07,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.17,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.26017
+   },
+   "measures": {
+    "x_realtime": 84.41,
+    "peak_memory_gb": 1.32,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 84.4,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 331,
+     "peak_memory_gb": 1.32,
+     "ref_chars": 4205,
+     "hyp_chars": 4273,
+     "extra_ratio": 1.0161712247324615,
+     "coverage": 0.7850178359096314,
+     "cer": 0.30416171224732463,
+     "coverage_cer": 0.260166468489893,
+     "subs": 597,
+     "dels": 307,
+     "insertions_counted": 190,
+     "insertions_excused": 185,
+     "excused_run_count": 2
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_large-v2_libdef_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-large-v2-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_large-v2_libdef_r1 --json clip_whisper_large-v2_libdef_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-large-v2-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_large-v2_libdef_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.37,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.17,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.11772
+   },
+   "measures": {
+    "x_realtime": 19.12,
+    "peak_memory_gb": 4.44,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 19.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 334,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 4205,
+     "hyp_chars": 4241,
+     "extra_ratio": 1.0085612366230678,
+     "coverage": 0.9222354340071344,
+     "cer": 0.11771700356718193,
+     "coverage_cer": 0.11771700356718193,
+     "subs": 195,
+     "dels": 132,
+     "insertions_counted": 168,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_large-v2_libdef_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-large-v2-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_large-v2_libdef_r2 --json clip_whisper_large-v2_libdef_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-large-v2-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_large-v2_libdef_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.96,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.17,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.15315
+   },
+   "measures": {
+    "x_realtime": 22.61,
+    "peak_memory_gb": 4.44,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 22.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 267,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 4205,
+     "hyp_chars": 4023,
+     "extra_ratio": 0.956718192627824,
+     "coverage": 0.8711058263971463,
+     "cer": 0.17074910820451844,
+     "coverage_cer": 0.15315101070154577,
+     "subs": 184,
+     "dels": 358,
+     "insertions_counted": 102,
+     "insertions_excused": 74,
+     "excused_run_count": 2
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_large-v2_libdef_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-large-v2-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_large-v2_libdef_r3 --json clip_whisper_large-v2_libdef_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-large-v2-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_large-v2_libdef_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.72,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.15172
+   },
+   "measures": {
+    "x_realtime": 22.45,
+    "peak_memory_gb": 4.44,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 22.5,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 266,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 4205,
+     "hyp_chars": 4023,
+     "extra_ratio": 0.956718192627824,
+     "coverage": 0.8725326991676575,
+     "cer": 0.16932223543400712,
+     "coverage_cer": 0.15172413793103448,
+     "subs": 178,
+     "dels": 358,
+     "insertions_counted": 102,
+     "insertions_excused": 74,
+     "excused_run_count": 2
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_large-v3_nocond_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-large-v3-mlx --language ja --no-condition --min-cut 30 --min-cut-words 6 --label clip_whisper_large-v3_nocond_r1 --json clip_whisper_large-v3_nocond_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-large-v3-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_large-v3_nocond_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.92,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.22,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.0887
+   },
+   "measures": {
+    "x_realtime": 23.91,
+    "peak_memory_gb": 4.48,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 23.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 277,
+     "peak_memory_gb": 4.48,
+     "ref_chars": 4205,
+     "hyp_chars": 4172,
+     "extra_ratio": 0.9921521997621878,
+     "coverage": 0.930321046373365,
+     "cer": 0.0887039239001189,
+     "coverage_cer": 0.0887039239001189,
+     "subs": 180,
+     "dels": 113,
+     "insertions_counted": 80,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_large-v3_nocond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-large-v3-mlx --language ja --no-condition --min-cut 30 --min-cut-words 6 --label clip_whisper_large-v3_nocond_r2 --json clip_whisper_large-v3_nocond_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-large-v3-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_large-v3_nocond_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.91,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.22,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.0887
+   },
+   "measures": {
+    "x_realtime": 23.82,
+    "peak_memory_gb": 4.48,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 23.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 277,
+     "peak_memory_gb": 4.48,
+     "ref_chars": 4205,
+     "hyp_chars": 4172,
+     "extra_ratio": 0.9921521997621878,
+     "coverage": 0.930321046373365,
+     "cer": 0.0887039239001189,
+     "coverage_cer": 0.0887039239001189,
+     "subs": 180,
+     "dels": 113,
+     "insertions_counted": 80,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_large-v3_nocond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-large-v3-mlx --language ja --no-condition --min-cut 30 --min-cut-words 6 --label clip_whisper_large-v3_nocond_r3 --json clip_whisper_large-v3_nocond_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-large-v3-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_large-v3_nocond_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.12,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.0887
+   },
+   "measures": {
+    "x_realtime": 23.81,
+    "peak_memory_gb": 4.48,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 23.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 277,
+     "peak_memory_gb": 4.48,
+     "ref_chars": 4205,
+     "hyp_chars": 4172,
+     "extra_ratio": 0.9921521997621878,
+     "coverage": 0.930321046373365,
+     "cer": 0.0887039239001189,
+     "coverage_cer": 0.0887039239001189,
+     "subs": 180,
+     "dels": 113,
+     "insertions_counted": 80,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_medium_libdef_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-medium-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_medium_libdef_r1 --json clip_whisper_medium_libdef_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-medium-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_medium_libdef_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.05,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.11629
+   },
+   "measures": {
+    "x_realtime": 31.69,
+    "peak_memory_gb": 2.8,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 31.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 367,
+     "peak_memory_gb": 2.8,
+     "ref_chars": 4205,
+     "hyp_chars": 4216,
+     "extra_ratio": 1.0026159334126041,
+     "coverage": 0.9200951248513675,
+     "cer": 0.11629013079667062,
+     "coverage_cer": 0.11629013079667062,
+     "subs": 194,
+     "dels": 142,
+     "insertions_counted": 153,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_medium_libdef_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-medium-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_medium_libdef_r2 --json clip_whisper_medium_libdef_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-medium-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_medium_libdef_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.22,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.22,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.11677
+   },
+   "measures": {
+    "x_realtime": 31.0,
+    "peak_memory_gb": 2.8,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 31.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 365,
+     "peak_memory_gb": 2.8,
+     "ref_chars": 4205,
+     "hyp_chars": 4215,
+     "extra_ratio": 1.0023781212841856,
+     "coverage": 0.9196195005945303,
+     "cer": 0.11676575505350772,
+     "coverage_cer": 0.11676575505350772,
+     "subs": 195,
+     "dels": 143,
+     "insertions_counted": 153,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_medium_libdef_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-medium-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_medium_libdef_r3 --json clip_whisper_medium_libdef_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-medium-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_medium_libdef_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.74,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.11677
+   },
+   "measures": {
+    "x_realtime": 31.05,
+    "peak_memory_gb": 2.8,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 31.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 367,
+     "peak_memory_gb": 2.8,
+     "ref_chars": 4205,
+     "hyp_chars": 4215,
+     "extra_ratio": 1.0023781212841856,
+     "coverage": 0.9196195005945303,
+     "cer": 0.11676575505350772,
+     "coverage_cer": 0.11676575505350772,
+     "subs": 195,
+     "dels": 143,
+     "insertions_counted": 153,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_small_libdef_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-small-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_small_libdef_r1 --json clip_whisper_small_libdef_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-small-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_small_libdef_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.91,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.14578
+   },
+   "measures": {
+    "x_realtime": 53.83,
+    "peak_memory_gb": 1.96,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 53.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 349,
+     "peak_memory_gb": 1.96,
+     "ref_chars": 4205,
+     "hyp_chars": 4213,
+     "extra_ratio": 1.0019024970273485,
+     "coverage": 0.8844233055885851,
+     "cer": 0.1633769322235434,
+     "coverage_cer": 0.14577883472057074,
+     "subs": 293,
+     "dels": 193,
+     "insertions_counted": 127,
+     "insertions_excused": 74,
+     "excused_run_count": 2
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_small_libdef_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-small-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_small_libdef_r2 --json clip_whisper_small_libdef_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-small-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_small_libdef_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.77,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.156
+   },
+   "measures": {
+    "x_realtime": 40.82,
+    "peak_memory_gb": 1.96,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 40.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 322,
+     "peak_memory_gb": 1.96,
+     "ref_chars": 4205,
+     "hyp_chars": 4161,
+     "extra_ratio": 0.9895362663495838,
+     "coverage": 0.8708680142687277,
+     "cer": 0.16837098692033295,
+     "coverage_cer": 0.15600475624256838,
+     "subs": 334,
+     "dels": 209,
+     "insertions_counted": 113,
+     "insertions_excused": 52,
+     "excused_run_count": 1
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_small_libdef_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-small-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_small_libdef_r3 --json clip_whisper_small_libdef_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-small-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_small_libdef_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.24,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.15291
+   },
+   "measures": {
+    "x_realtime": 48.09,
+    "peak_memory_gb": 1.96,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 48.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 209,
+     "peak_memory_gb": 1.96,
+     "ref_chars": 4205,
+     "hyp_chars": 4212,
+     "extra_ratio": 1.00166468489893,
+     "coverage": 0.8844233055885851,
+     "cer": 0.16860879904875148,
+     "coverage_cer": 0.15291319857312724,
+     "subs": 270,
+     "dels": 216,
+     "insertions_counted": 157,
+     "insertions_excused": 66,
+     "excused_run_count": 1
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_tiny_libdef_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-tiny-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_tiny_libdef_r1 --json clip_whisper_tiny_libdef_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-tiny-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_tiny_libdef_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.97,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.21,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.33484
+   },
+   "measures": {
+    "x_realtime": 77.01,
+    "peak_memory_gb": 1.08,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 77.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 586,
+     "peak_memory_gb": 1.08,
+     "ref_chars": 4205,
+     "hyp_chars": 3983,
+     "extra_ratio": 0.947205707491082,
+     "coverage": 0.7129607609988109,
+     "cer": 0.3348394768133175,
+     "coverage_cer": 0.3348394768133175,
+     "subs": 784,
+     "dels": 423,
+     "insertions_counted": 201,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_tiny_libdef_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-tiny-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_tiny_libdef_r2 --json clip_whisper_tiny_libdef_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-tiny-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_tiny_libdef_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.99,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.17,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.35125
+   },
+   "measures": {
+    "x_realtime": 89.53,
+    "peak_memory_gb": 1.08,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 89.5,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 471,
+     "peak_memory_gb": 1.08,
+     "ref_chars": 4205,
+     "hyp_chars": 4327,
+     "extra_ratio": 1.0290130796670631,
+     "coverage": 0.7146254458977408,
+     "cer": 0.3759809750297265,
+     "coverage_cer": 0.3512485136741974,
+     "subs": 941,
+     "dels": 259,
+     "insertions_counted": 277,
+     "insertions_excused": 104,
+     "excused_run_count": 1
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_tiny_libdef_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-tiny-mlx --language ja --min-cut 30 --min-cut-words 6 --label clip_whisper_tiny_libdef_r3 --json clip_whisper_tiny_libdef_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-tiny-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_tiny_libdef_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.27,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.22,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.33199
+   },
+   "measures": {
+    "x_realtime": 99.03,
+    "peak_memory_gb": 1.08,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 99.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 376,
+     "peak_memory_gb": 1.08,
+     "ref_chars": 4205,
+     "hyp_chars": 4296,
+     "extra_ratio": 1.021640903686088,
+     "coverage": 0.7326991676575505,
+     "cer": 0.3467300832342449,
+     "coverage_cer": 0.33198573127229486,
+     "subs": 881,
+     "dels": 243,
+     "insertions_counted": 272,
+     "insertions_excused": 62,
+     "excused_run_count": 1
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_turbo_nocond_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-large-v3-turbo --language ja --no-condition --min-cut 30 --min-cut-words 6 --label clip_whisper_turbo_nocond_r1 --json clip_whisper_turbo_nocond_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-large-v3-turbo",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_turbo_nocond_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.66,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.22,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.10416
+   },
+   "measures": {
+    "x_realtime": 72.87,
+    "peak_memory_gb": 3.01,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 72.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 273,
+     "peak_memory_gb": 3.01,
+     "ref_chars": 4205,
+     "hyp_chars": 4068,
+     "extra_ratio": 0.9674197384066587,
+     "coverage": 0.9131985731272295,
+     "cer": 0.10416171224732461,
+     "coverage_cer": 0.10416171224732461,
+     "subs": 155,
+     "dels": 210,
+     "insertions_counted": 73,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_turbo_nocond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-large-v3-turbo --language ja --no-condition --min-cut 30 --min-cut-words 6 --label clip_whisper_turbo_nocond_r2 --json clip_whisper_turbo_nocond_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-large-v3-turbo",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_turbo_nocond_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.79,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.17,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.10416
+   },
+   "measures": {
+    "x_realtime": 70.46,
+    "peak_memory_gb": 3.01,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 70.5,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 273,
+     "peak_memory_gb": 3.01,
+     "ref_chars": 4205,
+     "hyp_chars": 4068,
+     "extra_ratio": 0.9674197384066587,
+     "coverage": 0.9131985731272295,
+     "cer": 0.10416171224732461,
+     "coverage_cer": 0.10416171224732461,
+     "subs": 155,
+     "dels": 210,
+     "insertions_counted": 73,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_whisper_turbo_nocond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model mlx-community/whisper-large-v3-turbo --language ja --no-condition --min-cut 30 --min-cut-words 6 --label clip_whisper_turbo_nocond_r3 --json clip_whisper_turbo_nocond_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "mlx-community/whisper-large-v3-turbo",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "clip_whisper_turbo_nocond_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.99,
+    "cpu_count": 24,
+    "swap_used_mb": 5457.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.22,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.10416
+   },
+   "measures": {
+    "x_realtime": 70.17,
+    "peak_memory_gb": 3.01,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 70.2,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 273,
+     "peak_memory_gb": 3.01,
+     "ref_chars": 4205,
+     "hyp_chars": 4068,
+     "extra_ratio": 0.9674197384066587,
+     "coverage": 0.9131985731272295,
+     "cer": 0.10416171224732461,
+     "coverage_cer": 0.10416171224732461,
+     "subs": 155,
+     "dels": 210,
+     "insertions_counted": 73,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "clip_kotoba_c10_r1",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label clip_kotoba_c10_r1 --json clip_kotoba_c10_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "clip_kotoba_c10_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.18644
+   },
+   "measures": {
+    "x_realtime": 46.41,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 46.4,
+     "requested_language": "ja",
+     "windows": 94,
+     "segments": 267,
+     "ref_chars": 4205,
+     "hyp_chars": 3858,
+     "extra_ratio": 0.9174791914387633,
+     "coverage": 0.8361474435196194,
+     "cer": 0.18644470868014268,
+     "coverage_cer": 0.18644470868014268,
+     "subs": 247,
+     "dels": 442,
+     "insertions_counted": 95,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "clip_kotoba_c10_r2",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label clip_kotoba_c10_r2 --json clip_kotoba_c10_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "clip_kotoba_c10_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.18644
+   },
+   "measures": {
+    "x_realtime": 46.96,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 47.0,
+     "requested_language": "ja",
+     "windows": 94,
+     "segments": 267,
+     "ref_chars": 4205,
+     "hyp_chars": 3858,
+     "extra_ratio": 0.9174791914387633,
+     "coverage": 0.8361474435196194,
+     "cer": 0.18644470868014268,
+     "coverage_cer": 0.18644470868014268,
+     "subs": 247,
+     "dels": 442,
+     "insertions_counted": 95,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "clip_kotoba_c10_r3",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label clip_kotoba_c10_r3 --json clip_kotoba_c10_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "clip_kotoba_c10_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.18644
+   },
+   "measures": {
+    "x_realtime": 46.45,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 46.5,
+     "requested_language": "ja",
+     "windows": 94,
+     "segments": 267,
+     "ref_chars": 4205,
+     "hyp_chars": 3858,
+     "extra_ratio": 0.9174791914387633,
+     "coverage": 0.8361474435196194,
+     "cer": 0.18644470868014268,
+     "coverage_cer": 0.18644470868014268,
+     "subs": 247,
+     "dels": 442,
+     "insertions_counted": 95,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "clip_kotoba_c20_r1",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 20.0 --language ja --min-cut 30 --min-cut-words 6 --label clip_kotoba_c20_r1 --json clip_kotoba_c20_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 20.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "clip_kotoba_c20_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.22045
+   },
+   "measures": {
+    "x_realtime": 76.72,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 76.7,
+     "requested_language": "ja",
+     "windows": 47,
+     "segments": 251,
+     "ref_chars": 4205,
+     "hyp_chars": 3764,
+     "extra_ratio": 0.8951248513674197,
+     "coverage": 0.8068965517241379,
+     "cer": 0.22045184304399523,
+     "coverage_cer": 0.22045184304399523,
+     "subs": 256,
+     "dels": 556,
+     "insertions_counted": 115,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "clip_kotoba_c20_r2",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 20.0 --language ja --min-cut 30 --min-cut-words 6 --label clip_kotoba_c20_r2 --json clip_kotoba_c20_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 20.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "clip_kotoba_c20_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.22045
+   },
+   "measures": {
+    "x_realtime": 77.23,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 77.2,
+     "requested_language": "ja",
+     "windows": 47,
+     "segments": 251,
+     "ref_chars": 4205,
+     "hyp_chars": 3764,
+     "extra_ratio": 0.8951248513674197,
+     "coverage": 0.8068965517241379,
+     "cer": 0.22045184304399523,
+     "coverage_cer": 0.22045184304399523,
+     "subs": 256,
+     "dels": 556,
+     "insertions_counted": 115,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "clip_kotoba_c20_r3",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 20.0 --language ja --min-cut 30 --min-cut-words 6 --label clip_kotoba_c20_r3 --json clip_kotoba_c20_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 20.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "clip_kotoba_c20_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.22045
+   },
+   "measures": {
+    "x_realtime": 77.82,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 77.8,
+     "requested_language": "ja",
+     "windows": 47,
+     "segments": 251,
+     "ref_chars": 4205,
+     "hyp_chars": 3764,
+     "extra_ratio": 0.8951248513674197,
+     "coverage": 0.8068965517241379,
+     "cer": 0.22045184304399523,
+     "coverage_cer": 0.22045184304399523,
+     "subs": 256,
+     "dels": 556,
+     "insertions_counted": 115,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  }
+ ]
+}

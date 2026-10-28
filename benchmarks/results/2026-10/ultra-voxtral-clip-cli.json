@@ -1,0 +1,1080 @@
+{
+ "group": "ultra-voxtral-clip-cli",
+ "question": "Voxtral CLI decodes of the 935s clip: chunk length, overlap, KV precision, the weight-precision ladder at 60s / batch 16, fp16 at 30s / batch 32 / overlap 8, an instruction prompt, delay 480 against 2400ms, 8kHz round trip and 1.25x time-stretch, -14dB input with gain none and auto; and their rescore",
+ "docs": [
+  "docs/benchmarks/chunking.md",
+  "docs/benchmarks/quantization.md",
+  "docs/benchmarks/delay.md",
+  "docs/benchmarks/input-level.md",
+  "docs/benchmarks/prompt.md",
+  "docs/benchmarks/reference/peak-memory.md",
+  "RESULTS.md"
+ ],
+ "note": "In the commands $PY is the repo venv python, $CLIP the 935s clip (bench_out/corpus_timed/632a295d981d.wav), $REF its reference subtitles (the .srt beside it) and $D the queue directory bench_out/q7_20261015; hypotheses are not saved. The clip variants are corpus.json derived inputs clipattn14, clip8k and clipstretch125. CER (plain, kana, lenient) of every decode is the score_clip run (rescore_all.py over the written SRTs); the stats carry encode_s, decode_s, steps and peak memory.",
+ "runs": [
+  {
+   "run": "hk_attn14_gainauto",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $D/clipvar/clipattn14.wav --chunk-seconds 30 --max-batch 32 --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain auto -f srt -o $D/hyp/hk_attn14_gainauto.srt --stats-json $D/hk_attn14_gainauto.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 29.857997916871682,
+    "x_realtime": 31.31826906490633,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 32,
+    "chunk_seconds": 30.0,
+    "batch": 32,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "auto",
+    "cues": 207,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5278554160613567,
+    "peak_memory_gb": 7.22,
+    "encode_s": 11.065111625008285,
+    "decode_s": 15.647699250141159,
+    "steps": 447
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_attn14_gainnone",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $D/clipvar/clipattn14.wav --chunk-seconds 30 --max-batch 32 --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_attn14_gainnone.srt --stats-json $D/hk_attn14_gainnone.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 31.440758999902755,
+    "x_realtime": 29.741674254838827,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 32,
+    "chunk_seconds": 30.0,
+    "batch": 32,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 208,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5468916250392795,
+    "peak_memory_gb": 7.22,
+    "encode_s": 11.065813875058666,
+    "decode_s": 17.251513625029474,
+    "steps": 447
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c30b32_kv0",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 30 --max-batch 32 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c30b32_kv0.srt --stats-json $D/hk_c30b32_kv0.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 30.514255875023082,
+    "x_realtime": 30.64471951503201,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 32,
+    "chunk_seconds": 30.0,
+    "batch": 32,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.9078138328623027,
+    "peak_memory_gb": 9.46,
+    "encode_s": 11.076361834071577,
+    "decode_s": 15.970628542127088,
+    "steps": 446
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c30b32_kv8_gainauto",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 30 --max-batch 32 --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain auto -f srt -o $D/hyp/hk_c30b32_kv8_gainauto.srt --stats-json $D/hk_c30b32_kv8_gainauto.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 31.04134766687639,
+    "x_realtime": 30.124362593246154,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 32,
+    "chunk_seconds": 30.0,
+    "batch": 32,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "auto",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5623334168922156,
+    "peak_memory_gb": 7.22,
+    "encode_s": 11.067002000054345,
+    "decode_s": 16.811779791023582,
+    "steps": 446
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c30b32_kv8_ov4",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 30 --max-batch 32 --kv-bits 8 --overlap-seconds 4 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c30b32_kv8_ov4.srt --stats-json $D/hk_c30b32_kv8_ov4.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 33.217694374965504,
+    "x_realtime": 28.15068384772479,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 32,
+    "chunk_seconds": 30.0,
+    "batch": 32,
+    "overlap_seconds": 4.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.543093458050862,
+    "peak_memory_gb": 7.39,
+    "encode_s": 12.231782999821007,
+    "decode_s": 17.751745958114043,
+    "steps": 496
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c30b32_kv8_ov8_fp16",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --quantization fp16 --chunk-seconds 30 --max-batch 32 --kv-bits 8 --overlap-seconds 8 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c30b32_kv8_ov8_fp16.srt --stats-json $D/hk_c30b32_kv8_ov8_fp16.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 55.63473775004968,
+    "x_realtime": 16.807858728500342,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16",
+    "quantization": "fp16",
+    "weights_gb": 8.9,
+    "chunks": 32,
+    "chunk_seconds": 30.0,
+    "batch": 32,
+    "overlap_seconds": 8.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.7193670829292387,
+    "peak_memory_gb": 13.37,
+    "encode_s": 14.540573125006631,
+    "decode_s": 37.68248291593045,
+    "steps": 546
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c30b32_kv8_ov8",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 30 --max-batch 32 --kv-bits 8 --overlap-seconds 8 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c30b32_kv8_ov8.srt --stats-json $D/hk_c30b32_kv8_ov8.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 35.96012549987063,
+    "x_realtime": 26.00382505626584,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 32,
+    "chunk_seconds": 30.0,
+    "batch": 32,
+    "overlap_seconds": 8.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 207,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5190554589498788,
+    "peak_memory_gb": 7.43,
+    "encode_s": 13.603276958921924,
+    "decode_s": 19.263273125048727,
+    "steps": 546
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c30b32_kv8",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 30 --max-batch 32 --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c30b32_kv8.srt --stats-json $D/hk_c30b32_kv8.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 31.313664542045444,
+    "x_realtime": 29.86238839099852,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 32,
+    "chunk_seconds": 30.0,
+    "batch": 32,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5264277081005275,
+    "peak_memory_gb": 7.22,
+    "encode_s": 11.065049915807322,
+    "decode_s": 17.14906591712497,
+    "steps": 446
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b16_kv0_4bit",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c60b16_kv0_4bit.srt --stats-json $D/hk_c60b16_kv0_4bit.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 43.17849095794372,
+    "x_realtime": 21.6566348604169,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.4983389580156654,
+    "peak_memory_gb": 9.36,
+    "encode_s": 10.671366416150704,
+    "decode_s": 30.085546832997352,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b16_kv0_8bit",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --model models/voxtral-8bit --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c60b16_kv0_8bit.srt --stats-json $D/hk_c60b16_kv0_8bit.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 43.022898874944076,
+    "x_realtime": 21.734955964220006,
+    "model": "models/voxtral-8bit",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 208,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.8697426249273121,
+    "peak_memory_gb": 9.47,
+    "encode_s": 11.027954832883552,
+    "decode_s": 29.191734042018652,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b16_kv0_8k16k",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $D/clipvar/clip8k.wav --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c60b16_kv0_8k16k.srt --stats-json $D/hk_c60b16_kv0_8k16k.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.100875,
+    "wall_s": 43.61199999996461,
+    "x_realtime": 21.441366481719683,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 213,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 1.071367541095242,
+    "peak_memory_gb": 9.36,
+    "encode_s": 10.563985124928877,
+    "decode_s": 30.020314457826316,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b16_kv0_atempo125",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $D/clipvar/clipstretch125.wav --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c60b16_kv0_atempo125.srt --stats-json $D/hk_c60b16_kv0_atempo125.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 748.0608125,
+    "wall_s": 39.602960540913045,
+    "x_realtime": 18.889012394090916,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 13,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 185,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5338228340260684,
+    "peak_memory_gb": 8.75,
+    "encode_s": 8.481778874993324,
+    "decode_s": 28.865124499890953,
+    "steps": 806
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b16_kv0_fp16",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --quantization fp16 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c60b16_kv0_fp16.srt --stats-json $D/hk_c60b16_kv0_fp16.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 67.16406404203735,
+    "x_realtime": 13.922635948812287,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16",
+    "quantization": "fp16",
+    "weights_gb": 8.9,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 208,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.8892396250739694,
+    "peak_memory_gb": 15.28,
+    "encode_s": 11.05132595798932,
+    "decode_s": 53.256710374960676,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b16_kv0_mxfp8",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --model models/voxtral-mxfp8 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c60b16_kv0_mxfp8.srt --stats-json $D/hk_c60b16_kv0_mxfp8.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 42.93126254202798,
+    "x_realtime": 21.78134900143162,
+    "model": "models/voxtral-mxfp8",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 207,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.8416193339508027,
+    "peak_memory_gb": 9.26,
+    "encode_s": 10.778843209147453,
+    "decode_s": 29.288280833978206,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b16_kv0_nvfp4",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --model models/voxtral-nvfp4 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c60b16_kv0_nvfp4.srt --stats-json $D/hk_c60b16_kv0_nvfp4.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 43.24129566689953,
+    "x_realtime": 21.62518023750624,
+    "model": "models/voxtral-nvfp4",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 204,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5466400000732392,
+    "peak_memory_gb": 7.18,
+    "encode_s": 10.747884250013158,
+    "decode_s": 29.992355958092958,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b16_kv8_instr",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 60 --max-batch 16 --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain none --prompt \"Transcribe the Japanese audio accurately.\" -f srt -o $D/hyp/hk_c60b16_kv8_instr.srt --stats-json $D/hk_c60b16_kv8_instr.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 43.775691540911794,
+    "x_realtime": 21.361188814711824,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 199,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.87455645785667,
+    "peak_memory_gb": 6.75,
+    "encode_s": 10.552360374946147,
+    "decode_s": 29.74506170814857,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b16_kv8_ov8",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 60 --max-batch 16 --kv-bits 8 --overlap-seconds 8 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c60b16_kv8_ov8.srt --stats-json $D/hk_c60b16_kv8_ov8.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 49.36993720801547,
+    "x_realtime": 18.940692765316733,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 8.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 205,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5365997499320656,
+    "peak_memory_gb": 6.79,
+    "encode_s": 11.707395999925211,
+    "decode_s": 35.22168487496674,
+    "steps": 916
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b16_kv8",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 60 --max-batch 16 --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c60b16_kv8.srt --stats-json $D/hk_c60b16_kv8.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 44.47949450020678,
+    "x_realtime": 21.023188842572228,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 207,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5614804998040199,
+    "peak_memory_gb": 6.75,
+    "encode_s": 10.560986917000264,
+    "decode_s": 31.50530004198663,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b8_kv0_d2400",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 60 --max-batch 8 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c60b8_kv0_d2400.srt --stats-json $D/hk_c60b8_kv0_d2400.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 56.447674500057474,
+    "x_realtime": 16.56579869378052,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 8,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.508568667108193,
+    "peak_memory_gb": 7.58,
+    "encode_s": 10.629457958042622,
+    "decode_s": 43.43911699997261,
+    "steps": 1592
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c60b8_kv0_d480",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 60 --max-batch 8 --no-kv-quant --overlap-seconds 0 --delay-ms 480 --gain none -f srt -o $D/hyp/hk_c60b8_kv0_d480.srt --stats-json $D/hk_c60b8_kv0_d480.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 55.63047179207206,
+    "x_realtime": 16.80914761958323,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 8,
+    "overlap_seconds": 0.0,
+    "delay_ms": 480,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 214,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5537829999811947,
+    "peak_memory_gb": 7.57,
+    "encode_s": 10.31043399986811,
+    "decode_s": 43.069242167286575,
+    "steps": 1592
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c90b16_kv8",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 90 --max-batch 16 --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c90b16_kv8.srt --stats-json $D/hk_c90b16_kv8.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 54.03508754214272,
+    "x_realtime": 17.305437171184405,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 11,
+    "chunk_seconds": 90.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 205,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5501966669689864,
+    "peak_memory_gb": 6.63,
+    "encode_s": 10.149447417119518,
+    "decode_s": 41.695514583960176,
+    "steps": 1194
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "score_clip",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/rescore_all.py $D/hyp/hk_*.srt --reference $REF --no-ci --json $D/score_clip.json",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "reference: 4205 chars, 4772 kana\n\n                  hypothesis      CER   kanaCER  lenientCER\n      hk_attn14_gainauto.srt    8.61%     6.24%       8.30%\n      hk_attn14_gainnone.srt   10.84%     8.45%      10.49%\n           hk_c30b32_kv0.srt    8.66%     6.29%       8.35%\n  hk_c30b32_kv8_gainauto.srt    8.63%     6.27%       8.32%\n       hk_c30b32_kv8_ov4.srt    7.16%     5.39%       6.94%\n  hk_c30b32_kv8_ov8_fp16.srt    7.28%     5.47%       6.97%\n       hk_c30b32_kv8_ov8.srt    7.13%     5.51%       6.92%\n           hk_c30b32_kv8.srt    8.63%     6.27%       8.32%\n      hk_c60b16_kv0_4bit.srt    7.40%     5.49%       7.13%\n      hk_c60b16_kv0_8bit.srt    7.61%     5.60%       7.35%\n     hk_c60b16_kv0_8k16k.srt    8.35%     6.43%       8.09%\n hk_c60b16_kv0_atempo125.srt    9.87%     7.46%       9.66%\n      hk_c60b16_kv0_fp16.srt    7.78%     5.72%       7.51%\n     hk_c60b16_kv0_mxfp8.srt    7.51%     5.57%       7.25%\n     hk_c60b16_kv0_nvfp4.srt    7.75%     5.85%       7.54%\n     hk_c60b16_kv8_instr.srt   13.17%    10.75%      13.01%\n       hk_c60b16_kv8_ov8.srt    7.94%     6.22%       7.73%\n           hk_c60b16_kv8.srt    7.28%     5.39%       7.02%\n      hk_c60b8_kv0_d2400.srt    7.40%     5.49%       7.13%\n       hk_c60b8_kv0_d480.srt   14.74%    12.76%      14.39%\n           hk_c90b16_kv8.srt    7.94%     5.89%       7.68%\n[saved] bench_out/q7_20261015/score_clip.json"
+  }
+ ]
+}

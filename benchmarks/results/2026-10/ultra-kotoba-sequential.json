@@ -1,0 +1,2693 @@
+{
+ "group": "ultra-kotoba-sequential",
+ "question": "kotoba-whisper v2.0 through mlx-whisper's sequential driver on the 5 Japanese files of the 7-file subset and on the 935s clip: the kaiinui npz port and the mlx_asr conversion, condition on previous text on and off, 3 runs each",
+ "docs": [
+  "docs/benchmarks/engines/kotoba.md",
+  "docs/benchmarks/engines/whisper.md",
+  "mlx_asr/models.py",
+  "mlx_asr/cli.py"
+ ],
+ "note": "A third run of the mlx_asr conversion with conditioning (kseq_off_cond_r3) did not finish one file in 5 hours and was stopped; it is not saved. Every run was made after every audio revision in revisions.json, so it used the current copies.",
+ "runs": [
+  {
+   "run": "kseq_npz_cond_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model kaiinui/kotoba-whisper-v2.0-mlx --language ja --min-cut 30 --min-cut-words 6 --label kseq_npz_cond_r1 --json kseq_npz_cond_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_npz_cond_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.9,
+    "cpu_count": 24,
+    "swap_used_mb": 11411.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.89544
+   },
+   "measures": {
+    "x_realtime": 68.61,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 29.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 454,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 607,
+     "extra_ratio": 0.23944773175542405,
+     "coverage": 0.21696252465483234,
+     "cer": 0.7857988165680473,
+     "coverage_cer": 0.7857988165680473,
+     "subs": 50,
+     "dels": 1935,
+     "insertions_counted": 7,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 53.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 389,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 447,
+     "extra_ratio": 0.1932555123216602,
+     "coverage": 0.17380025940337224,
+     "cer": 0.8283614353653265,
+     "coverage_cer": 0.8283614353653265,
+     "subs": 40,
+     "dels": 1871,
+     "insertions_counted": 5,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 167.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 154,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 5,
+     "extra_ratio": 0.0007886435331230284,
+     "coverage": 0.0007886435331230284,
+     "cer": 0.999211356466877,
+     "coverage_cer": 0.999211356466877,
+     "subs": 0,
+     "dels": 6335,
+     "insertions_counted": 0,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 64.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 930,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 1077,
+     "extra_ratio": 0.1437341518750834,
+     "coverage": 0.12131322567729881,
+     "cer": 0.8805551848391833,
+     "coverage_cer": 0.8805551848391833,
+     "subs": 154,
+     "dels": 6430,
+     "insertions_counted": 14,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 67.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 1075,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 1392,
+     "extra_ratio": 0.14160732451678534,
+     "coverage": 0.12034587995930825,
+     "cer": 0.8839267548321464,
+     "coverage_cer": 0.8839267548321464,
+     "subs": 167,
+     "dels": 8480,
+     "insertions_counted": 42,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseq_npz_cond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model kaiinui/kotoba-whisper-v2.0-mlx --language ja --min-cut 30 --min-cut-words 6 --label kseq_npz_cond_r2 --json kseq_npz_cond_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_npz_cond_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.44,
+    "cpu_count": 24,
+    "swap_used_mb": 11371.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.2,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.91151
+   },
+   "measures": {
+    "x_realtime": 69.96,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 40.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 302,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 420,
+     "extra_ratio": 0.16568047337278108,
+     "coverage": 0.15226824457593688,
+     "cer": 0.8512820512820513,
+     "coverage_cer": 0.8512820512820513,
+     "subs": 25,
+     "dels": 2124,
+     "insertions_counted": 9,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 64.3,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 350,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 383,
+     "extra_ratio": 0.16558581928231733,
+     "coverage": 0.13575443147427582,
+     "cer": 0.8672719412019023,
+     "coverage_cer": 0.8672719412019023,
+     "subs": 62,
+     "dels": 1937,
+     "insertions_counted": 7,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 167.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 154,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 5,
+     "extra_ratio": 0.0007886435331230284,
+     "coverage": 0.0007886435331230284,
+     "cer": 0.999211356466877,
+     "coverage_cer": 0.999211356466877,
+     "subs": 0,
+     "dels": 6335,
+     "insertions_counted": 0,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 63.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 796,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 1060,
+     "extra_ratio": 0.14146536767649806,
+     "coverage": 0.11343920992926732,
+     "cer": 0.8884292005872148,
+     "coverage_cer": 0.8884292005872148,
+     "subs": 196,
+     "dels": 6447,
+     "insertions_counted": 14,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 62.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 1165,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 1309,
+     "extra_ratio": 0.13316378433367243,
+     "coverage": 0.10356052899287894,
+     "cer": 0.8984740590030519,
+     "coverage_cer": 0.8984740590030519,
+     "subs": 271,
+     "dels": 8541,
+     "insertions_counted": 20,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseq_npz_cond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model kaiinui/kotoba-whisper-v2.0-mlx --language ja --min-cut 30 --min-cut-words 6 --label kseq_npz_cond_r3 --json kseq_npz_cond_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_npz_cond_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.75,
+    "cpu_count": 24,
+    "swap_used_mb": 11355.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.93245
+   },
+   "measures": {
+    "x_realtime": 78.89,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 24.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 530,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 711,
+     "extra_ratio": 0.2804733727810651,
+     "coverage": 0.22840236686390533,
+     "cer": 0.7759368836291913,
+     "coverage_cer": 0.7759368836291913,
+     "subs": 121,
+     "dels": 1835,
+     "insertions_counted": 11,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 42.5,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 531,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 554,
+     "extra_ratio": 0.2395157803718115,
+     "coverage": 0.20665801988759186,
+     "cer": 0.7963683527885862,
+     "coverage_cer": 0.7963683527885862,
+     "subs": 69,
+     "dels": 1766,
+     "insertions_counted": 7,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 167.5,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 154,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 5,
+     "extra_ratio": 0.0007886435331230284,
+     "coverage": 0.0007886435331230284,
+     "cer": 0.999211356466877,
+     "coverage_cer": 0.999211356466877,
+     "subs": 0,
+     "dels": 6335,
+     "insertions_counted": 0,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 82.4,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 647,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 584,
+     "extra_ratio": 0.07793941011610837,
+     "coverage": 0.06619511544107834,
+     "cer": 0.9346056319231283,
+     "coverage_cer": 0.9346056319231283,
+     "subs": 82,
+     "dels": 6915,
+     "insertions_counted": 6,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 103.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 575,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 464,
+     "extra_ratio": 0.04720244150559512,
+     "coverage": 0.0409969481180061,
+     "cer": 0.9601220752797559,
+     "coverage_cer": 0.9601220752797559,
+     "subs": 50,
+     "dels": 9377,
+     "insertions_counted": 11,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseq_npz_nocond_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model kaiinui/kotoba-whisper-v2.0-mlx --language ja --no-condition --min-cut 30 --min-cut-words 6 --label kseq_npz_nocond_r1 --json kseq_npz_nocond_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_npz_nocond_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.8,
+    "cpu_count": 24,
+    "swap_used_mb": 11411.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.54551
+   },
+   "measures": {
+    "x_realtime": 93.47,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 101.3,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 390,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 2213,
+     "extra_ratio": 0.8729783037475345,
+     "coverage": 0.6575936883629191,
+     "cer": 0.4406311637080868,
+     "coverage_cer": 0.4406311637080868,
+     "subs": 297,
+     "dels": 571,
+     "insertions_counted": 249,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 89.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 811,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 2610,
+     "extra_ratio": 1.1284046692607004,
+     "coverage": 0.6623432771292693,
+     "cer": 0.683960224816256,
+     "coverage_cer": 0.395157803718115,
+     "subs": 277,
+     "dels": 504,
+     "insertions_counted": 133,
+     "insertions_excused": 668,
+     "excused_run_count": 10
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 97.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2029,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 6534,
+     "extra_ratio": 1.0305993690851736,
+     "coverage": 0.6162460567823344,
+     "cer": 0.5962145110410094,
+     "coverage_cer": 0.5247634069400631,
+     "subs": 1280,
+     "dels": 1153,
+     "insertions_counted": 894,
+     "insertions_excused": 453,
+     "excused_run_count": 8
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 89.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2520,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 8215,
+     "extra_ratio": 1.09635659949286,
+     "coverage": 0.6168423862271454,
+     "cer": 0.6903776858401175,
+     "coverage_cer": 0.5282263445882824,
+     "subs": 1291,
+     "dels": 1580,
+     "insertions_counted": 1087,
+     "insertions_excused": 1215,
+     "excused_run_count": 24
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 94.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 3351,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 10733,
+     "extra_ratio": 1.0918616480162766,
+     "coverage": 0.5644964394710071,
+     "cer": 0.7336724313326551,
+     "coverage_cer": 0.6344862665310275,
+     "subs": 2253,
+     "dels": 2028,
+     "insertions_counted": 1956,
+     "insertions_excused": 975,
+     "excused_run_count": 16
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseq_npz_nocond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model kaiinui/kotoba-whisper-v2.0-mlx --language ja --no-condition --min-cut 30 --min-cut-words 6 --label kseq_npz_nocond_r2 --json kseq_npz_nocond_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_npz_nocond_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.2,
+    "cpu_count": 24,
+    "swap_used_mb": 11371.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.23,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.50089
+   },
+   "measures": {
+    "x_realtime": 89.43,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 100.4,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 390,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 2213,
+     "extra_ratio": 0.8729783037475345,
+     "coverage": 0.6575936883629191,
+     "cer": 0.4406311637080868,
+     "coverage_cer": 0.4406311637080868,
+     "subs": 297,
+     "dels": 571,
+     "insertions_counted": 249,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 90.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 769,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 2802,
+     "extra_ratio": 1.2114137483787288,
+     "coverage": 0.6640726329442282,
+     "cer": 0.7163856463467358,
+     "coverage_cer": 0.4180717682663208,
+     "subs": 386,
+     "dels": 391,
+     "insertions_counted": 190,
+     "insertions_excused": 690,
+     "excused_run_count": 8
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 75.5,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2245,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 6557,
+     "extra_ratio": 1.0342271293375394,
+     "coverage": 0.6414826498422713,
+     "cer": 0.5541009463722397,
+     "coverage_cer": 0.49022082018927443,
+     "subs": 1250,
+     "dels": 1023,
+     "insertions_counted": 835,
+     "insertions_excused": 405,
+     "excused_run_count": 10
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 97.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2574,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 7855,
+     "extra_ratio": 1.0483117576404644,
+     "coverage": 0.6141732283464567,
+     "cer": 0.6345922861337248,
+     "coverage_cer": 0.502468971039637,
+     "subs": 1389,
+     "dels": 1502,
+     "insertions_counted": 874,
+     "insertions_excused": 990,
+     "excused_run_count": 14
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 91.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 3273,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 11333,
+     "extra_ratio": 1.1528992878942015,
+     "coverage": 0.5931841302136317,
+     "cer": 0.7636826042726348,
+     "coverage_cer": 0.5416073245167854,
+     "subs": 1994,
+     "dels": 2005,
+     "insertions_counted": 1325,
+     "insertions_excused": 2183,
+     "excused_run_count": 36
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseq_npz_nocond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model kaiinui/kotoba-whisper-v2.0-mlx --language ja --no-condition --min-cut 30 --min-cut-words 6 --label kseq_npz_nocond_r3 --json kseq_npz_nocond_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_npz_nocond_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 4.22,
+    "cpu_count": 24,
+    "swap_used_mb": 11355.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.55144
+   },
+   "measures": {
+    "x_realtime": 88.45,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 100.8,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 390,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 2213,
+     "extra_ratio": 0.8729783037475345,
+     "coverage": 0.6575936883629191,
+     "cer": 0.4406311637080868,
+     "coverage_cer": 0.4406311637080868,
+     "subs": 297,
+     "dels": 571,
+     "insertions_counted": 249,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 80.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 989,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 2584,
+     "extra_ratio": 1.1171638564634674,
+     "coverage": 0.6389969736273238,
+     "cer": 0.6705577172503242,
+     "coverage_cer": 0.5607436230004323,
+     "subs": 390,
+     "dels": 445,
+     "insertions_counted": 462,
+     "insertions_excused": 254,
+     "excused_run_count": 6
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 95.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2038,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 6536,
+     "extra_ratio": 1.0309148264984227,
+     "coverage": 0.616403785488959,
+     "cer": 0.5965299684542587,
+     "coverage_cer": 0.5250788643533123,
+     "subs": 1278,
+     "dels": 1154,
+     "insertions_counted": 897,
+     "insertions_excused": 453,
+     "excused_run_count": 8
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 91.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2515,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 8332,
+     "extra_ratio": 1.1119711730948885,
+     "coverage": 0.6359268650740691,
+     "cer": 0.6722274122514347,
+     "coverage_cer": 0.4979314026424663,
+     "subs": 1258,
+     "dels": 1470,
+     "insertions_counted": 1003,
+     "insertions_excused": 1306,
+     "excused_run_count": 22
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 83.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 3096,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 11064,
+     "extra_ratio": 1.125534079348932,
+     "coverage": 0.5826042726347914,
+     "cer": 0.7293997965412004,
+     "coverage_cer": 0.6356052899287894,
+     "subs": 2270,
+     "dels": 1833,
+     "insertions_counted": 2145,
+     "insertions_excused": 922,
+     "excused_run_count": 18
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseq_off_cond_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --min-cut 30 --min-cut-words 6 --label kseq_off_cond_r1 --json kseq_off_cond_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_off_cond_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.73,
+    "cpu_count": 24,
+    "swap_used_mb": 11403.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.25,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.92129
+   },
+   "measures": {
+    "x_realtime": 74.43,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 69.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 191,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 232,
+     "extra_ratio": 0.09151873767258382,
+     "coverage": 0.07731755424063116,
+     "cer": 0.9234714003944773,
+     "coverage_cer": 0.9234714003944773,
+     "subs": 34,
+     "dels": 2305,
+     "insertions_counted": 2,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 58.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 418,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 482,
+     "extra_ratio": 0.2083873757025508,
+     "coverage": 0.16990920881971466,
+     "cer": 0.8313878080415046,
+     "coverage_cer": 0.8313878080415046,
+     "subs": 86,
+     "dels": 1834,
+     "insertions_counted": 3,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 167.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 154,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 5,
+     "extra_ratio": 0.0007886435331230284,
+     "coverage": 0.0007886435331230284,
+     "cer": 0.999211356466877,
+     "coverage_cer": 0.999211356466877,
+     "subs": 0,
+     "dels": 6335,
+     "insertions_counted": 0,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 51.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 1283,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 1378,
+     "extra_ratio": 0.1839049779794475,
+     "coverage": 0.1317229414119845,
+     "cer": 0.8724142533030829,
+     "coverage_cer": 0.8724142533030829,
+     "subs": 360,
+     "dels": 6146,
+     "insertions_counted": 31,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 84.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 846,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 1084,
+     "extra_ratio": 0.11027466937945066,
+     "coverage": 0.0733468972533062,
+     "cer": 0.9288911495422177,
+     "coverage_cer": 0.9288911495422177,
+     "subs": 341,
+     "dels": 8768,
+     "insertions_counted": 22,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseq_off_cond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --min-cut 30 --min-cut-words 6 --label kseq_off_cond_r2 --json kseq_off_cond_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_off_cond_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.74,
+    "cpu_count": 24,
+    "swap_used_mb": 11363.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.2,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.95528
+   },
+   "measures": {
+    "x_realtime": 96.98,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 42.2,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 293,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 407,
+     "extra_ratio": 0.16055226824457594,
+     "coverage": 0.14043392504930965,
+     "cer": 0.8607495069033531,
+     "coverage_cer": 0.8607495069033531,
+     "subs": 48,
+     "dels": 2131,
+     "insertions_counted": 3,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 73.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 250,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 225,
+     "extra_ratio": 0.09727626459143969,
+     "coverage": 0.07220060527453523,
+     "cer": 0.9303934284479032,
+     "coverage_cer": 0.9303934284479032,
+     "subs": 52,
+     "dels": 2094,
+     "insertions_counted": 6,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 167.3,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 154,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 5,
+     "extra_ratio": 0.0007886435331230284,
+     "coverage": 0.0007886435331230284,
+     "cer": 0.999211356466877,
+     "coverage_cer": 0.999211356466877,
+     "subs": 0,
+     "dels": 6335,
+     "insertions_counted": 0,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 85.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 610,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 629,
+     "extra_ratio": 0.08394501534765782,
+     "coverage": 0.06419324703056185,
+     "cer": 0.9359402108634726,
+     "coverage_cer": 0.9359402108634726,
+     "subs": 147,
+     "dels": 6865,
+     "insertions_counted": 1,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 112.5,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 607,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 381,
+     "extra_ratio": 0.0387589013224822,
+     "coverage": 0.028382502543234996,
+     "cer": 0.9719226856561546,
+     "coverage_cer": 0.9719226856561546,
+     "subs": 99,
+     "dels": 9452,
+     "insertions_counted": 3,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseq_off_nocond_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --no-condition --min-cut 30 --min-cut-words 6 --label kseq_off_nocond_r1 --json kseq_off_nocond_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_off_nocond_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.17,
+    "cpu_count": 24,
+    "swap_used_mb": 11379.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.2,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.56575
+   },
+   "measures": {
+    "x_realtime": 89.24,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 100.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 390,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 2213,
+     "extra_ratio": 0.8729783037475345,
+     "coverage": 0.6575936883629191,
+     "cer": 0.4406311637080868,
+     "coverage_cer": 0.4406311637080868,
+     "subs": 297,
+     "dels": 571,
+     "insertions_counted": 249,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 85.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 943,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 2632,
+     "extra_ratio": 1.1379161262429744,
+     "coverage": 0.6255944660613921,
+     "cer": 0.6740164288802422,
+     "coverage_cer": 0.6152183311716386,
+     "subs": 492,
+     "dels": 374,
+     "insertions_counted": 557,
+     "insertions_excused": 136,
+     "excused_run_count": 3
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 81.4,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2068,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 6414,
+     "extra_ratio": 1.0116719242902208,
+     "coverage": 0.6315457413249211,
+     "cer": 0.5744479495268139,
+     "coverage_cer": 0.512776025236593,
+     "subs": 1104,
+     "dels": 1232,
+     "insertions_counted": 915,
+     "insertions_excused": 391,
+     "excused_run_count": 7
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 92.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2685,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 7647,
+     "extra_ratio": 1.0205525156813025,
+     "coverage": 0.5940210863472575,
+     "cer": 0.6259175230214867,
+     "coverage_cer": 0.5411717603096223,
+     "subs": 1548,
+     "dels": 1494,
+     "insertions_counted": 1013,
+     "insertions_excused": 635,
+     "excused_run_count": 9
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 91.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 3106,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 11536,
+     "extra_ratio": 1.1735503560528993,
+     "coverage": 0.5844354018311292,
+     "cer": 0.7730417090539166,
+     "coverage_cer": 0.6392675483214649,
+     "subs": 2277,
+     "dels": 1808,
+     "insertions_counted": 2199,
+     "insertions_excused": 1315,
+     "excused_run_count": 29
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseq_off_nocond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --no-condition --min-cut 30 --min-cut-words 6 --label kseq_off_nocond_r2 --json kseq_off_nocond_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_off_nocond_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.46,
+    "cpu_count": 24,
+    "swap_used_mb": 11363.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.2,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.5098
+   },
+   "measures": {
+    "x_realtime": 89.88,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 100.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 390,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 2213,
+     "extra_ratio": 0.8729783037475345,
+     "coverage": 0.6575936883629191,
+     "cer": 0.4406311637080868,
+     "coverage_cer": 0.4406311637080868,
+     "subs": 297,
+     "dels": 571,
+     "insertions_counted": 249,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 80.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 863,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 2835,
+     "extra_ratio": 1.2256809338521402,
+     "coverage": 0.6688283614353653,
+     "cer": 0.7310851707738867,
+     "coverage_cer": 0.40639861651534803,
+     "subs": 363,
+     "dels": 403,
+     "insertions_counted": 174,
+     "insertions_excused": 751,
+     "excused_run_count": 12
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 95.2,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2026,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 6556,
+     "extra_ratio": 1.0340694006309148,
+     "coverage": 0.6168769716088328,
+     "cer": 0.5990536277602524,
+     "coverage_cer": 0.5228706624605678,
+     "subs": 1276,
+     "dels": 1153,
+     "insertions_counted": 886,
+     "insertions_excused": 483,
+     "excused_run_count": 9
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 91.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2559,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 8189,
+     "extra_ratio": 1.0928866942479647,
+     "coverage": 0.6563459228613372,
+     "cer": 0.623515280928867,
+     "coverage_cer": 0.4973975710663286,
+     "subs": 1174,
+     "dels": 1401,
+     "insertions_counted": 1152,
+     "insertions_excused": 945,
+     "excused_run_count": 13
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 87.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 3336,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 11280,
+     "extra_ratio": 1.1475076297049847,
+     "coverage": 0.592472024415056,
+     "cer": 0.7473041709053917,
+     "coverage_cer": 0.553001017293998,
+     "subs": 2116,
+     "dels": 1890,
+     "insertions_counted": 1430,
+     "insertions_excused": 1910,
+     "excused_run_count": 27
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseq_off_nocond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus7/c18b2f5aa2a2.wav bench_out/corpus7/c18b2f5aa2a2_transcript.txt --pair bench_out/corpus7/9aefd8f2352e.wav bench_out/corpus7/9aefd8f2352e_transcript.txt --pair bench_out/corpus7/07fd66556725.wav bench_out/corpus7/07fd66556725_transcript.txt --pair bench_out/corpus7/c29657df52e9.wav bench_out/corpus7/c29657df52e9_transcript.txt --pair bench_out/corpus7/cbeb19543902.wav bench_out/corpus7/cbeb19543902_transcript.txt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --no-condition --min-cut 30 --min-cut-words 6 --label kseq_off_nocond_r3 --json kseq_off_nocond_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus7/c18b2f5aa2a2.wav",
+      "bench_out/corpus7/c18b2f5aa2a2_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/9aefd8f2352e.wav",
+      "bench_out/corpus7/9aefd8f2352e_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/07fd66556725.wav",
+      "bench_out/corpus7/07fd66556725_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/c29657df52e9.wav",
+      "bench_out/corpus7/c29657df52e9_transcript.txt"
+     ],
+     [
+      "bench_out/corpus7/cbeb19543902.wav",
+      "bench_out/corpus7/cbeb19543902_transcript.txt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseq_off_nocond_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.07,
+    "cpu_count": 24,
+    "swap_used_mb": 10899.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.55414
+   },
+   "measures": {
+    "x_realtime": 95.27,
+    "peak_memory_gb": 5.42,
+    "files_scored": 5,
+    "files_expected": 5,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "unit": "char",
+     "x_realtime": 100.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 390,
+     "peak_memory_gb": 2.66,
+     "ref_chars": 2535,
+     "hyp_chars": 2213,
+     "extra_ratio": 0.8729783037475345,
+     "coverage": 0.6575936883629191,
+     "cer": 0.4406311637080868,
+     "coverage_cer": 0.4406311637080868,
+     "subs": 297,
+     "dels": 571,
+     "insertions_counted": 249,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    },
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "unit": "char",
+     "x_realtime": 97.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 829,
+     "peak_memory_gb": 3.07,
+     "ref_chars": 2313,
+     "hyp_chars": 2595,
+     "extra_ratio": 1.1219195849546044,
+     "coverage": 0.6476437527021185,
+     "cer": 0.6744487678339819,
+     "coverage_cer": 0.4236921746649373,
+     "subs": 352,
+     "dels": 463,
+     "insertions_counted": 165,
+     "insertions_excused": 580,
+     "excused_run_count": 8
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "unit": "char",
+     "x_realtime": 96.4,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2042,
+     "peak_memory_gb": 3.92,
+     "ref_chars": 6340,
+     "hyp_chars": 6537,
+     "extra_ratio": 1.0310725552050473,
+     "coverage": 0.6165615141955836,
+     "cer": 0.5965299684542587,
+     "coverage_cer": 0.5203470031545742,
+     "subs": 1277,
+     "dels": 1154,
+     "insertions_counted": 868,
+     "insertions_excused": 483,
+     "excused_run_count": 9
+    },
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "unit": "char",
+     "x_realtime": 96.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 2406,
+     "peak_memory_gb": 4.44,
+     "ref_chars": 7493,
+     "hyp_chars": 7938,
+     "extra_ratio": 1.0593887628453222,
+     "coverage": 0.6197784598959029,
+     "cer": 0.6703590017349527,
+     "coverage_cer": 0.5120779394101161,
+     "subs": 1120,
+     "dels": 1729,
+     "insertions_counted": 988,
+     "insertions_excused": 1186,
+     "excused_run_count": 20
+    },
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "unit": "char",
+     "x_realtime": 92.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 3230,
+     "peak_memory_gb": 5.42,
+     "ref_chars": 9830,
+     "hyp_chars": 11006,
+     "extra_ratio": 1.1196337741607325,
+     "coverage": 0.5544252288911495,
+     "cer": 0.7521871820956256,
+     "coverage_cer": 0.6679552390640895,
+     "subs": 2542,
+     "dels": 1838,
+     "insertions_counted": 2186,
+     "insertions_excused": 828,
+     "excused_run_count": 19
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseqclip_npz_cond_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kaiinui/kotoba-whisper-v2.0-mlx --language ja --min-cut 30 --min-cut-words 6 --label kseqclip_npz_cond_r1 --json kseqclip_npz_cond_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseqclip_npz_cond_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.75,
+    "cpu_count": 24,
+    "swap_used_mb": 11379.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.98121
+   },
+   "measures": {
+    "x_realtime": 147.55,
+    "peak_memory_gb": 2.91,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 147.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 53,
+     "peak_memory_gb": 2.91,
+     "ref_chars": 4205,
+     "hyp_chars": 81,
+     "extra_ratio": 0.019262782401902497,
+     "coverage": 0.0187871581450654,
+     "cer": 0.9812128418549346,
+     "coverage_cer": 0.9812128418549346,
+     "subs": 2,
+     "dels": 4124,
+     "insertions_counted": 0,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseqclip_npz_cond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kaiinui/kotoba-whisper-v2.0-mlx --language ja --min-cut 30 --min-cut-words 6 --label kseqclip_npz_cond_r2 --json kseqclip_npz_cond_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseqclip_npz_cond_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.84,
+    "cpu_count": 24,
+    "swap_used_mb": 11355.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.88038
+   },
+   "measures": {
+    "x_realtime": 36.46,
+    "peak_memory_gb": 2.91,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 36.5,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 440,
+     "peak_memory_gb": 2.91,
+     "ref_chars": 4205,
+     "hyp_chars": 574,
+     "extra_ratio": 0.13650416171224733,
+     "coverage": 0.12057074910820452,
+     "cer": 0.8803804994054697,
+     "coverage_cer": 0.8803804994054697,
+     "subs": 63,
+     "dels": 3635,
+     "insertions_counted": 4,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseqclip_npz_cond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kaiinui/kotoba-whisper-v2.0-mlx --language ja --min-cut 30 --min-cut-words 6 --label kseqclip_npz_cond_r3 --json kseqclip_npz_cond_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kaiinui/kotoba-whisper-v2.0-mlx",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseqclip_npz_cond_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.45,
+    "cpu_count": 24,
+    "swap_used_mb": 10899.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.85589
+   },
+   "measures": {
+    "x_realtime": 28.09,
+    "peak_memory_gb": 2.91,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 28.1,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 576,
+     "peak_memory_gb": 2.91,
+     "ref_chars": 4205,
+     "hyp_chars": 745,
+     "extra_ratio": 0.17717003567181927,
+     "coverage": 0.14958382877526755,
+     "cer": 0.855885850178359,
+     "coverage_cer": 0.855885850178359,
+     "subs": 93,
+     "dels": 3483,
+     "insertions_counted": 23,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseqclip_off_cond_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --min-cut 30 --min-cut-words 6 --label kseqclip_off_cond_r1 --json kseqclip_off_cond_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseqclip_off_cond_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.22,
+    "cpu_count": 24,
+    "swap_used_mb": 11379.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.80024
+   },
+   "measures": {
+    "x_realtime": 21.93,
+    "peak_memory_gb": 2.91,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 21.9,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 823,
+     "peak_memory_gb": 2.91,
+     "ref_chars": 4205,
+     "hyp_chars": 1034,
+     "extra_ratio": 0.24589774078478002,
+     "coverage": 0.2023781212841855,
+     "cer": 0.8002378121284186,
+     "coverage_cer": 0.8002378121284186,
+     "subs": 172,
+     "dels": 3182,
+     "insertions_counted": 11,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseqclip_off_cond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --min-cut 30 --min-cut-words 6 --label kseqclip_off_cond_r2 --json kseqclip_off_cond_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseqclip_off_cond_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.53,
+    "cpu_count": 24,
+    "swap_used_mb": 11355.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.84281
+   },
+   "measures": {
+    "x_realtime": 31.95,
+    "peak_memory_gb": 2.91,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 32.0,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 389,
+     "peak_memory_gb": 2.91,
+     "ref_chars": 4205,
+     "hyp_chars": 1217,
+     "extra_ratio": 0.28941736028537457,
+     "coverage": 0.16456599286563614,
+     "cer": 0.8428061831153388,
+     "coverage_cer": 0.8428061831153388,
+     "subs": 494,
+     "dels": 3019,
+     "insertions_counted": 31,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseqclip_off_cond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --min-cut 30 --min-cut-words 6 --label kseqclip_off_cond_r3 --json kseqclip_off_cond_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": false,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseqclip_off_cond_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.62,
+    "cpu_count": 24,
+    "swap_used_mb": 10891.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.25,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.95767
+   },
+   "measures": {
+    "x_realtime": 93.63,
+    "peak_memory_gb": 2.91,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 93.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 62,
+     "peak_memory_gb": 2.91,
+     "ref_chars": 4205,
+     "hyp_chars": 199,
+     "extra_ratio": 0.04732461355529132,
+     "coverage": 0.04280618311533888,
+     "cer": 0.9576694411414982,
+     "coverage_cer": 0.9576694411414982,
+     "subs": 17,
+     "dels": 4008,
+     "insertions_counted": 2,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseqclip_off_nocond_r1",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --no-condition --min-cut 30 --min-cut-words 6 --label kseqclip_off_nocond_r1 --json kseqclip_off_nocond_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseqclip_off_nocond_r1"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.9,
+    "cpu_count": 24,
+    "swap_used_mb": 11371.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.2,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.439
+   },
+   "measures": {
+    "x_realtime": 76.74,
+    "peak_memory_gb": 2.91,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 76.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 263,
+     "peak_memory_gb": 2.91,
+     "ref_chars": 4205,
+     "hyp_chars": 3351,
+     "extra_ratio": 0.7969084423305589,
+     "coverage": 0.5961950059453032,
+     "cer": 0.4390011890606421,
+     "coverage_cer": 0.4390011890606421,
+     "subs": 696,
+     "dels": 1002,
+     "insertions_counted": 148,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseqclip_off_nocond_r2",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --no-condition --min-cut 30 --min-cut-words 6 --label kseqclip_off_nocond_r2 --json kseqclip_off_nocond_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseqclip_off_nocond_r2"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.58,
+    "cpu_count": 24,
+    "swap_used_mb": 11355.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.444
+   },
+   "measures": {
+    "x_realtime": 87.75,
+    "peak_memory_gb": 2.91,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 87.7,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 248,
+     "peak_memory_gb": 2.91,
+     "ref_chars": 4205,
+     "hyp_chars": 3247,
+     "extra_ratio": 0.7721759809750297,
+     "coverage": 0.5940546967895363,
+     "cer": 0.4439952437574316,
+     "coverage_cer": 0.4439952437574316,
+     "subs": 589,
+     "dels": 1118,
+     "insertions_counted": 160,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "kseqclip_off_nocond_r3",
+   "command": "scripts/benchmarks/run_whisper.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --language ja --no-condition --min-cut 30 --min-cut-words 6 --label kseqclip_off_nocond_r3 --json kseqclip_off_nocond_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "language": "ja",
+    "autodetect": false,
+    "greedy": false,
+    "no_condition": true,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "all_files": false,
+    "label": "kseqclip_off_nocond_r3"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.59,
+    "cpu_count": 24,
+    "swap_used_mb": 10891.25,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.24,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.44637
+   },
+   "measures": {
+    "x_realtime": 83.6,
+    "peak_memory_gb": 2.91,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 83.6,
+     "requested_language": "ja",
+     "detected_language": "ja",
+     "segments": 244,
+     "peak_memory_gb": 2.91,
+     "ref_chars": 4205,
+     "hyp_chars": 3257,
+     "extra_ratio": 0.7745541022592152,
+     "coverage": 0.6004756242568371,
+     "cer": 0.4463733650416171,
+     "coverage_cer": 0.4463733650416171,
+     "subs": 535,
+     "dels": 1145,
+     "insertions_counted": 197,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  }
+ ]
+}

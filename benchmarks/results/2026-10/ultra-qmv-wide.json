@@ -1,0 +1,238 @@
+{
+ "group": "ultra-qmv-wide",
+ "question": "Decode steps/s at batch 1-8, default qmv against qmv_wide forced by MLX_METAL_GPU_ARCH=applegpu_g15d, two interleaved runs each",
+ "docs": [
+  "docs/benchmarks/decode-throughput.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "qmv_default_r1",
+   "command": "mlx-asr-bench --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 400 --batches 1,2,4,8 --json qmv_default_r1.json",
+   "params": {
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "steps": 400,
+    "batches": "1,2,4,8",
+    "kv_bits": null
+   },
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "batch": 1,
+     "steps_per_s": 90.3,
+     "ms_per_step": 11.1,
+     "x_realtime": 7.2,
+     "peak_gb": 5.15
+    },
+    {
+     "batch": 2,
+     "steps_per_s": 77.91,
+     "ms_per_step": 12.8,
+     "x_realtime": 12.5,
+     "peak_gb": 5.32
+    },
+    {
+     "batch": 4,
+     "steps_per_s": 61.34,
+     "ms_per_step": 16.3,
+     "x_realtime": 19.6,
+     "peak_gb": 5.65
+    },
+    {
+     "batch": 8,
+     "steps_per_s": 40.51,
+     "ms_per_step": 24.7,
+     "x_realtime": 25.9,
+     "peak_gb": 6.28
+    }
+   ],
+   "missing": [
+    "machine load and GPU memory at start (not recorded by mlx-asr-bench)"
+   ]
+  },
+  {
+   "run": "qmv_default_r2",
+   "command": "mlx-asr-bench --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 400 --batches 1,2,4,8 --json qmv_default_r2.json",
+   "params": {
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "steps": 400,
+    "batches": "1,2,4,8",
+    "kv_bits": null
+   },
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "batch": 1,
+     "steps_per_s": 90.86,
+     "ms_per_step": 11.0,
+     "x_realtime": 7.3,
+     "peak_gb": 5.15
+    },
+    {
+     "batch": 2,
+     "steps_per_s": 77.76,
+     "ms_per_step": 12.9,
+     "x_realtime": 12.4,
+     "peak_gb": 5.32
+    },
+    {
+     "batch": 4,
+     "steps_per_s": 61.38,
+     "ms_per_step": 16.3,
+     "x_realtime": 19.6,
+     "peak_gb": 5.65
+    },
+    {
+     "batch": 8,
+     "steps_per_s": 40.54,
+     "ms_per_step": 24.7,
+     "x_realtime": 25.9,
+     "peak_gb": 6.28
+    }
+   ],
+   "missing": [
+    "machine load and GPU memory at start (not recorded by mlx-asr-bench)"
+   ]
+  },
+  {
+   "run": "qmv_wide_r1",
+   "command": "MLX_METAL_GPU_ARCH=applegpu_g15d mlx-asr-bench --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 400 --batches 1,2,4,8 --json qmv_wide_r1.json",
+   "params": {
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "steps": 400,
+    "batches": "1,2,4,8",
+    "kv_bits": null
+   },
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "batch": 1,
+     "steps_per_s": 89.94,
+     "ms_per_step": 11.1,
+     "x_realtime": 7.2,
+     "peak_gb": 5.15
+    },
+    {
+     "batch": 2,
+     "steps_per_s": 64.14,
+     "ms_per_step": 15.6,
+     "x_realtime": 10.3,
+     "peak_gb": 5.32
+    },
+    {
+     "batch": 4,
+     "steps_per_s": 52.39,
+     "ms_per_step": 19.1,
+     "x_realtime": 16.8,
+     "peak_gb": 5.65
+    },
+    {
+     "batch": 8,
+     "steps_per_s": 32.01,
+     "ms_per_step": 31.2,
+     "x_realtime": 20.5,
+     "peak_gb": 6.28
+    }
+   ],
+   "missing": [
+    "machine load and GPU memory at start (not recorded by mlx-asr-bench)"
+   ]
+  },
+  {
+   "run": "qmv_wide_r2",
+   "command": "MLX_METAL_GPU_ARCH=applegpu_g15d mlx-asr-bench --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 400 --batches 1,2,4,8 --json qmv_wide_r2.json",
+   "params": {
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "steps": 400,
+    "batches": "1,2,4,8",
+    "kv_bits": null
+   },
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "batch": 1,
+     "steps_per_s": 90.8,
+     "ms_per_step": 11.0,
+     "x_realtime": 7.3,
+     "peak_gb": 5.15
+    },
+    {
+     "batch": 2,
+     "steps_per_s": 64.09,
+     "ms_per_step": 15.6,
+     "x_realtime": 10.3,
+     "peak_gb": 5.32
+    },
+    {
+     "batch": 4,
+     "steps_per_s": 52.36,
+     "ms_per_step": 19.1,
+     "x_realtime": 16.8,
+     "peak_gb": 5.65
+    },
+    {
+     "batch": 8,
+     "steps_per_s": 32.01,
+     "ms_per_step": 31.2,
+     "x_realtime": 20.5,
+     "peak_gb": 6.28
+    }
+   ],
+   "missing": [
+    "machine load and GPU memory at start (not recorded by mlx-asr-bench)"
+   ]
+  }
+ ]
+}

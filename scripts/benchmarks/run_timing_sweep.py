@@ -59,7 +59,7 @@ def reference_language(ref: Path) -> str:
     """"en" or "ja", decided from the reference script rather than assumed.
 
     This exists because hardcoding one language here silently destroyed a row.
-    The corpus contains the same video dubbed twice, one track Japanese and one
+    The corpus contains the same recording dubbed twice, one track Japanese and one
     English, each with a matching subtitle file; forcing `ja` on the English one
     drove Whisper into a repetition loop with degenerate timestamps (identical
     start and end, one cue ending before it began), giving 9.8% anchor coverage.

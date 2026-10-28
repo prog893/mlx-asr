@@ -41,6 +41,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import mlx.core as mx
 from mlx_audio.stt.utils import load as load_model
 
+from benchmarks.corpus_files import add_files_option, only_files
 from benchmarks.machine_state import machine_state, warn_if_busy
 from metrics.eval_coverage import load_reference, score_pair
 from mlx_asr.audio import (SAMPLE_RATE, compact_silence, load_audio_16k,
@@ -99,6 +100,7 @@ def main():
     p.add_argument("--min-cut-words", type=int, default=6,
                    help="same threshold for the word-unit path")
     p.add_argument("--limit", type=int, help="only the N shortest files")
+    add_files_option(p)
     # Both of these shipped their defaults on a single-clip result and were never run
     # across the corpus, which is exactly the gap that let the precision conclusion
     # stand wrong for weeks (docs/benchmarks/reference/metrics.md). Exposed here so the corpus
@@ -118,7 +120,7 @@ def main():
     a = p.parse_args()
 
     corpus = Path(a.corpus).expanduser()
-    pairs = find_pairs(corpus)
+    pairs = only_files(find_pairs(corpus), a.files)
     if not pairs:
         print(f"no audio/transcript pairs found in {corpus}", file=sys.stderr)
         return 2

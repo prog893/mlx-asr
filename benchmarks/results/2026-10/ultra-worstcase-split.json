@@ -1,0 +1,24 @@
+{
+ "group": "ultra-worstcase-split",
+ "question": "The worst32 cut (first 1949s of file 0c193bf7ced2, 16-bit round trip) split at 60s by the Ultra checkout's split_at_silences: chunk count (canary 32, as saved) and the last and longest chunk against the 90s worst case",
+ "docs": [
+  "docs/benchmarks/chunking.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "derive_worst32_chunks",
+   "output": "stdout",
+   "command": "$PY -c \"",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "{'cut_first_s': 1949.0, 'chunks': 32, 'last_s': 82.66, 'max_s': 82.66, 'worst_s': 90.0, 'max_over_worst': 0.9185}"
+  }
+ ]
+}

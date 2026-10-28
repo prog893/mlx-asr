@@ -1,0 +1,38 @@
+{
+ "group": "ultra-voxtral-v1-conversion",
+ "question": "voxtral-v1 3B 8-bit: the first-use conversion against convert_drop_source.py, tensor by tensor",
+ "docs": [
+  "docs/benchmarks/engines/voxtral-v1.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "v1_conv_normal_3b_8bit",
+   "output": "stdout",
+   "command": "$PY -c \"from mlx_asr.voxtral_v1 import weights_dir; print(weights_dir('mistralai/Voxtral-Mini-3B-2507:8bit'))\"",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[convert] no 8bit MLX build of mistralai/Voxtral-Mini-3B-2507 is published by its authors; quantizing once into mistralai--Voxtral-Mini-3B-2507-8bit (audio encoder stays bf16)\n\n[INFO] Loading model from 3060fe34b35ba5d44202ce9ff3c097642914f8f3.mlx-asr-shards\n\n\n\n[INFO] Model domain: STT, type: voxtral\n[INFO] Converting to bfloat16\n[INFO] Quantized model with 9.522 bits per weight.\n[INFO] Conversion complete! Model saved to mistralai--Voxtral-Mini-3B-2507-8bit.partial\n[convert] wrote mistralai--Voxtral-Mini-3B-2507-8bit\nmistralai--Voxtral-Mini-3B-2507-8bit"
+  },
+  {
+   "run": "v1_conv_dropsrc_cmp_3b_8bit",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/convert_drop_source.py --source mistralai/Voxtral-Mini-3B-2507 --precision 8bit --out $D/v1_3b_8bit_dropsrc --compare $V1N",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "\n\n\n[INFO] Quantized model with 9.522 bits per weight.\n[convert] wrote bench_out/q8_20261016/v1_3b_8bit_dropsrc\nkeys: 1190 vs 1190, same set\ntensors differing: 0\nconfig.json: identical"
+  }
+ ]
+}

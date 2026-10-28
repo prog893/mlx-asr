@@ -1,0 +1,1397 @@
+{
+ "group": "ultra-kotoba-engines-clip",
+ "question": "kotoba-whisper on the 935s clip: MLX chunked driver (v2.0) against the authors' transformers pipeline (v2.2, and v2.0 at 15s), windows 10 / 15 / 20 / 30s, 3 runs each",
+ "docs": [
+  "docs/benchmarks/engines/kotoba.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "kclip_hf20_c15_r1",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.0 --chunk-length-s 15.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf20_c15_r1 --json kclip_hf20_c15_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "chunk_length_s": 15.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf20_c15_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.2088
+   },
+   "measures": {
+    "x_realtime": 25.88,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 25.9,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3769,
+     "extra_ratio": 0.8963139120095125,
+     "coverage": 0.8195005945303211,
+     "cer": 0.20879904875148633,
+     "coverage_cer": 0.20879904875148633,
+     "subs": 204,
+     "dels": 555,
+     "insertions_counted": 119,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c10_r1",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 10.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c10_r1 --json kclip_hf22_c10_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 10.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c10_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.2371
+   },
+   "measures": {
+    "x_realtime": 20.31,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 20.3,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3679,
+     "extra_ratio": 0.8749108204518431,
+     "coverage": 0.7938168846611178,
+     "cer": 0.2370986920332937,
+     "coverage_cer": 0.2370986920332937,
+     "subs": 211,
+     "dels": 656,
+     "insertions_counted": 130,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c10_r2",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 10.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c10_r2 --json kclip_hf22_c10_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 10.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c10_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.2371
+   },
+   "measures": {
+    "x_realtime": 20.85,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 20.8,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3679,
+     "extra_ratio": 0.8749108204518431,
+     "coverage": 0.7938168846611178,
+     "cer": 0.2370986920332937,
+     "coverage_cer": 0.2370986920332937,
+     "subs": 211,
+     "dels": 656,
+     "insertions_counted": 130,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c10_r3",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 10.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c10_r3 --json kclip_hf22_c10_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 10.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c10_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.2371
+   },
+   "measures": {
+    "x_realtime": 20.86,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 20.9,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3679,
+     "extra_ratio": 0.8749108204518431,
+     "coverage": 0.7938168846611178,
+     "cer": 0.2370986920332937,
+     "coverage_cer": 0.2370986920332937,
+     "subs": 211,
+     "dels": 656,
+     "insertions_counted": 130,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c15_r1",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 15.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c15_r1 --json kclip_hf22_c15_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 15.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c15_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.2088
+   },
+   "measures": {
+    "x_realtime": 25.71,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 25.7,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3769,
+     "extra_ratio": 0.8963139120095125,
+     "coverage": 0.8195005945303211,
+     "cer": 0.20879904875148633,
+     "coverage_cer": 0.20879904875148633,
+     "subs": 204,
+     "dels": 555,
+     "insertions_counted": 119,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c15_r2",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 15.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c15_r2 --json kclip_hf22_c15_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 15.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c15_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.2088
+   },
+   "measures": {
+    "x_realtime": 25.91,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 25.9,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3769,
+     "extra_ratio": 0.8963139120095125,
+     "coverage": 0.8195005945303211,
+     "cer": 0.20879904875148633,
+     "coverage_cer": 0.20879904875148633,
+     "subs": 204,
+     "dels": 555,
+     "insertions_counted": 119,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c15_r3",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 15.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c15_r3 --json kclip_hf22_c15_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 15.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c15_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.2088
+   },
+   "measures": {
+    "x_realtime": 25.95,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 26.0,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3769,
+     "extra_ratio": 0.8963139120095125,
+     "coverage": 0.8195005945303211,
+     "cer": 0.20879904875148633,
+     "coverage_cer": 0.20879904875148633,
+     "subs": 204,
+     "dels": 555,
+     "insertions_counted": 119,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c20_r1",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 20.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c20_r1 --json kclip_hf22_c20_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 20.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c20_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.16552
+   },
+   "measures": {
+    "x_realtime": 29.51,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 29.5,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3968,
+     "extra_ratio": 0.9436385255648038,
+     "coverage": 0.8644470868014269,
+     "cer": 0.16551724137931034,
+     "coverage_cer": 0.16551724137931034,
+     "subs": 207,
+     "dels": 363,
+     "insertions_counted": 126,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c20_r2",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 20.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c20_r2 --json kclip_hf22_c20_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 20.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c20_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.16552
+   },
+   "measures": {
+    "x_realtime": 29.78,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 29.8,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3968,
+     "extra_ratio": 0.9436385255648038,
+     "coverage": 0.8644470868014269,
+     "cer": 0.16551724137931034,
+     "coverage_cer": 0.16551724137931034,
+     "subs": 207,
+     "dels": 363,
+     "insertions_counted": 126,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c20_r3",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 20.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c20_r3 --json kclip_hf22_c20_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 20.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c20_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.16552
+   },
+   "measures": {
+    "x_realtime": 29.68,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 29.7,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3968,
+     "extra_ratio": 0.9436385255648038,
+     "coverage": 0.8644470868014269,
+     "cer": 0.16551724137931034,
+     "coverage_cer": 0.16551724137931034,
+     "subs": 207,
+     "dels": 363,
+     "insertions_counted": 126,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c30_r1",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 30.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c30_r1 --json kclip_hf22_c30_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 30.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c30_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.39524
+   },
+   "measures": {
+    "x_realtime": 39.58,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 39.6,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3579,
+     "extra_ratio": 0.8511296076099881,
+     "coverage": 0.6449464922711058,
+     "cer": 0.39524375743162904,
+     "coverage_cer": 0.39524375743162904,
+     "subs": 698,
+     "dels": 795,
+     "insertions_counted": 169,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c30_r2",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 30.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c30_r2 --json kclip_hf22_c30_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 30.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c30_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.39524
+   },
+   "measures": {
+    "x_realtime": 39.77,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 39.8,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3579,
+     "extra_ratio": 0.8511296076099881,
+     "coverage": 0.6449464922711058,
+     "cer": 0.39524375743162904,
+     "coverage_cer": 0.39524375743162904,
+     "subs": 698,
+     "dels": 795,
+     "insertions_counted": 169,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_hf22_c30_r3",
+   "command": "scripts/benchmarks/run_kotoba_hf.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model kotoba-tech/kotoba-whisper-v2.2 --chunk-length-s 30.0 --batch-size 16 --device mps --min-cut 30 --min-cut-words 6 --label kclip_hf22_c30_r3 --json kclip_hf22_c30_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "kotoba-tech/kotoba-whisper-v2.2",
+    "chunk_length_s": 30.0,
+    "batch_size": 16,
+    "device": "mps",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_hf22_c30_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.39524
+   },
+   "measures": {
+    "x_realtime": 39.79,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 39.8,
+     "requested_language": "ja",
+     "ref_chars": 4205,
+     "hyp_chars": 3579,
+     "extra_ratio": 0.8511296076099881,
+     "coverage": 0.6449464922711058,
+     "cer": 0.39524375743162904,
+     "coverage_cer": 0.39524375743162904,
+     "subs": 698,
+     "dels": 795,
+     "insertions_counted": 169,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c10_r1",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c10_r1 --json kclip_mlx_c10_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c10_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.18644
+   },
+   "measures": {
+    "x_realtime": 46.53,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 46.5,
+     "requested_language": "ja",
+     "windows": 94,
+     "segments": 267,
+     "ref_chars": 4205,
+     "hyp_chars": 3858,
+     "extra_ratio": 0.9174791914387633,
+     "coverage": 0.8361474435196194,
+     "cer": 0.18644470868014268,
+     "coverage_cer": 0.18644470868014268,
+     "subs": 247,
+     "dels": 442,
+     "insertions_counted": 95,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c10_r2",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c10_r2 --json kclip_mlx_c10_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c10_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.18644
+   },
+   "measures": {
+    "x_realtime": 46.4,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 46.4,
+     "requested_language": "ja",
+     "windows": 94,
+     "segments": 267,
+     "ref_chars": 4205,
+     "hyp_chars": 3858,
+     "extra_ratio": 0.9174791914387633,
+     "coverage": 0.8361474435196194,
+     "cer": 0.18644470868014268,
+     "coverage_cer": 0.18644470868014268,
+     "subs": 247,
+     "dels": 442,
+     "insertions_counted": 95,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c10_r3",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c10_r3 --json kclip_mlx_c10_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c10_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.18644
+   },
+   "measures": {
+    "x_realtime": 46.73,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 46.7,
+     "requested_language": "ja",
+     "windows": 94,
+     "segments": 267,
+     "ref_chars": 4205,
+     "hyp_chars": 3858,
+     "extra_ratio": 0.9174791914387633,
+     "coverage": 0.8361474435196194,
+     "cer": 0.18644470868014268,
+     "coverage_cer": 0.18644470868014268,
+     "subs": 247,
+     "dels": 442,
+     "insertions_counted": 95,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c15_r1",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 15.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c15_r1 --json kclip_mlx_c15_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 15.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c15_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.18977
+   },
+   "measures": {
+    "x_realtime": 63.2,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 63.2,
+     "requested_language": "ja",
+     "windows": 63,
+     "segments": 263,
+     "ref_chars": 4205,
+     "hyp_chars": 3842,
+     "extra_ratio": 0.9136741973840666,
+     "coverage": 0.8330558858501783,
+     "cer": 0.18977407847800237,
+     "coverage_cer": 0.18977407847800237,
+     "subs": 243,
+     "dels": 459,
+     "insertions_counted": 96,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c15_r2",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 15.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c15_r2 --json kclip_mlx_c15_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 15.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c15_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.18977
+   },
+   "measures": {
+    "x_realtime": 63.29,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 63.3,
+     "requested_language": "ja",
+     "windows": 63,
+     "segments": 263,
+     "ref_chars": 4205,
+     "hyp_chars": 3842,
+     "extra_ratio": 0.9136741973840666,
+     "coverage": 0.8330558858501783,
+     "cer": 0.18977407847800237,
+     "coverage_cer": 0.18977407847800237,
+     "subs": 243,
+     "dels": 459,
+     "insertions_counted": 96,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c15_r3",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 15.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c15_r3 --json kclip_mlx_c15_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 15.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c15_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.18977
+   },
+   "measures": {
+    "x_realtime": 62.92,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 62.9,
+     "requested_language": "ja",
+     "windows": 63,
+     "segments": 263,
+     "ref_chars": 4205,
+     "hyp_chars": 3842,
+     "extra_ratio": 0.9136741973840666,
+     "coverage": 0.8330558858501783,
+     "cer": 0.18977407847800237,
+     "coverage_cer": 0.18977407847800237,
+     "subs": 243,
+     "dels": 459,
+     "insertions_counted": 96,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c20_r1",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 20.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c20_r1 --json kclip_mlx_c20_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 20.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c20_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.22045
+   },
+   "measures": {
+    "x_realtime": 76.54,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 76.5,
+     "requested_language": "ja",
+     "windows": 47,
+     "segments": 251,
+     "ref_chars": 4205,
+     "hyp_chars": 3764,
+     "extra_ratio": 0.8951248513674197,
+     "coverage": 0.8068965517241379,
+     "cer": 0.22045184304399523,
+     "coverage_cer": 0.22045184304399523,
+     "subs": 256,
+     "dels": 556,
+     "insertions_counted": 115,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c20_r2",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 20.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c20_r2 --json kclip_mlx_c20_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 20.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c20_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.22045
+   },
+   "measures": {
+    "x_realtime": 77.2,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 77.2,
+     "requested_language": "ja",
+     "windows": 47,
+     "segments": 251,
+     "ref_chars": 4205,
+     "hyp_chars": 3764,
+     "extra_ratio": 0.8951248513674197,
+     "coverage": 0.8068965517241379,
+     "cer": 0.22045184304399523,
+     "coverage_cer": 0.22045184304399523,
+     "subs": 256,
+     "dels": 556,
+     "insertions_counted": 115,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c20_r3",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 20.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c20_r3 --json kclip_mlx_c20_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 20.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c20_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.22045
+   },
+   "measures": {
+    "x_realtime": 76.58,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 76.6,
+     "requested_language": "ja",
+     "windows": 47,
+     "segments": 251,
+     "ref_chars": 4205,
+     "hyp_chars": 3764,
+     "extra_ratio": 0.8951248513674197,
+     "coverage": 0.8068965517241379,
+     "cer": 0.22045184304399523,
+     "coverage_cer": 0.22045184304399523,
+     "subs": 256,
+     "dels": 556,
+     "insertions_counted": 115,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c30_r1",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 30.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c30_r1 --json kclip_mlx_c30_r1.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 30.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c30_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.41546
+   },
+   "measures": {
+    "x_realtime": 77.15,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 77.2,
+     "requested_language": "ja",
+     "windows": 32,
+     "segments": 243,
+     "ref_chars": 4205,
+     "hyp_chars": 3386,
+     "extra_ratio": 0.8052318668252081,
+     "coverage": 0.6299643281807372,
+     "cer": 0.4154577883472057,
+     "coverage_cer": 0.4154577883472057,
+     "subs": 546,
+     "dels": 1010,
+     "insertions_counted": 191,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c30_r2",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 30.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c30_r2 --json kclip_mlx_c30_r2.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 30.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c30_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.42188
+   },
+   "measures": {
+    "x_realtime": 85.01,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 85.0,
+     "requested_language": "ja",
+     "windows": 32,
+     "segments": 241,
+     "ref_chars": 4205,
+     "hyp_chars": 3325,
+     "extra_ratio": 0.7907253269916765,
+     "coverage": 0.6190249702734839,
+     "cer": 0.42187871581450653,
+     "coverage_cer": 0.42187871581450653,
+     "subs": 550,
+     "dels": 1052,
+     "insertions_counted": 172,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kclip_mlx_c30_r3",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --pair bench_out/corpus_timed/632a295d981d.wav bench_out/corpus_timed/632a295d981d.srt --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 30.0 --language ja --min-cut 30 --min-cut-words 6 --label kclip_mlx_c30_r3 --json kclip_mlx_c30_r3.json",
+   "params": {
+    "corpus": null,
+    "pair": [
+     [
+      "bench_out/corpus_timed/632a295d981d.wav",
+      "bench_out/corpus_timed/632a295d981d.srt"
+     ]
+    ],
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 30.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kclip_mlx_c30_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.40547
+   },
+   "measures": {
+    "x_realtime": 78.05,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 78.1,
+     "requested_language": "ja",
+     "windows": 32,
+     "segments": 243,
+     "ref_chars": 4205,
+     "hyp_chars": 3412,
+     "extra_ratio": 0.8114149821640904,
+     "coverage": 0.638525564803805,
+     "cer": 0.4054696789536266,
+     "coverage_cer": 0.4054696789536266,
+     "subs": 542,
+     "dels": 978,
+     "insertions_counted": 185,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  }
+ ]
+}

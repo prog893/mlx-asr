@@ -1,0 +1,709 @@
+{
+ "group": "m4-voxtral-clip",
+ "question": "Voxtral on the 935s clip on the M4 16GB: overlap 0 / 4 / 8s at 30s / batch 32 (4-bit), and silence compaction off and on at 60s / batch 16 and 30s / batch 32, nvfp4 and 4-bit (plain CER, complete reference)",
+ "docs": [
+  "docs/benchmarks/chunking.md"
+ ],
+ "note": "In the commands $PY is the repo venv python, $NV the local nvfp4 conversion (models/voxtral-nvfp4), $M4B the 4-bit hub build, $CLIP the 935s clip (bench_out/corpus_timed/632a295d981d.wav), $REF its reference subtitles and $D the queue directory bench_out/m4_20261016/out; hypotheses are not saved. The queue was stopped once and resumed; the resumed copy waits 60s before each machine-state check.",
+ "runs": [
+  {
+   "run": "m4_ov30_0s",
+   "arm": "overlap 0",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio '<local>/632a295d981d.wav' --reference '<local>/632a295d981d.srt' --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 0 --json m4_ov30_0s.json",
+   "params": {
+    "audio": "<local>/632a295d981d.wav",
+    "reference": "<local>/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "0"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0863
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0863,
+     "x_realtime": 7.4,
+     "wall_s": 127.0,
+     "steps": 446,
+     "extra_audio_s": 0.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "m4_ov30_4s",
+   "arm": "overlap 4",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio '<local>/632a295d981d.wav' --reference '<local>/632a295d981d.srt' --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 4 --json m4_ov30_4s.json",
+   "params": {
+    "audio": "<local>/632a295d981d.wav",
+    "reference": "<local>/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "4"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0711
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0711,
+     "x_realtime": 6.5,
+     "wall_s": 144.0,
+     "steps": 496,
+     "extra_audio_s": 124.0,
+     "cues": 206
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "m4_ov30_8s",
+   "arm": "overlap 8",
+   "command": "scripts/benchmarks/sweep_overlap.py --audio '<local>/632a295d981d.wav' --reference '<local>/632a295d981d.srt' --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlaps 8 --json m4_ov30_8s.json",
+   "params": {
+    "audio": "<local>/632a295d981d.wav",
+    "reference": "<local>/632a295d981d.srt",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlaps": "8"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.0713
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "cer": 0.0713,
+     "x_realtime": 6.0,
+     "wall_s": 156.4,
+     "steps": 546,
+     "extra_audio_s": 248.0,
+     "cues": 207
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "plain CER on one clip; sweep_overlap.py records no machine state"
+   ]
+  },
+  {
+   "run": "m4_compact_c30b32_kv0_off_4bit",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816_local --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label m4_compact_c30b32_kv0_off_4bit --json m4_compact_c30b32_kv0_off_4bit.json",
+   "params": {
+    "corpus": "bench_out/one_0816_local",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "files": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "m4_compact_c30b32_kv0_off_4bit"
+   },
+   "machine": {
+    "label": "Apple M4 16GB (Mac16,1)",
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "macos": "26.7.1",
+    "mlx": "0.32.0",
+    "load_1min": 11.94,
+    "cpu_count": 10,
+    "swap_used_mb": 14696.75,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.59,
+    "ac_power": true,
+    "battery_percent": 100,
+    "low_power_mode": false,
+    "busy": true,
+    "busy_reasons": [
+     "load 11.94 over 10 cpus"
+    ]
+   },
+   "aggregate": {
+    "char": 0.08656
+   },
+   "measures": {
+    "x_realtime": 6.42,
+    "peak_memory_gb": 9.48
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 6.4,
+     "chunks": 32,
+     "peak_memory_gb": 9.48,
+     "ref_chars": 4205,
+     "hyp_chars": 4177,
+     "extra_ratio": 0.9933412604042806,
+     "coverage": 0.9338882282996432,
+     "cer": 0.08656361474435197,
+     "coverage_cer": 0.08656361474435197,
+     "subs": 164,
+     "dels": 114,
+     "insertions_counted": 86,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [],
+   "caveats": [
+    "other GPU work at start: load 11.94 over 10 cpus"
+   ]
+  },
+  {
+   "run": "m4_compact_c30b32_kv0_off_nvfp4",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816_local --model models/voxtral-nvfp4 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label m4_compact_c30b32_kv0_off_nvfp4 --json m4_compact_c30b32_kv0_off_nvfp4.json",
+   "params": {
+    "corpus": "bench_out/one_0816_local",
+    "model": "models/voxtral-nvfp4",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "files": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "m4_compact_c30b32_kv0_off_nvfp4"
+   },
+   "machine": {
+    "label": "Apple M4 16GB (Mac16,1)",
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "macos": "26.7.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.44,
+    "cpu_count": 10,
+    "swap_used_mb": 12621.0,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.02,
+    "ac_power": true,
+    "battery_percent": 100,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.09275
+   },
+   "measures": {
+    "x_realtime": 8.2,
+    "peak_memory_gb": 7.24
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 8.2,
+     "chunks": 32,
+     "peak_memory_gb": 7.24,
+     "ref_chars": 4205,
+     "hyp_chars": 4179,
+     "extra_ratio": 0.9938168846611177,
+     "coverage": 0.9300832342449465,
+     "cer": 0.09274673008323424,
+     "coverage_cer": 0.09274673008323424,
+     "subs": 172,
+     "dels": 122,
+     "insertions_counted": 96,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "m4_compact_c30b32_kv0_on_4bit",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816_local --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --compact-silence --label m4_compact_c30b32_kv0_on_4bit --json m4_compact_c30b32_kv0_on_4bit.json",
+   "params": {
+    "corpus": "bench_out/one_0816_local",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "files": null,
+    "vad": false,
+    "compact_silence": true,
+    "prompt": "",
+    "label": "m4_compact_c30b32_kv0_on_4bit"
+   },
+   "machine": {
+    "label": "Apple M4 16GB (Mac16,1)",
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "macos": "26.7.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.83,
+    "cpu_count": 10,
+    "swap_used_mb": 8501.31,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.35,
+    "ac_power": true,
+    "battery_percent": 100,
+    "low_power_mode": false,
+    "busy": true,
+    "busy_reasons": [
+     "load 3.83 over 10 cpus"
+    ]
+   },
+   "aggregate": {
+    "char": 0.10678
+   },
+   "measures": {
+    "x_realtime": 6.7,
+    "peak_memory_gb": 10.13
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 6.7,
+     "chunks": 28,
+     "peak_memory_gb": 10.13,
+     "ref_chars": 4205,
+     "hyp_chars": 4107,
+     "extra_ratio": 0.9766944114149821,
+     "coverage": 0.9105826397146255,
+     "cer": 0.10677764565992866,
+     "coverage_cer": 0.10677764565992866,
+     "subs": 205,
+     "dels": 171,
+     "insertions_counted": 73,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [],
+   "caveats": [
+    "other GPU work at start: load 3.83 over 10 cpus"
+   ]
+  },
+  {
+   "run": "m4_compact_c30b32_kv0_on_nvfp4",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816_local --model models/voxtral-nvfp4 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --compact-silence --label m4_compact_c30b32_kv0_on_nvfp4 --json m4_compact_c30b32_kv0_on_nvfp4.json",
+   "params": {
+    "corpus": "bench_out/one_0816_local",
+    "model": "models/voxtral-nvfp4",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "files": null,
+    "vad": false,
+    "compact_silence": true,
+    "prompt": "",
+    "label": "m4_compact_c30b32_kv0_on_nvfp4"
+   },
+   "machine": {
+    "label": "Apple M4 16GB (Mac16,1)",
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "macos": "26.7.1",
+    "mlx": "0.32.0",
+    "load_1min": 6.43,
+    "cpu_count": 10,
+    "swap_used_mb": 15106.0,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.02,
+    "ac_power": true,
+    "battery_percent": 100,
+    "low_power_mode": false,
+    "busy": true,
+    "busy_reasons": [
+     "load 6.43 over 10 cpus"
+    ]
+   },
+   "aggregate": {
+    "char": 0.07705
+   },
+   "measures": {
+    "x_realtime": 8.49,
+    "peak_memory_gb": 8.23
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 8.5,
+     "chunks": 28,
+     "peak_memory_gb": 8.23,
+     "ref_chars": 4205,
+     "hyp_chars": 4150,
+     "extra_ratio": 0.9869203329369798,
+     "coverage": 0.9360285374554103,
+     "cer": 0.07705112960760999,
+     "coverage_cer": 0.07705112960760999,
+     "subs": 159,
+     "dels": 110,
+     "insertions_counted": 55,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [],
+   "caveats": [
+    "other GPU work at start: load 6.43 over 10 cpus"
+   ]
+  },
+  {
+   "run": "m4_compact_c60b16_kv0_off_4bit",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816_local --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label m4_compact_c60b16_kv0_off_4bit --json m4_compact_c60b16_kv0_off_4bit.json",
+   "params": {
+    "corpus": "bench_out/one_0816_local",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "files": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "m4_compact_c60b16_kv0_off_4bit"
+   },
+   "machine": {
+    "label": "Apple M4 16GB (Mac16,1)",
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "macos": "26.7.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.29,
+    "cpu_count": 10,
+    "swap_used_mb": 14407.75,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.61,
+    "ac_power": true,
+    "battery_percent": 100,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.07396
+   },
+   "measures": {
+    "x_realtime": 4.75,
+    "peak_memory_gb": 8.7
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 4.8,
+     "chunks": 16,
+     "peak_memory_gb": 8.7,
+     "ref_chars": 4205,
+     "hyp_chars": 4151,
+     "extra_ratio": 0.9871581450653983,
+     "coverage": 0.9388822829964328,
+     "cer": 0.07395957193816885,
+     "coverage_cer": 0.07395957193816885,
+     "subs": 149,
+     "dels": 108,
+     "insertions_counted": 54,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "m4_compact_c60b16_kv0_off_nvfp4",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816_local --model models/voxtral-nvfp4 --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label m4_compact_c60b16_kv0_off_nvfp4 --json m4_compact_c60b16_kv0_off_nvfp4.json",
+   "params": {
+    "corpus": "bench_out/one_0816_local",
+    "model": "models/voxtral-nvfp4",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "files": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "m4_compact_c60b16_kv0_off_nvfp4"
+   },
+   "machine": {
+    "label": "Apple M4 16GB (Mac16,1)",
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "macos": "26.7.1",
+    "mlx": "0.32.0",
+    "load_1min": 5.54,
+    "cpu_count": 10,
+    "swap_used_mb": 12393.5,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.38,
+    "ac_power": true,
+    "battery_percent": 100,
+    "low_power_mode": false,
+    "busy": true,
+    "busy_reasons": [
+     "load 5.54 over 10 cpus"
+    ]
+   },
+   "aggregate": {
+    "char": 0.07753
+   },
+   "measures": {
+    "x_realtime": 6.69,
+    "peak_memory_gb": 6.86
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 6.7,
+     "chunks": 16,
+     "peak_memory_gb": 6.86,
+     "ref_chars": 4205,
+     "hyp_chars": 4161,
+     "extra_ratio": 0.9895362663495838,
+     "coverage": 0.9386444708680143,
+     "cer": 0.07752675386444709,
+     "coverage_cer": 0.07752675386444709,
+     "subs": 146,
+     "dels": 112,
+     "insertions_counted": 68,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [],
+   "caveats": [
+    "other GPU work at start: load 5.54 over 10 cpus"
+   ]
+  },
+  {
+   "run": "m4_compact_c60b16_kv0_on_4bit",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816_local --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --compact-silence --label m4_compact_c60b16_kv0_on_4bit --json m4_compact_c60b16_kv0_on_4bit.json",
+   "params": {
+    "corpus": "bench_out/one_0816_local",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "files": null,
+    "vad": false,
+    "compact_silence": true,
+    "prompt": "",
+    "label": "m4_compact_c60b16_kv0_on_4bit"
+   },
+   "machine": {
+    "label": "Apple M4 16GB (Mac16,1)",
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "macos": "26.7.1",
+    "mlx": "0.32.0",
+    "load_1min": 6.35,
+    "cpu_count": 10,
+    "swap_used_mb": 12906.94,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.59,
+    "ac_power": true,
+    "battery_percent": 100,
+    "low_power_mode": false,
+    "busy": true,
+    "busy_reasons": [
+     "load 6.35 over 10 cpus"
+    ]
+   },
+   "aggregate": {
+    "char": 0.083
+   },
+   "measures": {
+    "x_realtime": 5.06,
+    "peak_memory_gb": 8.54
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 5.1,
+     "chunks": 14,
+     "peak_memory_gb": 8.54,
+     "ref_chars": 4205,
+     "hyp_chars": 4160,
+     "extra_ratio": 0.9892984542211652,
+     "coverage": 0.9326991676575506,
+     "cer": 0.08299643281807371,
+     "coverage_cer": 0.08299643281807371,
+     "subs": 172,
+     "dels": 111,
+     "insertions_counted": 66,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [],
+   "caveats": [
+    "other GPU work at start: load 6.35 over 10 cpus"
+   ]
+  },
+  {
+   "run": "m4_compact_c60b16_kv0_on_nvfp4",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816_local --model models/voxtral-nvfp4 --chunk-seconds 60.0 --max-batch 16 --delay-ms 2400 --kv-bits 0 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --compact-silence --label m4_compact_c60b16_kv0_on_nvfp4 --json m4_compact_c60b16_kv0_on_nvfp4.json",
+   "params": {
+    "corpus": "bench_out/one_0816_local",
+    "model": "models/voxtral-nvfp4",
+    "chunk_seconds": 60.0,
+    "max_batch": 16,
+    "delay_ms": 2400,
+    "kv_bits": 0,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "files": null,
+    "vad": false,
+    "compact_silence": true,
+    "prompt": "",
+    "label": "m4_compact_c60b16_kv0_on_nvfp4"
+   },
+   "machine": {
+    "label": "Apple M4 16GB (Mac16,1)",
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "macos": "26.7.1",
+    "mlx": "0.32.0",
+    "load_1min": 5.23,
+    "cpu_count": 10,
+    "swap_used_mb": 12812.38,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.29,
+    "ac_power": true,
+    "battery_percent": 100,
+    "low_power_mode": false,
+    "busy": true,
+    "busy_reasons": [
+     "load 5.23 over 10 cpus"
+    ]
+   },
+   "aggregate": {
+    "char": 0.07967
+   },
+   "measures": {
+    "x_realtime": 7.21,
+    "peak_memory_gb": 6.62
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 7.2,
+     "chunks": 14,
+     "peak_memory_gb": 6.62,
+     "ref_chars": 4205,
+     "hyp_chars": 4140,
+     "extra_ratio": 0.9845422116527943,
+     "coverage": 0.9341260404280618,
+     "cer": 0.07966706302021404,
+     "coverage_cer": 0.07966706302021404,
+     "subs": 154,
+     "dels": 123,
+     "insertions_counted": 58,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [],
+   "caveats": [
+    "other GPU work at start: load 5.23 over 10 cpus"
+   ]
+  }
+ ]
+}

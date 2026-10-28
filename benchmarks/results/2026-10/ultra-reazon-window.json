@@ -1,0 +1,89 @@
+{
+ "group": "ultra-reazon-window",
+ "question": "reazon-k2 fp32 on the 112s file with a 120s window (one window for the whole file)",
+ "docs": [
+  "docs/benchmarks/engines/reazon.md"
+ ],
+ "note": "Every run was made after every audio revision in revisions.json, so it used the current copies.",
+ "runs": [
+  {
+   "run": "reazon_fp32_whole_r112",
+   "command": "scripts/benchmarks/run_reazon.py --corpus bench_out/one_r112 --model reazon --precision fp32 --chunk-seconds 120.0 --min-cut 30 --min-cut-words 6 --label reazon_fp32_whole_r112 --wait-for-idle 0.0 --json reazon_fp32_whole_r112.json",
+   "params": {
+    "corpus": "bench_out/one_r112",
+    "model": "reazon",
+    "precision": "fp32",
+    "chunk_seconds": 120.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "reazon_fp32_whole_r112",
+    "require_idle": false,
+    "wait_for_idle": 0.0
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 8.12,
+    "cpu_count": 24,
+    "swap_used_mb": 5211.06,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.11,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.31517,
+    "char_kana": 0.28659,
+    "char_lenient": 0.31517
+   },
+   "measures": {
+    "x_realtime": 41.5,
+    "peak_rss_gb": 4.18,
+    "files_scored": 1,
+    "files_expected": 1,
+    "complete": true
+   },
+   "files": [
+    {
+     "file": "bb5cf5d5b247",
+     "duration_s": 112.0,
+     "unit": "char",
+     "x_realtime": 41.5,
+     "language_source": "single_language_model",
+     "segments": 11,
+     "cue_source": "token_times",
+     "token_count": 305,
+     "windows": 1,
+     "empty_windows": 0,
+     "ref_chars": 422,
+     "hyp_chars": 305,
+     "extra_ratio": 0.7227488151658767,
+     "coverage": 0.6895734597156398,
+     "cer": 0.31516587677725116,
+     "coverage_cer": 0.31516587677725116,
+     "subs": 12,
+     "dels": 119,
+     "insertions_counted": 2,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "kana_coverage_cer": 0.28659,
+     "kana_ref_chars": 492,
+     "lenient_coverage_cer": 0.31517,
+     "lenient_forgiven": 0
+    }
+   ],
+   "missing": [
+    "peak memory"
+   ]
+  }
+ ]
+}

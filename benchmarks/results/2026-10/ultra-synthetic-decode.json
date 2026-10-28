@@ -1,0 +1,349 @@
+{
+ "group": "ultra-synthetic-decode",
+ "question": "Synthetic decode throughput and peak memory by batch (mlx-asr-bench, 4-bit, 400 steps, batches 1-128), 3 runs",
+ "docs": [
+  "docs/benchmarks/decode-throughput.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "synth_ultra_4bit_r1",
+   "command": "mlx-asr-bench --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 400 --batches 1,2,4,8,12,16,24,32,48,64,96,128 --json synth_ultra_4bit_r1.json",
+   "params": {
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "steps": 400,
+    "batches": "1,2,4,8,12,16,24,32,48,64,96,128",
+    "kv_bits": null
+   },
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "batch": 1,
+     "steps_per_s": 89.83,
+     "ms_per_step": 11.1,
+     "x_realtime": 7.2,
+     "peak_gb": 5.15
+    },
+    {
+     "batch": 2,
+     "steps_per_s": 77.68,
+     "ms_per_step": 12.9,
+     "x_realtime": 12.4,
+     "peak_gb": 5.32
+    },
+    {
+     "batch": 4,
+     "steps_per_s": 61.36,
+     "ms_per_step": 16.3,
+     "x_realtime": 19.6,
+     "peak_gb": 5.65
+    },
+    {
+     "batch": 8,
+     "steps_per_s": 40.55,
+     "ms_per_step": 24.7,
+     "x_realtime": 26.0,
+     "peak_gb": 6.28
+    },
+    {
+     "batch": 12,
+     "steps_per_s": 32.22,
+     "ms_per_step": 31.0,
+     "x_realtime": 30.9,
+     "peak_gb": 6.75
+    },
+    {
+     "batch": 16,
+     "steps_per_s": 29.81,
+     "ms_per_step": 33.5,
+     "x_realtime": 38.2,
+     "peak_gb": 7.43
+    },
+    {
+     "batch": 24,
+     "steps_per_s": 28.78,
+     "ms_per_step": 34.7,
+     "x_realtime": 55.3,
+     "peak_gb": 8.38
+    },
+    {
+     "batch": 32,
+     "steps_per_s": 29.39,
+     "ms_per_step": 34.0,
+     "x_realtime": 75.2,
+     "peak_gb": 9.06
+    },
+    {
+     "batch": 48,
+     "steps_per_s": 18.7,
+     "ms_per_step": 53.5,
+     "x_realtime": 71.8,
+     "peak_gb": 10.73
+    },
+    {
+     "batch": 64,
+     "steps_per_s": 18.72,
+     "ms_per_step": 53.4,
+     "x_realtime": 95.9,
+     "peak_gb": 12.41
+    },
+    {
+     "batch": 96,
+     "steps_per_s": 12.98,
+     "ms_per_step": 77.1,
+     "x_realtime": 99.7,
+     "peak_gb": 16.16
+    },
+    {
+     "batch": 128,
+     "steps_per_s": 10.13,
+     "ms_per_step": 98.7,
+     "x_realtime": 103.8,
+     "peak_gb": 19.61
+    }
+   ],
+   "missing": [
+    "machine load and GPU memory at start (not recorded by mlx-asr-bench)"
+   ]
+  },
+  {
+   "run": "synth_ultra_4bit_r2",
+   "command": "mlx-asr-bench --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 400 --batches 1,2,4,8,12,16,24,32,48,64,96,128 --json synth_ultra_4bit_r2.json",
+   "params": {
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "steps": 400,
+    "batches": "1,2,4,8,12,16,24,32,48,64,96,128",
+    "kv_bits": null
+   },
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "batch": 1,
+     "steps_per_s": 90.62,
+     "ms_per_step": 11.0,
+     "x_realtime": 7.2,
+     "peak_gb": 5.15
+    },
+    {
+     "batch": 2,
+     "steps_per_s": 77.82,
+     "ms_per_step": 12.9,
+     "x_realtime": 12.5,
+     "peak_gb": 5.32
+    },
+    {
+     "batch": 4,
+     "steps_per_s": 61.31,
+     "ms_per_step": 16.3,
+     "x_realtime": 19.6,
+     "peak_gb": 5.65
+    },
+    {
+     "batch": 8,
+     "steps_per_s": 40.51,
+     "ms_per_step": 24.7,
+     "x_realtime": 25.9,
+     "peak_gb": 6.28
+    },
+    {
+     "batch": 12,
+     "steps_per_s": 32.22,
+     "ms_per_step": 31.0,
+     "x_realtime": 30.9,
+     "peak_gb": 6.75
+    },
+    {
+     "batch": 16,
+     "steps_per_s": 29.81,
+     "ms_per_step": 33.5,
+     "x_realtime": 38.2,
+     "peak_gb": 7.43
+    },
+    {
+     "batch": 24,
+     "steps_per_s": 28.9,
+     "ms_per_step": 34.6,
+     "x_realtime": 55.5,
+     "peak_gb": 8.38
+    },
+    {
+     "batch": 32,
+     "steps_per_s": 29.39,
+     "ms_per_step": 34.0,
+     "x_realtime": 75.3,
+     "peak_gb": 9.06
+    },
+    {
+     "batch": 48,
+     "steps_per_s": 18.71,
+     "ms_per_step": 53.5,
+     "x_realtime": 71.8,
+     "peak_gb": 10.73
+    },
+    {
+     "batch": 64,
+     "steps_per_s": 18.72,
+     "ms_per_step": 53.4,
+     "x_realtime": 95.8,
+     "peak_gb": 12.41
+    },
+    {
+     "batch": 96,
+     "steps_per_s": 12.98,
+     "ms_per_step": 77.1,
+     "x_realtime": 99.7,
+     "peak_gb": 16.16
+    },
+    {
+     "batch": 128,
+     "steps_per_s": 10.15,
+     "ms_per_step": 98.5,
+     "x_realtime": 103.9,
+     "peak_gb": 19.61
+    }
+   ],
+   "missing": [
+    "machine load and GPU memory at start (not recorded by mlx-asr-bench)"
+   ]
+  },
+  {
+   "run": "synth_ultra_4bit_r3",
+   "command": "mlx-asr-bench --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 400 --batches 1,2,4,8,12,16,24,32,48,64,96,128 --json synth_ultra_4bit_r3.json",
+   "params": {
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "steps": 400,
+    "batches": "1,2,4,8,12,16,24,32,48,64,96,128",
+    "kv_bits": null
+   },
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "batch": 1,
+     "steps_per_s": 90.57,
+     "ms_per_step": 11.0,
+     "x_realtime": 7.2,
+     "peak_gb": 5.15
+    },
+    {
+     "batch": 2,
+     "steps_per_s": 77.9,
+     "ms_per_step": 12.8,
+     "x_realtime": 12.5,
+     "peak_gb": 5.32
+    },
+    {
+     "batch": 4,
+     "steps_per_s": 61.32,
+     "ms_per_step": 16.3,
+     "x_realtime": 19.6,
+     "peak_gb": 5.65
+    },
+    {
+     "batch": 8,
+     "steps_per_s": 40.55,
+     "ms_per_step": 24.7,
+     "x_realtime": 25.9,
+     "peak_gb": 6.28
+    },
+    {
+     "batch": 12,
+     "steps_per_s": 32.24,
+     "ms_per_step": 31.0,
+     "x_realtime": 31.0,
+     "peak_gb": 6.75
+    },
+    {
+     "batch": 16,
+     "steps_per_s": 29.81,
+     "ms_per_step": 33.6,
+     "x_realtime": 38.2,
+     "peak_gb": 7.43
+    },
+    {
+     "batch": 24,
+     "steps_per_s": 28.94,
+     "ms_per_step": 34.6,
+     "x_realtime": 55.6,
+     "peak_gb": 8.38
+    },
+    {
+     "batch": 32,
+     "steps_per_s": 29.37,
+     "ms_per_step": 34.1,
+     "x_realtime": 75.2,
+     "peak_gb": 9.06
+    },
+    {
+     "batch": 48,
+     "steps_per_s": 18.71,
+     "ms_per_step": 53.5,
+     "x_realtime": 71.8,
+     "peak_gb": 10.73
+    },
+    {
+     "batch": 64,
+     "steps_per_s": 18.73,
+     "ms_per_step": 53.4,
+     "x_realtime": 95.9,
+     "peak_gb": 12.41
+    },
+    {
+     "batch": 96,
+     "steps_per_s": 12.98,
+     "ms_per_step": 77.0,
+     "x_realtime": 99.7,
+     "peak_gb": 16.16
+    },
+    {
+     "batch": 128,
+     "steps_per_s": 10.16,
+     "ms_per_step": 98.5,
+     "x_realtime": 104.0,
+     "peak_gb": 19.61
+    }
+   ],
+   "missing": [
+    "machine load and GPU memory at start (not recorded by mlx-asr-bench)"
+   ]
+  }
+ ]
+}

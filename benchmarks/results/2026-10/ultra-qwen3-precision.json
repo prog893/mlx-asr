@@ -166,7 +166,7 @@
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.31377,
      "lenient_forgiven": 8,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -665,6 +665,95 @@
      "kana_ref_chars": 10953,
      "lenient_coverage_cer": 0.30834,
      "lenient_forgiven": 26
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 65.0,
+     "requested_language": "Japanese",
+     "language_source": "forced",
+     "segments": 26,
+     "cue_source": "chunk_boundaries",
+     "peak_memory_gb": 2.06,
+     "audio_coverage": 1.0,
+     "runaway_segments": 1,
+     "empty_segments": 0,
+     "max_tokens_per_chunk": "scaled per window",
+     "ref_chars": 2266,
+     "hyp_chars": 3145,
+     "extra_ratio": 1.387908208296558,
+     "coverage": 0.8848190644307149,
+     "cer": 0.5335392762577229,
+     "coverage_cer": 0.1707855251544572,
+     "subs": 192,
+     "dels": 69,
+     "insertions_counted": 126,
+     "insertions_excused": 822,
+     "excused_run_count": 1,
+     "kana_coverage_cer": 0.13544,
+     "kana_ref_chars": 2658,
+     "lenient_coverage_cer": 0.16637,
+     "lenient_forgiven": 10,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3_0.6B_4bit_c30",
+     "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/supp_ultra_20261011/corpus --model qwen3-asr --size 0.6B --quantization 4bit --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3_0.6B_4bit_c30 --wait-for-idle 0.0 --json rerun_ultra_retry_20261010__qwen3_0.6B_4bit_c30.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "qwen3-asr",
+      "size": "0.6B",
+      "quantization": "4bit",
+      "language_mode": "forced",
+      "chunk_seconds": 30.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "repeat": 1,
+      "label": "qwen3_0.6B_4bit_c30",
+      "require_idle": false,
+      "wait_for_idle": 0.0
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.03,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 2.01,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 51.19,
+      "peak_memory_gb": 2.06,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "truncated_files": [],
+      "looped_files": [
+       "bb5cf5d5b247",
+       "71bb5eba3baa"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -829,7 +918,7 @@
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.29082,
      "lenient_forgiven": 1,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1328,6 +1417,94 @@
      "kana_ref_chars": 10953,
      "lenient_coverage_cer": 0.24527,
      "lenient_forgiven": 16
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 77.7,
+     "requested_language": "Japanese",
+     "language_source": "forced",
+     "segments": 26,
+     "cue_source": "chunk_boundaries",
+     "peak_memory_gb": 2.14,
+     "audio_coverage": 1.0,
+     "runaway_segments": 0,
+     "empty_segments": 0,
+     "max_tokens_per_chunk": "scaled per window",
+     "ref_chars": 2266,
+     "hyp_chars": 2320,
+     "extra_ratio": 1.0238305383936452,
+     "coverage": 0.9077669902912622,
+     "cer": 0.14474845542806708,
+     "coverage_cer": 0.14474845542806708,
+     "subs": 144,
+     "dels": 65,
+     "insertions_counted": 119,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "kana_coverage_cer": 0.11324,
+     "kana_ref_chars": 2658,
+     "lenient_coverage_cer": 0.14431,
+     "lenient_forgiven": 1,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3_0.6B_5bit_c30",
+     "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/supp_ultra_20261011/corpus --model qwen3-asr --size 0.6B --quantization 5bit --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3_0.6B_5bit_c30 --wait-for-idle 0.0 --json rerun_ultra_retry_20261010__qwen3_0.6B_5bit_c30.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "qwen3-asr",
+      "size": "0.6B",
+      "quantization": "5bit",
+      "language_mode": "forced",
+      "chunk_seconds": 30.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "repeat": 1,
+      "label": "qwen3_0.6B_5bit_c30",
+      "require_idle": false,
+      "wait_for_idle": 0.0
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.6,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.27,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 55.51,
+      "peak_memory_gb": 2.14,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "truncated_files": [],
+      "looped_files": [
+       "bb5cf5d5b247"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -1490,7 +1667,7 @@
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.2895,
      "lenient_forgiven": 2,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1989,6 +2166,92 @@
      "kana_ref_chars": 10953,
      "lenient_coverage_cer": 0.29929,
      "lenient_forgiven": 16
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 76.5,
+     "requested_language": "Japanese",
+     "language_source": "forced",
+     "segments": 26,
+     "cue_source": "chunk_boundaries",
+     "peak_memory_gb": 2.21,
+     "audio_coverage": 1.0,
+     "runaway_segments": 0,
+     "empty_segments": 1,
+     "max_tokens_per_chunk": "scaled per window",
+     "ref_chars": 2266,
+     "hyp_chars": 2326,
+     "extra_ratio": 1.026478375992939,
+     "coverage": 0.912180052956752,
+     "cer": 0.1416593115622242,
+     "coverage_cer": 0.1416593115622242,
+     "subs": 137,
+     "dels": 62,
+     "insertions_counted": 122,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "kana_coverage_cer": 0.10798,
+     "kana_ref_chars": 2658,
+     "lenient_coverage_cer": 0.14078,
+     "lenient_forgiven": 2,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3_0.6B_6bit_c30",
+     "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/supp_ultra_20261011/corpus --model qwen3-asr --size 0.6B --quantization 6bit --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3_0.6B_6bit_c30 --wait-for-idle 0.0 --json rerun_ultra_retry_20261010__qwen3_0.6B_6bit_c30.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "qwen3-asr",
+      "size": "0.6B",
+      "quantization": "6bit",
+      "language_mode": "forced",
+      "chunk_seconds": 30.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "repeat": 1,
+      "label": "qwen3_0.6B_6bit_c30",
+      "require_idle": false,
+      "wait_for_idle": 0.0
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.02,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 59.15,
+      "peak_memory_gb": 2.21,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "truncated_files": [],
+      "looped_files": []
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -2151,7 +2414,7 @@
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.28817,
      "lenient_forgiven": 2,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -2650,6 +2913,92 @@
      "kana_ref_chars": 10953,
      "lenient_coverage_cer": 0.28678,
      "lenient_forgiven": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 77.9,
+     "requested_language": "Japanese",
+     "language_source": "forced",
+     "segments": 26,
+     "cue_source": "chunk_boundaries",
+     "peak_memory_gb": 2.36,
+     "audio_coverage": 1.0,
+     "runaway_segments": 0,
+     "empty_segments": 1,
+     "max_tokens_per_chunk": "scaled per window",
+     "ref_chars": 2266,
+     "hyp_chars": 2319,
+     "extra_ratio": 1.0233892321270963,
+     "coverage": 0.912621359223301,
+     "cer": 0.13901147396293026,
+     "coverage_cer": 0.13901147396293026,
+     "subs": 134,
+     "dels": 64,
+     "insertions_counted": 117,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "kana_coverage_cer": 0.11136,
+     "kana_ref_chars": 2658,
+     "lenient_coverage_cer": 0.13813,
+     "lenient_forgiven": 2,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3_0.6B_8bit_c30",
+     "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/supp_ultra_20261011/corpus --model qwen3-asr --size 0.6B --quantization 8bit --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3_0.6B_8bit_c30 --wait-for-idle 0.0 --json rerun_ultra_retry_20261010__qwen3_0.6B_8bit_c30.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "qwen3-asr",
+      "size": "0.6B",
+      "quantization": "8bit",
+      "language_mode": "forced",
+      "chunk_seconds": 30.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "repeat": 1,
+      "label": "qwen3_0.6B_8bit_c30",
+      "require_idle": false,
+      "wait_for_idle": 0.0
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.57,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 74.77,
+      "peak_memory_gb": 2.36,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "truncated_files": [],
+      "looped_files": []
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -2813,7 +3162,7 @@
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.28729,
      "lenient_forgiven": 2,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3312,6 +3661,92 @@
      "kana_ref_chars": 10953,
      "lenient_coverage_cer": 0.29064,
      "lenient_forgiven": 9
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 70.5,
+     "requested_language": "Japanese",
+     "language_source": "forced",
+     "segments": 26,
+     "cue_source": "chunk_boundaries",
+     "peak_memory_gb": 2.92,
+     "audio_coverage": 1.0,
+     "runaway_segments": 0,
+     "empty_segments": 1,
+     "max_tokens_per_chunk": "scaled per window",
+     "ref_chars": 2266,
+     "hyp_chars": 2327,
+     "extra_ratio": 1.0269196822594882,
+     "coverage": 0.9152691968225949,
+     "cer": 0.13901147396293026,
+     "coverage_cer": 0.13901147396293026,
+     "subs": 130,
+     "dels": 62,
+     "insertions_counted": 123,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "kana_coverage_cer": 0.11136,
+     "kana_ref_chars": 2658,
+     "lenient_coverage_cer": 0.13813,
+     "lenient_forgiven": 2,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3_0.6B_bf16_c30",
+     "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/supp_ultra_20261011/corpus --model qwen3-asr --size 0.6B --quantization bf16 --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3_0.6B_bf16_c30 --wait-for-idle 0.0 --json rerun_ultra_retry_20261010__qwen3_0.6B_bf16_c30.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "qwen3-asr",
+      "size": "0.6B",
+      "quantization": "bf16",
+      "language_mode": "forced",
+      "chunk_seconds": 30.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "repeat": 1,
+      "label": "qwen3_0.6B_bf16_c30",
+      "require_idle": false,
+      "wait_for_idle": 0.0
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 6.8,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.3,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 67.27,
+      "peak_memory_gb": 2.92,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "truncated_files": [],
+      "looped_files": []
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -3474,7 +3909,7 @@
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.27626,
      "lenient_forgiven": 10,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3973,6 +4408,94 @@
      "kana_ref_chars": 10953,
      "lenient_coverage_cer": 0.21119,
      "lenient_forgiven": 21
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 37.7,
+     "requested_language": "Japanese",
+     "language_source": "forced",
+     "segments": 26,
+     "cue_source": "chunk_boundaries",
+     "peak_memory_gb": 3.19,
+     "audio_coverage": 1.0,
+     "runaway_segments": 0,
+     "empty_segments": 1,
+     "max_tokens_per_chunk": "scaled per window",
+     "ref_chars": 2266,
+     "hyp_chars": 3879,
+     "extra_ratio": 1.7118270079435127,
+     "coverage": 0.9214474845542807,
+     "cer": 0.8168578993821712,
+     "coverage_cer": 0.13150926743159752,
+     "subs": 118,
+     "dels": 60,
+     "insertions_counted": 120,
+     "insertions_excused": 1553,
+     "excused_run_count": 1,
+     "kana_coverage_cer": 0.09518,
+     "kana_ref_chars": 2658,
+     "lenient_coverage_cer": 0.12621,
+     "lenient_forgiven": 12,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3_1.7B_4bit_c30",
+     "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/supp_ultra_20261011/corpus --model qwen3-asr --size 1.7B --quantization 4bit --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3_1.7B_4bit_c30 --wait-for-idle 0.0 --json rerun_ultra_retry_20261010__qwen3_1.7B_4bit_c30.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "qwen3-asr",
+      "size": "1.7B",
+      "quantization": "4bit",
+      "language_mode": "forced",
+      "chunk_seconds": 30.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "repeat": 1,
+      "label": "qwen3_1.7B_4bit_c30",
+      "require_idle": false,
+      "wait_for_idle": 0.0
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 6.31,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 34.92,
+      "peak_memory_gb": 3.19,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "truncated_files": [],
+      "looped_files": [
+       "bb5cf5d5b247"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -4135,7 +4658,7 @@
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.26655,
      "lenient_forgiven": 7,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -4634,6 +5157,92 @@
      "kana_ref_chars": 10953,
      "lenient_coverage_cer": 0.22574,
      "lenient_forgiven": 12
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 41.0,
+     "requested_language": "Japanese",
+     "language_source": "forced",
+     "segments": 26,
+     "cue_source": "chunk_boundaries",
+     "peak_memory_gb": 3.4,
+     "audio_coverage": 1.0,
+     "runaway_segments": 0,
+     "empty_segments": 0,
+     "max_tokens_per_chunk": "scaled per window",
+     "ref_chars": 2266,
+     "hyp_chars": 2926,
+     "extra_ratio": 1.2912621359223302,
+     "coverage": 0.9276257722859664,
+     "cer": 0.38879082082965577,
+     "coverage_cer": 0.13106796116504854,
+     "subs": 107,
+     "dels": 57,
+     "insertions_counted": 133,
+     "insertions_excused": 584,
+     "excused_run_count": 1,
+     "kana_coverage_cer": 0.09857,
+     "kana_ref_chars": 2658,
+     "lenient_coverage_cer": 0.12665,
+     "lenient_forgiven": 10,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3_1.7B_5bit_c30",
+     "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/supp_ultra_20261011/corpus --model qwen3-asr --size 1.7B --quantization 5bit --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3_1.7B_5bit_c30 --wait-for-idle 0.0 --json rerun_ultra_retry_20261010__qwen3_1.7B_5bit_c30.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "qwen3-asr",
+      "size": "1.7B",
+      "quantization": "5bit",
+      "language_mode": "forced",
+      "chunk_seconds": 30.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "repeat": 1,
+      "label": "qwen3_1.7B_5bit_c30",
+      "require_idle": false,
+      "wait_for_idle": 0.0
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 4.73,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 41.31,
+      "peak_memory_gb": 3.4,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "truncated_files": [],
+      "looped_files": []
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -4797,7 +5406,7 @@
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.26787,
      "lenient_forgiven": 15,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -5296,6 +5905,94 @@
      "kana_ref_chars": 10953,
      "lenient_coverage_cer": 0.26053,
      "lenient_forgiven": 14
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 40.0,
+     "requested_language": "Japanese",
+     "language_source": "forced",
+     "segments": 26,
+     "cue_source": "chunk_boundaries",
+     "peak_memory_gb": 3.62,
+     "audio_coverage": 1.0,
+     "runaway_segments": 0,
+     "empty_segments": 0,
+     "max_tokens_per_chunk": "scaled per window",
+     "ref_chars": 2266,
+     "hyp_chars": 2877,
+     "extra_ratio": 1.2696381288614298,
+     "coverage": 0.9249779346866726,
+     "cer": 0.37113857016769636,
+     "coverage_cer": 0.12533097969991175,
+     "subs": 110,
+     "dels": 60,
+     "insertions_counted": 114,
+     "insertions_excused": 557,
+     "excused_run_count": 1,
+     "kana_coverage_cer": 0.08916,
+     "kana_ref_chars": 2658,
+     "lenient_coverage_cer": 0.11739,
+     "lenient_forgiven": 18,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3_1.7B_6bit_c30",
+     "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/supp_ultra_20261011/corpus --model qwen3-asr --size 1.7B --quantization 6bit --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3_1.7B_6bit_c30 --wait-for-idle 0.0 --json rerun_ultra_retry_20261010__qwen3_1.7B_6bit_c30.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "qwen3-asr",
+      "size": "1.7B",
+      "quantization": "6bit",
+      "language_mode": "forced",
+      "chunk_seconds": 30.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "repeat": 1,
+      "label": "qwen3_1.7B_6bit_c30",
+      "require_idle": false,
+      "wait_for_idle": 0.0
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.44,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 2.01,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 35.7,
+      "peak_memory_gb": 3.62,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "truncated_files": [],
+      "looped_files": [
+       "bb5cf5d5b247"
+      ]
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -5455,7 +6152,7 @@
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.26787,
      "lenient_forgiven": 9,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -5954,6 +6651,92 @@
      "kana_ref_chars": 10953,
      "lenient_coverage_cer": 0.22848,
      "lenient_forgiven": 17
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 33.6,
+     "requested_language": "Japanese",
+     "language_source": "forced",
+     "segments": 26,
+     "cue_source": "chunk_boundaries",
+     "peak_memory_gb": 4.05,
+     "audio_coverage": 1.0,
+     "runaway_segments": 0,
+     "empty_segments": 0,
+     "max_tokens_per_chunk": "scaled per window",
+     "ref_chars": 2266,
+     "hyp_chars": 3464,
+     "extra_ratio": 1.528684907325684,
+     "coverage": 0.9263018534863195,
+     "cer": 0.6288614298323036,
+     "coverage_cer": 0.12135922330097088,
+     "subs": 107,
+     "dels": 60,
+     "insertions_counted": 108,
+     "insertions_excused": 1150,
+     "excused_run_count": 2,
+     "kana_coverage_cer": 0.08691,
+     "kana_ref_chars": 2658,
+     "lenient_coverage_cer": 0.11606,
+     "lenient_forgiven": 12,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3_1.7B_8bit_c30",
+     "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/supp_ultra_20261011/corpus --model qwen3-asr --size 1.7B --quantization 8bit --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3_1.7B_8bit_c30 --wait-for-idle 0.0 --json rerun_ultra_retry_20261010__qwen3_1.7B_8bit_c30.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "qwen3-asr",
+      "size": "1.7B",
+      "quantization": "8bit",
+      "language_mode": "forced",
+      "chunk_seconds": 30.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "repeat": 1,
+      "label": "qwen3_1.7B_8bit_c30",
+      "require_idle": false,
+      "wait_for_idle": 0.0
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.96,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.25,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 31.08,
+      "peak_memory_gb": 4.05,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "truncated_files": [],
+      "looped_files": []
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -6115,7 +6898,7 @@
      "kana_ref_chars": 2658,
      "lenient_coverage_cer": 0.26567,
      "lenient_forgiven": 13,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -6614,6 +7397,92 @@
      "kana_ref_chars": 10953,
      "lenient_coverage_cer": 0.22228,
      "lenient_forgiven": 17
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 26.1,
+     "requested_language": "Japanese",
+     "language_source": "forced",
+     "segments": 26,
+     "cue_source": "chunk_boundaries",
+     "peak_memory_gb": 5.66,
+     "audio_coverage": 1.0,
+     "runaway_segments": 0,
+     "empty_segments": 0,
+     "max_tokens_per_chunk": "scaled per window",
+     "ref_chars": 2266,
+     "hyp_chars": 3456,
+     "extra_ratio": 1.5251544571932922,
+     "coverage": 0.9240953221535746,
+     "cer": 0.6284201235657546,
+     "coverage_cer": 0.12180052956751986,
+     "subs": 110,
+     "dels": 62,
+     "insertions_counted": 104,
+     "insertions_excused": 1148,
+     "excused_run_count": 2,
+     "kana_coverage_cer": 0.08616,
+     "kana_ref_chars": 2658,
+     "lenient_coverage_cer": 0.11474,
+     "lenient_forgiven": 16,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3_1.7B_bf16_c30",
+     "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/supp_ultra_20261011/corpus --model qwen3-asr --size 1.7B --quantization bf16 --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --label qwen3_1.7B_bf16_c30 --wait-for-idle 0.0 --json rerun_ultra_retry_20261010__qwen3_1.7B_bf16_c30.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "qwen3-asr",
+      "size": "1.7B",
+      "quantization": "bf16",
+      "language_mode": "forced",
+      "chunk_seconds": 30.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "repeat": 1,
+      "label": "qwen3_1.7B_bf16_c30",
+      "require_idle": false,
+      "wait_for_idle": 0.0
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.72,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 23.91,
+      "peak_memory_gb": 5.66,
+      "files_scored": 2,
+      "files_expected": 2,
+      "complete": true,
+      "truncated_files": [],
+      "looped_files": []
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],

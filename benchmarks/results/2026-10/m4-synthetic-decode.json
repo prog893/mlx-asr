@@ -1,0 +1,286 @@
+{
+ "group": "m4-synthetic-decode",
+ "question": "Synthetic decode throughput and peak memory by batch (mlx-asr-bench, nvfp4 weights, 400 steps), 3 runs",
+ "docs": [
+  "docs/benchmarks/decode-throughput.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "synth_nvfp4_r1",
+   "command": "mlx-asr-bench --model models/voxtral-nvfp4 --steps 400 --batches 1,2,4,8,12,16,24,32,48 --json synth_nvfp4_r1.json",
+   "params": {
+    "model": "models/voxtral-nvfp4",
+    "steps": 400,
+    "batches": "1,2,4,8,12,16,24,32,48",
+    "kv_bits": null
+   },
+   "machine": {
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "chip_family": "M4",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.7.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "batch": 1,
+     "steps_per_s": 45.5,
+     "ms_per_step": 22.0,
+     "x_realtime": 3.6,
+     "peak_gb": 2.79
+    },
+    {
+     "batch": 2,
+     "steps_per_s": 38.47,
+     "ms_per_step": 26.0,
+     "x_realtime": 6.2,
+     "peak_gb": 2.91
+    },
+    {
+     "batch": 4,
+     "steps_per_s": 19.64,
+     "ms_per_step": 50.9,
+     "x_realtime": 6.3,
+     "peak_gb": 3.25
+    },
+    {
+     "batch": 8,
+     "steps_per_s": 9.71,
+     "ms_per_step": 103.0,
+     "x_realtime": 6.2,
+     "peak_gb": 3.78
+    },
+    {
+     "batch": 12,
+     "steps_per_s": 12.32,
+     "ms_per_step": 81.1,
+     "x_realtime": 11.8,
+     "peak_gb": 4.45
+    },
+    {
+     "batch": 16,
+     "steps_per_s": 11.71,
+     "ms_per_step": 85.4,
+     "x_realtime": 15.0,
+     "peak_gb": 4.94
+    },
+    {
+     "batch": 24,
+     "steps_per_s": 10.79,
+     "ms_per_step": 92.7,
+     "x_realtime": 20.7,
+     "peak_gb": 5.92
+    },
+    {
+     "batch": 32,
+     "steps_per_s": 10.07,
+     "ms_per_step": 99.3,
+     "x_realtime": 25.8,
+     "peak_gb": 6.84
+    },
+    {
+     "batch": 48,
+     "steps_per_s": 5.52,
+     "ms_per_step": 181.3,
+     "x_realtime": 21.2,
+     "peak_gb": 8.42
+    }
+   ],
+   "missing": [
+    "machine load and GPU memory at start (not recorded by mlx-asr-bench)"
+   ]
+  },
+  {
+   "run": "synth_nvfp4_r2",
+   "command": "mlx-asr-bench --model models/voxtral-nvfp4 --steps 400 --batches 1,2,4,8,12,16,24,32,48 --json synth_nvfp4_r2.json",
+   "params": {
+    "model": "models/voxtral-nvfp4",
+    "steps": 400,
+    "batches": "1,2,4,8,12,16,24,32,48",
+    "kv_bits": null
+   },
+   "machine": {
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "chip_family": "M4",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.7.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "batch": 1,
+     "steps_per_s": 47.52,
+     "ms_per_step": 21.0,
+     "x_realtime": 3.8,
+     "peak_gb": 2.79
+    },
+    {
+     "batch": 2,
+     "steps_per_s": 38.64,
+     "ms_per_step": 25.9,
+     "x_realtime": 6.2,
+     "peak_gb": 2.91
+    },
+    {
+     "batch": 4,
+     "steps_per_s": 19.7,
+     "ms_per_step": 50.8,
+     "x_realtime": 6.3,
+     "peak_gb": 3.25
+    },
+    {
+     "batch": 8,
+     "steps_per_s": 9.69,
+     "ms_per_step": 103.2,
+     "x_realtime": 6.2,
+     "peak_gb": 3.78
+    },
+    {
+     "batch": 12,
+     "steps_per_s": 12.38,
+     "ms_per_step": 80.8,
+     "x_realtime": 11.9,
+     "peak_gb": 4.45
+    },
+    {
+     "batch": 16,
+     "steps_per_s": 11.86,
+     "ms_per_step": 84.3,
+     "x_realtime": 15.2,
+     "peak_gb": 4.94
+    },
+    {
+     "batch": 24,
+     "steps_per_s": 10.82,
+     "ms_per_step": 92.4,
+     "x_realtime": 20.8,
+     "peak_gb": 5.92
+    },
+    {
+     "batch": 32,
+     "steps_per_s": 10.09,
+     "ms_per_step": 99.1,
+     "x_realtime": 25.8,
+     "peak_gb": 6.84
+    },
+    {
+     "batch": 48,
+     "steps_per_s": 5.52,
+     "ms_per_step": 181.2,
+     "x_realtime": 21.2,
+     "peak_gb": 8.42
+    }
+   ],
+   "missing": [
+    "machine load and GPU memory at start (not recorded by mlx-asr-bench)"
+   ]
+  },
+  {
+   "run": "synth_nvfp4_r3",
+   "command": "mlx-asr-bench --model models/voxtral-nvfp4 --steps 400 --batches 1,2,4,8,12,16,24,32,48 --json synth_nvfp4_r3.json",
+   "params": {
+    "model": "models/voxtral-nvfp4",
+    "steps": 400,
+    "batches": "1,2,4,8,12,16,24,32,48",
+    "kv_bits": null
+   },
+   "machine": {
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "chip_family": "M4",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.7.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "batch": 1,
+     "steps_per_s": 48.16,
+     "ms_per_step": 20.8,
+     "x_realtime": 3.9,
+     "peak_gb": 2.79
+    },
+    {
+     "batch": 2,
+     "steps_per_s": 38.42,
+     "ms_per_step": 26.0,
+     "x_realtime": 6.1,
+     "peak_gb": 2.91
+    },
+    {
+     "batch": 4,
+     "steps_per_s": 19.63,
+     "ms_per_step": 50.9,
+     "x_realtime": 6.3,
+     "peak_gb": 3.25
+    },
+    {
+     "batch": 8,
+     "steps_per_s": 9.7,
+     "ms_per_step": 103.1,
+     "x_realtime": 6.2,
+     "peak_gb": 3.78
+    },
+    {
+     "batch": 12,
+     "steps_per_s": 12.37,
+     "ms_per_step": 80.8,
+     "x_realtime": 11.9,
+     "peak_gb": 4.45
+    },
+    {
+     "batch": 16,
+     "steps_per_s": 11.75,
+     "ms_per_step": 85.1,
+     "x_realtime": 15.0,
+     "peak_gb": 4.94
+    },
+    {
+     "batch": 24,
+     "steps_per_s": 10.86,
+     "ms_per_step": 92.1,
+     "x_realtime": 20.8,
+     "peak_gb": 5.92
+    },
+    {
+     "batch": 32,
+     "steps_per_s": 10.03,
+     "ms_per_step": 99.7,
+     "x_realtime": 25.7,
+     "peak_gb": 6.84
+    },
+    {
+     "batch": 48,
+     "steps_per_s": 5.53,
+     "ms_per_step": 180.9,
+     "x_realtime": 21.2,
+     "peak_gb": 8.42
+    }
+   ],
+   "missing": [
+    "machine load and GPU memory at start (not recorded by mlx-asr-bench)"
+   ]
+  }
+ ]
+}
