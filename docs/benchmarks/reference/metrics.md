@@ -3,7 +3,7 @@
 Use coverage CER/WER for editorial references, plain CER only for verbatim ones, and
 lenient CER as the fair Japanese number. Plain CER fails on most of this material because
 the references deliberately omit audio, so it counts correct transcription of that audio
-as error: four corpus files read over 100% plain CER while scoring 15-20% on coverage
+as error: four corpus files read over 100% plain CER while scoring 15-20%[^m1] on coverage
 CER. Kana CER is reported but should not be quoted as "the" figure: it over-forgives,
 and until 2026-08-19 it also under-forgave, because pykakasi never read numerals (see
 below).
@@ -40,12 +40,15 @@ transcripts rather than the scores:
 - **Word spacing on space-delimited output.** Because whitespace is deleted before
   scoring, a hypothesis can lose almost all its spaces and still score normally on
   character coverage. Conversely, word-level coverage over-punishes it: one arm of the
-  prompt experiment emitted 2 spaces where the unprompted run emitted 4016, which read as
-  97% coverage WER while the character content was within 3 points of baseline. See
+  prompt experiment emitted 1 space where the unprompted run emitted 4016, which read as
+  97.58% coverage WER while the whitespace-free character CER was within 1.4 points[^m12] of
+  baseline. See
   [prompt.md](../prompt.md).
 - **Punctuation density.** Voxtral emits Japanese `。` and `、` at roughly a third of the
-  rate the references use (7.6 to 10.6 marks per 1000 characters against 30.7), in every
-  configuration measured. Since punctuation is stripped, no number in these documents
+  rate the references use (8.8 to 13.6 marks per 1000 non-space characters across the
+  prompt arms, against 31.0 in the references, on the 12 Japanese recordings whose
+  references are transcripts, as the saved count's derive script defines it)[^m8], in
+  every prompt configuration counted. Since punctuation is stripped, no number in these documents
   reflects it, and it does not appear as a regression anywhere.
 
 Neither is a scoring bug: both metrics do what they are specified to do, and stripping is
@@ -60,27 +63,29 @@ evaluation: off-topic passages, side conversation in another language, and non-s
 segments were cut. The audio still contains that material, so a *correct* transcription
 legitimately includes text the reference lacks.
 
-Plain CER counted all of it as insertions and read 130-152% on the Japanese files. On the
-20-file corpus:
+Plain CER counted all of it as insertions. On the seven Japanese files below it reads
+37.4% to 150.8%[^m1], and above 130% on the four longest[^m1]. On the 20-file corpus:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../img/metrics-plain-vs-coverage-dark.svg">
-  <img alt="Plain CER and coverage CER for seven Japanese corpus files, labelled by duration; plain CER runs from 37% to 151% while coverage CER stays between 5.5% and 19.9%" src="../img/metrics-plain-vs-coverage-light.svg">
+  <img alt="Plain CER and coverage CER for seven Japanese corpus files, labelled by duration; plain CER runs from 37% to 151% while coverage CER stays between 5.5% and 19.7%" src="../img/metrics-plain-vs-coverage-light.svg">
 </picture>
 
 **Table:** per-file coverage, coverage CER and plain CER for seven Japanese files of the 20-file corpus, with the characters excused and the hypothesis-to-reference length ratio.
 
 | file | duration | coverage | coverage CER | plain CER | chars excused | extra_ratio |
 |---|---|---|---|---|---|---|
-| rec-02 | 52.0 min | 86.6% | **17.4%** | 150.7% | 8453 | 2.32 |
-| rec-06 | 25.9 min | 83.4% | **19.9%** | 148.2% | 2966 | 2.23 |
-| rec-03 | 93.2 min | 86.8% | **17.1%** | 144.5% | 12522 | 2.27 |
-| rec-05 | 69.6 min | 89.1% | **14.6%** | 134.1% | 8957 | 2.20 |
-| rec-07 | 5.5 min | 98.1% | **5.5%** | 99.3% | 1002 | 1.97 |
-| rec-04 | 13.3 min | 90.3% | **11.7%** | 64.4% | 1337 | 1.50 |
-| rec-12 | 1.9 min | 82.2% | **18.0%** | 37.4% | 82 | 1.18 |
+| c18b2f5aa2a2 | 52.0 min | 86.6% | **17.4%** | 150.8% | 8461 | 2.32 |
+| cbeb19543902 | 25.9 min | 83.4% | **19.7%** | 147.9% | 2966 | 2.22 |
+| 9aefd8f2352e | 93.2 min | 86.9% | **16.7%** | 146.2% | 12734 | 2.29 |
+| c29657df52e9 | 69.6 min | 89.4% | **16.6%** | 132.9% | 8719 | 2.19 |
+| b88caf8c0924 | 5.5 min | 98.1% | **5.5%** | 99.3% | 1002 | 1.97 |
+| 07fd66556725 | 13.3 min | 90.3% | **11.7%** | 64.4% | 1337 | 1.50 |
+| bb5cf5d5b247 | 1.9 min | 82.2% | **18.0%** | 37.4% | 82 | 1.18 |
 
-`rec-07` is the sharpest case: 99.3% plain against 5.5% coverage, with 98.1% of reference
+Source: [ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`; [corpus.json](../../../benchmarks/results/corpus.json)
+
+`b88caf8c0924` is the sharpest case: 99.3% plain against 5.5% coverage, with 98.1%[^m1] of reference
 characters found correctly. An evaluation of this corpus on plain CER would rank configs
 by **how much real speech they skip**, which is the opposite of what anyone wants.
 
@@ -111,7 +116,7 @@ from the 7-file runs (the Whisper rows from the 2026-07-29 baseline):
   <img alt="Japanese coverage CER against the min_cut excusal threshold for three Voxtral configs; the ranking holds at every threshold, 30 is the default" src="../img/metrics-mincut-configs-light.svg">
 </picture>
 
-**Table:** Japanese coverage CER of three Voxtral configs at five `min_cut` thresholds (mc10 to mc80, in characters).
+**Table:** Japanese coverage CER of three Voxtral configs at five `min_cut` thresholds (mc10 to mc80, in characters).[^m2]
 
 | config | mc10 | mc20 | mc30 | mc50 | mc80 |
 |---|---|---|---|---|---|
@@ -119,15 +124,20 @@ from the 7-file runs (the Whisper rows from the 2026-07-29 baseline):
 | 30s b32 kv8 ov8 | 15.62% | 16.67% | 17.34% | 18.12% | 20.61% |
 | 60s b16 kv8 | 16.80% | 17.95% | 18.21% | 19.32% | 20.69% |
 
-Absolute levels drift about 5 points across that range. But the **ranking is identical at
+Source: [ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`, `mincut7_vox_c30b32_kv8_ov8`, `mincut7_vox_c60b16_kv8` (mc30); [ultra-derived-measures.json](../../../benchmarks/results/2026-10/ultra-derived-measures.json) runs `mincut_sweep` (every threshold, rescoring the same hypotheses; its mc30 column reproduces the saved runs)
+
+Absolute levels drift about 5 points[^m9] across that range (5.26 on characters and 5.17 on
+words for the first config)[^m9]. But the **ranking is identical at
 every threshold**, on both units, which is the property the tuning conclusions actually
 depend on. Every figure in these documents uses 30 characters / 6 words.
 
 ### It is not flattering one engine
 
 The obvious worry is that excusing insertions helps whichever engine inserts more.
-Whisper's `extra_ratio` on Japanese (2.2-2.7) is higher than Voxtral's (2.1), so the
-threshold could in principle favour Whisper. Across engines:
+On the 5 Japanese files of the 7-file subset, the mean per-file `extra_ratio` is 2.1 for
+Voxtral and 1.66 to 2.02 for large-v3, medium and turbo at library defaults and for
+large-v3-nocond; only turbo-nocond inserts more than Voxtral, at 2.75[^m7]. That is the one
+comparison where the threshold could in principle favour Whisper. Across engines:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../img/metrics-mincut-engines-dark.svg">
@@ -138,17 +148,21 @@ threshold could in principle favour Whisper. Across engines:
 
 | config | mc10 | mc20 | mc30 | mc50 | mc80 |
 |---|---|---|---|---|---|
-| turbo-nocond | 13.85% | 14.78% | 14.93% | 16.03% | 16.84% |
+| turbo-nocond | 13.89% | 15.26% | 16.12% | 16.88% | 17.27% |
 | voxtral c30b32_kv8 | 14.97% | 15.89% | 16.44% | 17.81% | 20.23% |
-| large-v3-nocond | 13.32% | 15.53% | 17.36% | 20.10% | 23.39% |
-| large-v3-turbo | 22.76% | 23.99% | 24.97% | 26.58% | 28.05% |
-| medium | 21.81% | 26.23% | 28.93% | 32.18% | 36.49% |
+| large-v3-nocond | 13.48% | 15.98% | 17.07% | 21.05% | 26.85% |
+| large-v3-turbo | 24.09% | 25.01% | 25.92% | 26.62% | 28.42% |
+| medium | 23.47% | 29.61% | 34.43% | 39.24% | 44.99% |
 
-The two leaders keep their order across the whole range, and Voxtral's disadvantage
-against turbo-nocond *shrinks* as the threshold tightens (-1.1 at mc10 versus -3.4 at
-mc80). If anything the excusal rule works against Voxtral. One rank swap occurs at mc10,
-where large-v3-nocond overtakes turbo-nocond, and those two are inside each other's
-rerun noise anyway.
+Source: [ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_whisper_turbo_nocond`, `mincut7_vox_c30b32_kv8`, `mincut7_whisper_large-v3_nocond`, `mincut7_whisper_turbo_libdef`, `mincut7_whisper_medium_libdef` (mc30); [ultra-derived-measures.json](../../../benchmarks/results/2026-10/ultra-derived-measures.json) runs `mincut_sweep` (every threshold; one run per config)
+
+The two leaders keep their order across the whole range. Voxtral's disadvantage against
+turbo-nocond is 1.08 points[^m9] at mc10, 0.63 at mc20, 0.32 at mc30, 0.93 at mc50 and 2.96 at
+mc80[^m9]: smallest at the default and largest at mc80, where the least is excused, and not
+monotonic in the threshold, so the excusal rule does not systematically favour Voxtral. The
+ranking at mc30 holds at mc20, mc50 and mc80; it changes only at mc10, with three swaps:
+large-v3-nocond passes both turbo-nocond and Voxtral, and medium passes large-v3-turbo[^m9].
+The table is one run per config, so the swaps have not been tested for resolution.
 
 ## How much of Japanese CER is just spelling
 
@@ -159,19 +173,21 @@ not a model error. Three metrics on the best run of the narration clip ([single 
 
 | metric | value | forgives |
 |---|---|---|
-| CER | 7.42% | nothing |
-| lenient CER | 7.11% | script changes of the *same* word |
-| kana CER | 5.72% | anything sharing a reading |
+| CER | 7.13% | nothing |
+| lenient CER | 6.92% | script changes of the *same* word |
+| kana CER | 5.51% | anything sharing a reading |
+
+Source: [ultra-text-vs-srt.json](../../../benchmarks/results/2026-10/ultra-text-vs-srt.json) runs `tvs_ultra_score` (config 30s, b32, kv8, ov8, token text: the lowest CER of the six)
 
 **Use lenient CER as the fair number.** Kana CER over-forgives: collapsing everything to
 readings also excuses genuine homophone errors, where a different word sharing the same
 reading is substituted. A reader notices that; kana CER scores it free.
 
-This corrects an earlier claim in this project that ~1.6 CER points were orthographic.
-That figure came from the kana measure. The honest number is about 4% of edits, i.e.
-**~0.3 CER points**, so the vast majority of remaining error is real misrecognition.
+This corrects an earlier claim in this project that ~1.6 CER points[^m3] were orthographic.
+That figure came from the kana measure. The honest number is about 3% of edits,[^m3] i.e.
+**~0.2 CER points**, so the vast majority of remaining error is real misrecognition.
 
-Lenient CER changes no ranking on either machine, sitting uniformly 0.2-0.3 points below
+Lenient CER changes no ranking on either machine, sitting uniformly 0.2-0.3 points[^m5] below
 plain CER. That is a useful negative result: the refinement was worth doing to correct
 the magnitude claim, but it does not alter any decision. Kana CER, by contrast, does
 occasionally reorder configs (fp16 leads on kana but not on CER or lenient), which is a
@@ -184,8 +200,8 @@ Found while integrating Qwen3-ASR, and it qualifies every kana figure above:
 `にせんじゅうはちねん`, so the digits-versus-spelled-out difference, the largest
 orthographic class on this material, was charged in full by the very metric meant to
 forgive it. On two spellings of one sentence (`答えは1500でした` against
-`こたえはせんごひゃくでした`, nothing misheard) kana CER read **55%** where the corrected
-figure is 0%.
+`こたえはせんごひゃくでした`, nothing misheard) kana CER read **55%** where the corrected <!-- not-measured: worked example on two constructed strings -->
+figure is 0%. <!-- not-measured: same worked example -->
 
 `eval_cer_lenient.read_number` fills the gap, and `eval_coverage_kana` uses it by
 default. It is **opt-in** in the older plain scripts (`--read-digits`), so every kana
@@ -207,24 +223,25 @@ risks measuring the cue heuristics rather than the transcription.
 
 That concern also uncovered a real bug. Cue text used to be assembled by appending raw
 token *bytes* and decoding at each flush. The tokenizer is a byte-level BPE, so a flush
-landing mid-character split it and both halves decoded to U+FFFD. **217 stray replacement
+landing mid-character split it and both halves decoded to U+FFFD. **Stray replacement
 characters existed across the saved SRTs**, each an unearned CER error. Fixing it (break
-only on complete-character boundaries) improved CER by 0.40 points paired, CI
-[+0.05, +0.81].
+only on complete-character boundaries) removed an unearned CER error per stray character.
 
 With that fixed, text-only CER equals SRT-joined CER **to four decimals across all 12
 configs on both machines** (plain CER on the [single clip](corpus.md#the-single-clip)):
 
-**Table:** plain CER on the single clip from the text output and from the joined SRT cues, per config, on two machines.
+**Table:** plain CER on the single clip from the text output and from the joined SRT cues, per config, on two machines, 4-bit weights on both.[^m6]
 
 | config | M2 Ultra 128GB text | M2 Ultra 128GB srt | M4 16GB text | M4 16GB srt |
 |---|---|---|---|---|
-| 60s, b16 | 7.40% | 7.40% | 7.75% | 7.75% |
-| 60s, b16, kv8 | 7.28% | 7.28% | 7.73% | 7.73% |
-| 30s, b32, kv8 | 8.63% | 8.63% | 9.13% | 9.13% |
-| 30s, b32, kv8, ov4 | 7.16% | 7.16% | 7.87% | 7.87% |
-| 30s, b32, kv8, ov8 | 7.13% | 7.13% | 7.25% | 7.25% |
-| 60s, b16, kv8, compact | 8.30% | 8.30% | 7.97% | 7.97% |
+| 60s, b16 | 7.40% | 7.40% | 7.40% | 7.40% |
+| 60s, b16, kv8 | 7.28% | 7.28% | 7.44% | 7.44% |
+| 30s, b32, kv8 | 8.63% | 8.63% | 8.63% | 8.63% |
+| 30s, b32, kv8, ov4 | 7.16% | 7.16% | 7.11% | 7.11% |
+| 30s, b32, kv8, ov8 | 7.13% | 7.13% | 7.13% | 7.13% |
+| 60s, b16, kv8, compact | 8.30% | 8.30% | 8.32% | 8.32% |
+
+Source: [ultra-text-vs-srt.json](../../../benchmarks/results/2026-10/ultra-text-vs-srt.json) runs `tvs_ultra_score` (the M2 Ultra columns); [m4-text-vs-srt.json](../../../benchmarks/results/2026-10/m4-text-vs-srt.json) runs `tvs_m4_score` (the M4 16GB columns)
 
 So cue grouping does not distort the metric: the only text-changing step was a per-cue
 `.strip()`, and cue boundaries land in gaps rather than inside words. `mlx_asr/text.py`
@@ -245,8 +262,9 @@ instead of inflating both intervals. Sign convention in the output is `diff = a 
 **"Would this hold on other audio?"** Bootstrap over *files*, length-weighted
 (`scripts/benchmarks/compare_engines.py`). This is the only method that speaks to
 generalization, and it is much stricter: the per-file paired difference between two real
-configs has SD 3.50 points, so the corpus resolves effects of about **3.2 points at n=7
-and 1.6 at n=20**. Most lever docs here are n=7; check which the experiment used before
+configs (Voxtral at 4-bit, the default then, against Whisper turbo-nocond, 6 runs, over 17 Japanese files)
+has SD 2.75 points[^m10], so a 95% interval on the mean has a half-width of about **2.04 points at
+n=7 and 1.20 at n=20**[^m10]. Most lever docs here are n=7; check which the experiment used before
 reading "not resolvable" as "small".
 
 That gap between the two is why several single-clip results in this project reversed on a
@@ -258,10 +276,17 @@ The reverse mistake is the expensive one, and this project made it. A clip resul
 as the input to a power calculation, which then said the corpus experiment was not worth
 running:
 
-    clip: fp16 vs 4-bit = 0.07 points  ->  "needs ~15,000 files to resolve"
-    corpus: fp16 vs 4-bit = 1.30 points, CI [+0.59, +2.26], resolved at n=20
+**Table:** fp16 against 4-bit on the clip that sized the corpus experiment, its saved rerun, and the corpus result.
 
-Off by roughly three orders of magnitude, and the conclusion it licensed ("precision costs
+| basis | fp16 vs 4-bit | verdict |
+|---|---|---|
+| clip | a fraction of a point | unresolved, so "needs far more files than exist" |
+| clip, saved rerun | +0.38 points, CI [-0.19, +0.95] | unresolved |
+| corpus | 1.09 points, CI [+0.32, +2.07] | resolved at n=20 |
+
+Source: [ultra-voxtral-clip-paired.json](../../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_prec_fp16v4`; [ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8`
+
+The sample-size estimate was wrong by orders of magnitude, and the conclusion it licensed ("precision costs
 nothing measurable") stood in seven places for weeks
 ([quantization.md](../quantization.md)).
 
@@ -285,6 +310,7 @@ ever draw is the number of multisets of size n from n items, `C(2n-1, n)`:
 | 7 | 1,716 |
 | 17 | 1.17e9 |
 | 20 | 6.89e10 |
+<!-- not-measured: arithmetic, C(2n-1, n) for each n -->
 
 At n=3 there are ten possible resamples no matter how many are requested, so the resulting
 histogram is a handful of spikes and the 2.5th and 97.5th percentiles land on specific
@@ -292,7 +318,7 @@ compositions rather than on a smooth tail. `plot_evidence.py bootstrap` makes th
 immediately: the Japanese panel is a smooth distribution centred near zero, and the English
 panel next to it is five bars.
 
-The consequence is not that the English numbers are wrong, but that **a 95% interval is the
+The consequence is not that the English numbers are wrong, but that **a 95% interval is the <!-- not-measured: CI confidence level -->
 wrong summary for them**. Two English comparisons can both be reported as "not resolvable"
 while one has every resample on the same side of zero and the other is split evenly. Read
 the per-file numbers and the direction for English, not the interval. Anything that rests
@@ -330,3 +356,14 @@ Needs the `eval` extra: `uv sync --extra eval`.
 - [prompt.md](../prompt.md): the word-spacing defect that stripping whitespace hides
 - [engines.md](../engines.md): the cross-engine comparison the `min_cut` sweep checks
 - [README.md](../README.md): index of every lever page
+
+[^m1]: [ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`
+[^m2]: [ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`, `mincut7_vox_c30b32_kv8_ov8`, `mincut7_vox_c60b16_kv8` (mc30); [ultra-derived-measures.json](../../../benchmarks/results/2026-10/ultra-derived-measures.json) runs `mincut_sweep` (every threshold, rescoring the saved hypotheses; the hypotheses themselves are not saved)
+[^m3]: [ultra-text-vs-srt.json](../../../benchmarks/results/2026-10/ultra-text-vs-srt.json) runs `tvs_ultra_score` (config 30s, b32, kv8, ov8: CER minus kana CER, and CER minus lenient CER over CER)
+[^m5]: [ultra-text-vs-srt.json](../../../benchmarks/results/2026-10/ultra-text-vs-srt.json) runs `tvs_ultra_score` (the six M2 Ultra configs); [m4-text-vs-srt.json](../../../benchmarks/results/2026-10/m4-text-vs-srt.json) runs `tvs_m4_score` (the same six configs on the M4 16GB)
+[^m6]: [ultra-text-vs-srt.json](../../../benchmarks/results/2026-10/ultra-text-vs-srt.json) runs `tvs_ultra_score` (the M2 Ultra columns); [m4-text-vs-srt.json](../../../benchmarks/results/2026-10/m4-text-vs-srt.json) runs `tvs_m4_score` (the M4 16GB columns)
+[^m7]: [ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`, `mincut7_whisper_large-v3_libdef`, `mincut7_whisper_large-v3_nocond`, `mincut7_whisper_medium_libdef`, `mincut7_whisper_turbo_libdef`, `mincut7_whisper_turbo_nocond` (mean of the per-file extra_ratio over the 5 Japanese files)
+[^m8]: [ultra-derived-measures.json](../../../benchmarks/results/2026-10/ultra-derived-measures.json) runs `derive_prompt` (Japanese full stops and commas per 1000 non-whitespace characters, pooled over the 12 Japanese recordings whose references are transcripts; the other files are not counted)
+[^m9]: [ultra-derived-measures.json](../../../benchmarks/results/2026-10/ultra-derived-measures.json) runs `mincut_sweep`
+[^m10]: [ultra-resolution-floor.json](../../../benchmarks/results/2026-10/ultra-resolution-floor.json) runs `resolution_floor` (95% half-width 1.96 SD / sqrt(n) of the per-file paired Japanese differences), computed from [ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`; [ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+[^m12]: [ultra-derived-measures.json](../../../benchmarks/results/2026-10/ultra-derived-measures.json) runs `derive_prompt` (its unprompted first-session arm and its frequency-ranked topic English arm, file 0c193bf7ced2: spaces and whitespace-free coverage CER); [ultra-voxtral-prompt-derived.json](../../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic en`; [ultra-voxtral-prompt.json](../../../benchmarks/results/2026-10/ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`

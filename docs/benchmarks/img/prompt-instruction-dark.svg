@@ -172,7 +172,7 @@ L 605.88 195.933574
 L 156.5025 49.153428 
 " clip-path="url(#pe17eee3db5)" style="fill: none; stroke: #3987e5; stroke-width: 1.2"/>
     <path d="M 502.1775 191.987353 
-L 502.1775 101.416785 
+L 502.1775 101.513034 
 " clip-path="url(#pe17eee3db5)" style="fill: none; stroke: #3987e5; stroke-width: 1.2"/>
    </g>
    <g id="line2d_24">
@@ -189,7 +189,7 @@ L -3 -0
    <g id="line2d_25">
     <g clip-path="url(#pe17eee3db5)">
      <use xlink:href="#ma3156ba2cf" x="156.5025" y="49.153428" style="fill: #1f77b4; stroke: #3987e5"/>
-     <use xlink:href="#ma3156ba2cf" x="502.1775" y="101.416785" style="fill: #1f77b4; stroke: #3987e5"/>
+     <use xlink:href="#ma3156ba2cf" x="502.1775" y="101.513034" style="fill: #1f77b4; stroke: #3987e5"/>
     </g>
    </g>
    <g id="patch_3">

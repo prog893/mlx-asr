@@ -16,10 +16,11 @@ SWEEPS = {
         "connect": False,
         "series": ["paired difference"],
         "rows": [
-            (480, "| 480ms vs 2400ms |", ("+9.07",), ("[+5.41, +14.25]",)),
-            (960, "| 960ms vs 2400ms |", ("+4.02",), ("[+1.59, +8.84]",)),
+            (480, "| 480ms vs 2400ms |", ("+9.07",), ("[+5.26, +14.27]",)),
+            (960, "| 960ms vs 2400ms |", ("+4.02",), ("[+1.59, +8.91]",)),
         ],
         "chosen": None,
+        "source": "ultra-voxtral-delay.json#delay7_c30b32_d480,delay7_c30b32_d960;ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8",
         "panels": [{"series": [0], "zero_line": True, "zero": True}],
     },
 }

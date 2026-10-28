@@ -136,9 +136,8 @@ def picker(t):
                                        "runs on the CPU, no GPU peak"],
                loc="lower left", bbox_to_anchor=(0.01, 1.0), ncol=3, frameon=False,
                labelcolor=t["ink2"], fontsize=8.5, borderaxespad=0)
-    _caption(fig, t, "M2 Ultra. Speeds marked floor or shared GPU were measured with "
-                     "other GPU work resident; CPU runs on the CPU. Each model at its default "
-                     "precision. Source: RESULTS.md, engines.md, MODELS.md.")
+    _caption(fig, t, "M2 Ultra. CPU marks an engine that runs on the CPU. Each model at its "
+                     "default precision. Source: RESULTS.md, engines.md, MODELS.md.")
     fig.tight_layout()
     return fig
 
