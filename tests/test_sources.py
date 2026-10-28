@@ -9,7 +9,7 @@ The convention is in AGENTS.md and scripts/metrics/number_scan.py. Two contracts
   spec has a `"source"`, each measured figure in code has a `source:` comment, and each
   profile has a `"runs"` field.
 
-DONE grows page by page until it equals SURFACES.
+DONE equals SURFACES: every surface must be fully sourced.
 """
 
 import importlib.util
@@ -34,9 +34,8 @@ SURFACES = sorted(
        "scripts/docs/chart_data.py"}
     | {str(p.relative_to(ROOT)) for p in (ROOT / "mlx_asr").glob("*.py")}
     | {str(p.relative_to(ROOT)) for p in (ROOT / "scripts/docs/sweeps").glob("*.py")})
-# Pages move here once every number on them is sourced; the doc pass that sources them
-# lands separately.
-DONE: list[str] = []
+# Every surface is fully sourced (2026-10-28), so a new page or module is checked from the start.
+DONE: list[str] = list(SURFACES)
 
 
 def _group_file(name: str) -> Path | None:
