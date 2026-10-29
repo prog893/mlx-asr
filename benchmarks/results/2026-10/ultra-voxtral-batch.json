@@ -110,7 +110,7 @@
      "insertions_counted": 28,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -434,6 +434,77 @@
      "insertions_counted": 354,
      "insertions_excused": 12727,
      "excused_run_count": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 19.5,
+     "chunks": 27,
+     "peak_memory_gb": 6.53,
+     "ref_chars": 2266,
+     "hyp_chars": 2237,
+     "extra_ratio": 0.9872021182700794,
+     "coverage": 0.9421888790820829,
+     "cer": 0.0736981465136805,
+     "coverage_cer": 0.0736981465136805,
+     "subs": 66,
+     "dels": 65,
+     "insertions_counted": 36,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "batch_ultra_20261009__c30b16",
+     "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 16 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b16 --json batch_ultra_20261009__c30b16.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "chunk_seconds": 30.0,
+      "max_batch": 16,
+      "delay_ms": 2400,
+      "kv_bits": 8,
+      "overlap_seconds": 0.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "vad": false,
+      "compact_silence": false,
+      "prompt": "",
+      "label": "c30b16"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.55,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.25,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 18.03,
+      "peak_memory_gb": 6.53
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -545,7 +616,7 @@
      "insertions_counted": 28,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -869,6 +940,77 @@
      "insertions_counted": 354,
      "insertions_excused": 12743,
      "excused_run_count": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 30.0,
+     "chunks": 27,
+     "peak_memory_gb": 6.86,
+     "ref_chars": 2266,
+     "hyp_chars": 2235,
+     "extra_ratio": 0.9863195057369815,
+     "coverage": 0.941747572815534,
+     "cer": 0.07413945278022947,
+     "coverage_cer": 0.07413945278022947,
+     "subs": 65,
+     "dels": 67,
+     "insertions_counted": 36,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "batch_ultra_20261009__c30b32",
+     "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b32 --json batch_ultra_20261009__c30b32.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "chunk_seconds": 30.0,
+      "max_batch": 32,
+      "delay_ms": 2400,
+      "kv_bits": 8,
+      "overlap_seconds": 0.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "vad": false,
+      "compact_silence": false,
+      "prompt": "",
+      "label": "c30b32"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.17,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.21,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 25.53,
+      "peak_memory_gb": 6.86
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -980,7 +1122,7 @@
      "insertions_counted": 28,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1304,6 +1446,77 @@
      "insertions_counted": 354,
      "insertions_excused": 12734,
      "excused_run_count": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 30.2,
+     "chunks": 27,
+     "peak_memory_gb": 6.86,
+     "ref_chars": 2266,
+     "hyp_chars": 2235,
+     "extra_ratio": 0.9863195057369815,
+     "coverage": 0.941747572815534,
+     "cer": 0.07413945278022947,
+     "coverage_cer": 0.07413945278022947,
+     "subs": 65,
+     "dels": 67,
+     "insertions_counted": 36,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "batch_ultra_20261009__c30b128",
+     "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 128 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b128 --json batch_ultra_20261009__c30b128.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "chunk_seconds": 30.0,
+      "max_batch": 128,
+      "delay_ms": 2400,
+      "kv_bits": 8,
+      "overlap_seconds": 0.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "vad": false,
+      "compact_silence": false,
+      "prompt": "",
+      "label": "c30b128"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 4.38,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 25.34,
+      "peak_memory_gb": 6.86
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -1417,7 +1630,7 @@
      "insertions_counted": 28,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -1741,6 +1954,77 @@
      "insertions_counted": 351,
      "insertions_excused": 12734,
      "excused_run_count": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 30.1,
+     "chunks": 27,
+     "peak_memory_gb": 6.86,
+     "ref_chars": 2266,
+     "hyp_chars": 2235,
+     "extra_ratio": 0.9863195057369815,
+     "coverage": 0.941747572815534,
+     "cer": 0.07413945278022947,
+     "coverage_cer": 0.07413945278022947,
+     "subs": 65,
+     "dels": 67,
+     "insertions_counted": 36,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "batch__c30b48",
+     "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 48 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b48 --json batch__c30b48.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "chunk_seconds": 30.0,
+      "max_batch": 48,
+      "delay_ms": 2400,
+      "kv_bits": 8,
+      "overlap_seconds": 0.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "vad": false,
+      "compact_silence": false,
+      "prompt": "",
+      "label": "c30b48"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.03,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.27,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 25.35,
+      "peak_memory_gb": 6.86
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -1855,7 +2139,7 @@
      "insertions_counted": 28,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -2179,6 +2463,77 @@
      "insertions_counted": 351,
      "insertions_excused": 12734,
      "excused_run_count": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 30.1,
+     "chunks": 27,
+     "peak_memory_gb": 6.86,
+     "ref_chars": 2266,
+     "hyp_chars": 2235,
+     "extra_ratio": 0.9863195057369815,
+     "coverage": 0.941747572815534,
+     "cer": 0.07413945278022947,
+     "coverage_cer": 0.07413945278022947,
+     "subs": 65,
+     "dels": 67,
+     "insertions_counted": 36,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "batch__c30b64",
+     "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b64 --json batch__c30b64.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "chunk_seconds": 30.0,
+      "max_batch": 64,
+      "delay_ms": 2400,
+      "kv_bits": 8,
+      "overlap_seconds": 0.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "vad": false,
+      "compact_silence": false,
+      "prompt": "",
+      "label": "c30b64"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.35,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 25.29,
+      "peak_memory_gb": 6.86
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -2290,7 +2645,7 @@
      "insertions_counted": 28,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -2614,6 +2969,77 @@
      "insertions_counted": 354,
      "insertions_excused": 12743,
      "excused_run_count": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 30.1,
+     "chunks": 27,
+     "peak_memory_gb": 6.86,
+     "ref_chars": 2266,
+     "hyp_chars": 2235,
+     "extra_ratio": 0.9863195057369815,
+     "coverage": 0.941747572815534,
+     "cer": 0.07413945278022947,
+     "coverage_cer": 0.07413945278022947,
+     "subs": 65,
+     "dels": 67,
+     "insertions_counted": 36,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "batch__c30b32_r2",
+     "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b32_r2 --json batch__c30b32_r2.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "chunk_seconds": 30.0,
+      "max_batch": 32,
+      "delay_ms": 2400,
+      "kv_bits": 8,
+      "overlap_seconds": 0.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "vad": false,
+      "compact_silence": false,
+      "prompt": "",
+      "label": "c30b32_r2"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.51,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 25.56,
+      "peak_memory_gb": 6.86
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -2725,7 +3151,7 @@
      "insertions_counted": 28,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3049,6 +3475,77 @@
      "insertions_counted": 354,
      "insertions_excused": 12743,
      "excused_run_count": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 30.1,
+     "chunks": 27,
+     "peak_memory_gb": 6.86,
+     "ref_chars": 2266,
+     "hyp_chars": 2235,
+     "extra_ratio": 0.9863195057369815,
+     "coverage": 0.941747572815534,
+     "cer": 0.07413945278022947,
+     "coverage_cer": 0.07413945278022947,
+     "subs": 65,
+     "dels": 67,
+     "insertions_counted": 36,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "batch__c30b32_r3",
+     "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b32_r3 --json batch__c30b32_r3.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "chunk_seconds": 30.0,
+      "max_batch": 32,
+      "delay_ms": 2400,
+      "kv_bits": 8,
+      "overlap_seconds": 0.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "vad": false,
+      "compact_silence": false,
+      "prompt": "",
+      "label": "c30b32_r3"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.68,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.25,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 25.56,
+      "peak_memory_gb": 6.86
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -3160,7 +3657,7 @@
      "insertions_counted": 28,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3484,6 +3981,77 @@
      "insertions_counted": 351,
      "insertions_excused": 12734,
      "excused_run_count": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 30.0,
+     "chunks": 27,
+     "peak_memory_gb": 6.86,
+     "ref_chars": 2266,
+     "hyp_chars": 2235,
+     "extra_ratio": 0.9863195057369815,
+     "coverage": 0.941747572815534,
+     "cer": 0.07413945278022947,
+     "coverage_cer": 0.07413945278022947,
+     "subs": 65,
+     "dels": 67,
+     "insertions_counted": 36,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "batch__c30b64_r2",
+     "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b64_r2 --json batch__c30b64_r2.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "chunk_seconds": 30.0,
+      "max_batch": 64,
+      "delay_ms": 2400,
+      "kv_bits": 8,
+      "overlap_seconds": 0.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "vad": false,
+      "compact_silence": false,
+      "prompt": "",
+      "label": "c30b64_r2"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 1.96,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 25.3,
+      "peak_memory_gb": 6.86
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],
@@ -3595,7 +4163,7 @@
      "insertions_counted": 28,
      "insertions_excused": 0,
      "excused_run_count": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "a73e94506f13",
@@ -3919,6 +4487,79 @@
      "insertions_counted": 351,
      "insertions_excused": 12734,
      "excused_run_count": 20
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "unit": "char",
+     "x_realtime": 30.1,
+     "chunks": 27,
+     "peak_memory_gb": 6.86,
+     "ref_chars": 2266,
+     "hyp_chars": 2235,
+     "extra_ratio": 0.9863195057369815,
+     "coverage": 0.941747572815534,
+     "cer": 0.07413945278022947,
+     "coverage_cer": 0.07413945278022947,
+     "subs": 65,
+     "dels": 67,
+     "insertions_counted": 36,
+     "insertions_excused": 0,
+     "excused_run_count": 0,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "batch__c30b64_r3",
+     "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/supp_ultra_20261011/corpus --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 64 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label c30b64_r3 --json batch__c30b64_r3.json",
+     "params": {
+      "corpus": "bench_out/supp_ultra_20261011/corpus",
+      "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+      "chunk_seconds": 30.0,
+      "max_batch": 64,
+      "delay_ms": 2400,
+      "kv_bits": 8,
+      "overlap_seconds": 0.0,
+      "min_cut": 30,
+      "min_cut_words": 6,
+      "limit": null,
+      "vad": false,
+      "compact_silence": false,
+      "prompt": "",
+      "label": "c30b64_r3"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 2.92,
+      "cpu_count": 24,
+      "swap_used_mb": 6225.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 7.4,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": true,
+      "busy_reasons": [
+       "7.4GB GPU memory already in use"
+      ]
+     },
+     "measures": {
+      "x_realtime": 25.44,
+      "peak_memory_gb": 6.86
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [],

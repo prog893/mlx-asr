@@ -1,0 +1,52 @@
+{
+ "group": "ultra-profile-stages",
+ "question": "Per-stage wall clock (audio load, mel, conv stem, encoder, decode) on the 935s clip, 4-bit at 60s chunks, 3 runs (probes/profile_stages.py)",
+ "docs": [
+  "docs/benchmarks/decode-throughput.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "profile_stages_4bit_c60_r1",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/profile_stages.py $CLIP --model $W4 --chunk-seconds 60 --delay-ms 2400",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[audio] 935.1s load=0.3s -> 16 chunks\n\n[model] 1.1s\n[mel]        0.0s  (0.00s/chunk)\n[conv]       0.1s  (0.00s/chunk)\n[encoder]   11.4s  (0.71s/chunk)\n[encode total] 11.5s for 16 chunks\n[decode would be] 879 steps"
+  },
+  {
+   "run": "profile_stages_4bit_c60_r2",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/profile_stages.py $CLIP --model $W4 --chunk-seconds 60 --delay-ms 2400",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[audio] 935.1s load=0.3s -> 16 chunks\n\n[model] 1.1s\n[mel]        0.0s  (0.00s/chunk)\n[conv]       0.1s  (0.00s/chunk)\n[encoder]   11.4s  (0.71s/chunk)\n[encode total] 11.5s for 16 chunks\n[decode would be] 879 steps"
+  },
+  {
+   "run": "profile_stages_4bit_c60_r3",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/probes/profile_stages.py $CLIP --model $W4 --chunk-seconds 60 --delay-ms 2400",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[audio] 935.1s load=0.3s -> 16 chunks\n\n[model] 1.1s\n[mel]        0.0s  (0.00s/chunk)\n[conv]       0.1s  (0.00s/chunk)\n[encoder]   11.4s  (0.71s/chunk)\n[encode total] 11.5s for 16 chunks\n[decode would be] 879 steps"
+  }
+ ]
+}

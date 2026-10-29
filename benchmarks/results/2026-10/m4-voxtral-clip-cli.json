@@ -1,0 +1,228 @@
+{
+ "group": "m4-voxtral-clip-cli",
+ "question": "Voxtral CLI decodes of the 935s clip on the M4 16GB at 60s / batch 16, KV unquantized against kv8, 4-bit and nvfp4; CER from the score_clip run",
+ "docs": [
+  "docs/benchmarks/quantization.md"
+ ],
+ "note": "In the commands $PY is the repo venv python, $NV the local nvfp4 conversion (models/voxtral-nvfp4), $M4B the 4-bit hub build, $CLIP the 935s clip (bench_out/corpus_timed/632a295d981d.wav), $REF its reference subtitles and $D the queue directory bench_out/m4_20261016/out; hypotheses are not saved. The queue was stopped once and resumed; the resumed copy waits 60s before each machine-state check.",
+ "runs": [
+  {
+   "run": "m4_hk_c60b16_kv0_4bit",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --model $M4B --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/m4_hk_c60b16_kv0_4bit.srt --stats-json $D/hyp/m4_hk_c60b16_kv0_4bit.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "chip_family": "M4",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.7.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 177.78067979204934,
+    "x_realtime": 5.259856209312455,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 1.57321283291094,
+    "peak_memory_gb": 9.07,
+    "encode_s": 49.721872958005406,
+    "decode_s": 112.46521320799366,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": ""
+  },
+  {
+   "run": "m4_hk_c60b16_kv0_nvfp4",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --model $NV --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/m4_hk_c60b16_kv0_nvfp4.srt --stats-json $D/hyp/m4_hk_c60b16_kv0_nvfp4.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "chip_family": "M4",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.7.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 138.55041133298073,
+    "x_realtime": 6.749173845847741,
+    "model": "models/voxtral-nvfp4",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 204,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.8667917079292238,
+    "peak_memory_gb": 6.92,
+    "encode_s": 47.36030983296223,
+    "decode_s": 78.84059704199899,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": ""
+  },
+  {
+   "run": "m4_hk_c60b16_kv8_4bit",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --model $M4B --chunk-seconds 60 --max-batch 16 --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/m4_hk_c60b16_kv8_4bit.srt --stats-json $D/hyp/m4_hk_c60b16_kv8_4bit.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "chip_family": "M4",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.7.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 171.67097325006034,
+    "x_realtime": 5.447052549401628,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 1.449326583999209,
+    "peak_memory_gb": 6.52,
+    "encode_s": 50.02439279202372,
+    "decode_s": 104.71658487501554,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": ""
+  },
+  {
+   "run": "m4_hk_c60b16_kv8_nvfp4",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --model $NV --chunk-seconds 60 --max-batch 16 --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/m4_hk_c60b16_kv8_nvfp4.srt --stats-json $D/hyp/m4_hk_c60b16_kv8_nvfp4.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M4",
+    "model_id": "Mac16,1",
+    "chip_family": "M4",
+    "ram_gb": 16,
+    "gpu_cores": 10,
+    "gpu_working_set_gb": 12.7,
+    "macos": "26.7.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 131.89377708395477,
+    "x_realtime": 7.089802363494202,
+    "model": "models/voxtral-nvfp4",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 204,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.895056709065102,
+    "peak_memory_gb": 4.34,
+    "encode_s": 47.56799312506337,
+    "decode_s": 72.56563924998045,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": ""
+  },
+  {
+   "run": "m4_score_clip",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/rescore_all.py $D/hyp/m4_hk_*.srt --reference $REF --no-ci --json $D/m4_score_clip.json",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "reference: 4205 chars, 4772 kana\n\n                  hypothesis      CER   kanaCER  lenientCER\n   m4_hk_c60b16_kv0_4bit.srt    7.40%     5.49%       7.13%\n  m4_hk_c60b16_kv0_nvfp4.srt    7.75%     5.85%       7.54%\n   m4_hk_c60b16_kv8_4bit.srt    7.44%     5.53%       7.18%\n  m4_hk_c60b16_kv8_nvfp4.srt    7.73%     5.85%       7.51%\n[saved] bench_out/m4_20261016/out/m4_score_clip.json"
+  }
+ ]
+}

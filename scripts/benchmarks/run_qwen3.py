@@ -52,6 +52,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import mlx.core as mx
 from mlx_audio.stt.utils import load as load_model
 
+from benchmarks.corpus_files import add_files_option, only_files
 from benchmarks.machine_state import machine_state, warn_if_busy
 from metrics.eval_coverage import is_space_delimited, load_reference, score_pair
 from metrics.eval_coverage_kana import coverage_kana, coverage_lenient
@@ -108,6 +109,7 @@ def main():
     p.add_argument("--min-cut", type=int, default=30)
     p.add_argument("--min-cut-words", type=int, default=6)
     p.add_argument("--limit", type=int, help="only the N shortest files")
+    add_files_option(p)
     p.add_argument("--repeat", type=int, default=1,
                    help="decode each file N times and report whether the text is "
                         "identical. Greedy, so >1 is a determinism CHECK, not a "
@@ -141,7 +143,7 @@ def main():
     chunk_len = a.chunk_seconds or spec.opts.get("chunk_length_s", 30.0)
 
     corpus = Path(a.corpus).expanduser()
-    pairs = find_pairs(corpus)
+    pairs = only_files(find_pairs(corpus), a.files)
     if not pairs:
         print(f"no audio/transcript pairs found in {corpus}", file=sys.stderr)
         return 2

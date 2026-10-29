@@ -1,0 +1,134 @@
+{
+ "group": "ultra-text-vs-srt",
+ "question": "Token text against joined SRT text, scored on the 935s clip for six CLI configs",
+ "docs": [
+  "docs/benchmarks/reference/metrics.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "tvs_ultra_score",
+   "command": "scripts/benchmarks/compare_text_vs_srt.py --reference bench_out/corpus_timed/632a295d981d.srt --json tvs_ultra_score.json",
+   "params": {
+    "reference": "bench_out/corpus_timed/632a295d981d.srt"
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "rows": [
+    {
+     "run": "ultra_c60b16",
+     "token_text": {
+      "chars": 4151,
+      "cer": 0.07395957193816885,
+      "kana_cer": 0.05490360435875943,
+      "lenient_cer": 0.0713436385255648,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4151,
+      "cer": 0.07395957193816885,
+      "kana_cer": 0.05490360435875943,
+      "lenient_cer": 0.0713436385255648,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    },
+    {
+     "run": "ultra_c60b16_kv8",
+     "token_text": {
+      "chars": 4155,
+      "cer": 0.0727705112960761,
+      "kana_cer": 0.0538558256496228,
+      "lenient_cer": 0.07015457788347206,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4155,
+      "cer": 0.0727705112960761,
+      "kana_cer": 0.0538558256496228,
+      "lenient_cer": 0.07015457788347206,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    },
+    {
+     "run": "ultra_c30b32_kv8",
+     "token_text": {
+      "chars": 4179,
+      "cer": 0.08632580261593341,
+      "kana_cer": 0.0626571668063705,
+      "lenient_cer": 0.08323424494649227,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4179,
+      "cer": 0.08632580261593341,
+      "kana_cer": 0.0626571668063705,
+      "lenient_cer": 0.08323424494649227,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    },
+    {
+     "run": "ultra_c30b32_kv8_ov4",
+     "token_text": {
+      "chars": 4161,
+      "cer": 0.07158145065398336,
+      "kana_cer": 0.0538558256496228,
+      "lenient_cer": 0.06944114149821641,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4161,
+      "cer": 0.07158145065398336,
+      "kana_cer": 0.0538558256496228,
+      "lenient_cer": 0.06944114149821641,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    },
+    {
+     "run": "ultra_c30b32_kv8_ov8",
+     "token_text": {
+      "chars": 4164,
+      "cer": 0.0713436385255648,
+      "kana_cer": 0.055113160100586756,
+      "lenient_cer": 0.06920332936979785,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4164,
+      "cer": 0.0713436385255648,
+      "kana_cer": 0.055113160100586756,
+      "lenient_cer": 0.06920332936979785,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    },
+    {
+     "run": "ultra_c60b16_compact",
+     "token_text": {
+      "chars": 4161,
+      "cer": 0.08299643281807371,
+      "kana_cer": 0.06181894383906119,
+      "lenient_cer": 0.07990487514863258,
+      "fffd": 0
+     },
+     "srt_joined": {
+      "chars": 4161,
+      "cer": 0.08299643281807371,
+      "kana_cer": 0.06181894383906119,
+      "lenient_cer": 0.07990487514863258,
+      "fffd": 0
+     },
+     "cer_gap_points": 0.0
+    }
+   ],
+   "missing": [
+    "compare_text_vs_srt.py scores CLI outputs made by the queue's run lines"
+   ]
+  }
+ ]
+}

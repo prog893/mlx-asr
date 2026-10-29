@@ -1,0 +1,125 @@
+{
+ "group": "ultra-voxtral-clip-batch1",
+ "question": "Voxtral CLI on the 935s clip at 30s / kv8: batch 1 against a same-session batch 32 (the whole file in one batch), speed, peak memory and CER",
+ "docs": [
+  "docs/benchmarks/quantization.md",
+  "docs/benchmarks/decode-throughput.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "hk_c30b32_kv8_r2",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 30 --max-batch 32 --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c30b32_kv8_r2.srt --stats-json $D/hk_c30b32_kv8_r2.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 31.751096665859222,
+    "x_realtime": 29.450976838399388,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 32,
+    "chunk_seconds": 30.0,
+    "batch": 32,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 1.0722001660615206,
+    "peak_memory_gb": 7.22,
+    "encode_s": 11.0582122085616,
+    "decode_s": 15.662208292167634,
+    "steps": 446
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "hk_c30b1_kv8",
+   "output": "stats-json",
+   "command": "$PY -m mlx_asr.cli $CLIP --chunk-seconds 30 --max-batch 1  --kv-bits 8 --overlap-seconds 0 --delay-ms 2400 --gain none -f srt -o $D/hyp/hk_c30b1_kv8.srt --stats-json $D/hk_c30b1_kv8.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 178.63914583297446,
+    "x_realtime": 5.234579510217253,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 32,
+    "chunk_seconds": 30.0,
+    "batch": 1,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.4889776250347495,
+    "peak_memory_gb": 5.98,
+    "encode_s": 11.330586293246597,
+    "decode_s": 163.2232036665082,
+    "steps": 12024
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "score_batch1",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/rescore_all.py $D/hyp/hk_c30b32_kv8_r2.srt $D/hyp/hk_c30b1_kv8.srt --reference $REF --no-ci --json $D/score_batch1.json",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "reference: 4205 chars, 4772 kana\n\n                  hypothesis      CER   kanaCER  lenientCER\n        hk_c30b32_kv8_r2.srt    8.63%     6.27%       8.32%\n            hk_c30b1_kv8.srt    8.68%     6.31%       8.37%\n[saved] bench_out/q8_20261016/score_batch1.json"
+  }
+ ]
+}

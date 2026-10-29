@@ -1,0 +1,253 @@
+{
+ "group": "ultra-input-gain-extra",
+ "question": "Input gain modes peak, rms and -6dB on the 7-file subset at 30s / batch 32 / kv8 (sweep_gain.py records no machine state or timing)",
+ "docs": [
+  "docs/benchmarks/input-level.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "gain7_m6db_c30b32_kv8",
+   "arm": "mode -6",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes=-6 --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_m6db_c30b32_kv8.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "modes": "-6",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "peak_dbfs": -1.0,
+    "rms_dbfs": -23.0,
+    "limit": null
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.17534,
+    "word": 0.3268
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "peak_dbfs": -11.3,
+     "mel_floor_share": 0.397,
+     "coverage_cer": 0.11479
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "peak_dbfs": -6.5,
+     "mel_floor_share": 0.2399,
+     "coverage_cer": 0.33671
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "peak_dbfs": -10.2,
+     "mel_floor_share": 0.0685,
+     "coverage_cer": 0.2326
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "peak_dbfs": -9.4,
+     "mel_floor_share": 0.3115,
+     "coverage_cer": 0.32254
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "peak_dbfs": -8.9,
+     "mel_floor_share": 0.4192,
+     "coverage_cer": 0.18312
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "peak_dbfs": -8.8,
+     "mel_floor_share": 0.0725,
+     "coverage_cer": 0.1779
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "peak_dbfs": -10.7,
+     "mel_floor_share": 0.331,
+     "coverage_cer": 0.1705
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing"
+   ]
+  },
+  {
+   "run": "gain7_peak_c30b32_kv8",
+   "arm": "mode peak",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes peak --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_peak_c30b32_kv8.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "modes": "peak",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "peak_dbfs": -1.0,
+    "rms_dbfs": -23.0,
+    "limit": null
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.16741,
+    "word": 0.26377
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "peak_dbfs": -1.0,
+     "mel_floor_share": 0.1172,
+     "coverage_cer": 0.11795
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "peak_dbfs": -1.0,
+     "mel_floor_share": 0.1081,
+     "coverage_cer": 0.28836
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "peak_dbfs": -1.0,
+     "mel_floor_share": 0.0175,
+     "coverage_cer": 0.20709
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "peak_dbfs": -1.0,
+     "mel_floor_share": 0.0963,
+     "coverage_cer": 0.2532
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "peak_dbfs": -1.0,
+     "mel_floor_share": 0.1867,
+     "coverage_cer": 0.18202
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "peak_dbfs": -1.0,
+     "mel_floor_share": 0.0104,
+     "coverage_cer": 0.16162
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "peak_dbfs": -1.0,
+     "mel_floor_share": 0.1093,
+     "coverage_cer": 0.16582
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing"
+   ]
+  },
+  {
+   "run": "gain7_rms_c30b32_kv8",
+   "arm": "mode rms",
+   "command": "scripts/benchmarks/sweep_gain.py --corpus bench_out/corpus7 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --modes rms --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --peak-dbfs=-1.0 --rms-dbfs=-23.0 --json gain7_rms_c30b32_kv8.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "modes": "rms",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "peak_dbfs": -1.0,
+    "rms_dbfs": -23.0,
+    "limit": null
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.17088,
+    "word": 0.23927
+   },
+   "measures": {},
+   "files": [
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0656,
+     "coverage_cer": 0.12939
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0402,
+     "coverage_cer": 0.26757
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0107,
+     "coverage_cer": 0.20147
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.049,
+     "coverage_cer": 0.22711
+    },
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0927,
+     "coverage_cer": 0.18281
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0047,
+     "coverage_cer": 0.16028
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "peak_dbfs": 0.0,
+     "mel_floor_share": 0.0741,
+     "coverage_cer": 0.17477
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing"
+   ]
+  }
+ ]
+}

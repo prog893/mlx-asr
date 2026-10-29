@@ -1,0 +1,850 @@
+{
+ "group": "ultra-peak-memory-kotoba",
+ "question": "kotoba peak memory per file through the CLI over the 20-file corpus",
+ "docs": [
+  "docs/benchmarks/peak-memory.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "pm_kotoba_7f8150fdef0e",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/7f8150fdef0e.txt --stats-json $D/pm_kotoba/7f8150fdef0e.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 883.0155,
+    "wall_s": 22.53090862510726,
+    "x_realtime": 39.19129559719638,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 208,
+    "peak_memory_gb": 2.38,
+    "windows": 89,
+    "segments": 208
+   },
+   "files": [
+    {
+     "file": "7f8150fdef0e",
+     "duration_s": 883.0155,
+     "x_realtime": 39.19129559719638,
+     "wall_s": 22.53090862510726,
+     "peak_memory_gb": 2.38,
+     "cues": 208
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_c18b2f5aa2a2",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/c18b2f5aa2a2.txt --stats-json $D/pm_kotoba/c18b2f5aa2a2.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 3121.0,
+    "wall_s": 98.35026220791042,
+    "x_realtime": 31.73351987005658,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 1113,
+    "peak_memory_gb": 2.38,
+    "windows": 313,
+    "segments": 1113
+   },
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "duration_s": 3121.0,
+     "x_realtime": 31.73351987005658,
+     "wall_s": 98.35026220791042,
+     "peak_memory_gb": 2.38,
+     "cues": 1113
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_9aefd8f2352e",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/9aefd8f2352e.txt --stats-json $D/pm_kotoba/9aefd8f2352e.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 5592.0,
+    "wall_s": 167.39108437509276,
+    "x_realtime": 33.406797147387806,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 1800,
+    "peak_memory_gb": 2.38,
+    "windows": 560,
+    "segments": 1800
+   },
+   "files": [
+    {
+     "file": "9aefd8f2352e",
+     "duration_s": 5592.0,
+     "x_realtime": 33.406797147387806,
+     "wall_s": 167.39108437509276,
+     "peak_memory_gb": 2.38,
+     "cues": 1800
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_07fd66556725",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/07fd66556725.txt --stats-json $D/pm_kotoba/07fd66556725.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 798.0,
+    "wall_s": 27.87690254091285,
+    "x_realtime": 28.625848902288727,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 245,
+    "peak_memory_gb": 2.38,
+    "windows": 80,
+    "segments": 245
+   },
+   "files": [
+    {
+     "file": "07fd66556725",
+     "duration_s": 798.0,
+     "x_realtime": 28.625848902288727,
+     "wall_s": 27.87690254091285,
+     "peak_memory_gb": 2.38,
+     "cues": 245
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_c29657df52e9",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/c29657df52e9.txt --stats-json $D/pm_kotoba/c29657df52e9.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 4175.0,
+    "wall_s": 149.32395183388144,
+    "x_realtime": 27.959345762859037,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 1326,
+    "peak_memory_gb": 2.38,
+    "windows": 418,
+    "segments": 1326
+   },
+   "files": [
+    {
+     "file": "c29657df52e9",
+     "duration_s": 4175.0,
+     "x_realtime": 27.959345762859037,
+     "wall_s": 149.32395183388144,
+     "peak_memory_gb": 2.38,
+     "cues": 1326
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_cbeb19543902",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/cbeb19543902.txt --stats-json $D/pm_kotoba/cbeb19543902.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 1553.0,
+    "wall_s": 55.92591016716324,
+    "x_realtime": 27.768881996878797,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 461,
+    "peak_memory_gb": 2.38,
+    "windows": 156,
+    "segments": 461
+   },
+   "files": [
+    {
+     "file": "cbeb19543902",
+     "duration_s": 1553.0,
+     "x_realtime": 27.768881996878797,
+     "wall_s": 55.92591016716324,
+     "peak_memory_gb": 2.38,
+     "cues": 461
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_b88caf8c0924",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/b88caf8c0924.txt --stats-json $D/pm_kotoba/b88caf8c0924.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 330.0,
+    "wall_s": 9.690749540925026,
+    "x_realtime": 34.05309347913454,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 139,
+    "peak_memory_gb": 2.38,
+    "windows": 33,
+    "segments": 139
+   },
+   "files": [
+    {
+     "file": "b88caf8c0924",
+     "duration_s": 330.0,
+     "x_realtime": 34.05309347913454,
+     "wall_s": 9.690749540925026,
+     "peak_memory_gb": 2.38,
+     "cues": 139
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_bbdabfabfb4f",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/bbdabfabfb4f.txt --stats-json $D/pm_kotoba/bbdabfabfb4f.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 787.0,
+    "wall_s": 20.785735541954637,
+    "x_realtime": 37.86250423572899,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 230,
+    "peak_memory_gb": 2.38,
+    "windows": 79,
+    "segments": 230
+   },
+   "files": [
+    {
+     "file": "bbdabfabfb4f",
+     "duration_s": 787.0,
+     "x_realtime": 37.86250423572899,
+     "wall_s": 20.785735541954637,
+     "peak_memory_gb": 2.38,
+     "cues": 230
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_1672083b2499",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/1672083b2499.txt --stats-json $D/pm_kotoba/1672083b2499.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 797.0,
+    "wall_s": 19.241955833043903,
+    "x_realtime": 41.419905903293085,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 220,
+    "peak_memory_gb": 2.38,
+    "windows": 80,
+    "segments": 220
+   },
+   "files": [
+    {
+     "file": "1672083b2499",
+     "duration_s": 797.0,
+     "x_realtime": 41.419905903293085,
+     "wall_s": 19.241955833043903,
+     "peak_memory_gb": 2.38,
+     "cues": 220
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_5b44e078553d",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/5b44e078553d.txt --stats-json $D/pm_kotoba/5b44e078553d.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 687.0,
+    "wall_s": 16.79525329102762,
+    "x_realtime": 40.904414366112,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 204,
+    "peak_memory_gb": 2.38,
+    "windows": 69,
+    "segments": 204
+   },
+   "files": [
+    {
+     "file": "5b44e078553d",
+     "duration_s": 687.0,
+     "x_realtime": 40.904414366112,
+     "wall_s": 16.79525329102762,
+     "peak_memory_gb": 2.38,
+     "cues": 204
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_a73e94506f13",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/a73e94506f13.txt --stats-json $D/pm_kotoba/a73e94506f13.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 606.0,
+    "wall_s": 17.280097916023806,
+    "x_realtime": 35.069245726788225,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 187,
+    "peak_memory_gb": 2.38,
+    "windows": 61,
+    "segments": 187
+   },
+   "files": [
+    {
+     "file": "a73e94506f13",
+     "duration_s": 606.0,
+     "x_realtime": 35.069245726788225,
+     "wall_s": 17.280097916023806,
+     "peak_memory_gb": 2.38,
+     "cues": 187
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_bb5cf5d5b247",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/bb5cf5d5b247.txt --stats-json $D/pm_kotoba/bb5cf5d5b247.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 112.0,
+    "wall_s": 5.615444457856938,
+    "x_realtime": 19.94499292808309,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 46,
+    "peak_memory_gb": 2.38,
+    "windows": 12,
+    "segments": 46
+   },
+   "files": [
+    {
+     "file": "bb5cf5d5b247",
+     "duration_s": 112.0,
+     "x_realtime": 19.94499292808309,
+     "wall_s": 5.615444457856938,
+     "peak_memory_gb": 2.38,
+     "cues": 46
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_0c193bf7ced2",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/0c193bf7ced2.txt --stats-json $D/pm_kotoba/0c193bf7ced2.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 2122.0,
+    "wall_s": 85.2369460419286,
+    "x_realtime": 24.89530771029941,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 990,
+    "peak_memory_gb": 2.38,
+    "windows": 213,
+    "segments": 990
+   },
+   "files": [
+    {
+     "file": "0c193bf7ced2",
+     "duration_s": 2122.0,
+     "x_realtime": 24.89530771029941,
+     "wall_s": 85.2369460419286,
+     "peak_memory_gb": 2.38,
+     "cues": 990
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_57d841fe39b5",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/57d841fe39b5.txt --stats-json $D/pm_kotoba/57d841fe39b5.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 1300.0,
+    "wall_s": 49.36704270914197,
+    "x_realtime": 26.333357816453958,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 483,
+    "peak_memory_gb": 2.38,
+    "windows": 130,
+    "segments": 483
+   },
+   "files": [
+    {
+     "file": "57d841fe39b5",
+     "duration_s": 1300.0,
+     "x_realtime": 26.333357816453958,
+     "wall_s": 49.36704270914197,
+     "peak_memory_gb": 2.38,
+     "cues": 483
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_a773a315fb42",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/a773a315fb42.txt --stats-json $D/pm_kotoba/a773a315fb42.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 1193.0666875,
+    "wall_s": 28.545973167056218,
+    "x_realtime": 41.79457048172634,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 340,
+    "peak_memory_gb": 2.38,
+    "windows": 120,
+    "segments": 340
+   },
+   "files": [
+    {
+     "file": "a773a315fb42",
+     "duration_s": 1193.0666875,
+     "x_realtime": 41.79457048172634,
+     "wall_s": 28.545973167056218,
+     "peak_memory_gb": 2.38,
+     "cues": 340
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_71bb5eba3baa",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/71bb5eba3baa.txt --stats-json $D/pm_kotoba/71bb5eba3baa.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 783.5306875,
+    "wall_s": 17.747266417136416,
+    "x_realtime": 44.14937315323322,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 155,
+    "peak_memory_gb": 2.38,
+    "windows": 79,
+    "segments": 155
+   },
+   "files": [
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5306875,
+     "x_realtime": 44.14937315323322,
+     "wall_s": 17.747266417136416,
+     "peak_memory_gb": 2.38,
+     "cues": 155
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_a1372c4d2900",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/a1372c4d2900.txt --stats-json $D/pm_kotoba/a1372c4d2900.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 1514.2613125,
+    "wall_s": 34.69002904207446,
+    "x_realtime": 43.6511976009994,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 439,
+    "peak_memory_gb": 2.38,
+    "windows": 152,
+    "segments": 439
+   },
+   "files": [
+    {
+     "file": "a1372c4d2900",
+     "duration_s": 1514.2613125,
+     "x_realtime": 43.6511976009994,
+     "wall_s": 34.69002904207446,
+     "peak_memory_gb": 2.38,
+     "cues": 439
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_c47ad127bc83",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/c47ad127bc83.txt --stats-json $D/pm_kotoba/c47ad127bc83.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 939.8186875,
+    "wall_s": 21.890997041016817,
+    "x_realtime": 42.93174430287832,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 266,
+    "peak_memory_gb": 2.38,
+    "windows": 94,
+    "segments": 266
+   },
+   "files": [
+    {
+     "file": "c47ad127bc83",
+     "duration_s": 939.8186875,
+     "x_realtime": 42.93174430287832,
+     "wall_s": 21.890997041016817,
+     "peak_memory_gb": 2.38,
+     "cues": 266
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_1da58e1b2b69",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/1da58e1b2b69.txt --stats-json $D/pm_kotoba/1da58e1b2b69.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 778.3466875,
+    "wall_s": 17.90811579185538,
+    "x_realtime": 43.46334905060154,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 171,
+    "peak_memory_gb": 2.38,
+    "windows": 78,
+    "segments": 171
+   },
+   "files": [
+    {
+     "file": "1da58e1b2b69",
+     "duration_s": 778.3466875,
+     "x_realtime": 43.46334905060154,
+     "wall_s": 17.90811579185538,
+     "peak_memory_gb": 2.38,
+     "cues": 171
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  },
+  {
+   "run": "pm_kotoba_b3432b40c079",
+   "output": "stats-json",
+   "command": ".venv/bin/mlx-asr $w --model kotoba -f txt -o $D/pm_kotoba/b3432b40c079.txt --stats-json $D/pm_kotoba/b3432b40c079.stats.json --quiet",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 778.3466875,
+    "wall_s": 29.323136291932315,
+    "x_realtime": 26.54377348149307,
+    "model": "kotoba-tech/kotoba-whisper-v2.0",
+    "backend": "mlx-chunked",
+    "cues": 392,
+    "peak_memory_gb": 2.38,
+    "windows": 78,
+    "segments": 392
+   },
+   "files": [
+    {
+     "file": "b3432b40c079",
+     "duration_s": 778.3466875,
+     "x_realtime": 26.54377348149307,
+     "wall_s": 29.323136291932315,
+     "peak_memory_gb": 2.38,
+     "cues": 392
+    }
+   ],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ]
+  }
+ ]
+}

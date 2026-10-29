@@ -13,7 +13,7 @@ import mlx.core as mx
 import numpy as np
 
 from mlx_audio.stt.utils import load as load_model
-from mlx_asr.decode import SAMPLE_RATE, load_audio_16k, split_at_silences
+from mlx_asr.audio import SAMPLE_RATE, load_audio_16k, split_at_silences
 
 
 DEFAULT_MODEL = "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit"

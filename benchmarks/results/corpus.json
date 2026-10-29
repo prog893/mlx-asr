@@ -1,11 +1,12 @@
 {
- "id": "sha256(source id)[:12]; the source id is the filename stem for a recording and the video id for a downloaded public video",
+ "id": "sha256(source id)[:12]; the source id is a private identifier kept with the local corpus (usually the filename stem)",
  "fields": "language, duration_s, codec, sample_rate, bit_depth, bitrate, and the reference transcript's length (reference_length, in reference_unit)",
  "processing": {
-  "1_corpus_copy": "The corpus copies every run read: the per-file metadata below (16 kHz mono 16-bit PCM WAV). The recordings were 96 kHz mono WAV, converted with `ffmpeg -ac 1 -ar 16000 -c:a pcm_s16le` (ffmpeg's default resampler). Not recorded: the recordings' original bit depth (integer or float), and the original format of the downloaded public videos before their 16 kHz copies.",
+  "1_corpus_copy": "The corpus copies every run read: the per-file metadata below (16 kHz mono 16-bit PCM WAV). Sources that were 96 kHz mono WAV were converted with `ffmpeg -ac 1 -ar 16000 -c:a pcm_s16le` (ffmpeg's default resampler). Not recorded: those sources' original bit depth (integer or float), and the original format of the other sources before their 16 kHz copies.",
   "2_runner_cache": "Each runner (run_corpus.py, run_whisper.py, run_qwen3.py) converts with `ffmpeg -ac 1 -ar 16000 -c:a pcm_s16le` into a temp cache. For these 16 kHz mono 16-bit copies that is a re-encode with no change; a 24-bit or float source would be rounded to 16-bit here.",
   "3_decode": "Decoded to 16 kHz mono float32 in [-1, 1) for the model.",
-  "derived": "A derived input is the first cut_first_s seconds of its parent's step-1 copy, decoded to float32 (divided by 32768), then written back as 16-bit PCM (multiplied by 32767, rounded): a gain change of 32767/32768 (-0.0003 dB) plus rounding, not a bit-exact cut."
+  "derived": "A derived input is the first cut_first_s seconds of its parent's step-1 copy, decoded to float32 (divided by 32768), then written back as 16-bit PCM (multiplied by 32767, rounded): a gain change of 32767/32768 (-0.0003 dB) plus rounding, not a bit-exact cut.",
+  "filtered": "A filtered input is its parent's whole step-1 copy passed through `ffmpeg -af <ffmpeg_af> -c:a pcm_s16le` (16 kHz out); its own duration and format are probed from the written copy."
  },
  "files": {
   "07fd66556725": {
@@ -68,6 +69,16 @@
    "reference_length": 3715,
    "reference_unit": "characters"
   },
+  "632a295d981d": {
+   "language": "Japanese",
+   "duration_s": 935.101,
+   "codec": "pcm_s16le",
+   "sample_rate": 16000,
+   "bit_depth": 16,
+   "bitrate": 256000,
+   "reference_length": 4205,
+   "reference_unit": "characters"
+  },
   "71bb5eba3baa": {
    "language": "Japanese",
    "duration_s": 783.531,
@@ -83,7 +94,7 @@
      "previous": {
       "duration_s": 558.2
      },
-     "reason": "the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio",
+     "reason": "the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio",
      "new_copy": "re-fetched with yt-dlp 2026.08.19, format 251 (opus, 48 kHz, 2 channels, about 134 kb/s), converted with ffmpeg 9.0.1: ffmpeg -ac 1 -ar 16000 -c:a pcm_s16le"
     }
    ]
@@ -235,6 +246,44 @@
    "codec": "pcm_s16le",
    "sample_rate": 16000,
    "bit_depth": 16
+  },
+  "clip180": {
+   "derived_from": "632a295d981d",
+   "cut_first_s": 180.0,
+   "language": "Japanese",
+   "codec": "pcm_s16le",
+   "sample_rate": 16000,
+   "bit_depth": 16
+  },
+  "clipattn14": {
+   "derived_from": "632a295d981d",
+   "ffmpeg_af": "volume=-14dB",
+   "language": "Japanese",
+   "duration_s": 935.101,
+   "codec": "pcm_s16le",
+   "sample_rate": 16000,
+   "bit_depth": 16,
+   "bitrate": 256000
+  },
+  "clip8k": {
+   "derived_from": "632a295d981d",
+   "ffmpeg_af": "aresample=8000,aresample=16000",
+   "language": "Japanese",
+   "duration_s": 935.101,
+   "codec": "pcm_s16le",
+   "sample_rate": 16000,
+   "bit_depth": 16,
+   "bitrate": 256000
+  },
+  "clipstretch125": {
+   "derived_from": "632a295d981d",
+   "ffmpeg_af": "atempo=1.25",
+   "language": "Japanese",
+   "duration_s": 748.061,
+   "codec": "pcm_s16le",
+   "sample_rate": 16000,
+   "bit_depth": 16,
+   "bitrate": 256000
   }
  }
 }

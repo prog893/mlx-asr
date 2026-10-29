@@ -1,0 +1,39 @@
+{
+ "group": "ultra-voxtral-clip-recheck",
+ "question": "Model-free rechecks on the 935s clip: 30s against 60s chunks with kv8 on both sides, and the auto-gain no-op by cmp exit status and SHA-256",
+ "docs": [
+  "docs/benchmarks/chunking.md",
+  "docs/benchmarks/input-level.md"
+ ],
+ "note": "In the commands $PY is the repo venv python, $H the queue-7 hypothesis directory bench_out/q7_20261015/hyp (the decodes of ultra-voxtral-clip-cli) and $REF the clip reference subtitles. The hypotheses and the reference contain corpus text, so they are not published: the paired difference, its interval and the region counts reproduce only from those files, which are kept on the benchmark machine, as for every clip comparison in ultra-voxtral-clip-paired.",
+ "runs": [
+  {
+   "run": "cmp_len_30v60_kv8",
+   "output": "stdout",
+   "command": "$PY scripts/benchmarks/compare_configs.py $H/hk_c30b32_kv8.srt $H/hk_c60b16_kv8.srt --reference $REF --label-a c30 --label-b c60",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "metric: cer CER over 40 regions (~105 ref chars each)\n\n                         c30: 8.63% overall, 8.62% mean-of-regions\n                         c60: 7.28% overall, 7.27% mean-of-regions\n\npaired difference (c30 minus c60): +1.35 points\n  95% CI: [+0.10, +2.86]\n  regions won: c60 16, c30 10, ties 14 (sign test p=0.327)\n  => CI excludes zero: c60 is better ON THIS CLIP"
+  },
+  {
+   "run": "noop_clip_auto_sha256",
+   "output": "stdout",
+   "command": "zsh -c \"cmp $H/hk_c30b32_kv8.srt $H/hk_c30b32_kv8_gainauto.srt; echo cmp_exit=\\$?; shasum -a 256 $H/hk_c30b32_kv8.srt $H/hk_c30b32_kv8_gainauto.srt\"",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "cmp_exit=0\na9bc30bcb4cf5adc33e1484283d52c21c0c429995463abba7b2bb6783ff4be5b  bench_out/q7_20261015/hyp/hk_c30b32_kv8.srt\na9bc30bcb4cf5adc33e1484283d52c21c0c429995463abba7b2bb6783ff4be5b  bench_out/q7_20261015/hyp/hk_c30b32_kv8_gainauto.srt"
+  }
+ ]
+}

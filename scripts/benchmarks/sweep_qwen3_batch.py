@@ -40,6 +40,7 @@ import mlx.core as mx
 import numpy as np
 from mlx_audio.stt.utils import load as load_model
 
+from benchmarks.corpus_files import add_files_option, only_files
 from benchmarks.machine_state import machine_state, warn_if_busy
 from metrics.eval_coverage import load_reference, score_pair
 from mlx_asr.audio import SAMPLE_RATE, load_audio_16k
@@ -122,6 +123,7 @@ def main():
     p.add_argument("--quantization", default=None)
     p.add_argument("--language", default="ja")
     p.add_argument("--limit", type=int)
+    add_files_option(p)
     p.add_argument("--group-budget", action="store_true",
                    help="cap tokens per GROUP instead of per file, which is "
                         "the closest a batched call gets to the per-window "
@@ -131,7 +133,7 @@ def main():
 
     state = machine_state()
     warn_if_busy(state)
-    pairs = find_pairs(Path(a.corpus).expanduser())
+    pairs = only_files(find_pairs(Path(a.corpus).expanduser()), a.files)
     if a.limit:
         pairs = pairs[:a.limit]
     batches = [int(b) for b in a.batches.split(",")]

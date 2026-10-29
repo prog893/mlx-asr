@@ -1,0 +1,265 @@
+{
+ "group": "ultra-kotoba-determinism",
+ "question": "kotoba-whisper (MLX chunked driver, 10s windows) decoding the 112s file 5 times",
+ "docs": [
+  "docs/benchmarks/reference/determinism.md"
+ ],
+ "note": "Every run was made after every audio revision in revisions.json, so it used the current copies.",
+ "runs": [
+  {
+   "run": "kdet112_r1",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --corpus bench_out/one_r112 --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label kdet112_r1 --json kdet112_r1.json",
+   "params": {
+    "corpus": "bench_out/one_r112",
+    "pair": null,
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kdet112_r1"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.29858
+   },
+   "measures": {
+    "x_realtime": 29.35,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "bb5cf5d5b247",
+     "duration_s": 112.0,
+     "unit": "char",
+     "x_realtime": 29.4,
+     "requested_language": "ja",
+     "windows": 12,
+     "segments": 43,
+     "ref_chars": 422,
+     "hyp_chars": 381,
+     "extra_ratio": 0.9028436018957346,
+     "coverage": 0.7796208530805687,
+     "cer": 0.2985781990521327,
+     "coverage_cer": 0.2985781990521327,
+     "subs": 19,
+     "dels": 74,
+     "insertions_counted": 33,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kdet112_r2",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --corpus bench_out/one_r112 --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label kdet112_r2 --json kdet112_r2.json",
+   "params": {
+    "corpus": "bench_out/one_r112",
+    "pair": null,
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kdet112_r2"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.33412
+   },
+   "measures": {
+    "x_realtime": 26.06,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "bb5cf5d5b247",
+     "duration_s": 112.0,
+     "unit": "char",
+     "x_realtime": 26.1,
+     "requested_language": "ja",
+     "windows": 12,
+     "segments": 43,
+     "ref_chars": 422,
+     "hyp_chars": 397,
+     "extra_ratio": 0.9407582938388626,
+     "coverage": 0.7417061611374408,
+     "cer": 0.3341232227488152,
+     "coverage_cer": 0.3341232227488152,
+     "subs": 52,
+     "dels": 57,
+     "insertions_counted": 32,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kdet112_r3",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --corpus bench_out/one_r112 --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label kdet112_r3 --json kdet112_r3.json",
+   "params": {
+    "corpus": "bench_out/one_r112",
+    "pair": null,
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kdet112_r3"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.29147
+   },
+   "measures": {
+    "x_realtime": 24.17,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "bb5cf5d5b247",
+     "duration_s": 112.0,
+     "unit": "char",
+     "x_realtime": 24.2,
+     "requested_language": "ja",
+     "windows": 12,
+     "segments": 43,
+     "ref_chars": 422,
+     "hyp_chars": 378,
+     "extra_ratio": 0.8957345971563981,
+     "coverage": 0.7796208530805687,
+     "cer": 0.2914691943127962,
+     "coverage_cer": 0.2914691943127962,
+     "subs": 19,
+     "dels": 74,
+     "insertions_counted": 30,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kdet112_r4",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --corpus bench_out/one_r112 --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label kdet112_r4 --json kdet112_r4.json",
+   "params": {
+    "corpus": "bench_out/one_r112",
+    "pair": null,
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kdet112_r4"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.30806
+   },
+   "measures": {
+    "x_realtime": 33.88,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "bb5cf5d5b247",
+     "duration_s": 112.0,
+     "unit": "char",
+     "x_realtime": 33.9,
+     "requested_language": "ja",
+     "windows": 12,
+     "segments": 45,
+     "ref_chars": 422,
+     "hyp_chars": 385,
+     "extra_ratio": 0.9123222748815166,
+     "coverage": 0.7796208530805687,
+     "cer": 0.3080568720379147,
+     "coverage_cer": 0.3080568720379147,
+     "subs": 19,
+     "dels": 74,
+     "insertions_counted": 37,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  },
+  {
+   "run": "kdet112_r5",
+   "command": "scripts/benchmarks/run_kotoba_mlx.py --corpus bench_out/one_r112 --model '<local>/kotoba-tech--kotoba-whisper-v2.0' --chunk-length-s 10.0 --language ja --min-cut 30 --min-cut-words 6 --label kdet112_r5 --json kdet112_r5.json",
+   "params": {
+    "corpus": "bench_out/one_r112",
+    "pair": null,
+    "model": "<local>/kotoba-tech--kotoba-whisper-v2.0",
+    "chunk_length_s": 10.0,
+    "language": "ja",
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "label": "kdet112_r5"
+   },
+   "machine": {},
+   "aggregate": {
+    "char": 0.31754
+   },
+   "measures": {
+    "x_realtime": 33.77,
+    "languages": [
+     "ja"
+    ]
+   },
+   "files": [
+    {
+     "file": "bb5cf5d5b247",
+     "duration_s": 112.0,
+     "unit": "char",
+     "x_realtime": 33.8,
+     "requested_language": "ja",
+     "windows": 12,
+     "segments": 44,
+     "ref_chars": 422,
+     "hyp_chars": 389,
+     "extra_ratio": 0.9218009478672986,
+     "coverage": 0.7796208530805687,
+     "cer": 0.3175355450236967,
+     "coverage_cer": 0.3175355450236967,
+     "subs": 19,
+     "dels": 74,
+     "insertions_counted": 41,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": [
+    "machine state",
+    "peak memory"
+   ]
+  }
+ ]
+}

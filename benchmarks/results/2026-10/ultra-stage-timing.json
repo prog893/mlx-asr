@@ -1,0 +1,316 @@
+{
+ "group": "ultra-stage-timing",
+ "question": "CLI wall-clock split (encode, decode, load) on the 935s clip at 60s / batch 16 / no KV quantization, 4-bit and nvfp4, 3 runs each",
+ "docs": [
+  "docs/benchmarks/decode-throughput.md"
+ ],
+ "note": "",
+ "runs": [
+  {
+   "run": "stages_ultra_4bit_c60b16_r1",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli bench_out/corpus_timed/632a295d981d.wav --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --delay-ms 2400 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --gain none -f txt -o $D/stages/ultra_4bit_c60b16_r1.txt --stats-json $D/stages/ultra_4bit_c60b16_r1.stats.json",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 44.324185541132465,
+    "x_realtime": 21.096852679497843,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.5448647080920637,
+    "peak_memory_gb": 9.36,
+    "encode_s": 10.590628917096183,
+    "decode_s": 31.221839708043262,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[machine] Apple M2 Ultra 128GB, 115.4GB GPU -> batch 16, chunk 60s (profile)\n[audio] 935.1s -> 16 chunks of ~60s\n\n[model] loaded in 0.5s\n[encode] 16 chunks in 10.6s\n[decode] 816 steps in 31.2s (26.1 steps/s, 418 tok/s)\n[saved] bench_out/q5_20261013/stages/ultra_4bit_c60b16_r1.txt\n[total] 935.1s audio in 44.3s (21.1x realtime, incl. 0.5s model load), peak 9.36GB GPU"
+  },
+  {
+   "run": "stages_ultra_4bit_c60b16_r2",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli bench_out/corpus_timed/632a295d981d.wav --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --delay-ms 2400 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --gain none -f txt -o $D/stages/ultra_4bit_c60b16_r2.txt --stats-json $D/stages/ultra_4bit_c60b16_r2.stats.json",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 44.60018441686407,
+    "x_realtime": 20.966299236790217,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.545604124898091,
+    "peak_memory_gb": 9.36,
+    "encode_s": 10.720331249991432,
+    "decode_s": 31.2931989999488,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[machine] Apple M2 Ultra 128GB, 115.4GB GPU -> batch 16, chunk 60s (profile)\n[audio] 935.1s -> 16 chunks of ~60s\n\n[model] loaded in 0.5s\n[encode] 16 chunks in 10.7s\n[decode] 816 steps in 31.3s (26.1 steps/s, 417 tok/s)\n[saved] bench_out/q5_20261013/stages/ultra_4bit_c60b16_r2.txt\n[total] 935.1s audio in 44.6s (21.0x realtime, incl. 0.5s model load), peak 9.36GB GPU"
+  },
+  {
+   "run": "stages_ultra_4bit_c60b16_r3",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli bench_out/corpus_timed/632a295d981d.wav --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --delay-ms 2400 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --gain none -f txt -o $D/stages/ultra_4bit_c60b16_r3.txt --stats-json $D/stages/ultra_4bit_c60b16_r3.stats.json",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 44.37189633399248,
+    "x_realtime": 21.07416833081431,
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "quantization": "default",
+    "weights_gb": 2.5,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 206,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.557795749977231,
+    "peak_memory_gb": 9.36,
+    "encode_s": 10.5891497079283,
+    "decode_s": 31.19893112499267,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[machine] Apple M2 Ultra 128GB, 115.4GB GPU -> batch 16, chunk 60s (profile)\n[audio] 935.1s -> 16 chunks of ~60s\n\n[model] loaded in 0.6s\n[encode] 16 chunks in 10.6s\n[decode] 816 steps in 31.2s (26.2 steps/s, 418 tok/s)\n[saved] bench_out/q5_20261013/stages/ultra_4bit_c60b16_r3.txt\n[total] 935.1s audio in 44.4s (21.1x realtime, incl. 0.6s model load), peak 9.36GB GPU"
+  },
+  {
+   "run": "stages_ultra_nvfp4_c60b16_r1",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli bench_out/corpus_timed/632a295d981d.wav --model models/voxtral-nvfp4 --delay-ms 2400 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --gain none -f txt -o $D/stages/ultra_nvfp4_c60b16_r1.txt --stats-json $D/stages/ultra_nvfp4_c60b16_r1.stats.json",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 43.2541042920202,
+    "x_realtime": 21.618776479264962,
+    "model": "models/voxtral-nvfp4",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 204,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.2854042090475559,
+    "peak_memory_gb": 7.18,
+    "encode_s": 10.789953124942258,
+    "decode_s": 30.156528082909063,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[machine] Apple M2 Ultra 128GB, 115.4GB GPU -> batch 16, chunk 60s (profile)\n[audio] 935.1s -> 16 chunks of ~60s\n[model] loaded in 0.3s\n[encode] 16 chunks in 10.8s\n[decode] 816 steps in 30.2s (27.1 steps/s, 433 tok/s)\n[saved] bench_out/q5_20261013/stages/ultra_nvfp4_c60b16_r1.txt\n[total] 935.1s audio in 43.3s (21.6x realtime, incl. 0.3s model load), peak 7.18GB GPU"
+  },
+  {
+   "run": "stages_ultra_nvfp4_c60b16_r2",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli bench_out/corpus_timed/632a295d981d.wav --model models/voxtral-nvfp4 --delay-ms 2400 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --gain none -f txt -o $D/stages/ultra_nvfp4_c60b16_r2.txt --stats-json $D/stages/ultra_nvfp4_c60b16_r2.stats.json",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 43.43029870907776,
+    "x_realtime": 21.53107025037675,
+    "model": "models/voxtral-nvfp4",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 204,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.29398029204458,
+    "peak_memory_gb": 7.18,
+    "encode_s": 10.793163874885067,
+    "decode_s": 30.19019354111515,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[machine] Apple M2 Ultra 128GB, 115.4GB GPU -> batch 16, chunk 60s (profile)\n[audio] 935.1s -> 16 chunks of ~60s\n[model] loaded in 0.3s\n[encode] 16 chunks in 10.8s\n[decode] 816 steps in 30.2s (27.0 steps/s, 432 tok/s)\n[saved] bench_out/q5_20261013/stages/ultra_nvfp4_c60b16_r2.txt\n[total] 935.1s audio in 43.4s (21.5x realtime, incl. 0.3s model load), peak 7.18GB GPU"
+  },
+  {
+   "run": "stages_ultra_nvfp4_c60b16_r3",
+   "output": "stdout+stats-json",
+   "command": "$PY -m mlx_asr.cli bench_out/corpus_timed/632a295d981d.wav --model models/voxtral-nvfp4 --delay-ms 2400 --chunk-seconds 60 --max-batch 16 --no-kv-quant --overlap-seconds 0 --gain none -f txt -o $D/stages/ultra_nvfp4_c60b16_r3.txt --stats-json $D/stages/ultra_nvfp4_c60b16_r3.stats.json",
+   "params": {},
+   "machine": {
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "chip_family": "M2",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "gpu_working_set_gb": 115.4,
+    "macos": "26.4.1",
+    "arch": "arm64",
+    "mlx": "0.32.0"
+   },
+   "aggregate": null,
+   "measures": {
+    "duration_s": 935.1008125,
+    "wall_s": 43.27275641611777,
+    "x_realtime": 21.60945800419831,
+    "model": "models/voxtral-nvfp4",
+    "quantization": "default",
+    "weights_gb": 2.0,
+    "chunks": 16,
+    "chunk_seconds": 60.0,
+    "batch": 16,
+    "overlap_seconds": 0.0,
+    "delay_ms": 2400,
+    "kv_bits": null,
+    "compact_silence": false,
+    "gain": "none",
+    "cues": 204,
+    "cue_config": {
+     "gap_s": 1.2,
+     "max_chars": 28,
+     "max_dur_s": 7.0
+    },
+    "profile_source": "profile",
+    "model_load_s": 0.2800914170220494,
+    "peak_memory_gb": 7.18,
+    "encode_s": 10.795445707859471,
+    "decode_s": 30.20963625004515,
+    "steps": 816
+   },
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "[machine] Apple M2 Ultra 128GB, 115.4GB GPU -> batch 16, chunk 60s (profile)\n[audio] 935.1s -> 16 chunks of ~60s\n[model] loaded in 0.3s\n[encode] 16 chunks in 10.8s\n[decode] 816 steps in 30.2s (27.0 steps/s, 432 tok/s)\n[saved] bench_out/q5_20261013/stages/ultra_nvfp4_c60b16_r3.txt\n[total] 935.1s audio in 43.3s (21.6x realtime, incl. 0.3s model load), peak 7.18GB GPU"
+  }
+ ]
+}

@@ -102,9 +102,12 @@ def lint(path: Path) -> list[str]:
         t_idx = next(n for n, l in enumerate(head) if l.startswith("| setting | default | why |"))
         if not t_idx < setup[0]:
             errs.append("the defaults table comes before the Setup paragraph")
-        # nothing but the Setup paragraph after the defaults table
+        # nothing but the table's Source line (tests/test_sources.py) and then the Setup
+        # paragraph after the defaults table
         after = [l for l in head[t_idx:] if l.strip()]
         trailing = [l for l in after if not l.startswith("|")]
+        if trailing and re.match(r"(\*\*)?Source:", trailing[0]):
+            trailing = trailing[1:]
         if trailing and not trailing[0].startswith("**Setup:**"):
             errs.append("the Setup paragraph must directly follow the defaults table")
         setup_par_end = next((n for n in range(setup[0], len(head)) if not head[n].strip()),

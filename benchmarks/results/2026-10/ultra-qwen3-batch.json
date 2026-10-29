@@ -245,7 +245,7 @@
      "chars": 2958,
      "segments": 35,
      "runaway_segments": 0,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "1da58e1b2b69",
@@ -294,6 +294,64 @@
      "chars": 8776,
      "segments": 54,
      "runaway_segments": 0
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "wall_s": 22.42,
+     "x_realtime": 34.94,
+     "unit": "char",
+     "coverage_cer": 0.12180052956751986,
+     "ref_chars": 2266,
+     "chars": 3406,
+     "segments": 51,
+     "runaway_segments": 0,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3batch_1.7B_8bit_c15_b1",
+     "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 1 --json rerun_ultra_retry_20261010__qwen3batch_1.7B_8bit_c15_b1.json",
+     "params": {
+      "corpus": "bench_out/corpus_all",
+      "chunk_seconds": 15.0,
+      "size": "1.7B",
+      "quantization": "8bit",
+      "language": "ja",
+      "group_budget": true,
+      "batches": "1"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.26,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.21,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 34.9,
+      "peak_gb": 3.74,
+      "wall_s": 25.7
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [
@@ -543,7 +601,7 @@
      "chars": 2980,
      "segments": 35,
      "runaway_segments": null,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "1da58e1b2b69",
@@ -592,6 +650,64 @@
      "chars": 8806,
      "segments": 54,
      "runaway_segments": null
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "wall_s": 20.45,
+     "x_realtime": 38.31,
+     "unit": "char",
+     "coverage_cer": 0.12886142983230361,
+     "ref_chars": 2266,
+     "chars": 3442,
+     "segments": 51,
+     "runaway_segments": null,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3batch_1.7B_8bit_c15_b2",
+     "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 2 --json rerun_ultra_retry_20261010__qwen3batch_1.7B_8bit_c15_b2.json",
+     "params": {
+      "corpus": "bench_out/corpus_all",
+      "chunk_seconds": 15.0,
+      "size": "1.7B",
+      "quantization": "8bit",
+      "language": "ja",
+      "group_budget": true,
+      "batches": "2"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.72,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.25,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 38.37,
+      "peak_gb": 3.77,
+      "wall_s": 23.3
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [
@@ -843,7 +959,7 @@
      "chars": 3699,
      "segments": 35,
      "runaway_segments": null,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "1da58e1b2b69",
@@ -892,6 +1008,64 @@
      "chars": 8795,
      "segments": 54,
      "runaway_segments": null
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "wall_s": 24.37,
+     "x_realtime": 32.15,
+     "unit": "char",
+     "coverage_cer": 0.12444836716681378,
+     "ref_chars": 2266,
+     "chars": 4152,
+     "segments": 51,
+     "runaway_segments": null,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3batch_1.7B_8bit_c15_b4",
+     "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 4 --json rerun_ultra_retry_20261010__qwen3batch_1.7B_8bit_c15_b4.json",
+     "params": {
+      "corpus": "bench_out/corpus_all",
+      "chunk_seconds": 15.0,
+      "size": "1.7B",
+      "quantization": "8bit",
+      "language": "ja",
+      "group_budget": true,
+      "batches": "4"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.11,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 32.92,
+      "peak_gb": 3.74,
+      "wall_s": 27.2
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [
@@ -1144,7 +1318,7 @@
      "chars": 5018,
      "segments": 35,
      "runaway_segments": null,
-     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source video while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
+     "invalid": "superseded audio revision (2026-10-11): the previous copy held only the first 558.2s of its 783.5s source while the reference runs to 661.2s, so 16.7% of the reference characters (14 of 92 cues) had no audio"
     },
     {
      "file": "1da58e1b2b69",
@@ -1193,6 +1367,64 @@
      "chars": 8737,
      "segments": 54,
      "runaway_segments": null
+    },
+    {
+     "file": "71bb5eba3baa",
+     "duration_s": 783.5,
+     "wall_s": 37.32,
+     "x_realtime": 21.0,
+     "unit": "char",
+     "coverage_cer": 0.12577228596646073,
+     "ref_chars": 2266,
+     "chars": 5473,
+     "segments": 51,
+     "runaway_segments": null,
+     "supplement": 0
+    }
+   ],
+   "supplements": [
+    {
+     "run": "rerun_ultra_retry_20261010__qwen3batch_1.7B_8bit_c15_b8",
+     "command": "scripts/benchmarks/sweep_qwen3_batch.py --corpus bench_out/corpus_all --chunk-seconds 15.0 --size 1.7B --quantization 8bit --language ja --group-budget --batches 8 --json rerun_ultra_retry_20261010__qwen3batch_1.7B_8bit_c15_b8.json",
+     "params": {
+      "corpus": "bench_out/corpus_all",
+      "chunk_seconds": 15.0,
+      "size": "1.7B",
+      "quantization": "8bit",
+      "language": "ja",
+      "group_budget": true,
+      "batches": "8"
+     },
+     "machine": {
+      "label": "Apple M2 Ultra 128GB (Mac14,14)",
+      "chip": "Apple M2 Ultra",
+      "model_id": "Mac14,14",
+      "ram_gb": 128,
+      "gpu_cores": 60,
+      "macos": "26.4.1",
+      "mlx": "0.32.0",
+      "load_1min": 3.22,
+      "cpu_count": 24,
+      "swap_used_mb": 6217.25,
+      "swapout_pages_per_s": 0.0,
+      "gpu_in_use_gb": 0.26,
+      "ac_power": true,
+      "battery_percent": null,
+      "low_power_mode": false,
+      "busy": false,
+      "busy_reasons": []
+     },
+     "measures": {
+      "x_realtime": 22.37,
+      "peak_gb": 4.62,
+      "wall_s": 40.0
+     },
+     "canary": [
+      "bb5cf5d5b247"
+     ],
+     "added": [
+      "71bb5eba3baa"
+     ]
     }
    ],
    "missing": [

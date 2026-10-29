@@ -1,0 +1,419 @@
+{
+ "group": "ultra-voxtral-prompt-overlap-corpus",
+ "question": "Voxtral on the 935s clip at 30s / batch 32 / kv8: no prompt, the fixed description prompt and a derived term-list prompt, each at 0s and 4s overlap",
+ "docs": [
+  "docs/benchmarks/prompt.md",
+  "mlx_asr/cli.py"
+ ],
+ "note": "Run through run_corpus.py, which passes --prompt to the decoder; the CLI drops --prompt when --overlap-seconds is above 0. desc is the sweep's published fixed description (ja); terms is the derived freq Japanese term list (derive_prompt_terms.py), private, redacted here. Every run was made after every audio revision in revisions.json, so it used the current copies.",
+ "runs": [
+  {
+   "run": "po_desc_ov0",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --prompt '動画を収録している人の未編集の録音です。' --label po_desc_ov0 --json po_desc_ov0.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "動画を収録している人の未編集の録音です。",
+    "label": "po_desc_ov0"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.41,
+    "cpu_count": 24,
+    "swap_used_mb": 9325.19,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.13,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.08728
+   },
+   "measures": {
+    "x_realtime": 34.0,
+    "peak_memory_gb": 7.22
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 34.0,
+     "chunks": 32,
+     "peak_memory_gb": 7.22,
+     "ref_chars": 4205,
+     "hyp_chars": 4152,
+     "extra_ratio": 0.9873959571938169,
+     "coverage": 0.9293697978596909,
+     "cer": 0.08727705112960761,
+     "coverage_cer": 0.08727705112960761,
+     "subs": 174,
+     "dels": 123,
+     "insertions_counted": 70,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "po_desc_ov4",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 4.0 --min-cut 30 --min-cut-words 6 --prompt '動画を収録している人の未編集の録音です。' --label po_desc_ov4 --json po_desc_ov4.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 4.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "動画を収録している人の未編集の録音です。",
+    "label": "po_desc_ov4"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.21,
+    "cpu_count": 24,
+    "swap_used_mb": 9325.19,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.13,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.12604
+   },
+   "measures": {
+    "x_realtime": 30.65,
+    "peak_memory_gb": 7.39
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 30.6,
+     "chunks": 32,
+     "peak_memory_gb": 7.39,
+     "ref_chars": 4205,
+     "hyp_chars": 4171,
+     "extra_ratio": 0.9919143876337693,
+     "coverage": 0.9084423305588585,
+     "cer": 0.12604042806183116,
+     "coverage_cer": 0.12604042806183116,
+     "subs": 206,
+     "dels": 179,
+     "insertions_counted": 145,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "po_none_ov0",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --label po_none_ov0 --json po_none_ov0.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "po_none_ov0"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 2.23,
+    "cpu_count": 24,
+    "swap_used_mb": 9325.19,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.11,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.08633
+   },
+   "measures": {
+    "x_realtime": 34.0,
+    "peak_memory_gb": 7.22
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 34.0,
+     "chunks": 32,
+     "peak_memory_gb": 7.22,
+     "ref_chars": 4205,
+     "hyp_chars": 4179,
+     "extra_ratio": 0.9938168846611177,
+     "coverage": 0.9341260404280618,
+     "cer": 0.08632580261593341,
+     "coverage_cer": 0.08632580261593341,
+     "subs": 165,
+     "dels": 112,
+     "insertions_counted": 86,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "po_none_ov4",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 4.0 --min-cut 30 --min-cut-words 6 --label po_none_ov4 --json po_none_ov4.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 4.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "",
+    "label": "po_none_ov4"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 1.84,
+    "cpu_count": 24,
+    "swap_used_mb": 9325.19,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.11,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.07158
+   },
+   "measures": {
+    "x_realtime": 30.65,
+    "peak_memory_gb": 7.39
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 30.7,
+     "chunks": 32,
+     "peak_memory_gb": 7.39,
+     "ref_chars": 4205,
+     "hyp_chars": 4161,
+     "extra_ratio": 0.9895362663495838,
+     "coverage": 0.9424494649227111,
+     "cer": 0.07158145065398336,
+     "coverage_cer": 0.07158145065398336,
+     "subs": 139,
+     "dels": 103,
+     "insertions_counted": 59,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "po_terms_ov0",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 0.0 --min-cut 30 --min-cut-words 6 --prompt '<private: scripts/benchmarks/derive_prompt_terms.py, variant in the label>' --label po_terms_ov0 --json po_terms_ov0.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 0.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "<private: scripts/benchmarks/derive_prompt_terms.py, variant in the label>",
+    "label": "po_terms_ov0"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 1.78,
+    "cpu_count": 24,
+    "swap_used_mb": 9325.19,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.11,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.09322
+   },
+   "measures": {
+    "x_realtime": 34.01,
+    "peak_memory_gb": 7.22
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 34.0,
+     "chunks": 32,
+     "peak_memory_gb": 7.22,
+     "ref_chars": 4205,
+     "hyp_chars": 4170,
+     "extra_ratio": 0.9916765755053508,
+     "coverage": 0.9274673008323424,
+     "cer": 0.09322235434007134,
+     "coverage_cer": 0.09322235434007134,
+     "subs": 183,
+     "dels": 122,
+     "insertions_counted": 87,
+     "insertions_excused": 0,
+     "excused_run_count": 0
+    }
+   ],
+   "missing": []
+  },
+  {
+   "run": "po_terms_ov4",
+   "command": "scripts/benchmarks/run_corpus.py --corpus bench_out/one_0816 --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --chunk-seconds 30.0 --max-batch 32 --delay-ms 2400 --kv-bits 8 --overlap-seconds 4.0 --min-cut 30 --min-cut-words 6 --prompt '<private: scripts/benchmarks/derive_prompt_terms.py, variant in the label>' --label po_terms_ov4 --json po_terms_ov4.json",
+   "params": {
+    "corpus": "bench_out/one_0816",
+    "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
+    "chunk_seconds": 30.0,
+    "max_batch": 32,
+    "delay_ms": 2400,
+    "kv_bits": 8,
+    "overlap_seconds": 4.0,
+    "min_cut": 30,
+    "min_cut_words": 6,
+    "limit": null,
+    "vad": false,
+    "compact_silence": false,
+    "prompt": "<private: scripts/benchmarks/derive_prompt_terms.py, variant in the label>",
+    "label": "po_terms_ov4"
+   },
+   "machine": {
+    "label": "Apple M2 Ultra 128GB (Mac14,14)",
+    "chip": "Apple M2 Ultra",
+    "model_id": "Mac14,14",
+    "ram_gb": 128,
+    "gpu_cores": 60,
+    "macos": "26.4.1",
+    "mlx": "0.32.0",
+    "load_1min": 3.09,
+    "cpu_count": 24,
+    "swap_used_mb": 9325.19,
+    "swapout_pages_per_s": 0.0,
+    "gpu_in_use_gb": 0.11,
+    "ac_power": true,
+    "battery_percent": null,
+    "low_power_mode": false,
+    "busy": false,
+    "busy_reasons": []
+   },
+   "aggregate": {
+    "char": 0.1434
+   },
+   "measures": {
+    "x_realtime": 30.6,
+    "peak_memory_gb": 7.39
+   },
+   "files": [
+    {
+     "file": "632a295d981d",
+     "duration_s": 935.1,
+     "unit": "char",
+     "x_realtime": 30.6,
+     "chunks": 32,
+     "peak_memory_gb": 7.39,
+     "ref_chars": 4205,
+     "hyp_chars": 4333,
+     "extra_ratio": 1.0304399524375742,
+     "coverage": 0.8768133174791914,
+     "cer": 0.18644470868014268,
+     "coverage_cer": 0.14340071343638525,
+     "subs": 380,
+     "dels": 138,
+     "insertions_counted": 85,
+     "insertions_excused": 181,
+     "excused_run_count": 1
+    }
+   ],
+   "missing": []
+  }
+ ]
+}
