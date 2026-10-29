@@ -95,7 +95,7 @@ candidates on the new copy.
 | `ultra-voxtral-delay` | M2 Ultra 128GB | streaming delay 480 and 960ms at 30s / batch 32, 7-file subset |
 | `ultra-whisper-condition` | M2 Ultra 128GB | large-v3 and turbo, condition on previous text on and off, runs r2 and r3, 7-file subset |
 | `ultra-voxtral-prompt` | M2 Ultra 128GB | prompt content and language arms that run without topic or term text, 20-file corpus |
-| `ultra-qwen3-loops` | M2 Ultra 128GB | qwen3-asr 1.7B bf16 on the 7-file subset; the batch-1 per-window token budget; the per-window budget on the 1553s file, and the library's whole-file budget (8192, 19950) on it |
+| `ultra-qwen3-loops` | M2 Ultra 128GB | qwen3-asr 1.7B bf16 on the 7-file subset; the batch-1 per-window token budget; the per-window budget on the 1553s file, and the library's whole-file budget (8192, 19950) on it | <!-- not-measured: 8192 and 19950 are token-budget settings -->
 | `ultra-kotoba-windows` | M2 Ultra 128GB | kotoba-whisper on the MLX chunked driver at 10s (3 runs), 20s and 30s windows (3 runs each); kotoba samples on fallback like Whisper |
 | `ultra-whisper-runners` | M2 Ultra 128GB | competing Whisper runners on the 935s clip, 3 runs each (whisper.cpp 1.9.5 turbo and large-v3, faster-whisper 1.2.1 on CPU, batched and unbatched), plain CER |
 | `ultra-voxtral-clip` | M2 Ultra 128GB | the 935s clip: chunk length, overlap, VAD, carry-context, silence compaction, weight-precision ladder; plain CER (the clip's reference is complete); the clip runners record no machine state |
