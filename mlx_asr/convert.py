@@ -131,3 +131,43 @@ def cached_mlx_copy(repo: str, log=print) -> str:
         f"(this is a key rename, not a re-quantization)")
     convert_to_mlx(repo, dst, log=log)
     return str(dst)
+
+
+# Voxtral Realtime precisions converted on first use, with the exact recipe of the
+# saved runs that measured them (mlx_audio.convert from the fp16 hub build).
+# source: ultra-voxtral-precision-default.json#vox_w8bit_c30b128_kv8
+REALTIME_RECIPES = {"8bit": {"q_mode": "affine", "q_bits": 8, "q_group_size": 64}}
+
+
+def realtime_weights(repo: str, log=print) -> str:
+    """A loadable path for a Voxtral Realtime registry value.
+
+    A plain repo id is returned as is. `<fp16 repo>:<precision>` is quantized once into
+    `<HF cache>/mlx-asr-converted/` and reused, because no loadable build of that
+    precision is published (the hub's 8bit and 6bit repos crash mlx-audio's loader).
+    """
+    from huggingface_hub.constants import HF_HUB_CACHE
+
+    from .models import CONVERT_SEP
+
+    if CONVERT_SEP not in repo:
+        return repo
+    source, precision = repo.rsplit(CONVERT_SEP, 1)
+    if precision not in REALTIME_RECIPES:
+        raise ValueError(f"no conversion recipe for {precision!r}; "
+                         f"known: {', '.join(REALTIME_RECIPES)}")
+    dst = (Path(HF_HUB_CACHE) / "mlx-asr-converted"
+           / f"{source.replace('/', '--')}-{precision}")
+    if (dst / "config.json").exists() and list(dst.glob("*.safetensors")):
+        return str(dst)
+    log(f"[convert] no loadable {precision} build of {source} is published; "
+        f"quantizing once into {dst}")
+    from mlx_audio.convert import convert
+
+    # A half-written directory from an interrupted run must not pass the check above.
+    tmp = dst.with_name(dst.name + ".partial")
+    convert(hf_path=source, mlx_path=str(tmp), quantize=True,
+            **REALTIME_RECIPES[precision])
+    tmp.rename(dst)
+    log(f"[convert] wrote {dst}")
+    return str(dst)

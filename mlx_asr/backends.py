@@ -60,8 +60,10 @@ def transcribe_mlx_whisper(audio_path: str, model, language=None, log=print,
 
     ``model.opts`` carries `condition_on_previous_text=False` for the large
     models, which is not a stylistic default: leaving conditioning on lets a
-    repetition loop feed itself across 30s windows and costs up to 22 points on
-    long audio (docs/benchmarks/engines/whisper.md). It is applied here rather than left to the user.
+    repetition loop feed itself across 30s windows and costs up to 19 points on
+    long audio (docs/benchmarks/engines/whisper.md; source:
+    ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3,
+    with ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond). It is applied here rather than left to the user.
     """
     try:
         from mlx_whisper.transcribe import transcribe
@@ -95,9 +97,14 @@ def transcribe_mlx_chunked(audio_path: str, model, language=None, log=print,
 
     Exists because the chunked algorithm is a property of the *driver*, not of the
     framework, so a distil model does not have to leave MLX to be decoded
-    correctly. Measured on our corpus at chunk 10s: 27.01% coverage CER at 36.2x
-    realtime, against 26.16% at 25.4x through the transformers pipeline. Same
-    accuracy to within noise, 1.4x the throughput, and directly comparable to the
+    correctly. Measured on our corpus at chunk 10s (source: ultra-picker-speed.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3;
+    ultra-kotoba-engines.json#k20_hf22_c10_r1): 26.81% coverage CER at 36.8x
+    realtime, against 24.48% at 21.8x through the transformers pipeline. At this
+    window the MLX driver is 1.7x the throughput but 2.33 points worse, paired over
+    files with CI [+0.17, +4.33], so not a tie. At 15s, the shipped window, the two tie (25.34% against
+    26.09%, paired -0.75 points, CI [-3.71, +2.35]) with MLX at 1.8x the throughput
+    (source: ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3,k20_hf22_c15_r1,k20_hf22_c15_r2,k20_hf22_c15_r3;
+    repeat runs of one config averaged per file). Either way the rows are directly comparable to the
     other MLX rows instead of carrying a "not comparable" asterisk.
 
     Requires an MLX conversion of the weights; see `mlx_asr/chunked.py`.
@@ -115,7 +122,7 @@ def transcribe_mlx_chunked(audio_path: str, model, language=None, log=print,
 
     opts = dict(model.opts)
     opts.update({k: v for k, v in overrides.items() if v is not None})
-    chunk_len = opts.pop("chunk_length_s", 10.0)
+    chunk_len = opts.pop("chunk_length_s", 15.0)
     opts.pop("batch_size", None)      # transformers-only knob
     # Same normalisation as the whisper path; the chunked driver hands the code to
     # mlx-whisper's decoder in the end. A single-language model's own tag is already a
@@ -174,22 +181,24 @@ def qwen3_language(loaded, spec, language=None, log=print) -> str:
 # beginning of the file.
 #
 # Measured here on a real recording, which is why this is not a hypothetical: a 1553s
-# Japanese file at a 30s window returned ONE segment and 110.77% coverage CER. Its
-# first chunk entered a repetition loop (one 7-character phrase 2048 times),
-# spent the entire
-# 8192-token budget, and left 1523 of 1553 seconds untranscribed. Raising the budget
+# Japanese file at a 30s window returned ONE segment and 96.67% coverage CER. Its
+# source: ultra-qwen3-loops.json#q3budget_wholefile_8192,q3budget_wholefile_19950
+# first chunk entered a repetition loop, spent the entire
+# 8192-token budget, and left 1520 of 1553 seconds untranscribed. Raising the budget
+# source: ultra-qwen3-loops.json#q3budget_wholefile_19950 (audio_covered_s over duration_s)
 # does not fix that, it only lets the loop run longer: at a duration-scaled 19950
-# tokens the same file still came back 8% covered. The budget has to be per chunk, so
-# that one degenerate window costs one window.
+# tokens the same file still came back with 33.3 of 1553 seconds (2.1%) covered. The
+# budget has to be per chunk, so that one degenerate window costs one window.
 #
-# 25 tokens/s is 3-4x real speech (Japanese runs 6-9 chars/s at roughly 1 token per
-# 1-1.5 chars; English is lower), so it cannot truncate an honest transcript.
+# 25 tokens/s is well above the rate of real speech, so it cannot truncate an honest
+# transcript.
 TOKENS_PER_SECOND = 25
 # Floor per chunk, so a 2-second tail chunk still has room for a sentence.
 MIN_CHUNK_MAX_TOKENS = 256
 
 # Characters per second above which a segment's text cannot be speech and is treated
-# as a degenerate repetition loop. Japanese narration runs 6-9 chars/s; 25 is far
+# as a degenerate repetition loop. The corpus references run 1.5 to 5.4 characters per
+# second of audio (source: corpus.json, reference_length over duration_s); 25 is far
 # enough above that a dense speaker is never flagged.
 RUNAWAY_CHARS_PER_S = 25
 
@@ -199,7 +208,7 @@ def _split_for_qwen3(audio, chunk_len: float):
 
     Uses upstream's `split_audio_into_chunks` so the cut points are the ones the
     library would have chosen (it searches for a low-energy point within 5s of each
-    boundary), keeping this adapter's output comparable to running `generate` directly.
+    boundary; not-measured: the library's search radius), keeping this adapter's output comparable to running `generate` directly.
     Falls back to fixed-length slicing if that private helper moves.
     """
     try:
@@ -340,7 +349,7 @@ def transcribe_mlx_qwen3(audio_path: str, model, language=None, log=print,
     opts = dict(model.opts)
     opts.update({k: v for k, v in overrides.items() if v is not None})
     # Our flag name, the library's parameter name.
-    chunk_len = opts.pop("chunk_length_s", 30.0)
+    chunk_len = opts.pop("chunk_length_s", 15.0)
     opts.pop("batch_size", None)     # refused at the CLI; see UnsupportedFlags
 
     m = load_model(model.repo)
@@ -538,12 +547,13 @@ def transcribe_mlx_parakeet(audio_path: str, model, language=None, log=print,
 # sherpa-onnx. This is the one engine here that is not MLX, and that is a
 # measured trade rather than an oversight: the k2 build is the most accurate
 # open Japanese ASR on the public benchmarks its authors cite (TEDxJP-10K 9.09
-# CER against 10.42 for their NeMo build), and ONNX is what makes it runnable
-# without torch or CUDA. It decodes greedily, so it is deterministic like
-# Voxtral; it runs on CPU, so its throughput is not comparable to the GPU rows.
+# CER against 10.42 for their NeMo build; not-measured: the authors' published figures),
+# and ONNX is what makes it runnable without torch or CUDA. It decodes greedily, so
+# it is deterministic like Voxtral; it runs on CPU, so its throughput is not
+# comparable to the GPU rows.
 
 # Sentence-break pieces for grouping token timestamps into cues. These weights
-# emit NO punctuation (checked: a 558s file came back without a single 。), so
+# emit NO punctuation, so
 # the length cap does most of the closing and MAX_CUE_CHARS is set to the same
 # 42 the Voxtral cue builder uses.
 _SENTENCE_ENDERS = "。！？!?"
@@ -611,6 +621,8 @@ def reazon_k2_load(repo: str, precision: str = "fp32") -> str:
     one 112s file), which contradicts the near-parity the authors' table shows
     on read-speech benchmarks. Pass precision="int8" explicitly to trade that
     accuracy away for a 4x-smaller download and ~1.5x the speed.
+    (source: ultra-engines-jp-only.json#jp_reazon_int8_c30_r1,jp_reazon_int8_c30_r2,jp_reazon_int8_c30_r3,jp_reazon_fp32_c30_rss;
+    the 4x download ratio is the hub file sizes, not a run)
 
     Only the two published spellings are accepted, and an unrecognised value is
     an error rather than a silent fallthrough to fp32: this function maps the

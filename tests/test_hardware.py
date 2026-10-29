@@ -35,24 +35,33 @@ UNTESTED = {"chip": "Apple M3 Pro", "ram_gb": 36, "gpu_cores": 18,
 
 
 def test_measured_machines_keep_their_chunk_length_from_the_table():
-    for info, chunk in ((M4, 60), (ULTRA, 30)):
+    for info, chunk in ((M4, 30), (ULTRA, 30)):
         p = resolve_profile(info)
         assert p["matched"] == "profile", f"{info['chip']} lost its measured profile"
         assert p["chunk_seconds"] == chunk
 
 
 def test_batch_follows_memory_on_the_benchmarked_machines():
-    """The two batch sweeps: B32 is the largest that ran reliably on the M4 16GB at
-    60s, and the Ultra 128GB kept speeding up to B128 at 30s."""
+    """The two batch sweeps: B32 is the largest that ran reliably on the M4 16GB, and
+    the Ultra 128GB kept speeding up to B128 at 30s."""
     assert resolve_profile(M4)["batch"] == 32
     assert resolve_profile(ULTRA)["batch"] == 128
+
+
+def test_m4_profile_caps_the_batch_the_formula_would_raise():
+    """At the M4's 30s chunks the formula admits B64 (9.36GB predicted, under the
+    9.9GB budget), which has never run there; the profile's max_batch keeps it at the
+    measured 32. The cap only lowers: a longer chunk still shrinks the batch."""
+    assert derive_batch(12.7, 2.5, 30) == 64
+    assert resolve_profile(M4)["batch"] == 32
+    assert resolve_profile(M4, chunk_seconds=90)["batch"] < 32
 
 
 def test_batch_depends_on_memory_not_chip_name():
     """Same chip and profile, different GPU working set: the batch must follow the
     memory. Both machines keep their own chunk length while doing so."""
     assert resolve_profile({**ULTRA, "gpu_working_set_gb": 12.7})["batch"] < 128
-    assert resolve_profile({**M4, "gpu_working_set_gb": 115.4})["batch"] == 128
+    assert resolve_profile({**UNTESTED, "gpu_working_set_gb": 115.4})["batch"] == 128
 
 
 @pytest.mark.parametrize("batch,chunk,measured", [
@@ -70,8 +79,8 @@ def test_overlap_counts_toward_the_decoded_chunk_length():
     """Each chunk after the first decodes its warm-up overlap as well, so 60s chunks
     with 30s of overlap must be sized as 90s rows (B32 there is predicted at 11.1GB,
     over the M4's 9.9GB budget)."""
-    assert resolve_profile(M4)["batch"] == 32
-    assert resolve_profile(M4, overlap_seconds=30)["batch"] == 24
+    assert resolve_profile(M4, chunk_seconds=60)["batch"] == 32
+    assert resolve_profile(M4, chunk_seconds=60, overlap_seconds=30)["batch"] == 24
     assert resolve_profile(UNTESTED, overlap_seconds=30)["batch"] <= \
         resolve_profile(UNTESTED)["batch"]
 
@@ -89,6 +98,20 @@ def test_m4_budget_admits_b32_and_excludes_b48():
     budget = batch_budget_gb(12.7)
     assert predicted_peak_gb(32, 2.5, 60) <= budget
     assert predicted_peak_gb(48, 2.5, 60) > budget
+
+
+def test_b96_is_a_measured_good_batch():
+    """The Ultra synthetic sweep shows no dip at 96 (99.7x between 95.9x at 64 and
+    103.9x at 128), so a machine whose budget falls between 64 and 128 gets 96."""
+    assert 96 in FAST_BATCHES
+    assert derive_batch(25.0, 2.5, 60) == 96
+
+
+def test_unprofiled_machines_default_to_30s_chunks():
+    """Both measured machines ran 30s/B32 faster than 60s at tied accuracy, the
+    10-core M4 included, so the low-core and default branches are both 30s."""
+    assert resolve_profile(UNTESTED)["chunk_seconds"] == 30
+    assert resolve_profile({**UNTESTED, "gpu_cores": 8})["chunk_seconds"] == 30
 
 
 def test_untested_machine_is_derived_and_says_so():

@@ -152,9 +152,9 @@ L 338.292909 220.600781
    </g>
    <g id="line2d_19">
     <path d="M 60.936793 144.752127 
-L 147.340567 110.561282 
-L 197.883535 116.849254 
-L 233.744342 95.234352 
+L 147.340567 105.452306 
+L 197.883535 99.950331 
+L 233.744342 91.30437 
 L 320.148116 88.553383 
 " clip-path="url(#p7ca13a109e)" style="fill: none; stroke: #3987e5; stroke-width: 2; stroke-linecap: round"/>
     <defs>
@@ -172,18 +172,18 @@ z
     </defs>
     <g clip-path="url(#p7ca13a109e)">
      <use xlink:href="#m226001cfbb" x="60.936793" y="144.752127" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
-     <use xlink:href="#m226001cfbb" x="147.340567" y="110.561282" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
-     <use xlink:href="#m226001cfbb" x="197.883535" y="116.849254" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
-     <use xlink:href="#m226001cfbb" x="233.744342" y="95.234352" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m226001cfbb" x="147.340567" y="105.452306" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m226001cfbb" x="197.883535" y="99.950331" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m226001cfbb" x="233.744342" y="91.30437" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
      <use xlink:href="#m226001cfbb" x="320.148116" y="88.553383" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
     </g>
    </g>
    <g id="line2d_20">
     <path d="M 60.936793 143.180134 
-L 147.340567 110.954281 
-L 197.883535 125.495214 
-L 233.744342 119.600241 
-L 320.148116 110.168284 
+L 147.340567 108.98929 
+L 197.883535 108.203293 
+L 233.744342 109.382288 
+L 320.148116 108.203293 
 " clip-path="url(#p7ca13a109e)" style="fill: none; stroke: #d95926; stroke-width: 2; stroke-linecap: round"/>
     <defs>
      <path id="m187742bd72" d="M -4 4 
@@ -195,17 +195,17 @@ z
     </defs>
     <g clip-path="url(#p7ca13a109e)">
      <use xlink:href="#m187742bd72" x="60.936793" y="143.180134" style="fill: #d95926; stroke: #1a1a19; stroke-linejoin: miter"/>
-     <use xlink:href="#m187742bd72" x="147.340567" y="110.954281" style="fill: #d95926; stroke: #1a1a19; stroke-linejoin: miter"/>
-     <use xlink:href="#m187742bd72" x="197.883535" y="125.495214" style="fill: #d95926; stroke: #1a1a19; stroke-linejoin: miter"/>
-     <use xlink:href="#m187742bd72" x="233.744342" y="119.600241" style="fill: #d95926; stroke: #1a1a19; stroke-linejoin: miter"/>
-     <use xlink:href="#m187742bd72" x="320.148116" y="110.168284" style="fill: #d95926; stroke: #1a1a19; stroke-linejoin: miter"/>
+     <use xlink:href="#m187742bd72" x="147.340567" y="108.98929" style="fill: #d95926; stroke: #1a1a19; stroke-linejoin: miter"/>
+     <use xlink:href="#m187742bd72" x="197.883535" y="108.203293" style="fill: #d95926; stroke: #1a1a19; stroke-linejoin: miter"/>
+     <use xlink:href="#m187742bd72" x="233.744342" y="109.382288" style="fill: #d95926; stroke: #1a1a19; stroke-linejoin: miter"/>
+     <use xlink:href="#m187742bd72" x="320.148116" y="108.203293" style="fill: #d95926; stroke: #1a1a19; stroke-linejoin: miter"/>
     </g>
    </g>
    <g id="line2d_21">
     <path d="M 60.936793 145.145125 
-L 147.340567 110.561282 
-L 197.883535 112.919272 
-L 233.744342 82.265411 
+L 147.340567 103.094316 
+L 197.883535 95.234352 
+L 233.744342 81.872413 
 L 320.148116 77.942431 
 " clip-path="url(#p7ca13a109e)" style="fill: none; stroke: #199e70; stroke-width: 2; stroke-linecap: round"/>
     <defs>
@@ -217,9 +217,9 @@ z
     </defs>
     <g clip-path="url(#p7ca13a109e)">
      <use xlink:href="#m5f27725f36" x="60.936793" y="145.145125" style="fill: #199e70; stroke: #1a1a19; stroke-linejoin: miter"/>
-     <use xlink:href="#m5f27725f36" x="147.340567" y="110.561282" style="fill: #199e70; stroke: #1a1a19; stroke-linejoin: miter"/>
-     <use xlink:href="#m5f27725f36" x="197.883535" y="112.919272" style="fill: #199e70; stroke: #1a1a19; stroke-linejoin: miter"/>
-     <use xlink:href="#m5f27725f36" x="233.744342" y="82.265411" style="fill: #199e70; stroke: #1a1a19; stroke-linejoin: miter"/>
+     <use xlink:href="#m5f27725f36" x="147.340567" y="103.094316" style="fill: #199e70; stroke: #1a1a19; stroke-linejoin: miter"/>
+     <use xlink:href="#m5f27725f36" x="197.883535" y="95.234352" style="fill: #199e70; stroke: #1a1a19; stroke-linejoin: miter"/>
+     <use xlink:href="#m5f27725f36" x="233.744342" y="81.872413" style="fill: #199e70; stroke: #1a1a19; stroke-linejoin: miter"/>
      <use xlink:href="#m5f27725f36" x="320.148116" y="77.942431" style="fill: #199e70; stroke: #1a1a19; stroke-linejoin: miter"/>
     </g>
    </g>
@@ -474,8 +474,8 @@ z
    <text style="font-weight: 700; font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="10.8" y="18.3" transform="rotate(-0 10.8 18.3)">Voxtral: batch size end to end at 30s chunks (M2 Ultra)</text>
   </g>
   <g id="text_33">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 269.301587)">20-file corpus, M2 Ultra 128GB, 30s chunks, kv8, delay 2400ms, one run per batch. A file of 32 chunks or fewer fits in one batch from B32 up, so only the 8</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 277.751948)">longer files can gain; accuracy moves under 0.1 point. Source: chunking.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 269.301587)">20-file corpus, M2 Ultra 128GB, 30s chunks, kv8, delay 2400ms; B32 and B64 are means of 3 runs. A file of 32 chunks or fewer fits in one batch from B32 up, so</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 277.751948)">only the 8 longer files can gain; accuracy moves under 0.1 point. Source: chunking.md.</text>
   </g>
  </g>
  <defs>

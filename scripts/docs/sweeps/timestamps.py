@@ -26,9 +26,14 @@ SWEEPS = {
                         "| worst drift slope |", "| break F1 |",
                         "| mid-phrase splits |"],
         "rows": [
-            ("Voxtral", None, ("278", "786", "25.3", "37.4%", "58.1%")),
-            ("whisper\nturbo-nocond", None, ("250", "1908", "122.7", "56.0%", "41.9%")),
+            ("Voxtral", None, ("278", "865", "33.0", "37.7%", "58.3%")),
+            ("whisper\nturbo-nocond", None, ("244", "1994", "87.8", "56.9%", "41.4%")),
         ],
+        "source": ("ultra-timestamps.json#ts_default_r1#engine voxtral,"
+                   "ts_default_r2#engine voxtral,ts_default_r3#engine voxtral,"
+                   "ts_default_r1#engine whisper-turbo-nocond,"
+                   "ts_default_r2#engine whisper-turbo-nocond,"
+                   "ts_default_r3#engine whisper-turbo-nocond"),
         "chosen": "Voxtral", "chosen_series": "worst drift slope",
         "panels": [
             {"series": [0, 1], "ylabel": "error at anchors (ms)",

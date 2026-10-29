@@ -156,6 +156,7 @@ def _load_via_ffmpeg(path: str) -> np.ndarray:
 def split_at_silences(
     audio: np.ndarray, target_s: float = 60.0, search_s: float = 5.0
 ) -> list:
+    # not-measured: the 50ms search window is a design constant
     """Split audio into ~target_s chunks, cutting at the quietest 50ms window
     within +/- search_s of each target boundary.
 
@@ -184,7 +185,7 @@ def split_at_silences(
     return [audio[a:b] for a, b in zip(bounds[:-1], bounds[1:])]
 
 
-TOKEN_SAMPLES = 1280  # 80ms at 16kHz, one decoder position
+TOKEN_SAMPLES = 1280  # 80ms at 16kHz, one decoder position  # not-measured: model constant
 TOKEN_S = TOKEN_SAMPLES / SAMPLE_RATE  # 0.08s per decoded token
 
 
@@ -198,16 +199,18 @@ def split_with_overlap(
     preceding audio to every chunk after the first.
 
     Both the encoder and the decoder are causal, so a chunk's first tokens are
-    emitted with no left context and are measurably worse: on the reference clip,
-    edit operations are 2.2x enriched in the first 3s of a chunk versus 1.3x in
-    the last 3s. Trailing overlap therefore cannot help (future audio cannot
+    emitted with no left context and are measurably worse: on the reference clip
+    at 30s chunks, edit operations are 1.99x enriched in the first 3s of a chunk
+    versus 1.36x in the last 3s and 0.83x elsewhere (source:
+    ultra-voxtral-clip-paired.json#seam_c30). Trailing overlap therefore cannot help (future audio cannot
     change an already-emitted token) but leading overlap can, by letting the
     model warm up on audio whose transcript is then thrown away.
 
     Returns (chunks, offsets_s, warmup_tokens) where offsets_s[i] is the audio
     time of each chunk's *kept* region and warmup_tokens[i] is how many decoder
     positions to discard from the front of chunk i. The overlap is rounded to a
-    whole number of 80ms frames so the discard boundary lands exactly on a token.
+    whole number of 80ms frames so the discard boundary lands exactly on a token
+    (not-measured: 80ms is the model's token period).
     """
     base = split_at_silences(audio, target_s=target_s, search_s=search_s)
     if overlap_s <= 0:
@@ -247,8 +250,9 @@ def auto_gain_db(audio: np.ndarray, trigger_dbfs: float = AUTO_TRIGGER_DBFS,
 
     Derived from the measured behaviour rather than from a fixed loudness target:
 
-    - Attenuated input is significantly worse (-12dB costs ~3.8 CER points,
-      -20dB ~7.8), because the mel front end clamps at an absolute floor and
+    - Attenuated input is significantly worse (-12dB costs ~3.0 CER points,
+      -20dB ~7.3, on the Japanese files; source: ultra-input-gain.json#gain7_asrecorded_c30b32_kv8,gain7_m12db_c30b32_kv8,gain7_m20db_c30b32_kv8),
+      because the mel front end clamps at an absolute floor and
       quiet detail lands under it. So quiet audio must be brought up.
     - Amplifying audio that is *already* healthy is at best neutral and split by
       content, and every mode that improved anything did so while clipping. So
@@ -261,9 +265,10 @@ def auto_gain_db(audio: np.ndarray, trigger_dbfs: float = AUTO_TRIGGER_DBFS,
 
     Scope: this is a single scalar for the WHOLE file, decided from the file peak
     and applied before chunking. It deliberately does not adapt per chunk. Most
-    chunks of a normal recording sit well below the file peak (94% of chunks are
-    under -6 dBFS on the reference corpus, with up to 70dB of spread inside one
-    file), so a per-chunk normalizer would be applying tens of dB of differential
+    chunks of a normal recording sit well below the file peak (84.8% of 30s
+    chunks are under -6 dBFS over the 7-file subset and the narration clip, with
+    up to 70.0dB of spread inside one file; source:
+    ultra-derived-measures.json#derive_gain), so a per-chunk normalizer would be applying tens of dB of differential
     gain and flattening the loud/quiet structure the model uses. See
     ``per_chunk_gain_db`` and the measurements in docs/benchmarks/input-level.md.
     """
@@ -337,6 +342,7 @@ def apply_gain(audio: np.ndarray, mode: str = "0", peak_dbfs: float = -1.0,
 
 
 def frame_db(audio: np.ndarray, frame: int = 1280) -> np.ndarray:
+    # not-measured: 80ms is the model's token period
     """Per-frame RMS in dB at the model's 80ms token granularity."""
     n = len(audio) // frame
     if n == 0:
@@ -354,7 +360,7 @@ def compact_silence(
 ):
     """Shorten long silent runs, returning (new_audio, time_map).
 
-    Decode cost is one step per 80ms frame of audio, so removing silence
+    Decode cost is one step per 80ms frame of audio (not-measured: model constant), so removing silence
     removes decode steps one-for-one. Some silence must stay: it is what the
     model uses to place sentence boundaries, and the cue timing logic reads
     gaps in the token stream.

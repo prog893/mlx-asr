@@ -29,20 +29,23 @@ Maintainers turn a pasted bench block into a registry entry:
 {
   "match": {"chip": "Apple M3 Max", "ram_gb_min": 36, "ram_gb_max": 36},
   "model_id": "Mac15,8",
-  "chunk_seconds": 60,
+  "chunk_seconds": 30,
   "kv_bits": 8,
   "overlap_seconds": 0,
   "notes": "what is unusual about this machine's curve",
   "measured_x_realtime": 0.0,
   "peak_gb": 0.0,
-  "source": "Apple M3 Max, 36GB, 30 GPU cores (Mac15,8), mlx 0.32.0, 4bit"
+  "source": "Apple M3 Max, 36GB, 30 GPU cores (Mac15,8), mlx 0.32.0, 4bit",
+  "runs": "group.json#run_a,run_b"
 }
 ```
 
 `match` is a substring test against `sysctl -n machdep.cpu.brand_string` plus a RAM
 window. **`ram_gb` is nameplate GiB**, the number on the spec sheet: a 16GB Mac reports
 16, not the 17 you get from dividing bytes by 1e9. There is no `batch` field: the batch is
-sized from GPU memory at run time on every machine. `peak_gb` records the peak at the batch
+sized from GPU memory at run time on every machine. An optional `max_batch` caps it where
+the formula admits a batch larger than any that ran reliably on that machine. `runs` names
+the saved run-groups the measured fields come from. `peak_gb` records the peak at the batch
 the machine resolves to, which is what tests the memory model.
 
 `model_id` (`sysctl -n hw.model`) is recorded but not matched on. It identifies the
@@ -85,11 +88,15 @@ uv run python scripts/benchmarks/compare_engines.py a.json b.json               
 Report the difference with its confidence interval and say how many files it covers. Note
 the two scripts answer different questions: the first says "better on this clip", the
 second says "better on this kind of audio", and only the second speaks to generalization.
-The resolution depends on how many files you run: with a per-file paired SD of about
-3.5 points, that is roughly 3.2 points at n=7 and 1.6 at n=20. State which you used.
+The resolution depends on how many files you run: with a per-file paired SD of 2.75 points[^c1]
+on Japanese, the 95% half-width is 2.04 points at n=7 and 1.20 at n=20[^c1]. State which
+you used.
 
-Decoding is deterministic on a given machine, so **repeating a run adds no information**;
-only more audio does. It is *not* deterministic across machines, so do not compare a run
+The greedy engines (`voxtral`, `voxtral-v1`, `qwen3-asr`, `parakeet`, `reazon`) decode
+deterministically on a given machine, so **repeating one of their runs adds no information**;
+only more audio does. `whisper` and `kotoba` sample when a segment trips the temperature
+fallback, so their reruns differ, and a comparison on either needs several runs per config.
+Output is *not* deterministic across machines (measured on Voxtral), so do not compare a run
 on one chip against a run on another and attribute the difference to your change. See
 [docs/benchmarks/reference/determinism.md](docs/benchmarks/reference/determinism.md).
 
@@ -100,8 +107,10 @@ wrong choice.
 
 ## Sharing results
 
-**Result files are not committed to this repo**, and `scripts/benchmarks/*.json` is gitignored.
-They are generated from private recordings, so they carry filenames and paths, and a file
+**Raw runner output is not committed to this repo**, and `scripts/benchmarks/*.json` is
+gitignored. The per-file rows behind every published number are committed, in scrubbed form:
+`benchmarks/results/` holds them with file ids hashed and local paths removed. Raw output is
+generated from private recordings, so it carries filenames and paths, and a file
 of bare numbers with no statement of what was tested, which direction is better, or what
 corpus it needed is not auditable by anyone, human or otherwise.
 
@@ -122,3 +131,5 @@ filenames, absolute paths and hostnames before posting.
 | `JOURNAL.md` | the chronological log, including withdrawn conclusions. History, not current numbers. |
 
 `scripts/benchmarks/` imports `scripts/metrics/` and never the reverse.
+
+[^c1]: [ultra-resolution-floor.json](benchmarks/results/2026-10/ultra-resolution-floor.json) runs `resolution_floor` (Voxtral at 4-bit, the default then, [ultra-voxtral-headline.json](benchmarks/results/2026-10/ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`, against Whisper turbo-nocond, [ultra-whisper-sizes.json](benchmarks/results/2026-10/ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`, paired per file)
