@@ -38,9 +38,7 @@ HF = "https://huggingface.co"
 # mx.get_peak_memory() (reset per file) over the corpus on an M2 Ultra, as recorded in
 # the saved run-group SOURCE names for the family (benchmarks/results/). An earlier
 # version of this table mixed three bases (corpus / one 93-minute file / 3 files), which
-# cannot be read down a column, which is the only reason to publish a column. An
-# earlier CLI re-run (not saved) agreed with these cells except kotoba, and the note
-# there says why.
+# cannot be read down a column, which is the only reason to publish a column.
 PEAK = {
     # whisper. These barely track the download: tiny downloads 0.07GB and peaks at
     # 3.98, because the working set is dominated by the 30s mel window and decoder

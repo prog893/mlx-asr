@@ -139,6 +139,11 @@ def cached_mlx_copy(repo: str, log=print) -> str:
 REALTIME_RECIPES = {"8bit": {"q_mode": "affine", "q_bits": 8, "q_group_size": 64}}
 
 
+def _ready(d: Path) -> bool:
+    """A converted directory is usable only with its config and at least one weights file."""
+    return (d / "config.json").exists() and any(d.glob("*.safetensors"))
+
+
 def realtime_weights(repo: str, log=print) -> str:
     """A loadable path for a Voxtral Realtime registry value.
 
@@ -158,7 +163,7 @@ def realtime_weights(repo: str, log=print) -> str:
                          f"known: {', '.join(REALTIME_RECIPES)}")
     dst = (Path(HF_HUB_CACHE) / "mlx-asr-converted"
            / f"{source.replace('/', '--')}-{precision}")
-    if (dst / "config.json").exists() and list(dst.glob("*.safetensors")):
+    if _ready(dst):
         return str(dst)
     log(f"[convert] no loadable {precision} build of {source} is published; "
         f"quantizing once into {dst}")
@@ -178,8 +183,9 @@ def realtime_weights(repo: str, log=print) -> str:
         try:
             out.rename(dst)         # atomic on one filesystem; fails if dst now exists
         except OSError:
-            if not (dst / "config.json").exists():
-                raise
+            if not _ready(dst):
+                raise RuntimeError(f"{dst} exists but is incomplete (no config.json or "
+                                   f"weights); remove it and run again") from None
             log(f"[convert] another process finished {dst} first; using it")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
