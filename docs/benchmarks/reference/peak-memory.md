@@ -32,7 +32,7 @@ reason below.
 The six `voxtral-v1` cells were added on 2026-09-25 from the engine's corpus runs
 (`run_qwen3.py`) rather than a CLI-per-file sweep. The basis is the same: the counter is
 reset before the model loads, as the CLI does before `run()`, and the cell is the maximum
-over the 20 files. The one file measured both ways read 10.91GB in each.[^p10] Like qwen3-asr its
+over the 20 files.[^p10] Like qwen3-asr its
 peak is flat across the corpus, because a fixed window fixes the working set.
 
 ## What the number is sensitive to
@@ -164,7 +164,7 @@ mlx-asr audio.wav --stats-json stats.json      # peak_memory_gb in the JSON
 [^p7]: [ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_wfp16_c60b16_kv8`
 [^p8]: [ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`
 [^p9]: [ultra-voxtral-clip.json](../../../benchmarks/results/2026-10/ultra-voxtral-clip.json) runs `compact_c60b16_kv0_off`
-[^p10]: [ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/ultra-voxtral-v1.json) runs `3b_bf16_c30` (the corpus-run way; the CLI-per-file way has no saved run)
+[^p10]: [ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/ultra-voxtral-v1.json) runs `3b_bf16_c30`
 [^p11]: [ultra-kotoba-conversion.json](../../../benchmarks/results/2026-10/ultra-kotoba-conversion.json) runs `pm_kotoba_cold_r112`, `pm_kotoba_warm_r112`
 [^p12]: [ultra-voxtral-clip-cli.json](../../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_fp16`
 [^p13]: [m4-voxtral-chunking.json](../../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3` (6.87GB on all three)

@@ -91,7 +91,7 @@ PEAK = {
     ("kotoba", None): "2.38GB",
     # voxtral-v1, 30s windows, one window at a time. Same basis (max over the 20 files,
     # load included) from run_qwen3.py, which resets the counter before the load as the
-    # CLI does before run(); the one file measured both ways read 10.91GB in each.
+    # CLI does before run().
     # Flat across the corpus, like qwen3-asr, because the window fixes the working set.
     # source: ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30,24b_4bit_c30,24b_8bit_c30,24b_bf16_c30
     ("voxtral-v1-3b", "4bit"): "5.25GB",

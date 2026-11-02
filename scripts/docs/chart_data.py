@@ -12,6 +12,8 @@ A value is written exactly as its doc prints it (a string), and parsed for plott
 #
 # Defaults on the M2 Ultra 128GB, where the speeds were measured; Voxtral's is fp16 there
 # (a 16GB Mac loads 8-bit instead, docs/DEFAULTS.md "How a variant is chosen").
+# voxtral-v1 is the exception: its points are 8bit, the precision with three speed runs
+# per size, and are labelled so; on the M2 Ultra the selector loads bf16 for either size.
 # JP and EN from the 20-file corpus (JP: the 17 Japanese files; EN: the 3 English
 # files). Speed is the run's own x realtime; `speed_note` is a qualifier the chart
 # prints beside the label (reazon decodes on the CPU). `peak` is GPU memory from
@@ -31,9 +33,9 @@ PICKER = [
      "docs/benchmarks/engines/whisper.md"),
     ("qwen3-asr 1.7B", "18.62%", "24.72%", "24.6x", "3.74GB", "", "RESULTS.md"),
     ("qwen3-asr 0.6B", "22.31%", "22.95%", "35.5x", "2.07GB", "", "RESULTS.md"),
-    ("voxtral-v1 3B", "36.14%", "17.86%", "14.1x", "7.28GB", "",
+    ("voxtral-v1 3B 8bit", "36.14%", "17.86%", "14.1x", "7.28GB", "",
      "RESULTS.md"),
-    ("voxtral-v1 24B", "27.20%", "16.86%", "3.4x", "27.92GB", "",
+    ("voxtral-v1 24B 8bit", "27.20%", "16.86%", "3.4x", "27.92GB", "",
      "RESULTS.md"),
     ("kotoba", "25.34%", None, "50.0x", "2.38GB", "",
      "docs/benchmarks/engines.md"),

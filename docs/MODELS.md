@@ -288,7 +288,7 @@ word spacing ([benchmarks/prompt.md](benchmarks/prompt.md)).
 
 | flag | values | default | effect |
 |---|---|---|---|
-| `--size` | see matrix | by memory: `large-v3`, else `turbo` | which checkpoint |
+| `--size` | see matrix | by memory: the first of `large-v3`, `turbo`, `large-v2`, `medium`, `small`, `base`, `tiny` that fits | which checkpoint |
 | `--language` | any spelling | autodetect | set it; see above |
 
 `condition_on_previous_text=False` is applied to `small` and larger and is not a flag,

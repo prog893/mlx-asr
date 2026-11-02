@@ -14,7 +14,7 @@ unquantized KV on the corpus and is on by default.
 | `--quantization` on `voxtral` | per machine, the first that fits: `fp16`, then `8bit` (converted on first use), then `4bit` | 4-bit is last of five on the corpus; at 30s/B128 fp16 ties 8-bit (+0.11 points, CI [-0.01, +0.25]) and both beat 4-bit (-0.60 and -0.71), and the tie goes to the larger build. fp16 fits on the M2 Ultra 128GB, and 16GB Macs get 8-bit ([how a variant is chosen](../DEFAULTS.md#how-a-variant-is-chosen)) |
 | `--quantization` on `qwen3-asr` 1.7B | `8bit` | no rung beats it: 4bit is 1.16 points worse, 6bit 0.47 and bf16 0.52, all resolved; 5bit (-0.59) does not resolve ([qwen3-asr.md](engines/qwen3-asr.md)) |
 | `--quantization` on `qwen3-asr` 0.6B | `bf16`, else `8bit` | 4bit is 2.79 points worse and 5bit 0.92, both resolved; 6bit (-0.36) and bf16 (+0.01) tie, so bf16 runs where it fits, a tie going to the larger build ([qwen3-asr.md](engines/qwen3-asr.md)) |
-| `--quantization` on `voxtral-v1` | `8bit` | ties bf16 on both sizes; the 3B at 4bit loses 8.18 points ([voxtral-v1.md](engines/voxtral-v1.md)) |
+| `--quantization` on `voxtral-v1` | `bf16` where it fits, else `8bit` | 8bit ties bf16 on both sizes, so bf16 runs where it fits, a tie going to the larger build; the 3B at 4bit loses 8.18 points ([voxtral-v1.md](engines/voxtral-v1.md)) |
 | `--quantization` on `whisper`, `kotoba` | fp16 | one build each, so the flag errors |
 | `--quantization` on `parakeet` | its one build | one published build, so the flag errors |
 | `reazon` precision | fp32 | not a `--quantization` choice; int8 drops whole phrases (36.61% against 29.98%), an engine decision ([reazon.md](engines/reazon.md)) |
@@ -141,8 +141,8 @@ The ordering was re-checked at the shipped 30s/B128 on the M2 Ultra: fp16 15.20%
 
 Source: [ultra-voxtral-kv.json](../../benchmarks/results/2026-10/ultra-voxtral-kv.json) runs `vox_kv0_c60b16_w4bit`, `vox_kv8_c60b16_w4bit`, `vox_kv4_c60b16_w4bit`
 
-    kv8 vs unquantized: -0.17 points, CI [-0.50, +0.12]  -> tie [^kv]
-    kv8 vs kv4:         +0.27 points, CI [-0.51, +1.25]  -> tie [^kv]
+- kv8 against unquantized: -0.17 points, CI [-0.50, +0.12], a tie[^kv]
+- kv8 against kv4: +0.27 points, CI [-0.51, +1.25], a tie[^kv]
 
 All three tie, so quantizing the cache is free in the sense that matters, and kv8 keeps the
 default on its memory saving. kv4 is nominally best of the three, which is worth *not*
@@ -206,7 +206,7 @@ default is picked by this rule, in this order:
 | `reazon` | fp32 | none through `--quantization` | int8 drops whole phrases on this corpus (36.61% against 29.98%); see [reazon.md](engines/reazon.md) |
 | `qwen3-asr` | **8-bit** | 4bit, 5bit, 6bit, bf16 | best of the five on accuracy: 4bit (1.16 points), 6bit (0.47) and bf16 (0.52) are resolved worse and 5bit ties; bf16 (19.14% vs 18.62%) also costs **1.18x the wall clock** (19.5x vs 23.0x) and **1.43x the peak memory** (5.35 vs 3.74GB) |
 | `qwen3-asr-small` | **8-bit** | 4bit, 5bit, 6bit, bf16 | 4bit (2.79 points) and 5bit (0.92) are resolved worse and 6bit ties; bf16 ties (22.31% vs 22.31%) at **1.20x the wall clock** (30.4x vs 36.4x) and 1.27x the peak memory (2.63 vs 2.07GB), which would cut into the only reason this model is offered |
-| `voxtral-v1` | **8bit** | 4bit, bf16 | ties bf16 on both sizes at a fraction of the memory; the 3B at 4bit is 8.18 points worse. See [voxtral-v1.md](engines/voxtral-v1.md) |
+| `voxtral-v1` | **bf16** where it fits, else **8bit** | 4bit, 8bit, bf16 | 8bit ties bf16 on both sizes, so bf16 runs where its memory fits and 8bit at a fraction of it elsewhere; the 3B at 4bit is 8.18 points worse. See [voxtral-v1.md](engines/voxtral-v1.md) |
 
 Source: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`; [ultra-qwen3-precision-c15.json](../../benchmarks/results/2026-10/ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15`, `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`; [ultra-reazon-precision.json](../../benchmarks/results/2026-10/ultra-reazon-precision.json) runs `reazon_fp32_c30`, `reazon_int8_c30`; [ultra-voxtral-v1.json](../../benchmarks/results/2026-10/ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `3b_bf16_c30`, `24b_4bit_c30`, `24b_8bit_c30`, `24b_bf16_c30`; [ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`, `vox_w8bit_c30b128_kv8`, `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3` <!-- not-measured: the whisper, kotoba and voxtral weight sizes are file sizes of the published builds -->
 

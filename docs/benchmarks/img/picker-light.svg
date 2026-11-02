@@ -241,10 +241,10 @@ L 358.2 305.437969
     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="209.993249" y="187.251135" transform="rotate(-0 209.993249 187.251135)">qwen3-asr 0.6B</text>
    </g>
    <g id="text_22">
-    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="158.979988" y="83.551208" transform="rotate(-0 158.979988 83.551208)">voxtral-v1 3B</text>
+    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="158.979988" y="83.551208" transform="rotate(-0 158.979988 83.551208)">voxtral-v1 3B 8bit</text>
    </g>
    <g id="text_23">
-    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="80.39591" y="146.690814" transform="rotate(-0 80.39591 146.690814)">voxtral-v1 24B</text>
+    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="80.39591" y="146.690814" transform="rotate(-0 80.39591 146.690814)">voxtral-v1 24B 8bit</text>
    </g>
    <g id="text_24">
     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="228.914999" y="172.659456" transform="rotate(-0 228.914999 172.659456)">kotoba</text>
@@ -533,10 +533,10 @@ L 712.8 305.437969
     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="627.060148" y="140.576342" transform="rotate(-0 627.060148 140.576342)">qwen3-asr 0.6B</text>
    </g>
    <g id="text_48">
-    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="555.994184" y="256.047081" transform="rotate(-0 555.994184 256.047081)">voxtral-v1 3B</text>
+    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="555.994184" y="256.047081" transform="rotate(-0 555.994184 256.047081)">voxtral-v1 3B 8bit</text>
    </g>
    <g id="text_49">
-    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="446.519644" y="266.32548" transform="rotate(-0 446.519644 266.32548)">voxtral-v1 24B</text>
+    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="446.519644" y="266.32548" transform="rotate(-0 446.519644 266.32548)">voxtral-v1 24B 8bit</text>
    </g>
    <g id="patch_9">
     <path d="M 672.682411 276.819341 

@@ -106,7 +106,7 @@ build; a 16GB Mac, where it does not fit, runs 8bit at 7.28GB[^v1p].
 
 Source: [ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/ultra-voxtral-v1.json) runs `24b_4bit_c30`, `24b_8bit_c30`, `24b_bf16_c30` (16 valid Japanese files). The weights column is the on-disk size of each build, not a run. <!-- not-measured: the weights column is on-disk build sizes -->
 
-**Size is worth far more than precision here.** bf16 24B against the 3B at 8bit, the 16GB default, is -9.43 <!-- not-measured: machine memory size -->
+**Size is worth far more than precision here.** bf16 24B against the 3B at 8bit, the 16GB default, is -9.43[^v1s]
 points on Japanese, CI [-11.07, -7.92], better on all 16 files, and -1.01 on English, CI[^v1s]
 [-3.15, -0.10], all three files[^v1s]. It still loops, on 9 to 13 of the 16 Japanese files
 depending on precision, so the loops are a property of the family rather than of the small
@@ -164,11 +164,11 @@ Japanese the flag should be passed.
 
 ## Experiment: repeat decodes
 
-**Basis:** the 7 shortest files of the [20-file corpus](../reference/corpus.md#the-20-file-corpus), M2 Ultra 128GB (Mac14,14), 2026-09-24/25; 3B at 8bit and 24B at 4bit, each file decoded twice.
+**Basis:** the 7 shortest files of the [20-file corpus](../reference/corpus.md#the-20-file-corpus), M2 Ultra 128GB (Mac14,14), 2026-09-24/25; 3B at 8bit, each file decoded twice.
 
-The 7 shortest files, each decoded twice: 7/7 byte-identical for the 3B at 8bit[^v1d] and 7/7
-for the 24B at 4bit, as greedy decoding predicts. So one run per configuration is its
-score.
+The 7 shortest files, each decoded twice: 7/7 byte-identical for the 3B at 8bit[^v1d], as
+greedy decoding predicts, so one run per configuration is its score. A 24B repeat was run
+in an earlier session and not saved, so it is not reported here.
 
 ## How it works
 

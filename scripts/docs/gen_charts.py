@@ -80,11 +80,11 @@ def _jp_en_lines(ax, t, xs, jp, en, ordinal=False, en_files=2):
 _PICKER_OFFSETS = {
     "jp": {"voxtral": (8, 2), "whisper large-v3": (-8, 3), "whisper turbo": (8, 4),
            "qwen3-asr 1.7B": (8, 2), "qwen3-asr 0.6B": (8, -2),
-           "voxtral-v1 3B": (8, -2), "voxtral-v1 24B": (8, 2), "kotoba": (8, -10),
+           "voxtral-v1 3B 8bit": (8, -2), "voxtral-v1 24B 8bit": (8, 2), "kotoba": (8, -10),
            "parakeet": (-8, 8), "reazon": (8, 2)},
     "en": {"voxtral": (8, 2), "whisper large-v3": (-8, 6), "whisper turbo": (8, 6),
            "qwen3-asr 1.7B": (8, 2), "qwen3-asr 0.6B": (8, -2),
-           "voxtral-v1 3B": (8, -9), "voxtral-v1 24B": (8, 2)},
+           "voxtral-v1 3B 8bit": (8, -9), "voxtral-v1 24B 8bit": (8, 2)},
 }
 
 

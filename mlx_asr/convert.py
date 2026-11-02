@@ -164,10 +164,24 @@ def realtime_weights(repo: str, log=print) -> str:
         f"quantizing once into {dst}")
     from mlx_audio.convert import convert
 
-    # A half-written directory from an interrupted run must not pass the check above.
-    tmp = dst.with_name(dst.name + ".partial")
-    convert(hf_path=source, mlx_path=str(tmp), quantize=True,
-            **REALTIME_RECIPES[precision])
-    tmp.rename(dst)
+    # Each conversion writes into its own temporary directory beside the destination, so
+    # a half-written or concurrent conversion can never be mistaken for a finished one.
+    import shutil
+    import tempfile
+
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    tmp = Path(tempfile.mkdtemp(prefix=dst.name + ".partial-", dir=dst.parent))
+    try:
+        out = tmp / "model"
+        convert(hf_path=source, mlx_path=str(out), quantize=True,
+                **REALTIME_RECIPES[precision])
+        try:
+            out.rename(dst)         # atomic on one filesystem; fails if dst now exists
+        except OSError:
+            if not (dst / "config.json").exists():
+                raise
+            log(f"[convert] another process finished {dst} first; using it")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
     log(f"[convert] wrote {dst}")
     return str(dst)

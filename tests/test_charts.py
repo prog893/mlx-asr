@@ -32,8 +32,8 @@ PEAK_ROW = {
     "whisper turbo": "whisper-large-v3-turbo)",
     "qwen3-asr 1.7B": "Qwen3-ASR-1.7B-8bit)",
     "qwen3-asr 0.6B": "Qwen3-ASR-0.6B-8bit)",
-    "voxtral-v1 3B": "| `3B` | `8bit`",
-    "voxtral-v1 24B": "| `24B` | `8bit`",
+    "voxtral-v1 3B 8bit": "| `3B` | `8bit`",
+    "voxtral-v1 24B 8bit": "| `24B` | `8bit`",
     "kotoba": "kotoba-whisper-v2.0)",
     "parakeet": "parakeet-tdt_ctc-0.6b-ja)",
 }

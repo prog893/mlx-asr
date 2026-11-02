@@ -322,7 +322,7 @@ window.
 | **no prompt** | 0 | 0 | 7.28% | - |
 | **generic instruction** ("Transcribe the Japanese audio accurately.") | 7 | 7 | **13.17%** | **+5.90** |
 
-Source: [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv8`, `hk_c60b16_kv8_instr`, `score_clip` (rerun at the same configived run)
+Source: [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv8`, `hk_c60b16_kv8_instr`, `score_clip` (a rerun at the same configuration)
 
 **Table:** the generic instruction against no prompt, paired, with its 95% CI. <!-- not-measured: 95% is the confidence level -->
 
@@ -353,7 +353,7 @@ arm is a cost (+0.94 points[^pr4]) and no arm resolved a gain.
 
 [chunking.md](chunking.md) for the overlap side of the conflict.
 
-[^pr1]: [ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description en`, `prompt20_c30b32_kv8#description ja`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic en`, `prompt20_derived_names#topic en`, `prompt20_derived_freq#topic ja`, `prompt20_derived_names#terms en` (word unit, paired against the none row)
+[^pr1]: [ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description en`, `prompt20_c30b32_kv8#description ja`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic en`, `prompt20_derived_freq#topic ja`, `prompt20_derived_freq#terms en`, `prompt20_derived_freq#terms ja`, `prompt20_derived_names#topic en`, `prompt20_derived_names#topic ja`, `prompt20_derived_names#terms en`, `prompt20_derived_names#terms ja` (word unit, paired against the none row; all twelve arms)
 [^pr2]: [ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`
 [^pr3]: [ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`; [ultra-voxtral-headline.json](../../benchmarks/results/2026-10/ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`
 [^pr4]: [ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description ja`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic ja`, `prompt20_derived_names#topic ja`, `prompt20_derived_freq#terms en`, `prompt20_derived_freq#terms ja`, `prompt20_derived_names#terms ja` (char unit, paired against the none row)
