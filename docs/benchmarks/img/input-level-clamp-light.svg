@@ -368,6 +368,7 @@ L 607.601455 241.768781
    <g id="line2d_48">
     <path d="M 361.254493 172.51606 
 L 432.094741 200.995139 
+L 485.224927 213.397319 
 L 538.355112 220.549899 
 L 591.485298 216.284599 
 " clip-path="url(#p8e28970ad4)" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: round"/>
@@ -382,6 +383,7 @@ z
     <g clip-path="url(#p8e28970ad4)">
      <use xlink:href="#m658b94c491" x="361.254493" y="172.51606" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
      <use xlink:href="#m658b94c491" x="432.094741" y="200.995139" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
+     <use xlink:href="#m658b94c491" x="485.224927" y="213.397319" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
      <use xlink:href="#m658b94c491" x="538.355112" y="220.549899" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
      <use xlink:href="#m658b94c491" x="591.485298" y="216.284599" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
     </g>
@@ -389,6 +391,7 @@ z
    <g id="line2d_49">
     <path d="M 361.254493 87.931883 
 L 432.094741 103.811922 
+L 485.224927 113.983022 
 L 538.355112 154.208081 
 L 591.485298 171.20366 
 " clip-path="url(#p8e28970ad4)" style="fill: none; stroke: #1baf7a; stroke-width: 2; stroke-linecap: round"/>
@@ -402,6 +405,7 @@ z
     <g clip-path="url(#p8e28970ad4)">
      <use xlink:href="#m965ecce357" x="361.254493" y="87.931883" style="fill: #1baf7a; stroke: #fcfcfb; stroke-linejoin: miter"/>
      <use xlink:href="#m965ecce357" x="432.094741" y="103.811922" style="fill: #1baf7a; stroke: #fcfcfb; stroke-linejoin: miter"/>
+     <use xlink:href="#m965ecce357" x="485.224927" y="113.983022" style="fill: #1baf7a; stroke: #fcfcfb; stroke-linejoin: miter"/>
      <use xlink:href="#m965ecce357" x="538.355112" y="154.208081" style="fill: #1baf7a; stroke: #fcfcfb; stroke-linejoin: miter"/>
      <use xlink:href="#m965ecce357" x="591.485298" y="171.20366" style="fill: #1baf7a; stroke: #fcfcfb; stroke-linejoin: miter"/>
     </g>
@@ -457,9 +461,9 @@ L 490.633102 54.956259
    <text style="font-weight: 700; font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="10.8" y="18.3" transform="rotate(-0 10.8 18.3)">Mel bins clamped, and error, by input gain</text>
   </g>
   <g id="text_34">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 290.901587)">Clamp share: one recording, peaking at -5.5 dBFS as recorded. Error: 7-file subset, Voxtral, coverage CER/WER (-6 dB not run). --gain auto</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 299.410386)">leaves a file already peaking above -6 dBFS alone, because 0 dB is the Japanese optimum, +6 dB is marginally worse on Japanese and puts this</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 307.919185)">recording's peak at full scale; the English improvement rests on 2 files. Source: input-level.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 290.901587)">Clamp share: one recording, peaking at -0.5 dBFS as recorded. Error: 7-file subset, Voxtral, coverage CER/WER. --gain auto leaves a file</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 299.410386)">already peaking above -6 dBFS alone, because 0 dB is the Japanese optimum, +6 dB is marginally worse on Japanese and clips this recording</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 307.919185)">(peak 0.0 dBFS); the English improvement rests on 2 files. Source: input-level.md.</text>
   </g>
  </g>
  <defs>

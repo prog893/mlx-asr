@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="481.248pt" height="284.421309pt" viewBox="0 0 481.248 284.421309" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="481.248pt" height="284.79916pt" viewBox="0 0 481.248 284.79916" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
@@ -15,8 +15,8 @@
  </defs>
  <g id="figure_1">
   <g id="patch_1">
-   <path d="M 0 284.421309 
-L 481.248 284.421309 
+   <path d="M 0 284.79916 
+L 481.248 284.79916 
 L 481.248 0 
 L 0 0 
 z
@@ -140,7 +140,7 @@ L 470.448 214.840781
 " style="fill: none; stroke: #383835; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="line2d_17">
-    <path d="M 71.187091 155.542983 
+    <path d="M 71.187091 155.582798 
 L 164.47235 138.661274 
 L 257.757609 148.933635 
 L 444.328127 62.335246 
@@ -159,7 +159,7 @@ z
 " style="stroke: #1a1a19; stroke-width: 2"/>
     </defs>
     <g clip-path="url(#p9e2fe11656)">
-     <use xlink:href="#m226001cfbb" x="71.187091" y="155.542983" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m226001cfbb" x="71.187091" y="155.582798" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
      <use xlink:href="#m226001cfbb" x="164.47235" y="138.661274" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
      <use xlink:href="#m226001cfbb" x="257.757609" y="148.933635" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
      <use xlink:href="#m226001cfbb" x="444.328127" y="62.335246" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
@@ -217,8 +217,8 @@ L 179.211828 29.573559
    </g>
   </g>
   <g id="text_14">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 263.541587)">Corpus: the 5 Japanese files of the 7-file subset; narration: the single clip. Reference driver only,</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 272.050386)">not the CLI's. Source: kotoba.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 263.541587)">Corpus: each run's rows for the 5 Japanese files of the 7-file subset; narration: the single clip.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 272.050386)">Reference driver only, not the CLI's. Source: kotoba.md.</text>
   </g>
  </g>
  <defs>

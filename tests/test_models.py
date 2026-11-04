@@ -41,7 +41,7 @@ BACKENDS = ("voxtral", "mlx-voxtral-v1", "mlx-whisper", "mlx-chunked", "mlx-qwen
 # Qwen3-ASR's `temperature=0.0` becomes `mx.argmax` for the same reason;
 # parakeet's TDT and reazon-k2's transducer have no sampling path at all.
 # Whisper's temperature fallback samples, so it is not on this list and its
-# repeat runs spread ~0.5 CER points.
+# repeat runs spread 0.8 to 1.8 CER points (ultra-whisper-sizes).
 GREEDY_BACKENDS = ("voxtral", "mlx-voxtral-v1", "mlx-qwen3", "mlx-parakeet", "sherpa-onnx")
 
 
@@ -70,7 +70,7 @@ def test_large_whisper_models_disable_conditioning(alias):
 
 
 def test_kotoba_uses_a_chunked_driver_not_the_sequential_one():
-    """The distinction that is worth 68 CER points on identical weights.
+    """The distinction that is worth 63.9 CER points on identical weights (5 files).
 
     What must never happen is kotoba being routed to `mlx-whisper`, whose
     sequential driver a 2-layer distil decoder cannot satisfy.
@@ -149,13 +149,21 @@ def test_qwen3_ships_the_measured_window_not_the_librarys(alias):
     """The library default is `chunk_duration=1200.0`, i.e. 20 minutes.
 
     At that value nearly every real file is a single chunk: one segment, and the
-    batched path can never engage since it needs more than one. 30s is the measured
-    optimum on the 7-file corpus, where unusually for this project shorter is better
-    on accuracy, speed and memory at once, monotonically up to 300s (19.98% / 21.42% /
-    23.55% / 62.47% coverage CER at 30/60/120/300s). Regression-guarded because a
-    revert to the library value costs 42 points and would look like a tidy-up.
+    batched path can never engage since it needs more than one. 15s, the shortest
+    window swept, is the measured optimum on the 7-file corpus, where unusually for
+    this project shorter is better on accuracy, speed and memory at once,
+    monotonically up to 300s (19.73% / 20.67% / 22.27% / 23.55% / 64.89% coverage CER
+    at 15/30/60/120/300s). Regression-guarded because a revert toward the library
+    value (300s already costs 45 points) would look like a tidy-up.
     """
-    assert REGISTRY[alias].opts.get("chunk_length_s") == 30.0
+    assert REGISTRY[alias].opts.get("chunk_length_s") == 15.0
+
+
+def test_kotoba_ships_the_measured_window():
+    """15s beat the previous 10s default on the 20-file corpus (25.34% against 26.81%,
+    paired -1.47 points, CI [-2.75, -0.13], 3 runs each) and ran faster; 20s and 30s
+    lose to 10s. The window is kotoba's largest lever, so a drift is a regression."""
+    assert REGISTRY["kotoba"].opts.get("chunk_length_s") == 15.0
 
 
 def test_qwen3_repos_are_the_official_mlx_conversions():
@@ -313,12 +321,14 @@ def test_voxtral_offers_only_the_builds_that_load():
     `mlx-community/...-6bit` and `ellamind/...-8bit-mlx` ship a config.json with no
     `model_type`, so mlx-audio routes them to the non-realtime loader and dies in
     post_load_hook. Listing them would turn a usage error into a crash after a
-    multi-gigabyte download, so the ladder holds only the two that work.
+    multi-gigabyte download, so the ladder holds the two hub builds that work and an
+    8bit converted on first use from the fp16 one.
     """
     m = REGISTRY["voxtral"]
-    assert set(m.quant_repos) == {"4bit", "fp16"}, m.quant_repos
+    assert set(m.quant_repos) == {"4bit", "8bit", "fp16"}, m.quant_repos
+    assert m.quant_repos["8bit"] == m.quant_repos["fp16"] + CONVERT_SEP + "8bit"
     for repo in m.quant_repos.values():
-        assert "6bit" not in repo and "8bit" not in repo, repo
+        assert "6bit" not in repo and "ellamind" not in repo, repo
         assert repo.startswith("mlx-community/"), repo
 
 
@@ -372,10 +382,10 @@ def test_the_error_names_the_right_unquantized_build_per_model():
     from mlx_asr.models import UnknownQuantization
 
     with pytest.raises(UnknownQuantization) as e:
-        REGISTRY["voxtral"].repo_for("8bit")
+        REGISTRY["voxtral"].repo_for("6bit")
     assert "'none' means fp16" in str(e.value), str(e.value)
     # And the list is ordered smallest-first, not alphabetically.
-    assert "Available: 4bit, fp16" in str(e.value), str(e.value)
+    assert "Available: 4bit, 8bit, fp16" in str(e.value), str(e.value)
 
     with pytest.raises(UnknownQuantization) as e:
         REGISTRY["qwen3-asr"].repo_for("3bit")
@@ -399,11 +409,11 @@ def test_omitting_the_flag_gives_the_registry_default():
 def test_eight_bit_is_the_default_and_it_is_the_measured_one():
     """Regression guard on a measured default.
 
-    bf16 scored 20.16% against 8-bit's 19.98% on the 7-file corpus, a tie against the
-    ~3.2 points this corpus resolves, while costing 1.36x the wall clock (14.1x vs
-    19.2x) and 1.4x the peak memory (5.66 vs 4.05GB). On the 0.6B the gap is worse
-    (26.24% vs 23.27%, 23.0x vs 32.8x). So 8bit is not a guess and a silent switch to
-    bf16 would cost real speed for no accuracy.
+    At the 15s window on the 20-file corpus bf16 scored 19.14% against 8-bit's 18.62%
+    on the 1.7B (paired +0.52 points, CI [+0.21, +0.89]), at 19.5x against 23.0x and
+    5.35GB against 3.74GB. On the 0.6B the two tie (22.31% both) and bf16 runs at 30.4x
+    against 36.4x. So 8bit is not a guess and a silent switch to bf16 would cost real
+    speed for no accuracy.
     """
     for alias in ("qwen3-asr", "qwen3-asr-small"):
         m = REGISTRY[alias]
@@ -450,12 +460,14 @@ def test_the_help_text_is_derived_from_the_registry():
         else:
             # An alias with no choice must not appear as though it had one.
             assert f"{alias}:" not in text, alias
-    assert "8bit (default)" in text
+    # A family with a priority list has no fixed default precision: memory picks it.
+    assert "(default)" not in text.split("voxtral:")[1].split(";")[0]
 
 
 def test_list_models_shows_the_precisions_per_alias():
     out = describe_registry()
-    assert "--quantization: 4bit, 5bit, 6bit, 8bit (default), bf16" in out
+    assert "--quantization: 4bit, 5bit, 6bit, 8bit, bf16" in out
+    assert "1.7B 8bit > 1.7B 5bit" in out
     # Ordered smallest-first with bf16 last, not alphabetically (which would put
     # bf16 first and read as the default).
     assert out.index("4bit") < out.index("bf16")
@@ -701,7 +713,7 @@ def test_an_unlisted_qwen3_repo_gets_the_qwen3_defaults():
     assert m.backend == "mlx-qwen3"
     assert m.deterministic is True
     assert m.no_speech_timestamps is True
-    assert m.opts.get("chunk_length_s") == 30.0
+    assert m.opts.get("chunk_length_s") == REGISTRY["qwen3-asr"].opts["chunk_length_s"]
     assert m.opts.get("condition_on_previous_text") is None
 
 
@@ -713,7 +725,7 @@ def _table_rows(table: str) -> dict:
     """
     import re
 
-    rows, family, multi = {}, None, False
+    rows, family, multi, ranked = {}, None, False, False
     for line in table.splitlines():
         m = re.match(r"### `--model ([\w\-]+)`", line)
         if m:
@@ -722,6 +734,13 @@ def _table_rows(table: str) -> dict:
         if not line.startswith("| ") or line.startswith("|---") or family is None:
             continue
         cells = [c.strip() for c in line.strip("|").split("|")]
+        if cells[0] == "priority":       # a family whose default is chosen by memory
+            ranked = True
+            cells = cells[1:]
+        elif cells[0] in ("`--size`", "`--quantization`"):
+            ranked = False
+        elif ranked:
+            cells = cells[1:]
         if cells[0] in ("`--size`", "`--quantization`"):
             multi = cells[0] == "`--size`"
             continue

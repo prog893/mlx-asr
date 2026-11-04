@@ -6,7 +6,7 @@ transcript needed: it drives the real decoder with random embeddings, which
 measures the quantity that actually sets wall clock (decode steps per second).
 
     mlx-asr-bench                    # ~3 min, sensible batch ladder
-    mlx-asr-bench --quick            # ~1 min
+    mlx-asr-bench --quick            # ~1 min (not-measured: both times are rough guides)
     mlx-asr-bench --json out.json    # also save raw numbers
 """
 
@@ -38,6 +38,7 @@ def ladder(gpu_gb: float, quick: bool) -> list:
     else:
         base = [1, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256]
     # KV is roughly 0.11GB per row per 400 steps at this model size; keep a
+    # source: ultra-synthetic-decode.json#synth_ultra_4bit_r1,synth_ultra_4bit_r2,synth_ultra_4bit_r3 (peak slope over batch)
     # wide margin so the bench itself never swaps.
     cap = max(8, int(gpu_gb / 0.13))
     return [b for b in base if b <= cap]
@@ -77,7 +78,7 @@ def main(argv=None):
     p.add_argument("--steps", type=int, default=300)
     p.add_argument("--quick", action="store_true")
     p.add_argument("--batches", help="override the ladder, e.g. 1,16,32,64")
-    p.add_argument("--kv-bits", type=int, default=None, choices=[4, 8])
+    p.add_argument("--kv-bits", type=int, default=None, choices=[4, 8])  # not-measured: flag choices
     p.add_argument("--json", help="write raw results here")
     a = p.parse_args(argv)
 
@@ -103,7 +104,7 @@ def main(argv=None):
             print(f"{B:>6}  failed: {type(e).__name__}")
             rows.append({"batch": B, "error": type(e).__name__})
             continue
-        xrt = sps * B * 0.08  # each step consumes 80ms of audio per row
+        xrt = sps * B * 0.08  # each step consumes 80ms of audio per row  # not-measured: model constant
         rows.append({"batch": B, "steps_per_s": round(sps, 2),
                      "ms_per_step": round(1e3 / sps, 1),
                      "x_realtime": round(xrt, 1), "peak_gb": round(peak, 2)})

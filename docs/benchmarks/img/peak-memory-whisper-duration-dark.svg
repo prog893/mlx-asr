@@ -45,13 +45,13 @@ L 66.213263 26.3
     </g>
     <g id="xtick_2">
      <g id="line2d_3">
-      <path d="M 96.833659 214.840781 
-L 96.833659 26.3 
+      <path d="M 112.557645 214.840781 
+L 112.557645 26.3 
 " clip-path="url(#pb1a891a7c4)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_4"/>
      <g id="text_2">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #c3c2b7" x="96.833659" y="225.840781" transform="rotate(-0 96.833659 225.840781)">9.3</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #c3c2b7" x="112.557645" y="225.840781" transform="rotate(-0 112.557645 225.840781)">13.1</text>
      </g>
     </g>
     <g id="xtick_3">
@@ -116,60 +116,71 @@ L 470.448 214.840781
     </g>
     <g id="ytick_2">
      <g id="line2d_15">
-      <path d="M 39.768 183.383764 
-L 470.448 183.383764 
+      <path d="M 39.768 183.461249 
+L 470.448 183.461249 
 " clip-path="url(#pb1a891a7c4)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_16"/>
      <g id="text_9">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="187.133764" transform="rotate(-0 36.268 187.133764)">1</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="187.211249" transform="rotate(-0 36.268 187.211249)">1</text>
      </g>
     </g>
     <g id="ytick_3">
      <g id="line2d_17">
-      <path d="M 39.768 151.926746 
-L 470.448 151.926746 
+      <path d="M 39.768 152.081717 
+L 470.448 152.081717 
 " clip-path="url(#pb1a891a7c4)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_18"/>
      <g id="text_10">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="155.676746" transform="rotate(-0 36.268 155.676746)">2</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="155.831717" transform="rotate(-0 36.268 155.831717)">2</text>
      </g>
     </g>
     <g id="ytick_4">
      <g id="line2d_19">
-      <path d="M 39.768 120.469728 
-L 470.448 120.469728 
+      <path d="M 39.768 120.702185 
+L 470.448 120.702185 
 " clip-path="url(#pb1a891a7c4)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_20"/>
      <g id="text_11">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="124.219728" transform="rotate(-0 36.268 124.219728)">3</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="124.452185" transform="rotate(-0 36.268 124.452185)">3</text>
      </g>
     </g>
     <g id="ytick_5">
      <g id="line2d_21">
-      <path d="M 39.768 89.01271 
-L 470.448 89.01271 
+      <path d="M 39.768 89.322652 
+L 470.448 89.322652 
 " clip-path="url(#pb1a891a7c4)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_22"/>
      <g id="text_12">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="92.76271" transform="rotate(-0 36.268 92.76271)">4</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="93.072652" transform="rotate(-0 36.268 93.072652)">4</text>
      </g>
     </g>
     <g id="ytick_6">
      <g id="line2d_23">
-      <path d="M 39.768 57.555693 
-L 470.448 57.555693 
+      <path d="M 39.768 57.94312 
+L 470.448 57.94312 
 " clip-path="url(#pb1a891a7c4)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_24"/>
      <g id="text_13">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="61.305693" transform="rotate(-0 36.268 61.305693)">5</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="61.69312" transform="rotate(-0 36.268 61.69312)">5</text>
      </g>
     </g>
-    <g id="text_14">
+    <g id="ytick_7">
+     <g id="line2d_25">
+      <path d="M 39.768 26.563588 
+L 470.448 26.563588 
+" clip-path="url(#pb1a891a7c4)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
+     </g>
+     <g id="line2d_26"/>
+     <g id="text_14">
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="36.268" y="30.313588" transform="rotate(-0 36.268 30.313588)">6</text>
+     </g>
+    </g>
+    <g id="text_15">
      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #c3c2b7" x="24.563313" y="120.570391" transform="rotate(-90 24.563313 120.570391)">peak GPU memory (GB)</text>
     </g>
    </g>
@@ -183,13 +194,13 @@ L 39.768 26.3
 L 470.448 214.840781 
 " style="fill: none; stroke: #383835; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
-   <g id="line2d_25">
-    <path d="M 66.213263 134.310816 
-L 96.833659 128.648553 
-L 204.832621 105.9995 
-L 273.521616 87.43986 
-L 346.348503 72.025921 
-L 444.002737 41.198044 
+   <g id="line2d_27">
+    <path d="M 66.213263 135.136769 
+L 112.557645 128.233272 
+L 204.832621 104.698623 
+L 273.521616 88.381266 
+L 346.348503 72.377705 
+L 444.002737 41.311968 
 " clip-path="url(#pb1a891a7c4)" style="fill: none; stroke: #3987e5; stroke-width: 2; stroke-linecap: round"/>
     <defs>
      <path id="m226001cfbb" d="M 0 3 
@@ -205,19 +216,19 @@ z
 " style="stroke: #1a1a19; stroke-width: 2"/>
     </defs>
     <g clip-path="url(#pb1a891a7c4)">
-     <use xlink:href="#m226001cfbb" x="66.213263" y="134.310816" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
-     <use xlink:href="#m226001cfbb" x="96.833659" y="128.648553" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
-     <use xlink:href="#m226001cfbb" x="204.832621" y="105.9995" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
-     <use xlink:href="#m226001cfbb" x="273.521616" y="87.43986" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
-     <use xlink:href="#m226001cfbb" x="346.348503" y="72.025921" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
-     <use xlink:href="#m226001cfbb" x="444.002737" y="41.198044" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m226001cfbb" x="66.213263" y="135.136769" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m226001cfbb" x="112.557645" y="128.233272" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m226001cfbb" x="204.832621" y="104.698623" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m226001cfbb" x="273.521616" y="88.381266" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m226001cfbb" x="346.348503" y="72.377705" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m226001cfbb" x="444.002737" y="41.311968" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
     </g>
    </g>
-   <g id="text_15">
+   <g id="text_16">
     <text style="font-weight: 700; font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="39.768" y="18.3" transform="rotate(-0 39.768 18.3)">whisper turbo: peak GPU memory grows with audio length</text>
    </g>
   </g>
-  <g id="text_16">
+  <g id="text_17">
    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #898781" x="10.8" y="263.415" transform="rotate(-0 10.8 263.415)">Six files of the 20-file corpus, M2 Ultra. Source: peak-memory.md.</text>
   </g>
  </g>

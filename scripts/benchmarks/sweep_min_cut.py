@@ -49,7 +49,11 @@ def main():
                    help="directory of <stem>.<label>.txt hypotheses")
     p.add_argument("--thresholds", default="10,20,30,50,80",
                    help="character-unit thresholds; the word-unit path uses /5")
+    p.add_argument("--configs", help="comma-separated hypothesis labels to score (default: all)")
     p.add_argument("--json")
+    p.add_argument("--per-file", action="store_true",
+                   help="also write one row per config, threshold and file into --json, so "
+                        "each cell can be recomputed from saved rows")
     a = p.parse_args()
 
     corpus = Path(a.corpus).expanduser()
@@ -69,10 +73,17 @@ def main():
 
     thresholds = [int(x) for x in a.thresholds.split(",")]
     labels = sorted(hyps)
+    if a.configs:
+        want = a.configs.split(",")
+        missing = [c for c in want if c not in hyps]
+        if missing:
+            print(f"no hypotheses for {missing} in {a.hyp_dir}", file=sys.stderr)
+            return 2
+        labels = [c for c in labels if c in want]
     print(f"{len(labels)} configs, thresholds {thresholds} "
           f"(word-unit threshold = chars/5)\n")
 
-    table = {}
+    table, per_file = {}, []
     for unit in ("char", "word"):
         header = f"{'config':>22} " + " ".join(f"{'mc'+str(t):>9}" for t in thresholds)
         rows = []
@@ -90,6 +101,9 @@ def main():
                     else:
                         r, h, mc = normalize(ref_text), normalize(hyp_text), t
                     s = coverage_score(r, h, mc)
+                    per_file.append({"config": label, "threshold": t, "unit": unit,
+                                     "file": stem, "coverage_cer": round(s["coverage_cer"], 5),
+                                     "ref_chars": s["ref_chars"]})
                     tot += s["ref_chars"]
                     charged += s["coverage_cer"] * s["ref_chars"]
                 vals.append(charged / tot if tot else None)
@@ -124,8 +138,14 @@ def main():
           "alongside any number.\nWhat matters for tuning is whether the ranking "
           "holds; see 'ranking identical' above.")
     if a.json:
+        out = table
+        if a.per_file:
+            out = {"min_cut_sweep": True,
+                   "config": {"corpus": a.corpus, "hyp_dir": a.hyp_dir,
+                              "thresholds": a.thresholds, "per_file": True},
+                   "table": table, "files": per_file}
         with open(a.json, "w") as f:
-            json.dump(table, f, indent=2)
+            json.dump(out, f, indent=2)
         print(f"[saved] {a.json}")
     return 0
 

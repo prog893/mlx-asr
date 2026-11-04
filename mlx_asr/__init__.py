@@ -1,7 +1,7 @@
 """Voxtral Realtime batch transcription for Apple Silicon.
 
 Voxtral Realtime is a *streaming* ASR model: it emits exactly one token per
-80ms audio frame. A single stream is therefore pinned near 1x realtime no
+80ms audio frame (not-measured: model constant). A single stream is therefore pinned near 1x realtime no
 matter how fast the hardware is, because the token count is set by the audio
 duration, not by the compute available.
 

@@ -5,7 +5,7 @@ it looks like a result. Every property here corresponds to a bug that shipped a
 wrong published number.
 
 - **Forced language.** `run_timing_sweep.py` hardcoded `language='ja'` for
-  Whisper. The corpus contains the same video dubbed into two languages, so the
+  Whisper. The corpus contains the same recording dubbed into two languages, so the
   English file was transcribed as Japanese, looped, and produced degenerate
   timestamps. The timing metric then discarded the row as untrustworthy, which
   read as a model weakness rather than a harness error.

@@ -7,13 +7,18 @@
 One CLI over seven engines, because on measured evidence no single one wins
 everything (docs/benchmarks/engines.md):
 
-    voxtral        fastest, deterministic, best timestamp stability, no language
-                   token needed. The default.
-    whisper-*      most accurate on our corpus, but samples (so not
+    voxtral        the fastest multilingual engine measured that writes subtitles,
+                   deterministic, best timestamp stability, no language token
+                   needed. The default.
+    whisper-*      lowest Japanese error on our corpus, though not resolved over
+                   files against Voxtral's fp16 default; samples (so not
                    reproducible) and needs to be told the language.
     kotoba         Japanese-specialised. Runs on MLX through our own chunked
                    driver (chunked.py), since Whisper's sequential algorithm
-                   costs a 2-layer distil decoder 68 points.
+                   costs a 2-layer distil decoder 63.9 points on the same 5
+                   Japanese files (source:
+                   ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;
+                   ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3).
     qwen3-asr      deterministic and does real language ID, but emits no
                    timestamp finer than its own chunk boundaries, so `-f srt`
                    and `-f vtt` are refused on it: txt and json only.
@@ -26,7 +31,9 @@ Defaults per model come from `models.py`; defaults per machine come from
 `hardware.py`, which uses measured profiles where a machine has been benchmarked
 and a formula elsewhere. Batch size is not a fixed constant because throughput is
 not monotonic in it: on a 16GB M4, B=2..8 is *slower* per step than B=1 (see
-docs/benchmarks/decode-throughput.md), so "bigger batch is better" lands in the worst regime.
+docs/benchmarks/decode-throughput.md; source: m4-synthetic-decode.json#synth_nvfp4_r1,synth_nvfp4_r2,synth_nvfp4_r3),
+and throughput stays flat across B=2..8 (6.2x to 6.3x against 3.8x at B=1) where
+"bigger batch is better" would predict it to keep rising.
 
 The flags are mostly NOT portable across the engines, because the engines do
 not share a long-form algorithm. **An unsupported flag is a hard error** (exit 2),
@@ -74,9 +81,12 @@ from .models import (
     describe_registry,
     families,
     quantization_help,
+    DEFAULT_ALIAS,
     resolve as resolve_model,
     size_help,
 )
+from .convert import realtime_weights
+from .variants import select as select_variant
 from .output import WRITERS, build_cues
 from .text import transcript_text, write_text
 
@@ -198,6 +208,7 @@ def _run_other_backend(a, spec, log, t_start):
     # --chunk-seconds is the one chunking flag that carries over, and only to the
     # chunked drivers: there it picks the window length, which is the largest
     # lever those engines have (23 points across 10-30s on kotoba). The
+    # source: ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3,kw_kotoba_c30,kw_kotoba_c30_r2,kw_kotoba_c30_r3
     # sequential Whisper driver has no such knob, its 30s window is fixed.
     overrides = {}
     if a.chunk_seconds and spec.chunked_long_form:
@@ -240,15 +251,17 @@ def _run_other_backend(a, spec, log, t_start):
         # Qwen3-ASR is the one engine where --max-batch is refused for a reason
         # other than "the knob does not exist". It does: `generate(batch_size=)`
         # batches whole chunks. It is now refused because it was MEASURED and
-        # loses: 23.2x at batch 1 against 9.9x at batch 8 over the 20-file corpus,
+        # loses: 26.7x at batch 1 against 9.9x at batch 8 over the 20-file corpus,
+        # source: ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1,qwen3batch_1.7B_8bit_c15_b8
         # monotonic, with accuracy flat inside noise
         # (docs/benchmarks/qwen3-batch.md). Batching whole chunks pads every group
         # to its longest member and finishes at its slowest, neither of which the
         # per-chunk path pays, and there is no weight read to amortize because each
         # chunk's decode is already sequential over its own tokens.
         if spec.backend == "mlx-qwen3" and unsupported == ["--max-batch"]:
+            # source: ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1,qwen3batch_1.7B_8bit_c15_b8
             hint = (f"{spec.alias} batches whole chunks upstream, and it was measured "
-                    f"to be SLOWER: 23.2x at batch 1 against 9.9x at batch 8 on the "
+                    f"to be SLOWER: 26.7x at batch 1 against 9.9x at batch 8 on the "
                     f"20-file corpus, for no accuracy gain. Chunks in a batch are "
                     f"padded to the longest and the batch ends with the slowest, so "
                     f"one at a time wins. See docs/benchmarks/qwen3-batch.md")
@@ -265,9 +278,10 @@ def _run_other_backend(a, spec, log, t_start):
         else:
             to_iso(a.language, spec.alias)
     if not spec.deterministic:
+        # source: ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6
         log(f"[{spec.backend}] this engine samples, so repeat runs differ "
-            f"(~0.5 CER points on our corpus); it is not reproducible like "
-            f"voxtral")
+            f"(0.8 to 1.8 CER points for Whisper on our corpus); it is not "
+            f"reproducible like voxtral")
     if spec.languages != "multilingual" and not a.language:
         log(f"[{spec.backend}] {spec.alias} is {spec.languages}-only; "
             f"forcing language={spec.languages}")
@@ -323,10 +337,12 @@ def build_parser():
                         f"Families: {', '.join(families())}. Pick the variant with "
                         f"--size and --quantization")
     p.add_argument("--size", default=None,
-                   help=f"which size within the family. {size_help()}. Defaults are "
-                        f"measured: whisper defaults to large-v3, which ties turbo "
-                        f"on our corpus; turbo is the 2x faster option. "
-                        f"Refused on a family that has one size")
+                   help=f"which size within the family: {size_help()}. Default: the "
+                        f"first size and precision of the family's priority list "
+                        f"(best measured accuracy first, the larger variant first "
+                        f"within a tie) that fits this Mac's GPU memory; pinning "
+                        f"--size or --quantization keeps only the matching entries. "
+                        f"See docs/DEFAULTS.md. Refused on a family that has one size")
     p.add_argument("--list-models", action="store_true",
                    help="list the built-in models with their caveats and exit")
     p.add_argument("--language",
@@ -355,6 +371,7 @@ def build_parser():
                         "is NOT an instruction field (the decoder reads it as text it "
                         "already emitted), it does not recall vocabulary, and on "
                         "space-delimited audio such as English it wrecks word spacing, "
+                        # not-measured: ~31 is n_left_pad_tokens - 1 (decode.py), a model constant
                         "so leave it empty there. Only the last ~31 tokens are used. "
                         "Ignored when --overlap-seconds is active. "
                         "See docs/benchmarks/prompt.md")
@@ -363,24 +380,27 @@ def build_parser():
                         "hardware profile, and a throughput knob rather than an "
                         "accuracy one. kotoba: the window length, and its biggest lever "
                         "by far; it is material-dependent, so sweep it on your own "
-                        "audio. qwen3-asr: the window length too, defaulted to 30s here "
+                        # not-measured: the window lengths here are configured defaults
+                        "audio. qwen3-asr: the window length too, defaulted to 15s here "
                         "rather than the library's 1200s, at which any file under 20 "
                         "minutes is a single window. voxtral-v1: the window length, "
                         "default 30s, and an accuracy lever on Japanese, which "
+                        # not-measured: configured window lengths
                         "degrades above 60s. Refused by whisper, whose 30s window is "
                         "fixed. See docs/benchmarks/chunking.md")
     p.add_argument("--quantization", default=None, metavar="PRECISION",
                    help=f"weight precision, where the alias publishes a choice. "
                         f"Per model: {quantization_help()}. 'none' means whichever "
                         f"unquantized build that model publishes (bf16 or fp16). "
+                        # source: ultra-qwen3-precision-c15.json#qwen3_1.7B_4bit_c15,qwen3_1.7B_8bit_c15,qwen3_0.6B_4bit_c15,qwen3_0.6B_8bit_c15;ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30
                         f"The defaults are measured on the 20-file corpus. qwen3-asr: "
-                        f"every rung ties on 1.7B; on 0.6B 4bit costs 5 points. "
+                        f"8bit is the most accurate rung on both sizes; 4bit costs "
+                        f"1.2 points on 1.7B and 2.8 on 0.6B. "
                         f"voxtral-v1: 8bit ties bf16; 3B at 4bit costs 8 points. "
-                        f"voxtral: accuracy improves with bit width "
-                        f"and 4bit is LAST of five over the 20-file corpus (16.34%%, "
-                        f"against 15.27%% at 8bit and 15.04%% at fp16); it ships "
-                        f"because fp16 peaks at 12.98GB and will not fit 16GB, and no "
-                        f"loadable 8bit build is published. An unpublished "
+                        # source: ultra-voxtral-precision-default.json#vox_default_c30b128_kv8,vox_w8bit_c30b128_kv8,vox_wfp16_c30b128_kv8
+                        f"voxtral: fp16 ties 8bit and both beat 4bit by 0.6 to 0.7 "
+                        f"points; 8bit is converted on first use. Default: chosen "
+                        f"by memory, as for --size. An unpublished "
                         f"value is an error naming what exists. "
                         f"See docs/benchmarks/quantization.md")
     p.add_argument("--max-batch", type=int, default=None,
@@ -390,7 +410,7 @@ def build_parser():
                    help="transcription delay. The largest accuracy lever here and it "
                         "costs no speed; 2400 is both the default and the maximum the "
                         "model supports. See docs/benchmarks/delay.md")
-    p.add_argument("--kv-bits", type=int, default=None, choices=[4, 8],
+    p.add_argument("--kv-bits", type=int, default=None, choices=[4, 8],  # not-measured: flag choices
                    help="quantize the KV cache; 8 is the profile default (faster, "
                         "no measured accuracy cost)")
     p.add_argument("--no-kv-quant", action="store_true",
@@ -450,19 +470,39 @@ def main(argv=None):
 
     log = (lambda *x: None) if a.quiet else print
     t_start = time.perf_counter()
-    spec = resolve_model(a.model, a.size)
-
     # Resolved here, before either backend and before any audio is read, so an
     # unpublished precision costs nothing and a valid one is simply a different
     # repo id from that point on. Every downstream consumer (the loader, the
     # stats JSON, the log line) then sees one repo and cannot disagree about
     # which weights ran.
-    if a.quantization:
+    family = a.model or REGISTRY[DEFAULT_ALIAS].family
+    if family in families():
+        # A family: its priority list, filtered by any pinned --size/--quantization,
+        # and the first entry that fits this machine's memory (variants.py).
+        info = machine_info()
+        fit = {}
+        if family == REGISTRY[DEFAULT_ALIAS].family:
+            # Voxtral fits when a useful batch still fits at this run's row length.
+            prof0 = resolve_profile(info, chunk_seconds=a.chunk_seconds,
+                                    overlap_seconds=a.overlap_seconds)
+            fit["chunk_seconds"] = ((a.chunk_seconds or prof0["chunk_seconds"])
+                                    + (a.overlap_seconds if a.overlap_seconds is not None
+                                       else prof0.get("overlap_seconds", 0.0)))
+        choice = select_variant(family, a.size, a.quantization,
+                                info.get("gpu_working_set_gb"), **fit)
+        spec = choice.model
+        a.chosen_quantization = choice.quant
+        if choice.reason:
+            log(f"[model] {choice.reason}" if choice.fits
+                else f"[model] warning: {choice.reason}")
+    else:
+        spec = resolve_model(a.model, a.size)
+    if a.quantization and family not in families():
         repo = spec.repo_for(a.quantization)      # raises UnknownQuantization
         if repo != spec.repo:
             # weights_gb travels with the repo. On the Voxtral path it is subtracted
             # from the GPU budget to size a batch, so leaving it at the 4-bit value
-            # while loading fp16 would plan for 6.4GB of memory that is already
+            # while loading fp16 would plan for 6.4GB of memory that is already  # not-measured: difference of the registry weight sizes
             # spent, and the failure would look like an OOM rather than a bad
             # default. Harmless on the other backends, which do their own batching.
             spec = replace(spec, repo=repo,
@@ -521,11 +561,14 @@ def main(argv=None):
                            overlap_seconds=a.overlap_seconds)
     # Three independent levers, each resolved the same way: your value if you gave one,
     # otherwise this machine's profile. There is deliberately no composite flag bundling
-    # them. A `--fast` used to exist and it was a mistake: the chunk/batch trade it
-    # encoded is FASTER on a 60-core GPU and SLOWER on a 10-core one, because the extra
-    # encoder passes that shorter chunks add are cheap on the former and are already the
-    # bottleneck on the latter (docs/benchmarks/chunking.md). A single flag cannot carry a
-    # value whose sign depends on the hardware; profiles.json can, and does.
+    # them. A `--fast` used to exist and was removed on the belief that the chunk/batch
+    # trade it encoded is FASTER on a 60-core GPU and SLOWER on a 10-core one. The
+    # saved runs support the first half only: on the 10-core M4 at 4-bit, 30s/B32 ran 6.37x
+    # (mean of 3 runs) against 4.66x for 60s/B16 and 5.80x for 60s/B32 (mean of 7
+    # runs), so both profiles now ship 30s.
+    # source: m4-voxtral-chunking.json#c30b32,c30b32_r2,c30b32_r3,c60b16;
+    # m4-voxtral-batch.json#c60b32,c60b32_r1,batch_m4_repeat_20261009__c60b32_r2,batch_m4_repeat_20261009__c60b32_r3,c60b32_r4,batch_m4_b64_20261010__c60b32_r2,batch_m4_b64_20261010__c60b32_r3
+    # Per-machine values stay in profiles.json (docs/benchmarks/chunking.md).
     batch = a.max_batch or prof["batch"]
     chunk_s = a.chunk_seconds or prof["chunk_seconds"]
     kv_bits = None if a.no_kv_quant else (a.kv_bits or prof.get("kv_bits"))
@@ -570,27 +613,28 @@ def main(argv=None):
         + (f" (+{overlap_s:.0f}s warm-up overlap)" if overlap_s else ""))
 
     t0 = time.perf_counter()
-    model = load_model(spec.repo)
+    weights = realtime_weights(spec.repo, log)    # converts a `<repo>:8bit` once
+    model = load_model(weights)
     t_model = time.perf_counter() - t0
     log(f"[model] loaded in {t_model:.1f}s")
 
     prompt_ids = None
     if a.prompt and overlap_s > 0:
         # Measured conflict: --prompt with --overlap-seconds sends the decoder
-        # into degenerate repetition loops (a short phrase repeated many times),
-        # costing ~9 CER points
-        # (30s chunks, 4s overlap: 9.04% with prompt alone, 7.16% with overlap
-        # alone, 18.64% with both). Both knobs work by handing the model text it
+        # into degenerate repetition loops (a short phrase repeated many times)
+        # on the narration clip at 30s chunks and 4s overlap, scoring worse than
+        # either knob alone. Both knobs work by handing the model text it
         # is meant to treat as already-emitted, and stacking them apparently
         # over-conditions it. Overlap is the stronger effect, so it wins.
-        log("[prompt] ignored: --prompt and --overlap-seconds conflict and "
-            "together degrade output badly; overlap is kept (see docs/benchmarks/prompt.md). "
-            "Use --overlap-seconds 0 if you need the prompt.")
+        # stderr and never silenced by --quiet: dropping a flag the user passed must be visible
+        print("[prompt] ignored: --prompt and --overlap-seconds conflict and "
+              "together degrade output badly; overlap is kept (see docs/benchmarks/prompt.md). "
+              "Use --overlap-seconds 0 if you need the prompt.", file=sys.stderr)
     elif a.prompt:
         from mistral_common.tokens.tokenizers.tekken import Tekkenizer
         from mlx_audio.stt.utils import get_model_path
 
-        tek = Tekkenizer.from_file(str(get_model_path(spec.repo) / "tekken.json"))
+        tek = Tekkenizer.from_file(str(get_model_path(weights) / "tekken.json"))
         prompt_ids = tek.encode(a.prompt, bos=False, eos=False)
         cap = prompt_capacity(model.config)
         if len(prompt_ids) > cap:
@@ -653,7 +697,8 @@ def main(argv=None):
                 # naming. Recorded separately because weight precision changes the
                 # batch this run planned for, so a throughput figure is not
                 # comparable across it.
-                "quantization": a.quantization or "default",
+                "quantization": a.quantization or getattr(a, "chosen_quantization", "")
+                                or "default",
                 "weights_gb": spec.weights_gb,
                 "chunks": len(chunks), "chunk_seconds": chunk_s, "batch": batch,
                 "overlap_seconds": overlap_s,

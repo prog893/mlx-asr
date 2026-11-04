@@ -121,6 +121,16 @@ def runner_and_rows(d: dict):
     select it, so the rebuilt command reruns exactly that arm; `gaps` are things the runner
     did not record, which make the run a rerun candidate.
     """
+    if d.get("min_cut_sweep"):                                  # sweep_min_cut.py --per-file
+        cfg = dict(d["config"])
+        arms = sorted({(r["config"], r["threshold"]) for r in d["files"]})
+        return "sweep_min_cut.py", cfg, [
+            (f"{c} mc{t}", {"thresholds": str(t), "configs": c}, None,
+             [{k: r[k] for k in ("file", "unit", "coverage_cer", "ref_chars")}
+              for r in d["files"] if (r["config"], r["threshold"]) == (c, t)],
+             None, {}, ["sweep_min_cut.py rescores saved hypotheses and records no machine "
+                        "state; one arm per config and threshold"])
+            for c, t in arms]
     if "overlaps" in d.get("config", {}) and "duration_s" in d:   # sweep_overlap.py (clip)
         cfg = {k: v for k, v in d["config"].items() if k != "overlaps"}
         stem = Path(cfg.get("audio", "")).stem

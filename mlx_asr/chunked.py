@@ -3,9 +3,11 @@
 `mlx-whisper` ships only Whisper's *sequential* long-form driver: 30s windows,
 each conditioned on the last one's text and timestamps. That is correct for full
 Whisper and wrong for distil models, which keep 2 decoder layers instead of 32 and
-cannot maintain state across windows. kotoba-whisper measured 94.23% coverage CER
-through the sequential driver versus 26.16% through transformers' *chunked* driver,
-on identical weights (docs/benchmarks/engines/kotoba.md).
+cannot maintain state across windows. kotoba-whisper measured 93.83% coverage CER
+through the sequential driver (mean of two runs; source: ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2)
+versus 26.15% through transformers' *chunked* driver, on identical weights, over the
+5 Japanese files of the 7-file subset (docs/benchmarks/engines/kotoba.md). (source:
+ultra-kotoba-engines.json#k20_hf22_c10_r1, its rows of those 5 files.)
 
 The important part: chunked long-form is a property of the **driver**, not the
 model or the framework. Slice the audio, transcribe each slice independently,
@@ -66,7 +68,7 @@ def resolve_mlx_weights(model_repo, log=print):
             return str(path)
     else:
         # config.json alone, which is a few hundred bytes, so the format can be
-        # decided before pulling 1.5GB of weights. Fetched rather than read from
+        # decided before pulling 1.5GB of weights (not-measured: hub download size). Fetched rather than read from
         # the cache because on a fresh machine nothing is cached yet, and that is
         # exactly the case that has to work: the default `kotoba` repo is
         # transformers-format and would otherwise fail on first run.
@@ -93,8 +95,10 @@ def transcribe_chunked(audio, model_repo, chunk_length_s=10.0, language=None,
     ``output.build_cues`` returns, so every writer works unchanged.
 
     ``chunk_length_s`` is the one knob that matters here and it is
-    material-dependent: on our corpus kotoba scored 26.16% at 10s versus 49.57% at
+    material-dependent: on our corpus kotoba scored 26.15% at 10s versus 49.57% at
     30s, but on clean narration 20s beat both. Sweep it on your own audio.
+    (source: ultra-kotoba-engines.json#k20_hf22_c10_r1,k20_hf22_c30_r1, rows of the 5
+    Japanese files of the 7-file subset; ultra-kotoba-engines-clip.json#kclip_hf22_c10_r1,kclip_hf22_c20_r1,kclip_hf22_c30_r1)
     """
     from mlx_whisper.transcribe import transcribe
 

@@ -34,13 +34,14 @@ def build_cues(model, timed_chunks, chunk_offsets, gap_s=1.2, max_chars=28,
     encodes one subtitle house style.** Two sweeps were run and both are recorded
     in docs/benchmarks/cue-layout.md rather than applied:
 
-    * n=1 (one file): suggested (1.2, 28), F1 35.4% -> 43.6%.
+    * n=1 (one file): suggested (1.2, 28), with a gain in F1 on that file.
     * n=7 (seven files, `scripts/benchmarks/sweep_cues.py`): suggested (0.7, 32) instead,
       and showed the n=1 result only wins on the single file it was fitted to.
 
-    These shipped values score F1 37.4% end to end across the 7 timed references
-    against 42.8% for (0.7, 32); see docs/benchmarks/cue-layout.md.
-    Giving up those 5.4 points is the deliberate trade described above; what is not
+    These shipped values score F1 38.8% end to end across the 7 timed references
+    (source: ultra-timestamps.json#ts_default_r1,ts_0732) against 43.9% for (0.7, 32)
+    (source: ultra-cue-layout.json#cue_sweep_union); see docs/benchmarks/cue-layout.md.
+    Giving up those 5.1 points is the deliberate trade described above; what is not
     negotiable is reporting the number the default actually produces, which an
     earlier version of this docstring did not.
 
@@ -53,8 +54,9 @@ def build_cues(model, timed_chunks, chunk_offsets, gap_s=1.2, max_chars=28,
 
     What the sweeps DO establish, and what a caller can act on:
 
-    * `gap_s` is the only knob that matters. Mean F1 moves 44.5 / 42.3 / 40.2 /
-      36.2 / 35.9% across gap 0.6 / 0.7 / 0.8 / 1.0 / 1.2 on these references, so a
+    * `gap_s` is the only knob that matters. Mean F1 moves 45.3 / 43.3 / 41.3 /
+      37.7 / 37.1% across gap 0.6 / 0.7 / 0.8 / 1.0 / 1.2 on these references
+      (source: ultra-cue-layout.json#cue_sweep_union), so a
       user with their own reference SRTs should sweep this one parameter and
       nothing else. `mlx-asr --gap-seconds` exists for exactly that; it was advice
       with no flag behind it until the flags were added.
@@ -62,13 +64,18 @@ def build_cues(model, timed_chunks, chunk_offsets, gap_s=1.2, max_chars=28,
     * `max_dur_s` is inert: no cue reached it at any value from 4 to 9 seconds,
       because gap_s or max_chars always fires first. It stays as a safety valve
       for long unbroken speech.
-    * Lower gap_s buys F1 partly by emitting more cues (cues/ref 0.99 at gap 1.0,
-      1.25 at 0.7, 1.36 at 0.6), and that component is recall the reader does not
+    * Lower gap_s buys F1 partly by emitting more cues (cues/ref 1.01 at gap 1.0,
+      1.25 at 0.7, 1.35 at 0.6), and that component is recall the reader does not
       benefit from.
 
     Cue placement is the weaker half of this project's timing story either way
-    (Whisper reaches 56.0% F1 on the same files). Drift is the strong half and is
+    (Whisper reaches 57.1% F1 on the same files). Drift is the strong half and is
     unaffected by these knobs: regrouping cues cannot move a token's timestamp.
+
+    Figures are means over the valid timed files (source: ultra-timestamps.json#ts_default_r1,ts_0732
+    for end to end and Whisper;
+    ultra-cue-layout.json#cue_sweep_union for the gap and cues/ref sweep). The n=1
+    sweep has no saved run, so its figures are not given.
     """
     from .audio import map_time
 
@@ -123,6 +130,7 @@ def build_cues(model, timed_chunks, chunk_offsets, gap_s=1.2, max_chars=28,
 
 
 def fmt_ts(s: float, sep: str = ",") -> str:
+    # not-measured: millisecond arithmetic in a format string
     ms = int(round(s * 1000))
     return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d}{sep}{ms % 1000:03d}"
 

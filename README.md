@@ -18,8 +18,8 @@ Apple Silicon, macOS 14+.
 brew install prog893/tap/mlx-asr
 ```
 
-Weights download on first use into `~/.cache/huggingface`, about 3GB for the
-default model.
+Weights download on first use into `~/.cache/huggingface`, about 9GB for the default <!-- not-measured: Hugging Face repo size of the default weights, not a run -->
+model: the fp16 Voxtral build, which a 16GB Mac converts to 8bit once.
 
 <details>
 <summary>From source, for development or to run the benchmarks</summary>
@@ -110,20 +110,23 @@ Reference: [docs/MODELS.md](docs/MODELS.md).
 
 | `--model` | what it is |
 |---|---|
-| `voxtral` (default) | Mistral's 2026 realtime model. Takes a vocabulary prompt, decodes greedily so reruns on one machine are byte-identical, and has the steadiest timestamps here |
-| `voxtral-v1` | Mistral's first-generation Voxtral (2025). `--size 3B` (default) or `24B`, the latter for large-memory Macs. At 24B, the lowest English error measured here (on three files); weak on Japanese, which its card does not claim. Greedy. **Writes no subtitles**, like `qwen3-asr` |
-| `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **large-v3**; turbo ties it on accuracy at about 2x the speed. The most accurate engine on the test corpus, but it samples, so reruns differ |
+| `voxtral` (default) | Mistral's 2026 realtime model, and the fastest multilingual engine measured here that writes subtitles (23.9x realtime on the M2 Ultra, where it loads fp16; 16 GB Macs get 8-bit). Takes a vocabulary prompt, decodes greedily so reruns on one machine are byte-identical, and has the steadiest timestamps here |
+| `voxtral-v1` | Mistral's first-generation Voxtral (2025). `--size 24B` or `3B`: the 24B loads where it fits, the 3B on 16 GB Macs. At 24B, the lowest English error measured here (on three files); weak on Japanese, which its card does not claim. Greedy. **Writes no subtitles**, like `qwen3-asr` |
+| `whisper` | OpenAI's Whisper. `--size tiny base small medium large-v2 large-v3 turbo`, defaulting to **large-v3**; turbo ties it on accuracy at about 1.8x the speed. The lowest Japanese error measured here (turbo 14.17% CER), though on the M2 Ultra Voxtral's fp16 default is within the interval of it (+1.03 points, 95% CI [-0.11, +2.25]); on English both voxtral-v1 sizes score lower (24B 16.86% WER against turbo's 18.65%). It samples, so reruns differ |
 | `kotoba` | kotoba-whisper: Whisper large-v3 distilled down to 2 decoder layers, then finetuned on Japanese. Fast, Japanese only, and samples like Whisper |
-| `qwen3-asr` | Alibaba's Qwen3-ASR. `--size 1.7B` (default) or `0.6B`, the fastest engine measured here. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
-| `parakeet` | NVIDIA's Japanese FastConformer-TDT, through mlx-audio. Greedy, token-level timestamps so subtitles work. The fastest engine measured here (244x realtime), well behind the multilingual defaults on this corpus's Japanese |
-| `reazon` | ReazonSpeech k2-v2 (Japanese Zipformer), the authors' ONNX build via sherpa-onnx. Decodes on CPU; needs `uv sync --extra reazon`. Japanese only |
+| `qwen3-asr` | Alibaba's Qwen3-ASR. `--size 1.7B` (default) or `0.6B`, the speed option at 35.5x, the fastest multilingual engine measured here. Greedy, so reproducible. **Writes no subtitles**: it emits no timestamp finer than its own decode window, so `-f srt` and `-f vtt` are refused and only `txt` and `json` work |
+| `parakeet` | NVIDIA's Japanese FastConformer-TDT, through mlx-audio. Greedy, token-level timestamps so subtitles work. The fastest engine measured here (261.8x realtime, Japanese only), well behind the multilingual defaults on this corpus's Japanese |
+| `reazon` | ReazonSpeech k2-v2 (Japanese Zipformer), the authors' ONNX build via sherpa-onnx. Decodes on CPU (52.9x realtime); needs `uv sync --extra reazon`. Japanese only |
 | any HF repo id | the backend is inferred from the name; `--size` and `--quantization` are refused, since the id already names the variant |
 
+Source: [ultra-whisper-sizes.json](benchmarks/results/2026-10/ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`, `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r4`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`; [ultra-picker-speed.json](benchmarks/results/2026-10/ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_qwen3_1.7B_8bit_c15_s1`, `pk_qwen3_1.7B_8bit_c15_s2`, `pk_qwen3_1.7B_8bit_c15_s3`, `pk_qwen3_0.6B_8bit_c15_s1`, `pk_qwen3_0.6B_8bit_c15_s2`, `pk_qwen3_0.6B_8bit_c15_s3`, `pk_v1_3B_8bit_c30_s1`, `pk_v1_3B_8bit_c30_s2`, `pk_v1_3B_8bit_c30_s3`, `pk_kotoba_c10_s1`, `pk_kotoba_c10_s2`, `pk_kotoba_c10_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [ultra-picker-speed-24b.json](benchmarks/results/2026-10/ultra-picker-speed-24b.json) runs `pk_v1_24B_8bit_c30_s1`, `pk_v1_24B_8bit_c30_s2`, `pk_v1_24B_8bit_c30_s3`; [ultra-voxtral-precision-default.json](benchmarks/results/2026-10/ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`
+
 `--model` picks the family; `--size` and `--quantization` pick the variant inside it. Size
-matters far more than precision, and both defaults are picked on measurement rather than on
-the largest number. On Voxtral, higher precision does score better, so 4-bit ships as the
-option that is published and fits everywhere rather than as the most accurate one; see
-[docs/DEFAULTS.md](docs/DEFAULTS.md) if you have memory to spare.
+matters far more than precision. Each family's variants are ranked by measured accuracy,
+the larger first within a tie, and the CLI loads the first one that fits the Mac's memory,
+so one `--model` can run a different variant on a 16 GB Mac than on a 128 GB one
+([how a variant is chosen](docs/DEFAULTS.md#how-a-variant-is-chosen)). On Voxtral, higher
+precision scores better, so it runs fp16 where it fits and 8-bit on 16 GB Macs.
 
 `whisper`, `qwen3-asr` and `voxtral-v1` do better when you set `--language`, and each gets the form it
 wants (a code for Whisper and Voxtral v1, an English name for Qwen) from whatever you type. Voxtral takes
@@ -153,14 +156,19 @@ Every default was measured, and several went against the obvious choice:
 findings are in [docs/benchmarks/](docs/benchmarks/), one document per lever, indexed by
 [RESULTS.md](RESULTS.md).
 
-The short version: transcription delay is the biggest lever and it is free; throughput is
-not monotonic in batch size, so the middle of the range is worse than one at a time; VAD
+The short version: transcription delay is the biggest lever and it is free; per-step decode
+time is not monotonic in batch size (batches of 2 to 8 take longer per step than one at a
+time, though they still finish sooner: 12.5x to 25.9x against 7.2x on the M2 Ultra[^m2]), so
+the batch is snapped to sizes that measured well; VAD
 cut points and dropping silence both turned out to change nothing measurable, so both stay
-off; higher precision does help Voxtral, so 4-bit is a distribution choice rather than the
-best-scoring one; and whisper defaults to large-v3 although turbo ties it at twice the
+off; higher precision does help Voxtral, so it runs fp16 where memory allows and 8-bit on
+16 GB Macs; and whisper defaults to large-v3 although turbo ties it at 1.8x[^m1] the
 speed, because a tie on 20 files is not evidence the smaller decoder is safe elsewhere.
 
 ## License
 
 MIT, see [LICENSE](LICENSE). Model weights are not redistributed here and follow
 their own licenses; `--list-models` prints the repo id for every model.
+
+[^m1]: [ultra-whisper-sizes.json](benchmarks/results/2026-10/ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`, `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r4`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`
+[^m2]: [ultra-synthetic-decode.json](benchmarks/results/2026-10/ultra-synthetic-decode.json) runs `synth_ultra_4bit_r1`, `synth_ultra_4bit_r2`, `synth_ultra_4bit_r3` (synthetic decode, mean of 3 runs per batch size)

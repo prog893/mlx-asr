@@ -87,60 +87,71 @@ L 470.448 194.166445
     </g>
     <g id="ytick_2">
      <g id="line2d_9">
-      <path d="M 45.528 163.176022 
-L 470.448 163.176022 
+      <path d="M 45.528 167.585952 
+L 470.448 167.585952 
 " clip-path="url(#pe1ca40dcb0)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_10"/>
      <g id="text_6">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="166.926022" transform="rotate(-0 42.028 166.926022)">10</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="171.335952" transform="rotate(-0 42.028 171.335952)">10</text>
      </g>
     </g>
     <g id="ytick_3">
      <g id="line2d_11">
-      <path d="M 45.528 132.185599 
-L 470.448 132.185599 
+      <path d="M 45.528 141.005459 
+L 470.448 141.005459 
 " clip-path="url(#pe1ca40dcb0)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_12"/>
      <g id="text_7">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="135.935599" transform="rotate(-0 42.028 135.935599)">20</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="144.755459" transform="rotate(-0 42.028 144.755459)">20</text>
      </g>
     </g>
     <g id="ytick_4">
      <g id="line2d_13">
-      <path d="M 45.528 101.195176 
-L 470.448 101.195176 
+      <path d="M 45.528 114.424966 
+L 470.448 114.424966 
 " clip-path="url(#pe1ca40dcb0)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_14"/>
      <g id="text_8">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="104.945176" transform="rotate(-0 42.028 104.945176)">30</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="118.174966" transform="rotate(-0 42.028 118.174966)">30</text>
      </g>
     </g>
     <g id="ytick_5">
      <g id="line2d_15">
-      <path d="M 45.528 70.204752 
-L 470.448 70.204752 
+      <path d="M 45.528 87.844473 
+L 470.448 87.844473 
 " clip-path="url(#pe1ca40dcb0)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_16"/>
      <g id="text_9">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="73.954752" transform="rotate(-0 42.028 73.954752)">40</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="91.594473" transform="rotate(-0 42.028 91.594473)">40</text>
      </g>
     </g>
     <g id="ytick_6">
      <g id="line2d_17">
-      <path d="M 45.528 39.214329 
-L 470.448 39.214329 
+      <path d="M 45.528 61.26398 
+L 470.448 61.26398 
 " clip-path="url(#pe1ca40dcb0)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_18"/>
      <g id="text_10">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="42.964329" transform="rotate(-0 42.028 42.964329)">50</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="65.01398" transform="rotate(-0 42.028 65.01398)">50</text>
      </g>
     </g>
-    <g id="text_11">
+    <g id="ytick_7">
+     <g id="line2d_19">
+      <path d="M 45.528 34.683487 
+L 470.448 34.683487 
+" clip-path="url(#pe1ca40dcb0)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
+     </g>
+     <g id="line2d_20"/>
+     <g id="text_11">
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="42.028" y="38.433487" transform="rotate(-0 42.028 38.433487)">60</text>
+     </g>
+    </g>
+    <g id="text_12">
      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #c3c2b7" x="24.693625" y="110.233223" transform="rotate(-90 24.693625 110.233223)">JP coverage CER % (lower is better)</text>
     </g>
    </g>
@@ -154,7 +165,7 @@ L 45.528 26.3
 L 470.448 194.166445 
 " style="fill: none; stroke: #383835; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
-   <g id="line2d_19">
+   <g id="line2d_21">
     <defs>
      <path id="m3d7b4c0e3e" d="M 0 3.5 
 C 0.928211 3.5 1.81853 3.131218 2.474874 2.474874 
@@ -169,15 +180,15 @@ z
 " style="stroke: #1a1a19; stroke-width: 2"/>
     </defs>
     <g clip-path="url(#pe1ca40dcb0)">
-     <use xlink:href="#m3d7b4c0e3e" x="125.2005" y="116.783359" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
-     <use xlink:href="#m3d7b4c0e3e" x="257.988" y="38.780463" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m3d7b4c0e3e" x="125.2005" y="102.304262" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
+     <use xlink:href="#m3d7b4c0e3e" x="257.988" y="36.783346" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
     </g>
    </g>
-   <g id="text_12">
+   <g id="text_13">
     <text style="font-weight: 700; font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="45.528" y="18.3" transform="rotate(-0 45.528 18.3)">Whisper: three ways of supplying the language</text>
    </g>
   </g>
-  <g id="text_13">
+  <g id="text_14">
    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 263.541587)">7-file subset, M2 Ultra, large-v3-turbo at library defaults. Forcing ja has no CER point because the</text>
    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 272.050386)">English files score about 100% WER. Source: whisper.md.</text>
   </g>

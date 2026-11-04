@@ -5,11 +5,12 @@ Two decisions, made on different inputs because they have different causes:
   batch          sized from memory on every machine (``derive_batch``). Batch is
                  memory-bound: on both benchmarked machines end-to-end speed rises
                  with batch until memory runs out, accuracy shifts by about 0.1 point
-                 (unresolved on both machines), and
+                 (unresolved on both machines; source: ultra-voxtral-batch.json#c30b32,c30b128;
+                 m4-voxtral-batch.json#c60b16,c60b32), and
                  larger batches only speed up files longer than one batch.
   chunk length   per chip, from profiles.json. It is a throughput choice set by
                  how expensive the encoder is on a given GPU, so it has to be
-                 measured; chips with no profile fall back to 60s.
+                 measured; chips with no profile fall back to 30s (not-measured: a config value).
 
 ## The memory model
 
@@ -17,40 +18,60 @@ Peak MLX memory over the 20-file corpus is linear in rows times chunk seconds, o
 top of the weights and a fixed cost:
 
     M2 Ultra 128GB, 30s, 4-bit: 6.56 / 7.23 / 8.14 / 9.17 / 11.33 GB at B=16/32/48/64/128
-                                (0.0014 GB per row-second, 3.4 GB fixed beyond weights)
+                                (source: ultra-voxtral-batch.json#c30b16,c30b32,c30b48,c30b64,c30b128)
+                                (0.0014 GB per row-second, 3.5 GB fixed beyond weights)
     M4 16GB,       60s, 4-bit: 6.60 / 7.34 / 8.08 GB at B=16/24/32
+                                (source: m4-voxtral-batch.json#c60b16,c60b24,c60b32)
                                 (0.0015 GB per row-second, 2.6 GB fixed beyond weights)
+
+(The per-row-second and fixed terms are least-squares fits to these peaks, with the
+registry's 2.5GB of 4-bit weights subtracted from the intercept; not-measured: 2.5GB is
+the registry's weight constant.)
 
 The Ultra points are not quite linear (B=48 to 64 is steeper than the rest), so the
 constants below are set to cover every measured peak rather than to fit the mean:
 the tightest is the Ultra at B=64 (9.36GB predicted, 9.17 measured), and the M4 at
-B=32 is over-predicted by 16% (9.36 against 8.08).
+B=32 is over-predicted by 16% (9.36 against 8.08; source: ultra-voxtral-batch.json#c30b64;
+m4-voxtral-batch.json#c60b32).
 
 Rows are sized on the nominal chunk length, although a batch is padded to its longest
-row and a file's last chunk can reach 1.5x the target. That padding is inside the fit:
+row and a file's last chunk can reach 1.5x the target (not-measured: the splitter's design limit). That padding is inside the fit:
 the corpus runs it was fitted on decoded padded batches (worst on the M4 at B=32: 25
 rows x 84.1s against 32 x 60s nominal). The worst case itself was measured too: a file
 cut so that all 32 rows pad to an 89.4s last chunk peaked at 8.31GB on the M4, under the
-9.36 predicted from the nominal length. Overlap is not in the fit, so it is added.
+9.36 predicted from the nominal length (source: m4-voxtral-worstcase.json#worst32_c60b32;
+the 25 x 84.1s and 89.4s row lengths have no saved record). Overlap is not in the fit, so it is added.
 
 The budget is a fraction of the GPU working set, fitted to the one machine where
-memory binds: on the M4 (12.7GB working set) B=32 completed the corpus twice with
-no errors at 8.08GB, while B=48 is past the ~8.4GB wall where synthetic decode
-throughput collapses. 0.78 (a 9.9GB budget) admits the former with 0.55GB to spare
-and excludes the latter (11.1GB predicted). On the
-Ultra (115.4GB) memory does not bind below the largest measured-good batch, 128.
+memory binds: on the M4 (12.7GB working set) B=32 completed the corpus seven times with
+no errors at 8.08GB (source: m4-synthetic-decode.json#synth_nvfp4_r1,synth_nvfp4_r2,synth_nvfp4_r3;
+m4-voxtral-batch.json#c60b32,c60b32_r1,c60b32_r4). 0.78 (a 9.9GB budget) admits it with 0.55GB to spare
+and excludes B=48 (11.1GB predicted) at 60s. B=48 and B=64 did complete the corpus at
+60s, four times each, but B=64 on a worst-case padded file peaked at 11.87GB, 93% of the
+working set (source: m4-voxtral-batch.json#c60b48,c60b48_r1,c60b48_r2,c60b48_r3,c60b64,c60b64_r1,c60b64_r2,c60b64_r3;
+m4-voxtral-worstcase.json#worst64_c60b64), which is too close to the limit to call
+reliable. At the M4's 30s chunks the formula admits B=64 (9.36GB predicted), which
+has never run there, so the M4 profile caps the batch at the measured 32
+(``max_batch``). On the
+Ultra (115.4GB, source: ultra-synthetic-decode.json#synth_ultra_4bit_r1) memory does not bind below the largest measured-good batch, 128.
 Two machines is a thin fit; a third with a different RAM size is the test.
 
 ## Why the result gets snapped to a list
 
-Throughput per step is not monotonic, and two dips reproduce on every machine
+Throughput per step is not monotonic, and two dips reproduce on both machines
 measured:
 
-    B = 2..8   worse per step than B=1. On the M4, x-realtime is 6.1 / 6.2 / 5.8
-               at B=2/4/8 versus 3.6 at B=1: the batch grows 8x and throughput
-               does not follow. Never default here.
-    B = 48     a regression in the synthetic sweep on both machines (M2 Ultra 903
-               tok/s at 48 vs 945 at 32; M4 251 vs 309). B=96 dips on the Ultra too.
+    B = 2..8   worse per step than B=1. On the M4, x-realtime is 6.2 / 6.3 / 6.2
+               at B=2/4/8 versus 3.8 at B=1 (source: m4-synthetic-decode.json#synth_nvfp4_r1,synth_nvfp4_r2,synth_nvfp4_r3):
+               the batch grows 8x and throughput does not follow. Never default here.
+    B = 48     a regression in the synthetic sweep on both machines (M2 Ultra 898
+               tok/s at 48 vs 940 at 32; M4 265 vs 322).
+
+B=96 was once excluded as a dip on the Ultra; the synthetic sweep does not show one
+(x-realtime 95.9 / 99.7 / 103.9 at B=64/96/128), so it is allowed.
+
+(source: ultra-synthetic-decode.json#synth_ultra_4bit_r1,synth_ultra_4bit_r2,synth_ultra_4bit_r3;
+m4-synthetic-decode.json#synth_nvfp4_r1,synth_nvfp4_r2,synth_nvfp4_r3, means of 3 runs)
 
 These look like scheduling artifacts rather than a memory effect, so no formula
 over specs will predict them. ``FAST_BATCHES`` encodes the sizes that measured
@@ -68,8 +89,10 @@ import mlx.core as mx
 PROFILES_PATH = Path(__file__).with_name("profiles.json")
 
 # Batch sizes that measured well. Excludes 2-8 (slower per step than 1) and 48
-# and 96 (measured regressions). See the module docstring.
-FAST_BATCHES = (1, 12, 16, 24, 32, 64, 128)
+# (a measured regression). 96 sits between 64 and 128 on the Ultra synthetic sweep
+# (99.7x between 95.9x and 103.9x). See the module docstring.
+# source: ultra-synthetic-decode.json#synth_ultra_4bit_r1,synth_ultra_4bit_r2,synth_ultra_4bit_r3
+FAST_BATCHES = (1, 12, 16, 24, 32, 64, 96, 128)
 
 # GB of peak memory per decoded row per second of chunk audio. The two corpus fits
 # give 0.0014 (Ultra) and 0.0015 (M4); 0.0018 is what it takes to cover every
@@ -77,12 +100,20 @@ FAST_BATCHES = (1, 12, 16, 24, 32, 64, 128)
 GB_PER_ROW_SECOND = 0.0018
 
 # Fixed peak beyond the weights: encoder activations, mel buffers, framework
-# overhead. Rounded up from the two fits (3.4 Ultra, 2.6 M4).
+# overhead. The two fits give 3.5 (Ultra) and 2.6 (M4); 3.4 sits just under the
+# Ultra fit, and with GB_PER_ROW_SECOND's margin the formula still covers every
+# measured peak. See the module docstring.
+# source: ultra-voxtral-batch.json#c30b16,c30b32,c30b48,c30b64,c30b128;
+# m4-voxtral-batch.json#c60b16,c60b24,c60b32
 FIXED_OVERHEAD_GB = 3.4
 
 # Fraction of the GPU working set a decode may plan to use. Fitted on the M4, the
+# source: m4-synthetic-decode.json#synth_nvfp4_r1 (working set); m4-voxtral-batch.json#c60b32
 # only machine where memory binds: on a 12.7GB working set it admits B=32 (8.08GB
-# measured, 9.36 predicted) and excludes B=48 (11.1 predicted).
+# measured, 9.36 predicted) and excludes B=48 (11.1 predicted). B=64 completed the
+# corpus but peaked at 93% of the working set on a worst-case padded file, too close
+# to call reliable. See the module docstring.
+# source: m4-voxtral-worstcase.json#worst64_c60b64
 USABLE_FRACTION = 0.78
 
 
@@ -105,7 +136,7 @@ def chip_family(chip: str) -> str:
 
 @functools.lru_cache(maxsize=1)
 def machine_info() -> dict:
-    """Identify this machine. Cached: the shell-outs cost ~100ms."""
+    """Identify this machine. Cached: the shell-outs cost ~100ms (not-measured: a rough cost)."""
     try:
         gpu_gb = mx.device_info()["max_recommended_working_set_size"] / 1e9
     except Exception:
@@ -210,9 +241,13 @@ def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
         chunk = chunk_seconds or float(prof["chunk_seconds"])
         overlap = (overlap_seconds if overlap_seconds is not None
                    else prof.get("overlap_seconds", 0.0))
+        # every chunk after the first decodes its warm-up overlap too
+        batch = derive_batch(gpu_gb, weights_gb, chunk + overlap)
+        if prof.get("max_batch"):
+            # the largest batch measured reliable here, where the formula admits more
+            batch = min(batch, snap_batch(prof["max_batch"]))
         return {
-            # every chunk after the first decodes its warm-up overlap too
-            "batch": derive_batch(gpu_gb, weights_gb, chunk + overlap),
+            "batch": batch,
             "chunk_seconds": prof["chunk_seconds"],
             "kv_bits": prof.get("kv_bits"),
             "overlap_seconds": prof.get("overlap_seconds", 0.0),
@@ -224,15 +259,19 @@ def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
     # No measured profile: derive chunk length from what can be detected at runtime.
     cores = info.get("gpu_cores") or 0
     derived = data.get("derived", {})
-    # Both values are currently 60s, so this branch is deliberately a no-op: on a
-    # low-core GPU the compute-bound encoder dominates wall clock, so shorter
-    # chunks add encoder work without buying decode speed, but that is measured
-    # only on the M4 and one machine is not enough to justify a different default.
-    # The split is kept so a second low-core measurement can change one value
-    # without touching this code.
+    # Both values are 30s, so this branch is deliberately a no-op.  # not-measured: config values
+    # The split was made on the belief that short chunks lose on a low-core GPU,
+    # where the encoder is compute-bound. Both measured machines show the reverse:
+    # 30s/B32 ran 6.37x against 4.66x for 60s/B16 on the 10-core M4, and 29.3x
+    # against 20.4x on the 60-core Ultra, with accuracy tied on both (means of 3 runs
+    # except the M4 60s/B16, one run).
+    # source: m4-voxtral-chunking.json#c30b32,c30b32_r2,c30b32_r3,c60b16;
+    # ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit
+    # The split is kept so a low-core measurement can change one value without
+    # touching this code.
     chunk = chunk_seconds or float(
-        derived.get("chunk_seconds_low_core", 60.0) if cores and cores <= 12
-        else derived.get("chunk_seconds_default", 60.0)
+        derived.get("chunk_seconds_low_core", 30.0) if cores and cores <= 12
+        else derived.get("chunk_seconds_default", 30.0)
     )
     batch = derive_batch(gpu_gb, weights_gb, chunk + (overlap_seconds or 0.0))
     return {

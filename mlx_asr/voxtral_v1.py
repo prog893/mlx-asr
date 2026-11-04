@@ -25,7 +25,7 @@ each of which fails quietly or only on some installs:
 3. **mistralai's repos ship two copies of the weights**, `consolidated.safetensors`
    (Mistral-native key names) beside HF-format shards, and mlx-audio's loader prefers the
    consolidated file, whose keys this model's `sanitize` does not map. Downloading only
-   the shards also halves the download (48GB instead of 96GB for Small 24B).
+   the shards also halves the download (48GB instead of 96GB for Small 24B; not-measured: hub file sizes).
 
 Weights come from the authors' own repos, never a third-party conversion. bf16 loads
 straight from the downloaded shards; a quantized precision is converted once per machine

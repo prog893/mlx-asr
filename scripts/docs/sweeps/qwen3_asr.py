@@ -4,9 +4,9 @@ SWEEPS = {
     "qwen3-asr-window": {
         "doc": "docs/benchmarks/engines/qwen3-asr.md",
         "title": "qwen3-asr 1.7B: decode window",
-        "basis": "7-file subset (5 JP, 2 EN files), 8bit, one run per arm. 30s is the "
-                 "Japanese CER optimum; 15s ties it within 0.06 points and is faster and "
-                 "smaller, the memory-bound option.",
+        "basis": "7-file subset (5 JP, 2 EN files), 8bit, one run per arm. 15s is the "
+                 "default: 0.94 points lower on Japanese CER than 30s, a tie (CI [-2.87, +0.76]), "
+                 "and faster and smaller.",
         "xlabel": "window length (log scale)",
         "scale": "log", "unit": "s",
         "series": ["Japanese CER", "English WER (2 files)", "x realtime", "peak GB"],
@@ -19,27 +19,30 @@ SWEEPS = {
         ],
         "width": 11.0,
         "rows": [
-            (15, "| 15s |", ("20.04%", "30.38%", "22.3x", "3.73")),
-            (30, "| **30s** |", ("19.98%", "31.38%", "19.2x", "4.05")),
-            (60, "| 60s |", ("21.42%", "29.86%", "16.7x", "4.10")),
-            (120, "| 120s |", ("23.55%", "34.47%", "15.5x", "4.68")),
-            (300, "| 300s |", ("62.47%", "37.24%", "9.4x", "5.77")),
+            (15, "| **15s** |", ("19.73%", "30.15%", "22.4x", "3.73")),
+            (30, "| 30s |", ("20.67%", "31.45%", "18.1x", "4.05")),
+            (60, "| 60s |", ("22.27%", "30.04%", "16.4x", "4.10")),
+            (120, "| 120s |", ("23.55%", "34.62%", "16.2x", "4.68")),
+            (300, "| 300s |", ("64.89%", "36.94%", "9.4x", "5.77")),
         ],
-        "chosen": 30, "chosen_series": "Japanese CER",
+        "chosen": 15, "chosen_series": "Japanese CER",
         "label_dy": 14,
+        "source": "ultra-qwen3-window.json#qwen3w7_1.7B_8bit_c15,qwen3w7_1.7B_8bit_c30,"
+                  "qwen3w7_1.7B_8bit_c60,qwen3w7_1.7B_8bit_c120,qwen3w7_1.7B_8bit_c300",
     },
-    # Both sizes on ONE y scale, so the 1.7B's sub-point spread reads as the tie it is
-    # beside the 0.6B's 5-point slope. Each table line holds one size, so each row
+    # Both sizes on ONE y scale, so the 1.7B's narrower spread reads beside the 0.6B's
+    # steeper slope. Each table line holds one size, so each row
     # carries a value for one series only. The second panel is the paired difference
     # the table prints ("8bit minus rung", negative means 8bit is better) with its 95%
     # CI; the default rows have no paired figure, they are the zero line.
     "qwen3-asr-precision": {
         "doc": "docs/benchmarks/engines/qwen3-asr.md",
-        "title": "qwen3-asr: precision ladder (1.7B flat within noise, 0.6B steep)",
-        "basis": "20-file corpus, 30s window; 8bit is the default on both sizes. A rung "
-                 "replaces 8bit only if its paired CI lies wholly above zero: every 1.7B "
-                 "CI spans zero (a tie keeps the default); on the 0.6B, 4bit and 6bit lie "
-                 "below it (8bit wins) and 5bit and bf16 span it.",
+        "title": "qwen3-asr: precision ladder (8bit best on the 1.7B, 0.6B steeper)",
+        "basis": "20-file corpus, 15s window; 8bit is the default on both sizes. A rung "
+                 "replaces 8bit only if its paired CI lies wholly above zero: on the 1.7B, "
+                 "4bit, 6bit and bf16 lie below it (8bit wins) and 5bit spans it; on the "
+                 "0.6B, 4bit and 5bit lie below it and 6bit and bf16 span it (a tie keeps "
+                 "the default).",
         "xlabel": "size and precision",
         "scale": "category",
         "series": ["1.7B", "0.6B", "1.7B, paired", "0.6B, paired"],
@@ -52,28 +55,32 @@ SWEEPS = {
         ],
         "width": 12.0, "height": 3.9,
         "rows": [
-            ("1.7B\n4bit", "| 1.7B | 4bit |", ("20.03%", None, "-0.35", None),
-             (None, None, "[-1.57, +0.80]", None)),
-            ("1.7B\n5bit", "| 1.7B | 5bit |", ("19.44%", None, "+0.24", None),
-             (None, None, "[-0.91, +1.48]", None)),
-            ("1.7B\n6bit", "| 1.7B | 6bit |", ("19.63%", None, "+0.05", None),
-             (None, None, "[-1.02, +1.10]", None)),
-            ("1.7B\n8bit", "| 1.7B | **8bit (default)** |", ("19.68%", None, None, None)),
-            ("1.7B\nbf16", "| 1.7B | bf16 |", ("19.51%", None, "+0.17", None),
-             (None, None, "[-0.56, +0.88]", None)),
-            ("0.6B\n4bit", "| 0.6B | 4bit |", (None, "28.36%", None, "-5.00"),
-             (None, None, None, "[-6.96, -3.60]")),
-            ("0.6B\n5bit", "| 0.6B | 5bit |", (None, "24.11%", None, "-0.76"),
-             (None, None, None, "[-2.08, +0.76]")),
-            ("0.6B\n6bit", "| 0.6B | 6bit |", (None, "24.33%", None, "-0.98"),
-             (None, None, None, "[-1.76, -0.24]")),
-            ("0.6B\n8bit", "| 0.6B | **8bit (default)** |", (None, "23.35%", None, None)),
-            ("0.6B\nbf16", "| 0.6B | bf16 |", (None, "23.40%", None, "-0.04"),
-             (None, None, None, "[-0.46, +0.33]")),
+            ("1.7B\n4bit", "| 1.7B | 4bit |", ("19.78%", None, "-1.16", None),
+             (None, None, "[-1.49, -0.86]", None)),
+            ("1.7B\n5bit", "| 1.7B | 5bit |", ("19.21%", None, "-0.59", None),
+             (None, None, "[-1.34, +0.08]", None)),
+            ("1.7B\n6bit", "| 1.7B | 6bit |", ("19.09%", None, "-0.47", None),
+             (None, None, "[-0.88, -0.13]", None)),
+            ("1.7B\n8bit", "| 1.7B | **8bit (default)** |", ("18.62%", None, None, None)),
+            ("1.7B\nbf16", "| 1.7B | bf16 |", ("19.14%", None, "-0.52", None),
+             (None, None, "[-0.89, -0.21]", None)),
+            ("0.6B\n4bit", "| 0.6B | 4bit |", (None, "25.10%", None, "-2.79"),
+             (None, None, None, "[-3.43, -2.19]")),
+            ("0.6B\n5bit", "| 0.6B | 5bit |", (None, "23.23%", None, "-0.92"),
+             (None, None, None, "[-1.63, -0.18]")),
+            ("0.6B\n6bit", "| 0.6B | 6bit |", (None, "22.67%", None, "-0.36"),
+             (None, None, None, "[-1.16, +0.53]")),
+            ("0.6B\n8bit", "| 0.6B | **8bit** |", (None, "22.31%", None, None)),
+            ("0.6B\nbf16", "| 0.6B | bf16 |", (None, "22.31%", None, "+0.01"),
+             (None, None, None, "[-0.56, +0.60]")),
         ],
         "chosen": "1.7B\n8bit", "chosen_series": "1.7B",
         "chosen_label": "default (8bit)",
         "label_dy": -16,
+        "source": "ultra-qwen3-precision-c15.json#qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,"
+                  "qwen3_1.7B_6bit_c15,qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15,"
+                  "qwen3_0.6B_4bit_c15,qwen3_0.6B_5bit_c15,qwen3_0.6B_6bit_c15,"
+                  "qwen3_0.6B_8bit_c15,qwen3_0.6B_bf16_c15",
     },
     # Markers only: the two arms are different weights, not points on one axis.
     "qwen3-asr-loops": {
@@ -87,20 +94,23 @@ SWEEPS = {
         "series": ["8-bit (default)", "bf16"],
         "layout": "columns", "series_keys": ["| 8-bit |", "| bf16 |"],
         "rows": [
-            (1, None, ("3", "2")), (2, None, ("0", "0")), (3, None, ("19", "18")),
-            (4, None, ("0", "0")), (5, None, ("31", "31")), (6, None, ("40", "38")),
-            (7, None, ("52", "56")),
+            (1, None, ("3", "4")), (2, None, ("0", "0")), (3, None, ("18", "18")),
+            (4, None, ("0", "0")), (5, None, ("32", "28")), (6, None, ("39", "36")),
+            (7, None, ("51", "57")),
         ],
         "legend_loc": "upper left",
+        "source": "ultra-qwen3-window.json#qwen3w7_1.7B_8bit_c30;"
+                  "ultra-qwen3-loops.json#qwen3loop7_1.7B_bf16_c30",
     },
     # Markers only: unordered engines. No ring, since the engine default is decided on
     # engines.md; this chart only places both sizes against the two existing engines.
     "qwen3-asr-headline": {
         "doc": "docs/benchmarks/engines/qwen3-asr.md",
         "title": "qwen3-asr against the current headline engines",
-        "basis": "20-file corpus (17 JP, 3 EN files), 8bit, 30s windows for qwen3-asr. "
+        "basis": "20-file corpus (17 JP, 3 EN files), 8bit, 15s windows for qwen3-asr; "
+                 "Voxtral at fp16, its M2 Ultra default. "
                  "Neither size displaces an existing engine on Japanese CER; the 0.6B is "
-                 "the fastest. Whisper speed is a range and Whisper/Voxtral peak is not "
+                 "faster than Voxtral. Whisper speed is a range and Whisper/Voxtral peak is not "
                  "in this table, so those points are absent.",
         "xlabel": "engine",
         "scale": "category", "connect": False,
@@ -116,13 +126,18 @@ SWEEPS = {
         "width": 13.0, "height": 3.9,
         "rows": [
             ("whisper-turbo\nno-condition", "| whisper-turbo, no-condition |",
-             ("14.49%", "18.34%", None, None)),
-            ("voxtral", "| voxtral (default) |", ("16.22%", "21.50%", "29.6x", None)),
+             ("14.17%", "18.65%", None, None)),
+            ("voxtral", "| voxtral (default on 128GB, fp16) |", ("15.20%", "21.21%", "23.9x", None)),
             ("qwen3-asr\n1.7B", "| qwen3-asr (1.7B) |",
-             ("19.68%", "25.53%", "21.1x", "4.05")),
+             ("18.62%", "24.72%", "23.0x", "3.74")),
             ("qwen3-asr\n0.6B", "| qwen3-asr-small (0.6B) |",
-             ("23.35%", "24.27%", "31.7x", "2.36")),
+             ("22.31%", "22.95%", "36.4x", "2.07")),
         ],
+        "source": "ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
+                  "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
+                  "whisper_turbo_nocond_r6;ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,"
+                  "vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;"
+                  "ultra-qwen3-precision-c15.json#qwen3_1.7B_8bit_c15,qwen3_0.6B_8bit_c15",
     },
     # Markers only: three budget configurations of the same engine on one file.
     "qwen3-asr-truncation": {
@@ -142,12 +157,14 @@ SWEEPS = {
         "width": 10.0,
         "rows": [
             ("whole file\n8192 (library)", "| library default, whole-file budget of 8192 |",
-             ("110.77%", "2%")),
+             ("96.67%", "2.1%")),
             ("whole file\n19950 (scaled)", "| whole-file budget scaled to duration (19950) |",
-             ("96.69%", "8%")),
+             ("96.71%", "2.1%")),
             ("per window\n(default)", "| **per-window budget (default)** |",
-             ("19.15%", "100%")),
+             ("17.29%", "100%")),
         ],
         "chosen": "per window\n(default)", "chosen_series": "coverage CER",
+        "source": "ultra-qwen3-loops.json#q3budget_wholefile_8192,q3budget_wholefile_19950,"
+                  "q3trunc_perwindow_1.7B_8bit_c30",
     },
 }

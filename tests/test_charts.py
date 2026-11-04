@@ -27,13 +27,13 @@ IMG = ROOT / "docs" / "benchmarks" / "img"
 # The MODELS.md row each picker point takes its peak from: a repo id or row prefix
 # unique to that row.
 PEAK_ROW = {
-    "voxtral": "Voxtral-Mini-4B-Realtime-2602-4bit)",
+    "voxtral": "| 1 | `fp16`",
     "whisper large-v3": "whisper-large-v3-mlx)",
     "whisper turbo": "whisper-large-v3-turbo)",
     "qwen3-asr 1.7B": "Qwen3-ASR-1.7B-8bit)",
     "qwen3-asr 0.6B": "Qwen3-ASR-0.6B-8bit)",
-    "voxtral-v1 3B": "| `3B` | `8bit`",
-    "voxtral-v1 24B": "| `24B` | `8bit`",
+    "voxtral-v1 3B 8bit": "| `3B` | `8bit`",
+    "voxtral-v1 24B 8bit": "| `24B` | `8bit`",
     "kotoba": "kotoba-whisper-v2.0)",
     "parakeet": "parakeet-tdt_ctc-0.6b-ja)",
 }
