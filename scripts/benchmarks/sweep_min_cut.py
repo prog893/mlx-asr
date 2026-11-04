@@ -49,6 +49,7 @@ def main():
                    help="directory of <stem>.<label>.txt hypotheses")
     p.add_argument("--thresholds", default="10,20,30,50,80",
                    help="character-unit thresholds; the word-unit path uses /5")
+    p.add_argument("--configs", help="comma-separated hypothesis labels to score (default: all)")
     p.add_argument("--json")
     p.add_argument("--per-file", action="store_true",
                    help="also write one row per config, threshold and file into --json, so "
@@ -72,6 +73,13 @@ def main():
 
     thresholds = [int(x) for x in a.thresholds.split(",")]
     labels = sorted(hyps)
+    if a.configs:
+        want = a.configs.split(",")
+        missing = [c for c in want if c not in hyps]
+        if missing:
+            print(f"no hypotheses for {missing} in {a.hyp_dir}", file=sys.stderr)
+            return 2
+        labels = [c for c in labels if c in want]
     print(f"{len(labels)} configs, thresholds {thresholds} "
           f"(word-unit threshold = chars/5)\n")
 

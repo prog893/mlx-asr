@@ -9,12 +9,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c30b32_kv8 mc10",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10 --per-file --configs c30b32_kv8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "10",
+    "per_file": true,
+    "configs": "c30b32_kv8"
    },
    "machine": {},
    "aggregate": null,
@@ -75,12 +76,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c30b32_kv8 mc20",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 20 --per-file --configs c30b32_kv8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "20",
+    "per_file": true,
+    "configs": "c30b32_kv8"
    },
    "machine": {},
    "aggregate": null,
@@ -141,12 +143,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c30b32_kv8 mc30",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 30 --per-file --configs c30b32_kv8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "30",
+    "per_file": true,
+    "configs": "c30b32_kv8"
    },
    "machine": {},
    "aggregate": null,
@@ -207,12 +210,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c30b32_kv8 mc50",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 50 --per-file --configs c30b32_kv8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "50",
+    "per_file": true,
+    "configs": "c30b32_kv8"
    },
    "machine": {},
    "aggregate": null,
@@ -273,12 +277,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c30b32_kv8 mc80",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 80 --per-file --configs c30b32_kv8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "80",
+    "per_file": true,
+    "configs": "c30b32_kv8"
    },
    "machine": {},
    "aggregate": null,
@@ -339,12 +344,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c30b32_kv8_ov8 mc10",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10 --per-file --configs c30b32_kv8_ov8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "10",
+    "per_file": true,
+    "configs": "c30b32_kv8_ov8"
    },
    "machine": {},
    "aggregate": null,
@@ -405,12 +411,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c30b32_kv8_ov8 mc20",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 20 --per-file --configs c30b32_kv8_ov8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "20",
+    "per_file": true,
+    "configs": "c30b32_kv8_ov8"
    },
    "machine": {},
    "aggregate": null,
@@ -471,12 +478,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c30b32_kv8_ov8 mc30",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 30 --per-file --configs c30b32_kv8_ov8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "30",
+    "per_file": true,
+    "configs": "c30b32_kv8_ov8"
    },
    "machine": {},
    "aggregate": null,
@@ -537,12 +545,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c30b32_kv8_ov8 mc50",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 50 --per-file --configs c30b32_kv8_ov8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "50",
+    "per_file": true,
+    "configs": "c30b32_kv8_ov8"
    },
    "machine": {},
    "aggregate": null,
@@ -603,12 +612,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c30b32_kv8_ov8 mc80",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 80 --per-file --configs c30b32_kv8_ov8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "80",
+    "per_file": true,
+    "configs": "c30b32_kv8_ov8"
    },
    "machine": {},
    "aggregate": null,
@@ -669,12 +679,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c60b16_kv8 mc10",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10 --per-file --configs c60b16_kv8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "10",
+    "per_file": true,
+    "configs": "c60b16_kv8"
    },
    "machine": {},
    "aggregate": null,
@@ -735,12 +746,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c60b16_kv8 mc20",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 20 --per-file --configs c60b16_kv8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "20",
+    "per_file": true,
+    "configs": "c60b16_kv8"
    },
    "machine": {},
    "aggregate": null,
@@ -801,12 +813,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c60b16_kv8 mc30",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 30 --per-file --configs c60b16_kv8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "30",
+    "per_file": true,
+    "configs": "c60b16_kv8"
    },
    "machine": {},
    "aggregate": null,
@@ -867,12 +880,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c60b16_kv8 mc50",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 50 --per-file --configs c60b16_kv8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "50",
+    "per_file": true,
+    "configs": "c60b16_kv8"
    },
    "machine": {},
    "aggregate": null,
@@ -933,12 +947,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "c60b16_kv8 mc80",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 80 --per-file --configs c60b16_kv8 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "80",
+    "per_file": true,
+    "configs": "c60b16_kv8"
    },
    "machine": {},
    "aggregate": null,
@@ -999,12 +1014,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3 mc10",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10 --per-file --configs large-v3 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "10",
+    "per_file": true,
+    "configs": "large-v3"
    },
    "machine": {},
    "aggregate": null,
@@ -1065,12 +1081,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3 mc20",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 20 --per-file --configs large-v3 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "20",
+    "per_file": true,
+    "configs": "large-v3"
    },
    "machine": {},
    "aggregate": null,
@@ -1131,12 +1148,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3 mc30",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 30 --per-file --configs large-v3 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "30",
+    "per_file": true,
+    "configs": "large-v3"
    },
    "machine": {},
    "aggregate": null,
@@ -1197,12 +1215,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3 mc50",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 50 --per-file --configs large-v3 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "50",
+    "per_file": true,
+    "configs": "large-v3"
    },
    "machine": {},
    "aggregate": null,
@@ -1263,12 +1282,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3 mc80",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 80 --per-file --configs large-v3 --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "80",
+    "per_file": true,
+    "configs": "large-v3"
    },
    "machine": {},
    "aggregate": null,
@@ -1329,12 +1349,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3-nocond mc10",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10 --per-file --configs large-v3-nocond --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "10",
+    "per_file": true,
+    "configs": "large-v3-nocond"
    },
    "machine": {},
    "aggregate": null,
@@ -1395,12 +1416,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3-nocond mc20",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 20 --per-file --configs large-v3-nocond --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "20",
+    "per_file": true,
+    "configs": "large-v3-nocond"
    },
    "machine": {},
    "aggregate": null,
@@ -1461,12 +1483,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3-nocond mc30",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 30 --per-file --configs large-v3-nocond --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "30",
+    "per_file": true,
+    "configs": "large-v3-nocond"
    },
    "machine": {},
    "aggregate": null,
@@ -1527,12 +1550,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3-nocond mc50",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 50 --per-file --configs large-v3-nocond --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "50",
+    "per_file": true,
+    "configs": "large-v3-nocond"
    },
    "machine": {},
    "aggregate": null,
@@ -1593,12 +1617,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3-nocond mc80",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 80 --per-file --configs large-v3-nocond --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "80",
+    "per_file": true,
+    "configs": "large-v3-nocond"
    },
    "machine": {},
    "aggregate": null,
@@ -1659,12 +1684,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3-turbo mc10",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10 --per-file --configs large-v3-turbo --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "10",
+    "per_file": true,
+    "configs": "large-v3-turbo"
    },
    "machine": {},
    "aggregate": null,
@@ -1725,12 +1751,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3-turbo mc20",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 20 --per-file --configs large-v3-turbo --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "20",
+    "per_file": true,
+    "configs": "large-v3-turbo"
    },
    "machine": {},
    "aggregate": null,
@@ -1791,12 +1818,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3-turbo mc30",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 30 --per-file --configs large-v3-turbo --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "30",
+    "per_file": true,
+    "configs": "large-v3-turbo"
    },
    "machine": {},
    "aggregate": null,
@@ -1857,12 +1885,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3-turbo mc50",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 50 --per-file --configs large-v3-turbo --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "50",
+    "per_file": true,
+    "configs": "large-v3-turbo"
    },
    "machine": {},
    "aggregate": null,
@@ -1923,12 +1952,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "large-v3-turbo mc80",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 80 --per-file --configs large-v3-turbo --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "80",
+    "per_file": true,
+    "configs": "large-v3-turbo"
    },
    "machine": {},
    "aggregate": null,
@@ -1989,12 +2019,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "medium mc10",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10 --per-file --configs medium --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "10",
+    "per_file": true,
+    "configs": "medium"
    },
    "machine": {},
    "aggregate": null,
@@ -2055,12 +2086,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "medium mc20",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 20 --per-file --configs medium --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "20",
+    "per_file": true,
+    "configs": "medium"
    },
    "machine": {},
    "aggregate": null,
@@ -2121,12 +2153,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "medium mc30",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 30 --per-file --configs medium --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "30",
+    "per_file": true,
+    "configs": "medium"
    },
    "machine": {},
    "aggregate": null,
@@ -2187,12 +2220,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "medium mc50",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 50 --per-file --configs medium --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "50",
+    "per_file": true,
+    "configs": "medium"
    },
    "machine": {},
    "aggregate": null,
@@ -2253,12 +2287,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "medium mc80",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 80 --per-file --configs medium --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "80",
+    "per_file": true,
+    "configs": "medium"
    },
    "machine": {},
    "aggregate": null,
@@ -2319,12 +2354,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "turbo-nocond mc10",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10 --per-file --configs turbo-nocond --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "10",
+    "per_file": true,
+    "configs": "turbo-nocond"
    },
    "machine": {},
    "aggregate": null,
@@ -2385,12 +2421,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "turbo-nocond mc20",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 20 --per-file --configs turbo-nocond --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "20",
+    "per_file": true,
+    "configs": "turbo-nocond"
    },
    "machine": {},
    "aggregate": null,
@@ -2451,12 +2488,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "turbo-nocond mc30",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 30 --per-file --configs turbo-nocond --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "30",
+    "per_file": true,
+    "configs": "turbo-nocond"
    },
    "machine": {},
    "aggregate": null,
@@ -2517,12 +2555,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "turbo-nocond mc50",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 50 --per-file --configs turbo-nocond --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "50",
+    "per_file": true,
+    "configs": "turbo-nocond"
    },
    "machine": {},
    "aggregate": null,
@@ -2583,12 +2622,13 @@
   {
    "run": "mincut_sweep_perfile",
    "arm": "turbo-nocond mc80",
-   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 80 --per-file --configs turbo-nocond --json mincut_sweep_perfile.json",
    "params": {
     "corpus": "bench_out/corpus7",
     "hyp_dir": "bench_out/rerun/hyp/mincut7",
-    "thresholds": "10,20,30,50,80",
-    "per_file": true
+    "thresholds": "80",
+    "per_file": true,
+    "configs": "turbo-nocond"
    },
    "machine": {},
    "aggregate": null,
