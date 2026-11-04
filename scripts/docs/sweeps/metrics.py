@@ -31,7 +31,7 @@ SWEEPS = {
             (80, None, ("20.23%", "20.61%", "20.69%")),
         ],
         "source": "ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8,mincut7_vox_c30b32_kv8_ov8,"
-                  "mincut7_vox_c60b16_kv8;ultra-derived-measures.json#mincut_sweep",
+                  "mincut7_vox_c60b16_kv8;ultra-mincut-sweep.json#mincut_sweep_perfile#c30b32_kv8 mc10,mincut_sweep_perfile#c30b32_kv8 mc20,mincut_sweep_perfile#c30b32_kv8 mc30,mincut_sweep_perfile#c30b32_kv8 mc50,mincut_sweep_perfile#c30b32_kv8 mc80,mincut_sweep_perfile#c30b32_kv8_ov8 mc10,mincut_sweep_perfile#c30b32_kv8_ov8 mc20,mincut_sweep_perfile#c30b32_kv8_ov8 mc30,mincut_sweep_perfile#c30b32_kv8_ov8 mc50,mincut_sweep_perfile#c30b32_kv8_ov8 mc80,mincut_sweep_perfile#c60b16_kv8 mc10,mincut_sweep_perfile#c60b16_kv8 mc20,mincut_sweep_perfile#c60b16_kv8 mc30,mincut_sweep_perfile#c60b16_kv8 mc50,mincut_sweep_perfile#c60b16_kv8 mc80",
         "chosen": 30, "chosen_series": "30s b32 kv8",
         "label_dy": -22,   # above the ring sits the ov8 line
         "legend_loc": "upper left",
@@ -57,7 +57,7 @@ SWEEPS = {
         ],
         "source": "ultra-mincut-inputs.json#mincut7_whisper_turbo_nocond,mincut7_vox_c30b32_kv8,"
                   "mincut7_whisper_large-v3_nocond,mincut7_whisper_turbo_libdef,"
-                  "mincut7_whisper_medium_libdef;ultra-derived-measures.json#mincut_sweep",
+                  "mincut7_whisper_medium_libdef;ultra-mincut-sweep.json#mincut_sweep_perfile#turbo-nocond mc10,mincut_sweep_perfile#turbo-nocond mc20,mincut_sweep_perfile#turbo-nocond mc30,mincut_sweep_perfile#turbo-nocond mc50,mincut_sweep_perfile#turbo-nocond mc80,mincut_sweep_perfile#c30b32_kv8 mc10,mincut_sweep_perfile#c30b32_kv8 mc20,mincut_sweep_perfile#c30b32_kv8 mc30,mincut_sweep_perfile#c30b32_kv8 mc50,mincut_sweep_perfile#c30b32_kv8 mc80,mincut_sweep_perfile#large-v3-nocond mc10,mincut_sweep_perfile#large-v3-nocond mc20,mincut_sweep_perfile#large-v3-nocond mc30,mincut_sweep_perfile#large-v3-nocond mc50,mincut_sweep_perfile#large-v3-nocond mc80,mincut_sweep_perfile#large-v3-turbo mc10,mincut_sweep_perfile#large-v3-turbo mc20,mincut_sweep_perfile#large-v3-turbo mc30,mincut_sweep_perfile#large-v3-turbo mc50,mincut_sweep_perfile#large-v3-turbo mc80,mincut_sweep_perfile#medium mc10,mincut_sweep_perfile#medium mc20,mincut_sweep_perfile#medium mc30,mincut_sweep_perfile#medium mc50,mincut_sweep_perfile#medium mc80",
         "chosen": 30, "chosen_series": "voxtral c30b32_kv8",
         "legend_loc": "upper left",
     },

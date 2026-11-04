@@ -135,6 +135,7 @@ candidates on the new copy.
 | `ultra-qwen3-determinism` | M2 Ultra 128GB | qwen3-asr 1.7B 8-bit at 30s, 7-file subset, every file decoded twice |
 | `ultra-qwen3-batch-budget` | M2 Ultra 128GB | qwen3-asr 1.7B 8-bit, batch 4, 15s windows, the library's file-wide token budget, on the 883s file |
 | `ultra-resolution-floor` | (computed) | per-file paired SD and 95% half-width by corpus size, from the saved Voxtral default and Whisper turbo-nocond runs (`scripts/metrics/resolution_floor.py`) |
+| `ultra-mincut-sweep` | M2 Ultra 128GB | the min_cut sweep with per-file rows (2026-11-04): 8 configs on the 7-file subset at thresholds 10, 20, 30, 50 and 80, one arm per config and threshold, rescoring the `ultra-mincut-inputs` hypotheses |
 | `ultra-voxtral-clip-recheck` | M2 Ultra 128GB | model-free rechecks on the 935s clip (2026-10-28): 30s against 60s with kv8 on both sides, and the auto-gain no-op by `cmp` exit status and SHA-256 |
 | `ultra-worstcase-split` | M2 Ultra 128GB | the worst32 cut split at 60s: 32 chunks (canary), last and longest chunk against the 90s worst case |
 | `ultra-voxtral-clip-batch1` | M2 Ultra 128GB | Voxtral CLI on the 935s clip at 30s / kv8, batch 1 against a same-session batch 32 |

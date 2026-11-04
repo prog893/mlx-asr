@@ -1,0 +1,2650 @@
+{
+ "group": "ultra-mincut-sweep",
+ "question": "Coverage error of 8 configs on the 7-file subset at min_cut 10, 20, 30, 50 and 80, per file",
+ "docs": [
+  "docs/benchmarks/reference/metrics.md"
+ ],
+ "note": "Rescores the hypotheses kept by the ultra-mincut-inputs runs (bench_out/rerun/hyp/mincut7 on the benchmark machine, not published: they contain corpus text) at five min_cut thresholds, one arm per config and threshold. Its printed table is identical to the q7 run behind ultra-derived-measures mincut_sweep.",
+ "runs": [
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c30b32_kv8 mc10",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.16435,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.15259,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11677,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.13332,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.18634,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.23315,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.23665,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c30b32_kv8 mc20",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.17366,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.15697,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11677,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.15107,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.19758,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.25272,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.26869,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c30b32_kv8 mc30",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.17366,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.16256,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11677,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.16495,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.19758,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.25924,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.27993,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c30b32_kv8 mc50",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.20268,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.16694,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11677,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.18257,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.21098,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.26262,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.29848,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c30b32_kv8 mc80",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.22098,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.20753,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11677,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.20579,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.21098,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.26262,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.34008,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c30b32_kv8_ov8 mc10",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.18328,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.17955,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.16095,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.10169,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.15391,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.26432,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.30804,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c30b32_kv8_ov8 mc20",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.19511,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.19532,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.16095,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.11104,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.15391,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.2834,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.33839,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c30b32_kv8_ov8 mc30",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.19921,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.20987,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.16095,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.11384,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.15391,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.29065,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.34739,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c30b32_kv8_ov8 mc50",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.20931,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.22208,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.16095,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.11918,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.15391,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.29548,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.36762,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c30b32_kv8_ov8 mc80",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.24748,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.24466,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.16095,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.14453,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.17769,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.29548,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.37943,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c60b16_kv8 mc10",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.22382,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.16216,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11045,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.12652,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.23692,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.2474,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.25183,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c60b16_kv8 mc20",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.24464,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.17467,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11045,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.13186,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.25119,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.26407,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.28331,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c60b16_kv8 mc30",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.24464,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.1822,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11045,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.13186,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.25119,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.26915,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.2968,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c60b16_kv8 mc50",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.26735,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.19664,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11045,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.13599,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.25119,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.27567,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.32715,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "c60b16_kv8 mc80",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.29685,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.2174,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11045,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.13599,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.25119,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.27567,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.37156,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3 mc10",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.16798,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.22625,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.12347,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.37181,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.63424,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.19618,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.276,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3 mc20",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.20852,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.24964,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.13333,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.41946,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.74578,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.22493,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.31535,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3 mc30",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.24606,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.26256,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.13333,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.44548,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.7981,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.24571,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.34289,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3 mc50",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.31956,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.28718,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.13333,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.46777,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.7981,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.25948,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.38898,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3 mc80",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.35789,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.29847,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.13333,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.49193,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.7981,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.28002,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.4199,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3-nocond mc10",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.16278,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.14496,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11874,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.09796,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.15132,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.15511,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.25239,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3-nocond mc20",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.20426,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.16378,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11874,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.13346,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.15132,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.17734,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.29286,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3-nocond mc30",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.22965,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.16378,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11874,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.15041,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.16083,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.18579,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.31535,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3-nocond mc50",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.27587,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.21109,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11874,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.18711,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.20536,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.19401,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.34008,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3-nocond mc80",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.3664,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.27284,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11874,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.23555,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.25249,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.19739,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.37886,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3-turbo mc10",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.18517,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.43082,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.1211,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.10516,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.15694,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.14955,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.21529,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3-turbo mc20",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.20237,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.43337,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.12584,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.10997,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.19239,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.18869,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.2552,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3-turbo mc30",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.2142,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.43886,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.12584,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.11851,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.22049,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.20198,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.27881,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3-turbo mc50",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.22886,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.43886,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.14122,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.12372,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.2339,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.21261,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.31591,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "large-v3-turbo mc80",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.26041,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.43886,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.14122,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.13052,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.34717,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.21503,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.36425,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "medium mc10",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.21546,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.24354,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.15108,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.19004,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.48638,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.20826,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.20967,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "medium mc20",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.26309,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.29573,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.16134,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.25611,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.6658,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.23146,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.25351,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "medium mc30",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.31703,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.33703,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.16134,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.31883,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.73281,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.24064,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.27825,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "medium mc50",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.37161,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.38728,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.16134,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.38516,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.74838,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.2445,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.32153,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "medium mc80",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.41956,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.4409,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.1858,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.45256,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.85257,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.24764,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.34233,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "turbo-nocond mc10",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.1847,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.14537,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11913,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.10263,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.12451,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.15704,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.26925,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "turbo-nocond mc20",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.203,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.16429,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11913,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.1121,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.13273,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.18604,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.29792,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "turbo-nocond mc30",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.203,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.1762,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11913,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.11838,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.16775,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.19208,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.31535,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "turbo-nocond mc50",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.2142,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.18769,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11913,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.11838,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.18201,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.2044,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.32715,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  },
+  {
+   "run": "mincut_sweep_perfile",
+   "arm": "turbo-nocond mc80",
+   "command": "scripts/benchmarks/sweep_min_cut.py --corpus bench_out/corpus7 --hyp-dir bench_out/rerun/hyp/mincut7 --thresholds 10,20,30,50,80 --per-file --json mincut_sweep_perfile.json",
+   "params": {
+    "corpus": "bench_out/corpus7",
+    "hyp_dir": "bench_out/rerun/hyp/mincut7",
+    "thresholds": "10,20,30,50,80",
+    "per_file": true
+   },
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [
+    {
+     "file": "c18b2f5aa2a2",
+     "unit": "char",
+     "coverage_cer": 0.2142,
+     "ref_chars": 6340
+    },
+    {
+     "file": "9aefd8f2352e",
+     "unit": "char",
+     "coverage_cer": 0.19888,
+     "ref_chars": 9830
+    },
+    {
+     "file": "07fd66556725",
+     "unit": "char",
+     "coverage_cer": 0.11913,
+     "ref_chars": 2535
+    },
+    {
+     "file": "c29657df52e9",
+     "unit": "char",
+     "coverage_cer": 0.11838,
+     "ref_chars": 7493
+    },
+    {
+     "file": "cbeb19543902",
+     "unit": "char",
+     "coverage_cer": 0.18201,
+     "ref_chars": 2313
+    },
+    {
+     "file": "0c193bf7ced2",
+     "unit": "word",
+     "coverage_cer": 0.20923,
+     "ref_chars": 4139
+    },
+    {
+     "file": "57d841fe39b5",
+     "unit": "word",
+     "coverage_cer": 0.34458,
+     "ref_chars": 1779
+    }
+   ],
+   "missing": [
+    "machine state",
+    "x_realtime",
+    "peak memory",
+    "per-file duration",
+    "per-file timing",
+    "sweep_min_cut.py rescores saved hypotheses and records no machine state; one arm per config and threshold"
+   ]
+  }
+ ]
+}
