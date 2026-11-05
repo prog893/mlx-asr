@@ -10,7 +10,7 @@
   "docs/benchmarks/reference/metrics.md",
   "docs/benchmarks/reference/corpus.md"
  ],
- "note": "In the commands $PY is the repo venv python, $CLIP the 935s clip (bench_out/corpus_timed/632a295d981d.wav), $REF its reference subtitles (the .srt beside it) and $D the queue directory bench_out/q7_20261015; hypotheses are not saved. The derive_*.py scripts are written into $D/derive by the queue file's heredocs (not yet in the repo); they load no model and print counts keyed by file id. mincut_sweep rescores the hypotheses kept by the saved m2-ultra-mincut-inputs runs.",
+ "note": "In the commands $PY is the repo venv python, $CLIP the 935s clip (bench_out/corpus_timed/632a295d981d.wav), $REF its reference subtitles (the .srt beside it) and $D the queue directory bench_out/q7_20261015; hypotheses are not saved. The derive_*.py scripts are written into $D/derive by the queue file's heredocs (not yet in the repo); they load no model and print counts keyed by file id. mincut_sweep rescores the hypotheses kept by the saved ultra-mincut-inputs runs.",
  "runs": [
   {
    "run": "derive_cues",
