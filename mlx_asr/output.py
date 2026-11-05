@@ -39,8 +39,8 @@ def build_cues(model, timed_chunks, chunk_offsets, gap_s=1.2, max_chars=28,
       and showed the n=1 result only wins on the single file it was fitted to.
 
     These shipped values score F1 38.8% end to end across the 7 timed references
-    (source: ultra-timestamps.json#ts_default_r1,ts_0732) against 43.9% for (0.7, 32)
-    (source: ultra-cue-layout.json#cue_sweep_union); see docs/benchmarks/cue-layout.md.
+    (source: m2-ultra-timestamps.json#ts_default_r1,ts_0732) against 43.9% for (0.7, 32)
+    (source: m2-ultra-cue-layout.json#cue_sweep_union); see docs/benchmarks/cue-layout.md.
     Giving up those 5.1 points is the deliberate trade described above; what is not
     negotiable is reporting the number the default actually produces, which an
     earlier version of this docstring did not.
@@ -56,7 +56,7 @@ def build_cues(model, timed_chunks, chunk_offsets, gap_s=1.2, max_chars=28,
 
     * `gap_s` is the only knob that matters. Mean F1 moves 45.3 / 43.3 / 41.3 /
       37.7 / 37.1% across gap 0.6 / 0.7 / 0.8 / 1.0 / 1.2 on these references
-      (source: ultra-cue-layout.json#cue_sweep_union), so a
+      (source: m2-ultra-cue-layout.json#cue_sweep_union), so a
       user with their own reference SRTs should sweep this one parameter and
       nothing else. `mlx-asr --gap-seconds` exists for exactly that; it was advice
       with no flag behind it until the flags were added.
@@ -72,9 +72,9 @@ def build_cues(model, timed_chunks, chunk_offsets, gap_s=1.2, max_chars=28,
     (Whisper reaches 57.1% F1 on the same files). Drift is the strong half and is
     unaffected by these knobs: regrouping cues cannot move a token's timestamp.
 
-    Figures are means over the valid timed files (source: ultra-timestamps.json#ts_default_r1,ts_0732
+    Figures are means over the valid timed files (source: m2-ultra-timestamps.json#ts_default_r1,ts_0732
     for end to end and Whisper;
-    ultra-cue-layout.json#cue_sweep_union for the gap and cues/ref sweep). The n=1
+    m2-ultra-cue-layout.json#cue_sweep_union for the gap and cues/ref sweep). The n=1
     sweep has no saved run, so its figures are not given.
     """
     from .audio import map_time

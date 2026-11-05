@@ -1,5 +1,5 @@
 {
- "group": "ultra-reazon-window",
+ "group": "m2-ultra-reazon-window",
  "question": "reazon-k2 fp32 on the 112s file with a 120s window (one window for the whole file)",
  "docs": [
   "docs/benchmarks/engines/reazon.md"

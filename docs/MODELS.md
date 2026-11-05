@@ -35,7 +35,7 @@ Source: [ultra-voxtral-precision.json](../benchmarks/results/2026-10/ultra-voxtr
 | 2 | `24B` | `8bit` | [mistralai/Voxtral-Small-24B-2507](https://huggingface.co/mistralai/Voxtral-Small-24B-2507), converted on first use | 48.54GB | 27.92GB |
 | 1 | `24B` | `bf16` | [mistralai/Voxtral-Small-24B-2507](https://huggingface.co/mistralai/Voxtral-Small-24B-2507) | 48.54GB | 50.08GB |
 
-Source: [ultra-voxtral-v1.json](../benchmarks/results/2026-10/ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `3b_bf16_c30`, `24b_4bit_c30`, `24b_8bit_c30`, `24b_bf16_c30` (peak; download is the hub repo size)
+Source: [m2-ultra-voxtral-v1.json](../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `3b_bf16_c30`, `24b_4bit_c30`, `24b_8bit_c30`, `24b_bf16_c30` (peak; download is the hub repo size)
 
 ### `--model whisper`
 
@@ -49,7 +49,7 @@ Source: [ultra-voxtral-v1.json](../benchmarks/results/2026-10/ultra-voxtral-v1.j
 | 1 | `large-v3` | - | [mlx-community/whisper-large-v3-mlx](https://huggingface.co/mlx-community/whisper-large-v3-mlx) | 3.08GB | 7.00GB |
 | 2 | `turbo` | - | [mlx-community/whisper-large-v3-turbo](https://huggingface.co/mlx-community/whisper-large-v3-turbo) | 1.61GB | 5.53GB |
 
-Source: [ultra-whisper-sizes.json](../benchmarks/results/2026-10/ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond` (peak; download is the hub repo size)
+Source: [m2-ultra-whisper-sizes.json](../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond` (peak; download is the hub repo size)
 
 ### `--model kotoba`
 
@@ -57,7 +57,7 @@ Source: [ultra-whisper-sizes.json](../benchmarks/results/2026-10/ultra-whisper-s
 |---|---|---|---|
 | - | [kotoba-tech/kotoba-whisper-v2.0](https://huggingface.co/kotoba-tech/kotoba-whisper-v2.0) | 1.52GB | 2.38GB |
 
-Source: [ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079` (peak, maximum over the files, at the 10s window shipped then; download is the hub repo size)
+Source: [m2-ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079` (peak, maximum over the files, at the 10s window shipped then; download is the hub repo size)
 
 ### `--model qwen3-asr`
 
@@ -74,7 +74,7 @@ Source: [ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/ultra-peak
 | 1 | `1.7B` | `8bit` | [mlx-community/Qwen3-ASR-1.7B-8bit](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-8bit) | 2.47GB | 3.74GB |
 | 3 | `1.7B` | `bf16` | [mlx-community/Qwen3-ASR-1.7B-bf16](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-bf16) | 4.08GB | 5.35GB |
 
-Source: [ultra-qwen3-precision-c15.json](../benchmarks/results/2026-10/ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`, `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15` (peak at the shipped 15s window; download is the hub repo size)
+Source: [m2-ultra-qwen3-precision-c15.json](../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`, `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15` (peak at the shipped 15s window; download is the hub repo size)
 
 ### `--model parakeet`
 
@@ -415,10 +415,10 @@ python -m mlx_audio.convert \
 mlx-asr audio.wav --model ./voxtral-8bit
 ```
 
-[^n1]: [ultra-whisper-sizes.json](../benchmarks/results/2026-10/ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond` (the runner's own peak per size, which is what the table column prints)
-[^n2]: [ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079`
+[^n1]: [m2-ultra-whisper-sizes.json](../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond` (the runner's own peak per size, which is what the table column prints)
+[^n2]: [m2-ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079`
 [^n3]: [ultra-voxtral-batch.json](../benchmarks/results/2026-10/ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [ultra-voxtral-precision.json](../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w4bit_c60b16_kv8_r2`; [ultra-voxtral-kv.json](../benchmarks/results/2026-10/ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit`
-[^n4]: [ultra-whisper-language.json](../benchmarks/results/2026-10/ultra-whisper-language.json) runs `lang7_turbo_autodetect_r1`, `lang7_turbo_autodetect_r2`, `lang7_turbo_autodetect_r3`; [ultra-mincut-inputs.json](../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_whisper_turbo_libdef`; [ultra-whisper-condition.json](../benchmarks/results/2026-10/ultra-whisper-condition.json) runs `cond7_whisper_turbo_libdef_r2`, `cond7_whisper_turbo_libdef_r3` (autodetect against forced Japanese, both at library defaults, mean of 3 runs each)
+[^n4]: [m2-ultra-whisper-language.json](../benchmarks/results/2026-10/m2-ultra-whisper-language.json) runs `lang7_turbo_autodetect_r1`, `lang7_turbo_autodetect_r2`, `lang7_turbo_autodetect_r3`; [ultra-mincut-inputs.json](../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_whisper_turbo_libdef`; [ultra-whisper-condition.json](../benchmarks/results/2026-10/ultra-whisper-condition.json) runs `cond7_whisper_turbo_libdef_r2`, `cond7_whisper_turbo_libdef_r3` (autodetect against forced Japanese, both at library defaults, mean of 3 runs each)
 [^n5]: [m4-voxtral-chunking.json](../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`, `c60b16`; [m4-voxtral-batch.json](../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b32`, `c60b32_r1`, `batch_m4_repeat_20261009__c60b32_r2`, `batch_m4_repeat_20261009__c60b32_r3`, `c60b32_r4`, `batch_m4_b64_20261010__c60b32_r2`, `batch_m4_b64_20261010__c60b32_r3` (mean of 7 runs)
-[^n6]: [ultra-voxtral-precision.json](../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8`; [ultra-qwen3-precision-c15.json](../benchmarks/results/2026-10/ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_8bit_c15`; [ultra-voxtral-v1.json](../benchmarks/results/2026-10/ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30` (paired over files)
+[^n6]: [ultra-voxtral-precision.json](../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8`; [m2-ultra-qwen3-precision-c15.json](../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_8bit_c15`; [m2-ultra-voxtral-v1.json](../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30` (paired over files)
 [^n7]: [ultra-kotoba-conversion.json](../benchmarks/results/2026-10/ultra-kotoba-conversion.json) runs `pm_kotoba_cold_r112`, `pm_kotoba_warm_r112` (the 112s file through the CLI, with the first-use conversion and then with it cached)

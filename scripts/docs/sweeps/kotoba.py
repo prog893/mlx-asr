@@ -23,7 +23,7 @@ SWEEPS = {
             ("own conversion\nno-condition", "| same, `--no-condition` | 54.32% |",
              ("54.32%", "44.31%")),
         ],
-        "source": "ultra-kotoba-sequential.json#kseq_npz_cond_r1,kseq_npz_cond_r2,kseq_npz_cond_r3,kseq_npz_nocond_r1,kseq_npz_nocond_r2,kseq_npz_nocond_r3,kseq_off_cond_r1,kseq_off_cond_r2,kseq_off_nocond_r1,kseq_off_nocond_r2,kseq_off_nocond_r3,kseqclip_npz_cond_r1,kseqclip_npz_cond_r2,kseqclip_npz_cond_r3,kseqclip_off_cond_r1,kseqclip_off_cond_r2,kseqclip_off_cond_r3,kseqclip_off_nocond_r1,kseqclip_off_nocond_r2,kseqclip_off_nocond_r3",
+        "source": "m2-ultra-kotoba-sequential.json#kseq_npz_cond_r1,kseq_npz_cond_r2,kseq_npz_cond_r3,kseq_npz_nocond_r1,kseq_npz_nocond_r2,kseq_npz_nocond_r3,kseq_off_cond_r1,kseq_off_cond_r2,kseq_off_nocond_r1,kseq_off_nocond_r2,kseq_off_nocond_r3,kseqclip_npz_cond_r1,kseqclip_npz_cond_r2,kseqclip_npz_cond_r3,kseqclip_off_cond_r1,kseqclip_off_cond_r2,kseqclip_off_cond_r3,kseqclip_off_nocond_r1,kseqclip_off_nocond_r2,kseqclip_off_nocond_r3",
         "chosen": None,
         "width": 7.6,
         "zero": True,

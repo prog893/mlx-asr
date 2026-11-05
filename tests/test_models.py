@@ -41,7 +41,7 @@ BACKENDS = ("voxtral", "mlx-voxtral-v1", "mlx-whisper", "mlx-chunked", "mlx-qwen
 # Qwen3-ASR's `temperature=0.0` becomes `mx.argmax` for the same reason;
 # parakeet's TDT and reazon-k2's transducer have no sampling path at all.
 # Whisper's temperature fallback samples, so it is not on this list and its
-# repeat runs spread 0.8 to 1.8 CER points (ultra-whisper-sizes).
+# repeat runs spread 0.8 to 1.8 CER points (m2-ultra-whisper-sizes).
 GREEDY_BACKENDS = ("voxtral", "mlx-voxtral-v1", "mlx-qwen3", "mlx-parakeet", "sherpa-onnx")
 
 

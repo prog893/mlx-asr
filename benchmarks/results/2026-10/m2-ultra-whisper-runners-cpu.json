@@ -1,6 +1,6 @@
 {
- "group": "ultra-whisper-runners-cpu",
- "question": "CPU share of the unbatched faster-whisper runs on the 935s clip: time -p totals (real, user, sys) from each run's log, 3 runs each; the runs' results are in ultra-whisper-runners",
+ "group": "m2-ultra-whisper-runners-cpu",
+ "question": "CPU share of the unbatched faster-whisper runs on the 935s clip: time -p totals (real, user, sys) from each run's log, 3 runs each; the runs' results are in m2-ultra-whisper-runners",
  "docs": [
   "docs/benchmarks/engines/whisper.md"
  ],

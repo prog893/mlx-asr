@@ -1,5 +1,5 @@
 {
- "group": "ultra-peak-memory-kotoba",
+ "group": "m2-ultra-peak-memory-kotoba",
  "question": "kotoba peak memory per file through the CLI over the 20-file corpus",
  "docs": [
   "docs/benchmarks/peak-memory.md"

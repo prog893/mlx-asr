@@ -20,7 +20,7 @@ SWEEPS = {
         ],
         "chosen": 30, "chosen_series": "Japanese CER",
         "source": "ultra-voxtral-v1-window.json#sweep_3b_bf16_c15,sweep_3b_bf16_c60,"
-                  "sweep_3b_bf16_c120;ultra-voxtral-v1.json#3b_bf16_c30",
+                  "sweep_3b_bf16_c120;m2-ultra-voxtral-v1.json#3b_bf16_c30",
     },
     "voxtral-v1-precision-3b": {
         "doc": _DOC,
@@ -42,7 +42,7 @@ SWEEPS = {
             {"series": [2], "ylabel": "peak GPU memory (GB)", "zero": True, "title": "cost"},
         ],
         "chosen": "8bit", "chosen_label": "default on 16GB", "chosen_series": "Japanese CER",
-        "source": "ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30",
+        "source": "m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30",
     },
     "voxtral-v1-precision-24b": {
         "doc": _DOC,
@@ -72,7 +72,7 @@ SWEEPS = {
             {"series": [4], "ylabel": "peak GPU memory (GB)", "zero": True, "title": "cost"},
         ],
         "chosen": "bf16", "chosen_label": "default on 128GB", "chosen_series": "Japanese CER",
-        "source": "ultra-voxtral-v1.json#24b_4bit_c30,24b_8bit_c30,24b_bf16_c30",
+        "source": "m2-ultra-voxtral-v1.json#24b_4bit_c30,24b_8bit_c30,24b_bf16_c30",
     },
     "voxtral-v1-language": {
         "doc": _DOC,
@@ -92,6 +92,6 @@ SWEEPS = {
              "title": "wrong-script output"},
         ],
         "chosen": None, "width": 7.6,
-        "source": "ultra-voxtral-v1.json#3b_bf16_c30,3b_bf16_c30_auto;ultra-derived-measures.json#derive_v1latin",
+        "source": "m2-ultra-voxtral-v1.json#3b_bf16_c30,3b_bf16_c30_auto;m2-ultra-derived-measures.json#derive_v1latin",
     },
 }

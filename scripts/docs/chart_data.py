@@ -59,7 +59,7 @@ WHISPER_SIZES = {
              ("large-v2", "17.74%", "17.72%"), ("large-v3", "14.51%", "18.59%"),
              ("turbo", "14.17%", "18.65%")],
     "chosen": "large-v3",
-    "source": ("ultra-whisper-sizes.json#whisper_large-v2_nocond_r2,"
+    "source": ("m2-ultra-whisper-sizes.json#whisper_large-v2_nocond_r2,"
                 "whisper_large-v2_nocond_r3,whisper_large-v2_nocond,whisper_large-v3_nocond_r2,"
                 "whisper_large-v3_nocond_r3,whisper_large-v3_nocond,whisper_medium_nocond_r2,"
                 "whisper_medium_nocond_r3,whisper_medium_nocond,whisper_small_nocond_r2,"
@@ -158,9 +158,9 @@ GAIN = {
 
 # Saved run data behind each bare row list above: "group.json#run,run;group2.json#run".
 SOURCES = {
-    "PICKER": ("ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,"
+    "PICKER": ("m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,"
                "vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;"
-               "ultra-whisper-sizes.json#whisper_large-v3_nocond,whisper_large-v3_nocond_r2,"
+               "m2-ultra-whisper-sizes.json#whisper_large-v3_nocond,whisper_large-v3_nocond_r2,"
                "whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,"
                "whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6,whisper_turbo_nocond,"
                "whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,"
@@ -174,9 +174,9 @@ SOURCES = {
                "pk_reazon_fp32_default_s1,pk_reazon_fp32_default_s2,pk_reazon_fp32_default_s3;"
                "ultra-picker-speed-24b.json#pk_v1_24B_8bit_c30_s1,pk_v1_24B_8bit_c30_s2,"
                "pk_v1_24B_8bit_c30_s3;ultra-voxtral-precision.json#vox_wfp16_c60b16_kv8;"
-               "ultra-qwen3-precision-c15.json#qwen3_1.7B_8bit_c15,qwen3_0.6B_8bit_c15;"
-               "ultra-voxtral-v1.json#3b_8bit_c30,24b_8bit_c30;"
-               "ultra-peak-memory-kotoba.json#pm_kotoba_7f8150fdef0e,pm_kotoba_c18b2f5aa2a2,"
+               "m2-ultra-qwen3-precision-c15.json#qwen3_1.7B_8bit_c15,qwen3_0.6B_8bit_c15;"
+               "m2-ultra-voxtral-v1.json#3b_8bit_c30,24b_8bit_c30;"
+               "m2-ultra-peak-memory-kotoba.json#pm_kotoba_7f8150fdef0e,pm_kotoba_c18b2f5aa2a2,"
                "pm_kotoba_9aefd8f2352e,pm_kotoba_07fd66556725,pm_kotoba_c29657df52e9,"
                "pm_kotoba_cbeb19543902,pm_kotoba_b88caf8c0924,pm_kotoba_bbdabfabfb4f,"
                "pm_kotoba_1672083b2499,pm_kotoba_5b44e078553d,pm_kotoba_a73e94506f13,"
@@ -190,14 +190,14 @@ SOURCES = {
                 "ultra-qwen3-window.json#qwen3w7_1.7B_8bit_c120,qwen3w7_1.7B_8bit_c15,"
                 "qwen3w7_1.7B_8bit_c30,qwen3w7_1.7B_8bit_c300,qwen3w7_1.7B_8bit_c60;"
                 "ultra-voxtral-v1-window.json#sweep_3b_bf16_c15,sweep_3b_bf16_c60,"
-                "sweep_3b_bf16_c120;ultra-voxtral-v1.json#3b_bf16_c30;"
+                "sweep_3b_bf16_c120;m2-ultra-voxtral-v1.json#3b_bf16_c30;"
                 "ultra-parakeet-window.json#parakeet_c120,parakeet_c300"),
     "PRECISION": ("ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_wnvfp4_c60b16_kv8,"
                   "vox_w8bit_c60b16_kv8,vox_wmxfp8_c60b16_kv8,vox_wfp16_c60b16_kv8;"
-                  "ultra-qwen3-precision-c15.json#qwen3_0.6B_4bit_c15,qwen3_0.6B_5bit_c15,"
+                  "m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_4bit_c15,qwen3_0.6B_5bit_c15,"
                   "qwen3_0.6B_6bit_c15,qwen3_0.6B_8bit_c15,qwen3_0.6B_bf16_c15,"
                   "qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,qwen3_1.7B_6bit_c15,"
-                  "qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15;ultra-voxtral-v1.json#3b_4bit_c30,"
+                  "qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15;m2-ultra-voxtral-v1.json#3b_4bit_c30,"
                   "3b_8bit_c30,3b_bf16_c30,24b_4bit_c30,24b_8bit_c30,24b_bf16_c30"),
     "BATCH": ("ultra-synthetic-decode.json#synth_ultra_4bit_r1,synth_ultra_4bit_r2,"
               "synth_ultra_4bit_r3;m4-synthetic-decode.json#synth_nvfp4_r1,synth_nvfp4_r2,"

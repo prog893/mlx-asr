@@ -135,7 +135,7 @@ def cached_mlx_copy(repo: str, log=print) -> str:
 
 # Voxtral Realtime precisions converted on first use, with the exact recipe of the
 # saved runs that measured them (mlx_audio.convert from the fp16 hub build).
-# source: ultra-voxtral-precision-default.json#vox_w8bit_c30b128_kv8
+# source: m2-ultra-voxtral-precision-default.json#vox_w8bit_c30b128_kv8
 REALTIME_RECIPES = {"8bit": {"q_mode": "affine", "q_bits": 8, "q_group_size": 64}}
 
 

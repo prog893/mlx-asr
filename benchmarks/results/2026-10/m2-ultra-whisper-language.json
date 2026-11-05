@@ -1,5 +1,5 @@
 {
- "group": "ultra-whisper-language",
+ "group": "m2-ultra-whisper-language",
  "question": "Whisper turbo at library defaults on the 7-file subset: autodetect, and forced Japanese on the two English files, 3 runs each",
  "docs": [
   "docs/benchmarks/engines/whisper.md"

@@ -29,7 +29,7 @@ SWEEPS = {
             ("Voxtral", None, ("278", "865", "33.0", "37.7%", "58.3%")),
             ("whisper\nturbo-nocond", None, ("244", "1994", "87.8", "56.9%", "41.4%")),
         ],
-        "source": ("ultra-timestamps.json#ts_default_r1#engine voxtral,"
+        "source": ("m2-ultra-timestamps.json#ts_default_r1#engine voxtral,"
                    "ts_default_r2#engine voxtral,ts_default_r3#engine voxtral,"
                    "ts_default_r1#engine whisper-turbo-nocond,"
                    "ts_default_r2#engine whisper-turbo-nocond,"

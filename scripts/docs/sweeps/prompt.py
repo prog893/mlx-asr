@@ -65,7 +65,7 @@ SWEEPS = {
              "zero_line": True},
         ],
         "width": 20, "height": 3.8,
-        "source": "ultra-voxtral-prompt.json#prompt20_c30b32_kv8#none -,"
+        "source": "m2-ultra-voxtral-prompt.json#prompt20_c30b32_kv8#none -,"
                   "prompt20_c30b32_kv8#instruction en,prompt20_c30b32_kv8#instruction ja,"
                   "prompt20_c30b32_kv8#description en,prompt20_c30b32_kv8#description ja;"
                   "ultra-voxtral-prompt-derived.json#" + _DERIVED,

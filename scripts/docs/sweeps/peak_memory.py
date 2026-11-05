@@ -19,7 +19,7 @@ SWEEPS = {
             (69.6, "| 69.6 min |", ("4.54GB",)),
             (93.2, "| 93.2 min |", ("5.53GB",)),
         ],
-        "source": ("ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
+        "source": ("m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
                    "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
                    "whisper_turbo_nocond_r6;corpus.json"),
     },
@@ -41,16 +41,16 @@ SWEEPS = {
             ("voxtral", "| `voxtral 4bit` |", ("5.38GB", "6.77GB")),
             ("whisper turbo", "| `whisper turbo` |", ("2.54GB", "5.53GB")),
         ],
-        "source": ("ultra-peak-memory-kotoba.json#pm_kotoba_7f8150fdef0e,pm_kotoba_c18b2f5aa2a2,"
+        "source": ("m2-ultra-peak-memory-kotoba.json#pm_kotoba_7f8150fdef0e,pm_kotoba_c18b2f5aa2a2,"
                    "pm_kotoba_9aefd8f2352e,pm_kotoba_07fd66556725,pm_kotoba_c29657df52e9,"
                    "pm_kotoba_cbeb19543902,pm_kotoba_b88caf8c0924,pm_kotoba_bbdabfabfb4f,"
                    "pm_kotoba_1672083b2499,pm_kotoba_5b44e078553d,pm_kotoba_a73e94506f13,"
                    "pm_kotoba_bb5cf5d5b247,pm_kotoba_0c193bf7ced2,pm_kotoba_57d841fe39b5,"
                    "pm_kotoba_a773a315fb42,pm_kotoba_71bb5eba3baa,pm_kotoba_a1372c4d2900,"
                    "pm_kotoba_c47ad127bc83,pm_kotoba_1da58e1b2b69,pm_kotoba_b3432b40c079;"
-                   "ultra-qwen3-precision-c15.json#qwen3_0.6B_8bit_c15,qwen3_1.7B_8bit_c15;"
+                   "m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_8bit_c15,qwen3_1.7B_8bit_c15;"
                    "ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8;"
-                   "ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
+                   "m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
                    "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
                    "whisper_turbo_nocond_r6"),
         "chosen": None,

@@ -17,7 +17,7 @@ everything (docs/benchmarks/engines.md):
                    driver (chunked.py), since Whisper's sequential algorithm
                    costs a 2-layer distil decoder 63.9 points on the same 5
                    Japanese files (source:
-                   ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;
+                   m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;
                    ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3).
     qwen3-asr      deterministic and does real language ID, but emits no
                    timestamp finer than its own chunk boundaries, so `-f srt`
@@ -278,7 +278,7 @@ def _run_other_backend(a, spec, log, t_start):
         else:
             to_iso(a.language, spec.alias)
     if not spec.deterministic:
-        # source: ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6
+        # source: m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6
         log(f"[{spec.backend}] this engine samples, so repeat runs differ "
             f"(0.8 to 1.8 CER points for Whisper on our corpus); it is not "
             f"reproducible like voxtral")
@@ -392,12 +392,12 @@ def build_parser():
                    help=f"weight precision, where the alias publishes a choice. "
                         f"Per model: {quantization_help()}. 'none' means whichever "
                         f"unquantized build that model publishes (bf16 or fp16). "
-                        # source: ultra-qwen3-precision-c15.json#qwen3_1.7B_4bit_c15,qwen3_1.7B_8bit_c15,qwen3_0.6B_4bit_c15,qwen3_0.6B_8bit_c15;ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30
+                        # source: m2-ultra-qwen3-precision-c15.json#qwen3_1.7B_4bit_c15,qwen3_1.7B_8bit_c15,qwen3_0.6B_4bit_c15,qwen3_0.6B_8bit_c15;m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30
                         f"The defaults are measured on the 20-file corpus. qwen3-asr: "
                         f"8bit is the most accurate rung on both sizes; 4bit costs "
                         f"1.2 points on 1.7B and 2.8 on 0.6B. "
                         f"voxtral-v1: 8bit ties bf16; 3B at 4bit costs 8 points. "
-                        # source: ultra-voxtral-precision-default.json#vox_default_c30b128_kv8,vox_w8bit_c30b128_kv8,vox_wfp16_c30b128_kv8
+                        # source: m2-ultra-voxtral-precision-default.json#vox_default_c30b128_kv8,vox_w8bit_c30b128_kv8,vox_wfp16_c30b128_kv8
                         f"voxtral: fp16 ties 8bit and both beat 4bit by 0.6 to 0.7 "
                         f"points; 8bit is converted on first use. Default: chosen "
                         f"by memory, as for --size. An unpublished "

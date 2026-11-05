@@ -1,5 +1,5 @@
 {
- "group": "ultra-qwen3-precision-c15",
+ "group": "m2-ultra-qwen3-precision-c15",
  "question": "qwen3-asr precision ladder at 15s windows, the default since 2026-10-27 (same flags as the 30s ladder)",
  "docs": [
   "docs/benchmarks/engines/qwen3-asr.md"

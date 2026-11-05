@@ -4,7 +4,7 @@
 each conditioned on the last one's text and timestamps. That is correct for full
 Whisper and wrong for distil models, which keep 2 decoder layers instead of 32 and
 cannot maintain state across windows. kotoba-whisper measured 93.83% coverage CER
-through the sequential driver (mean of two runs; source: ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2)
+through the sequential driver (mean of two runs; source: m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2)
 versus 26.15% through transformers' *chunked* driver, on identical weights, over the
 5 Japanese files of the 7-file subset (docs/benchmarks/engines/kotoba.md). (source:
 ultra-kotoba-engines.json#k20_hf22_c10_r1, its rows of those 5 files.)

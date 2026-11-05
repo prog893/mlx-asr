@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-prompt",
+ "group": "m2-ultra-voxtral-prompt",
  "question": "Voxtral prompt content and language over the 20-file corpus at 30s / batch 32 (the arms the sweep runs with no topic or term text)",
  "docs": [
   "docs/benchmarks/prompt.md"

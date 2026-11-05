@@ -28,21 +28,21 @@ from .models import Model, UnknownQuantization, families, resolve_family
 # its last entry always fits, since the batch sizing falls back to 1 for it.
 PRIORITY: dict[str, list[tuple[str, str, float | None]]] = {
     # fp16 ties 8bit (+0.11, CI [-0.01, +0.25]) and both beat 4bit (-0.60 and -0.71)
-    # at 30s / B128. source: ultra-voxtral-precision-default.json#vox_default_c30b128_kv8,vox_w8bit_c30b128_kv8,vox_wfp16_c30b128_kv8
+    # at 30s / B128. source: m2-ultra-voxtral-precision-default.json#vox_default_c30b128_kv8,vox_w8bit_c30b128_kv8,vox_wfp16_c30b128_kv8
     "voxtral": [("", "fp16", None), ("", "8bit", None), ("", "4bit", None)],
     # 24B beats 3B by 8.97 points; within a size bf16 ties 8bit; 24B 4bit is worse on
     # English (+1.03, CI [+0.06, +2.87]), 3B 4bit on Japanese (+8.18).
-    # source: ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30,24b_4bit_c30,24b_8bit_c30,24b_bf16_c30
+    # source: m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30,24b_4bit_c30,24b_8bit_c30,24b_bf16_c30
     "voxtral-v1": [("24B", "bf16", 50.08), ("24B", "8bit", 27.92), ("24B", "4bit", 16.27),
                    ("3B", "bf16", 10.91), ("3B", "8bit", 7.28), ("3B", "4bit", 5.25)],
     # large-v3 ties turbo (6 runs each); then by accuracy, medium tying small.
-    # source: ultra-whisper-sizes.json#whisper_tiny_libdef,whisper_base_libdef,whisper_small_nocond,whisper_medium_nocond,whisper_large-v2_nocond,whisper_large-v3_nocond,whisper_turbo_nocond
+    # source: m2-ultra-whisper-sizes.json#whisper_tiny_libdef,whisper_base_libdef,whisper_small_nocond,whisper_medium_nocond,whisper_large-v2_nocond,whisper_large-v3_nocond,whisper_turbo_nocond
     "whisper": [("large-v3", "", 7.00), ("turbo", "", 5.53), ("large-v2", "", 6.97),
                 ("medium", "", 5.43), ("small", "", 4.37), ("base", "", 4.07),
                 ("tiny", "", 3.98)],
     # At 15s 8bit is best on both sizes; 1.7B 5bit ties it, 1.7B bf16 ties 6bit; the
     # 0.6B is behind every 1.7B rung; 0.6B bf16 ties 8bit.
-    # source: ultra-qwen3-precision-c15.json#qwen3_0.6B_4bit_c15,qwen3_0.6B_5bit_c15,qwen3_0.6B_6bit_c15,qwen3_0.6B_8bit_c15,qwen3_0.6B_bf16_c15,qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,qwen3_1.7B_6bit_c15,qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15
+    # source: m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_4bit_c15,qwen3_0.6B_5bit_c15,qwen3_0.6B_6bit_c15,qwen3_0.6B_8bit_c15,qwen3_0.6B_bf16_c15,qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,qwen3_1.7B_6bit_c15,qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15
     "qwen3-asr": [("1.7B", "8bit", 3.74), ("1.7B", "5bit", 3.09), ("1.7B", "bf16", 5.35),
                   ("1.7B", "6bit", 3.31), ("1.7B", "4bit", 2.88), ("0.6B", "bf16", 2.63),
                   ("0.6B", "8bit", 2.07), ("0.6B", "6bit", 1.92), ("0.6B", "5bit", 1.85),

@@ -1,6 +1,6 @@
 {
- "group": "ultra-voxtral-precision-default",
- "question": "Voxtral weight precision at the Ultra default 30s / batch 128 / kv8: fp16 and 8-bit, against the three 4-bit default runs",
+ "group": "m2-ultra-voxtral-precision-default",
+ "question": "Voxtral weight precision at the M2 Ultra default 30s / batch 128 / kv8: fp16 and 8-bit, against the three 4-bit default runs",
  "docs": [
   "docs/benchmarks/quantization.md",
   "docs/benchmarks/engines/voxtral.md"

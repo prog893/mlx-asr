@@ -1,10 +1,10 @@
 {
- "group": "ultra-whisper-runners",
+ "group": "m2-ultra-whisper-runners",
  "question": "Competing Whisper runners on the 935s clip, 3 runs each: mlx-whisper turbo and large-v3, whisper.cpp turbo fp16 (-t 8, -t 4), turbo q5_0 and large-v3 q5_0 (-t 4), faster-whisper turbo int8 batched 16, and turbo and large-v3 int8 unbatched (CPU)",
  "docs": [
   "docs/benchmarks/engines/whisper.md"
  ],
- "note": "The faster-whisper runs without batching (rn_fw_*_b1_*) ran under time -p for their CPU share; the totals are in ultra-whisper-runners-cpu.",
+ "note": "The faster-whisper runs without batching (rn_fw_*_b1_*) ran under time -p for their CPU share; the totals are in m2-ultra-whisper-runners-cpu.",
  "runs": [
   {
    "run": "rn_cpp_turbo_fp16_t4_r1",

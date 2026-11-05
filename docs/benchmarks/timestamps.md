@@ -14,7 +14,7 @@ subtitle output, with the cue knobs exposed so you can fit them to your own refe
 | `--gap-seconds` | `1.2` | not the sweep optimum; costs 5.4 break-F1 points, see [cue-layout.md](cue-layout.md) |
 | `--max-chars` | `28` | paired with `--gap-seconds 1.2`, see [cue-layout.md](cue-layout.md) |
 
-Source: [ultra-timestamps.json](../../benchmarks/results/2026-10/ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`, `ts_default_r1#engine whisper-turbo-nocond`, `ts_default_r2#engine whisper-turbo-nocond`, `ts_default_r3#engine whisper-turbo-nocond`
+Source: [m2-ultra-timestamps.json](../../benchmarks/results/2026-10/m2-ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`, `ts_default_r1#engine whisper-turbo-nocond`, `ts_default_r2#engine whisper-turbo-nocond`, `ts_default_r3#engine whisper-turbo-nocond`
 
 **Setup:** the 7 [timed references](reference/corpus.md#timed-references) (six subtitled corpus files
 and the single clip), on a machine not recorded with this table, scored by drift and cue-break
@@ -49,7 +49,7 @@ excluded.
 | break F1 | 37.7% | **56.9%** |
 | mid-phrase splits | 58.3% | **41.4%** |
 
-Source: [ultra-timestamps.json](../../benchmarks/results/2026-10/ultra-timestamps.json) runs `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`, `ts_default_r1#engine whisper-turbo-nocond`, `ts_default_r2#engine whisper-turbo-nocond`, `ts_default_r3#engine whisper-turbo-nocond`
+Source: [m2-ultra-timestamps.json](../../benchmarks/results/2026-10/m2-ultra-timestamps.json) runs `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`, `ts_default_r1#engine whisper-turbo-nocond`, `ts_default_r2#engine whisper-turbo-nocond`, `ts_default_r3#engine whisper-turbo-nocond`
 
 Per-file, Voxtral's p95 error is lower on **6 of 7 files**, and 2.3x lower at the median.[^t1]
 Whisper's break F1 is higher on **6 of 7**, the exception being the prepared-narration
@@ -153,5 +153,5 @@ override per-file detection.
 [determinism.md](reference/determinism.md) for why Whisper needs a distribution.
 [metrics.md](reference/metrics.md) for `eval_timing` alongside the text metrics.
 
-[^t1]: [ultra-timestamps.json](../../benchmarks/results/2026-10/ultra-timestamps.json) runs `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`, `ts_default_r1#engine whisper-turbo-nocond`, `ts_default_r2#engine whisper-turbo-nocond`, `ts_default_r3#engine whisper-turbo-nocond`
-[^t2]: [ultra-timestamps.json](../../benchmarks/results/2026-10/ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`
+[^t1]: [m2-ultra-timestamps.json](../../benchmarks/results/2026-10/m2-ultra-timestamps.json) runs `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`, `ts_default_r1#engine whisper-turbo-nocond`, `ts_default_r2#engine whisper-turbo-nocond`, `ts_default_r3#engine whisper-turbo-nocond`
+[^t2]: [m2-ultra-timestamps.json](../../benchmarks/results/2026-10/m2-ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`
