@@ -519,8 +519,8 @@ def main():
         old, _, new = spec.partition("=")
         for run in group["runs"]:
             run["run"] = run["run"].replace(old, new)
-    check_unique_keys(group["runs"])
     group = scrub(group)
+    check_unique_keys(group["runs"])     # after scrubbing, which can rewrite names too
     if a.revisions:
         revisions = json.load(open(a.revisions))
         for run in group["runs"]:

@@ -126,9 +126,9 @@ def main():
         old, _, new = spec.partition("=")
         for run in runs:
             run["run"] = run["run"].replace(old, new)
-    check_unique_keys(runs)
     group = scrub({"group": a.group, "question": a.question, "docs": a.doc, "note": a.note,
                    "runs": runs})
+    check_unique_keys(group["runs"])     # after scrubbing, which can rewrite names too
     text = json.dumps(group, indent=1, ensure_ascii=False)
     if scrub.leaks(text):
         print(f"REFUSED {a.group}: {scrub.leaks(text)} private strings survived", file=sys.stderr)
