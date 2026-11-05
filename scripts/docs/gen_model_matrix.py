@@ -43,7 +43,7 @@ PEAK = {
     # whisper. These barely track the download: tiny downloads 0.07GB and peaks at
     # 3.98, because the working set is dominated by the 30s mel window and decoder
     # activations rather than by weights.
-    # source: ultra-whisper-sizes.json#whisper_tiny_libdef,whisper_base_libdef,whisper_small_nocond,whisper_medium_nocond,whisper_large-v2_nocond,whisper_large-v3_nocond,whisper_turbo_nocond
+    # source: m2-ultra-whisper-sizes.json#whisper_tiny_libdef,whisper_base_libdef,whisper_small_nocond,whisper_medium_nocond,whisper_large-v2_nocond,whisper_large-v3_nocond,whisper_turbo_nocond
     ("whisper-tiny", None): "3.98GB",
     ("whisper-base", None): "4.07GB",
     ("whisper-small", None): "4.37GB",
@@ -54,7 +54,7 @@ PEAK = {
     # qwen3-asr, 15s windows (the shipped window). large-v2 and large-v3 land within 0.03GB of each other,
     # and several rungs here are close too: the window and the weights set the working
     # set, and the two checkpoints are the same size.
-    # source: ultra-qwen3-precision-c15.json#qwen3_0.6B_4bit_c15,qwen3_0.6B_5bit_c15,qwen3_0.6B_6bit_c15,qwen3_0.6B_8bit_c15,qwen3_0.6B_bf16_c15,qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,qwen3_1.7B_6bit_c15,qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15
+    # source: m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_4bit_c15,qwen3_0.6B_5bit_c15,qwen3_0.6B_6bit_c15,qwen3_0.6B_8bit_c15,qwen3_0.6B_bf16_c15,qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,qwen3_1.7B_6bit_c15,qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15
     ("qwen3-asr", "4bit"): "2.88GB",
     ("qwen3-asr", "5bit"): "3.09GB",
     ("qwen3-asr", "6bit"): "3.31GB",
@@ -85,13 +85,13 @@ PEAK = {
     # every run after. 2.38GB is what a user sees for all but the first decode, so it is
     # what belongs in a table about whether a model fits.
     # source: ultra-kotoba-conversion.json#pm_kotoba_cold_r112,pm_kotoba_warm_r112
-    # source: ultra-peak-memory-kotoba.json (one run per corpus file, max over the runs)
+    # source: m2-ultra-peak-memory-kotoba.json (one run per corpus file, max over the runs)
     ("kotoba", None): "2.38GB",
     # voxtral-v1, 30s windows, one window at a time. Same basis (max over the 20 files,
     # load included) from run_qwen3.py, which resets the counter before the load as the
     # CLI does before run().
     # Flat across the corpus, like qwen3-asr, because the window fixes the working set.
-    # source: ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30,24b_4bit_c30,24b_8bit_c30,24b_bf16_c30
+    # source: m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30,24b_4bit_c30,24b_8bit_c30,24b_bf16_c30
     ("voxtral-v1-3b", "4bit"): "5.25GB",
     ("voxtral-v1-3b", "8bit"): "7.28GB",
     ("voxtral-v1-3b", "bf16"): "10.91GB",
@@ -136,16 +136,16 @@ _KOTOBA_RUNS = (
 SOURCE = {
     "voxtral": "Source: " + _src("ultra-voxtral-precision", "vox_w4bit_c60b16_kv8",
                                  "vox_w8bit_c60b16_kv8", "vox_wfp16_c60b16_kv8") + _HUB,
-    "voxtral-v1": "Source: " + _src("ultra-voxtral-v1", "3b_4bit_c30", "3b_8bit_c30",
+    "voxtral-v1": "Source: " + _src("m2-ultra-voxtral-v1", "3b_4bit_c30", "3b_8bit_c30",
                                     "3b_bf16_c30", "24b_4bit_c30", "24b_8bit_c30",
                                     "24b_bf16_c30") + _HUB,
-    "whisper": "Source: " + _src("ultra-whisper-sizes", "whisper_tiny_libdef",
+    "whisper": "Source: " + _src("m2-ultra-whisper-sizes", "whisper_tiny_libdef",
                                  "whisper_base_libdef", "whisper_small_nocond",
                                  "whisper_medium_nocond", "whisper_large-v2_nocond",
                                  "whisper_large-v3_nocond", "whisper_turbo_nocond") + _HUB,
-    "kotoba": "Source: " + _src("ultra-peak-memory-kotoba", *_KOTOBA_RUNS)
+    "kotoba": "Source: " + _src("m2-ultra-peak-memory-kotoba", *_KOTOBA_RUNS)
               + " (peak, maximum over the files, at the 10s window shipped then; download is the hub repo size)",
-    "qwen3-asr": "Source: " + _src("ultra-qwen3-precision-c15", *(
+    "qwen3-asr": "Source: " + _src("m2-ultra-qwen3-precision-c15", *(
         f"qwen3_{z}_{q}_c15" for z in ("0.6B", "1.7B")
         for q in ("4bit", "5bit", "6bit", "8bit", "bf16")))
                  + " (peak at the shipped 15s window; download is the hub repo size)",

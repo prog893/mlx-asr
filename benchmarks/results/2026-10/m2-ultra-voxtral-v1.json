@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-v1",
+ "group": "m2-ultra-voxtral-v1",
  "question": "voxtral-v1 3B and 24B at 4-bit, 8-bit and bf16 over the 20-file corpus at 30s windows, plus 3B bf16 with auto language",
  "docs": [
   "docs/benchmarks/engines/voxtral-v1.md",

@@ -48,7 +48,7 @@ SWEEPS = {
             ("mean", "| mean minus Voxtral, 95% t-interval (points) |",
              ("-0.92", "-3.94"), ("[-1.46, -0.37]", "[-4.60, -3.28]")),
         ],
-        "source": ("ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
+        "source": ("m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
                    "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
                    "whisper_turbo_nocond_r6;ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8"),
         "panels": [{"series": [0, 1], "zero_line": True}], "width": 7.6,

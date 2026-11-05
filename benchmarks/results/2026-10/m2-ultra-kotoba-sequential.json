@@ -1,5 +1,5 @@
 {
- "group": "ultra-kotoba-sequential",
+ "group": "m2-ultra-kotoba-sequential",
  "question": "kotoba-whisper v2.0 through mlx-whisper's sequential driver on the 5 Japanese files of the 7-file subset and on the 935s clip: the kaiinui npz port and the mlx_asr conversion, condition on previous text on and off, 3 runs each",
  "docs": [
   "docs/benchmarks/engines/kotoba.md",

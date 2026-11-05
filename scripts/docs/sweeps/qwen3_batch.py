@@ -44,7 +44,7 @@ SWEEPS = {
         # The first two rows are the 883s file's rows of the batch 1 and batch 4 arms.
         "source": "ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1#batch 1,"
                   "qwen3batch_1.7B_8bit_c15_b4#batch 4;"
-                  "ultra-qwen3-batch-budget.json#qwen3batch_wholefilebudget_b4_q883#batch 4",
+                  "m2-ultra-qwen3-batch-budget.json#qwen3batch_wholefilebudget_b4_q883#batch 4",
         "panels": [
             {"series": [0], "ylabel": "CER %", "title": "accuracy", "zero": True},
             {"series": [1], "ylabel": "x realtime", "title": "speed", "zero": True},

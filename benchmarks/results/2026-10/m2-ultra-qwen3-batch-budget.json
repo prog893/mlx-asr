@@ -1,5 +1,5 @@
 {
- "group": "ultra-qwen3-batch-budget",
+ "group": "m2-ultra-qwen3-batch-budget",
  "question": "qwen3-asr 1.7B 8-bit at batch 4 and 15s windows with the library's file-wide token budget (no per-group cap), on the 883s file",
  "docs": [
   "docs/benchmarks/qwen3-batch.md"

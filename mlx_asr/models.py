@@ -11,16 +11,16 @@ docs/benchmarks/engines.md):
                 hardware. Takes no language token. The fastest multilingual
                 engine measured here that writes subtitles, 23.9x realtime at its
                 fp16 default on the M2 Ultra (source:
-                ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3);
+                m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3);
                 only the Japanese-only parakeet and reazon are faster (source:
                 ultra-picker-speed.json#pk_parakeet_default_s1,pk_reazon_fp32_default_s1). Per-token
                 timestamps, so timing drift is the best measured here: worst slope
                 25 ms/min across 6 timed files, against Whisper's 37
-                (source: ultra-timestamps.json#ts_default_r1).
+                (source: m2-ultra-timestamps.json#ts_default_r1).
   whisper       MLX (mlx-whisper), Whisper's *sequential* long-form algorithm.
                 Its temperature fallback samples, so it is NOT deterministic;
                 repeat runs of one config span 0.8 (turbo) to 1.8 (large-v3) points
-                of CER over 6 runs (source: ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6). Needs
+                of CER over 6 runs (source: m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6). Needs
                 `condition_on_previous_text=False` on long audio or a repetition
                 loop can feed itself across windows (worth up to 19 points, source:
                 ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;
@@ -34,7 +34,7 @@ docs/benchmarks/engines.md):
                 cannot carry state across windows: the sequential algorithm costs
                 these weights 63.9 points against the chunked driver at 10s on the
                 same 5 Japanese files
-                (source: ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;
+                (source: m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;
                 ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3).
                 Japanese only. The weights are a
                 third-party MLX conversion, since the authors publish torch only.
@@ -75,7 +75,7 @@ four choices, and the second layer is where "same model, different tradeoff" liv
 
 The two second-layer flags are not equivalent, and the difference is measured.
 **Size is a large accuracy lever** (36.5 CER points from `tiny` to `large-v3`, source:
-ultra-whisper-sizes.json#whisper_tiny_libdef,whisper_tiny_libdef_r2,whisper_tiny_libdef_r3,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6), so each
+m2-ultra-whisper-sizes.json#whisper_tiny_libdef,whisper_tiny_libdef_r2,whisper_tiny_libdef_r3,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6), so each
 family's default is chosen on evidence: `whisper` defaults to `large-v3`, which ties
 `turbo` on the corpus and is kept as the default because a 20-file corpus cannot rule
 out where the smaller decoder loses.
@@ -313,7 +313,7 @@ REGISTRY: dict[str, Model] = {
             # fp16 build with the recipe of its saved runs (convert.REALTIME_RECIPES).
             # At 30s / B128 it beats 4bit by 0.71 points (CI [+0.31, +1.27]) at the same
             # speed, and ties fp16. Which precision runs is chosen by memory
-            # (variants.py). source: ultra-voxtral-precision-default.json#vox_default_c30b128_kv8,vox_w8bit_c30b128_kv8,vox_wfp16_c30b128_kv8
+            # (variants.py). source: m2-ultra-voxtral-precision-default.json#vox_default_c30b128_kv8,vox_w8bit_c30b128_kv8,vox_wfp16_c30b128_kv8
             quant_repos={
                 "4bit": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
                 "8bit": converted_id("mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16", "8bit"),
@@ -335,7 +335,7 @@ REGISTRY: dict[str, Model] = {
                 "then pass --model ./voxtral-nvfp4. See docs/benchmarks/quantization.md."
             ),
             # source: ultra-voxtral-precision.json#vox_wfp16_c60b16_kv8;
-            # ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3
+            # m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3
             notes="fastest multilingual engine measured here that writes subtitles; greedy so "
                   "reproducible; no language token; best timestamp stability. Precision "
                   "is chosen by memory: fp16 where it fits, else 8bit (converted on "
@@ -353,7 +353,7 @@ REGISTRY: dict[str, Model] = {
             # 30s, measured on the 7-file subset at 15/30/60/120s. Japanese is best at
             # 30s and collapses above 60s (44.27 / 45.97 / 57.54%), for the same reason
             # source: ultra-voxtral-v1-window.json#sweep_3b_bf16_c15,sweep_3b_bf16_c60,sweep_3b_bf16_c120;
-            # ultra-voxtral-v1.json#3b_bf16_c30 (30s: its rows of the 7-file subset)
+            # m2-ultra-voxtral-v1.json#3b_bf16_c30 (30s: its rows of the 7-file subset)
             # as on qwen3-asr: a longer window gives a repetition loop a bigger budget.
             # English prefers 60s by about a point (20.72 vs 21.70%, two files), which
             # is not worth the Japanese cost. See docs/benchmarks/engines/voxtral-v1.md.
@@ -364,7 +364,7 @@ REGISTRY: dict[str, Model] = {
             #
             # 8bit is the default, measured on the 20-file corpus: it ties bf16
             # (36.41 vs 36.84% Japanese, 17.86 vs 17.77% English, neither resolvable)
-            # source: ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30
+            # source: m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30
             # at 7.28GB of peak memory against 10.91GB. 4bit is NOT near-parity here:
             # +8.18 points on Japanese against 8bit, CI [+4.87, +11.99], 15 of 16
             # files worse, so it is offered for memory-bound machines only.
@@ -396,7 +396,7 @@ REGISTRY: dict[str, Model] = {
             no_speech_timestamps=True,
             # 8bit is the default, measured on the 20-file corpus. Against bf16 it is
             # +0.46 on Japanese, CI [-0.27, +1.60], and an exact tie on English, at
-            # source: ultra-voxtral-v1.json#24b_4bit_c30,24b_8bit_c30,24b_bf16_c30
+            # source: m2-ultra-voxtral-v1.json#24b_4bit_c30,24b_8bit_c30,24b_bf16_c30
             # 27.92GB of peak memory against 50.08GB. bf16 is ahead on 12 of 16 Japanese
             # files by small margins, so it is the choice when the memory is there.
             # 4bit costs a point on English (-1.03 in 8bit's favour, CI excludes zero).
@@ -422,7 +422,7 @@ REGISTRY: dict[str, Model] = {
             label="Whisper large-v3-turbo",
             weights_gb=1.6,
             opts={"condition_on_previous_text": False},
-            # source: ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6
+            # source: m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6
             # source: ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;
             # ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond
             notes="the speed option: ties large-v3 on the corpus at 1.8x its speed "
@@ -526,7 +526,7 @@ REGISTRY: dict[str, Model] = {
             # clean narration in the earlier sweep 20s won, so sweep it on your
             # own material.
             opts={"chunk_length_s": 15.0},
-            # source: ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3
+            # source: m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3
             notes="Japanese only. Converted to MLX on first use, since the "
                   "authors publish transformers weights only. Needs the CHUNKED "
                   "driver: Whisper's sequential algorithm costs these weights 67 "
@@ -564,7 +564,7 @@ REGISTRY: dict[str, Model] = {
             # resolved worse (paired 1.16, 0.47 and 0.52 points, every CI clear of
             # zero); 5bit ties. bf16 also costs 1.18x the wall clock (19.5x vs
             # 23.0x) and 1.43x the peak memory (5.35 vs 3.74GB).
-            # source: ultra-qwen3-precision-c15.json#qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,qwen3_1.7B_6bit_c15,qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15
+            # source: m2-ultra-qwen3-precision-c15.json#qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,qwen3_1.7B_6bit_c15,qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15
             # The ladder is exposed rather than hidden because a precision is a
             # size/quality knob like a Whisper size, and 4bit at 1.61GB is a real  # not-measured: 1.61GB is a hub download size
             # choice on a small machine. See docs/benchmarks/quantization.md.
@@ -594,15 +594,15 @@ REGISTRY: dict[str, Model] = {
             # size. On the 20-file corpus 15s ties 30s for this size too (paired
             # -0.56 points, CI [-1.47, +0.32]) at 36.4x against 32.7x and 2.07GB
             # against 2.36GB.
-            # source: ultra-qwen3-precision-c15.json#qwen3_0.6B_8bit_c15;ultra-qwen3-precision.json#qwen3_0.6B_8bit_c30
+            # source: m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_8bit_c15;m2-ultra-qwen3-precision.json#qwen3_0.6B_8bit_c30
             opts={"chunk_length_s": 15.0},
             no_speech_timestamps=True,
             # 8-bit, as on the 1.7B. At 15s windows bf16 ties 8-bit on accuracy (22.31% against 22.31%,
             # paired -0.01 points, CI [-0.60, +0.56]) but runs at 30.4x against 36.4x,
-            # source: ultra-qwen3-precision-c15.json#qwen3_0.6B_bf16_c15,qwen3_0.6B_8bit_c15
+            # source: m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_bf16_c15,qwen3_0.6B_8bit_c15
             # which would give up the reason this alias ships: its speed, ahead of
             # Voxtral's 23.9x (fp16 on the M2 Ultra) as a multilingual engine.
-            # source: ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3
+            # source: m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3
             quant_repos={
                 "4bit": "mlx-community/Qwen3-ASR-0.6B-4bit",
                 "5bit": "mlx-community/Qwen3-ASR-0.6B-5bit",
@@ -610,11 +610,11 @@ REGISTRY: dict[str, Model] = {
                 "8bit": "mlx-community/Qwen3-ASR-0.6B-8bit",
                 "bf16": "mlx-community/Qwen3-ASR-0.6B-bf16",
             },
-            # source: ultra-qwen3-precision-c15.json#qwen3_0.6B_bf16_c15,qwen3_0.6B_8bit_c15;
-            # ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3
+            # source: m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_bf16_c15,qwen3_0.6B_8bit_c15;
+            # m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3
             notes="the speed option: 30.4x at bf16, which ties 8bit and so runs "
                   "where it fits (36.4x at 8bit), against voxtral's 23.9x on the "
-                  # source: ultra-qwen3-precision-c15.json#qwen3_0.6B_bf16_c15;ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8
+                  # source: m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_bf16_c15;m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8
                   "M2 Ultra, and 7.1 points behind it on Japanese. Same caveats as 1.7B",
         ),
         Model(
@@ -671,13 +671,13 @@ DEFAULT_ALIAS = "voxtral"
 #   whisper    `large-v3`. At the shipped config it TIES turbo on the 20-file corpus
 #              (14.51% against 14.17% JP, 18.59% against 18.65% EN, both inside
 #              turbo's own rerun spread), so the measurement cannot pick between them.
-#              source: ultra-whisper-sizes.json#whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6,whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6
+#              source: m2-ultra-whisper-sizes.json#whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6,whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6
 #              The tie is broken toward capacity rather than speed: the corpus is 20
 #              files from a few sources, and turbo's 4-layer decoder is where an
 #              untested language or recording condition would show a loss. Turbo is
 #              the speed option (1.8x, 1.5GB less memory). An older 7-file table had
 #              turbo ahead; it measured large-v3 at library defaults and is superseded.
-#              source: ultra-whisper-sizes.json#whisper_large-v3_nocond,whisper_turbo_nocond (and their _r2.._r6)
+#              source: m2-ultra-whisper-sizes.json#whisper_large-v3_nocond,whisper_turbo_nocond (and their _r2.._r6)
 #   qwen3-asr  `1.7B`, which beats 0.6B by 3.7 points on the 20-file corpus (18.62%
 #              against 22.31%, 15s windows). The 0.6B is the speed option, not the default.
 #              source: ultra-picker-speed.json#pk_qwen3_1.7B_8bit_c15_s1,pk_qwen3_0.6B_8bit_c15_s1
@@ -786,7 +786,7 @@ def infer_backend(repo: str) -> str:
     # distil derivatives keep few decoder layers and need the chunked driver;
     # the sequential one costs kotoba 63.9 points on the same 5 Japanese files
     # (docs/benchmarks/engines/kotoba.md)
-    # source: ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3
+    # source: m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3
     if "kotoba" in low or "distil" in low:
         return "mlx-chunked"
     if "whisper" in low:

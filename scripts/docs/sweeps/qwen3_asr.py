@@ -77,7 +77,7 @@ SWEEPS = {
         "chosen": "1.7B\n8bit", "chosen_series": "1.7B",
         "chosen_label": "default (8bit)",
         "label_dy": -16,
-        "source": "ultra-qwen3-precision-c15.json#qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,"
+        "source": "m2-ultra-qwen3-precision-c15.json#qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,"
                   "qwen3_1.7B_6bit_c15,qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15,"
                   "qwen3_0.6B_4bit_c15,qwen3_0.6B_5bit_c15,qwen3_0.6B_6bit_c15,"
                   "qwen3_0.6B_8bit_c15,qwen3_0.6B_bf16_c15",
@@ -133,11 +133,11 @@ SWEEPS = {
             ("qwen3-asr\n0.6B", "| qwen3-asr-small (0.6B) |",
              ("22.31%", "22.95%", "36.4x", "2.07")),
         ],
-        "source": "ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
+        "source": "m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
                   "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
-                  "whisper_turbo_nocond_r6;ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,"
+                  "whisper_turbo_nocond_r6;m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,"
                   "vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;"
-                  "ultra-qwen3-precision-c15.json#qwen3_1.7B_8bit_c15,qwen3_0.6B_8bit_c15",
+                  "m2-ultra-qwen3-precision-c15.json#qwen3_1.7B_8bit_c15,qwen3_0.6B_8bit_c15",
     },
     # Markers only: three budget configurations of the same engine on one file.
     "qwen3-asr-truncation": {

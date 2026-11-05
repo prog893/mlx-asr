@@ -1,5 +1,5 @@
 {
- "group": "ultra-cue-layout",
+ "group": "m2-ultra-cue-layout",
  "question": "Cue layout grid (gap, max chars, max duration) over the 7 timed files, from one Voxtral decode",
  "docs": [
   "docs/benchmarks/cue-layout.md"

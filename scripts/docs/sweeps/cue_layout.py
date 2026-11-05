@@ -21,7 +21,7 @@ SWEEPS = {
             (1.0, "| 1.0 |", ("36.4%", "59.4%", "1.02")),
             (1.2, "| 1.2 |", ("36.0%", "58.2%", "0.95")),
         ],
-        "source": "ultra-cue-layout.json#cue_sweep_union",
+        "source": "m2-ultra-cue-layout.json#cue_sweep_union",
         "chosen": 1.2, "chosen_series": "break F1",
         "chosen_label": "default gap_s",
         "panels": [
@@ -54,7 +54,7 @@ SWEEPS = {
             ("c47ad127bc83", "| c47ad127bc83 |", ("41.9%", "48.8%")),
             ("b3432b40c079", "| b3432b40c079 |", ("38.8%", "43.6%")),
         ],
-        "source": "ultra-cue-layout.json#cue_sweep_union",
+        "source": "m2-ultra-cue-layout.json#cue_sweep_union",
         "chosen": None,
         "width": 7.6,
         "height": 3.6,
@@ -77,7 +77,7 @@ SWEEPS = {
             ("0.7/32", "`0.7/32` (earlier published config)",
              ("43.1%", "57.4%", "258", "976")),
         ],
-        "source": ("ultra-timestamps.json#ts_0732#engine voxtral,ts_default_r1#engine voxtral,"
+        "source": ("m2-ultra-timestamps.json#ts_0732#engine voxtral,ts_default_r1#engine voxtral,"
                    "ts_default_r2#engine voxtral,ts_default_r3#engine voxtral"),
         "chosen": "1.2/28", "chosen_series": "break F1",
         "panels": [

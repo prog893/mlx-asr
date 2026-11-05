@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-clip-recheck",
+ "group": "m2-ultra-voxtral-clip-recheck",
  "question": "Model-free rechecks on the 935s clip: 30s against 60s chunks with kv8 on both sides, and the auto-gain no-op by cmp exit status and SHA-256",
  "docs": [
   "docs/benchmarks/chunking.md",

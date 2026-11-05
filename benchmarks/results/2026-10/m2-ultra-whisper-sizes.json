@@ -1,5 +1,5 @@
 {
- "group": "ultra-whisper-sizes",
+ "group": "m2-ultra-whisper-sizes",
  "question": "Every Whisper size at its default config, repeated to measure run-to-run spread (Whisper samples on fallback)",
  "docs": [
   "docs/benchmarks/engines/whisper.md"

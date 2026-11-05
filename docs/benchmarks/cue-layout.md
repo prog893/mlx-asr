@@ -21,7 +21,7 @@ other engines emit their own segments, so `--gap-seconds`, `--max-chars` and
 | `--max-chars` (`max_chars`) | 28 | the best value in 28-72 at the default gap (37.43% at 28 against 33.76% at 72, a 3.7-point spread); up to 5.2 points elsewhere in the grid |
 | `--max-dur-seconds` (`max_dur_s`) | 7.0 | the best value at the default pair (37.43% at 7s against 35.52% to 35.63% at 4s and 5s); up to 5.1 points elsewhere in the grid |
 
-Source: [ultra-cue-layout.json](../../benchmarks/results/2026-10/ultra-cue-layout.json) runs `cue_sweep_union` (grid points, mean break F1 over the 7 timed files); [ultra-timestamps.json](../../benchmarks/results/2026-10/ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`
+Source: [m2-ultra-cue-layout.json](../../benchmarks/results/2026-10/m2-ultra-cue-layout.json) runs `cue_sweep_union` (grid points, mean break F1 over the 7 timed files); [m2-ultra-timestamps.json](../../benchmarks/results/2026-10/m2-ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`
 
 **Setup:** 7 files with author-written timed subtitle references (one prepared-narration
 clip and six subtitled corpus files, all by one editor; see [timed references](reference/corpus.md#timed-references)), scored by
@@ -54,7 +54,7 @@ the table).[^c1] The last table row is the default pair, which uses
 | 1.2 | 36.0% | 58.2% | 0.95 |
 | 1.2 / chars 28 (**default**) | 37.4% | 58.1% | 1.04 |
 
-Source: [ultra-cue-layout.json](../../benchmarks/results/2026-10/ultra-cue-layout.json) runs `cue_sweep_union` (grid points at max_dur_s 7.0, mean over the 7 timed files)
+Source: [m2-ultra-cue-layout.json](../../benchmarks/results/2026-10/m2-ultra-cue-layout.json) runs `cue_sweep_union` (grid points at max_dur_s 7.0, mean over the 7 timed files)
 
 Per file, the default pair against `0.7/32`, the earlier published config:
 
@@ -75,7 +75,7 @@ Per file, the default pair against `0.7/32`, the earlier published config:
 | c47ad127bc83 | 41.9% | **48.8%** |
 | b3432b40c079 | 38.8% | **43.6%** |
 
-Source: [ultra-cue-layout.json](../../benchmarks/results/2026-10/ultra-cue-layout.json) runs `cue_sweep_union` (grid points 1.2/28 and 0.7/32 at max_dur_s 7.0)
+Source: [m2-ultra-cue-layout.json](../../benchmarks/results/2026-10/m2-ultra-cue-layout.json) runs `cue_sweep_union` (grid points 1.2/28 and 0.7/32 at max_dur_s 7.0)
 
 **The one file where the default pair wins is the one it was fitted to.** It loses on all
 six held-out files. That is overfitting visible in a single table, and it is the clearest
@@ -113,7 +113,7 @@ Measured end to end on the same audio with everything else fixed:
 | **`1.2/28` (default)** | **37.7%** | 58.3% | 278 ms | 865 ms |
 | `0.7/32` (earlier published config) | 43.1% | 57.4% | 258 ms | 976 ms |
 
-Source: [ultra-timestamps.json](../../benchmarks/results/2026-10/ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`
+Source: [m2-ultra-timestamps.json](../../benchmarks/results/2026-10/m2-ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`
 
 So the default costs 5.4 break points,[^c2] and it is *better* on p95 drift, so the points are
 not bought with timing accuracy.
@@ -209,7 +209,7 @@ revisiting on the larger set. The rejection rests on n=1 data only.
 [timestamps.md](timestamps.md) for the drift half of timing, which these knobs move only
 through the written cues.
 
-[^c1]: [ultra-cue-layout.json](../../benchmarks/results/2026-10/ultra-cue-layout.json) runs `cue_sweep_union`
-[^c2]: [ultra-timestamps.json](../../benchmarks/results/2026-10/ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`
-[^c3]: [ultra-timestamps.json](../../benchmarks/results/2026-10/ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`; [ultra-cue-layout.json](../../benchmarks/results/2026-10/ultra-cue-layout.json) runs `cue_sweep_union`
-[^c4]: [ultra-derived-measures.json](../../benchmarks/results/2026-10/ultra-derived-measures.json) runs `derive_cues`
+[^c1]: [m2-ultra-cue-layout.json](../../benchmarks/results/2026-10/m2-ultra-cue-layout.json) runs `cue_sweep_union`
+[^c2]: [m2-ultra-timestamps.json](../../benchmarks/results/2026-10/m2-ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`
+[^c3]: [m2-ultra-timestamps.json](../../benchmarks/results/2026-10/m2-ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`; [m2-ultra-cue-layout.json](../../benchmarks/results/2026-10/m2-ultra-cue-layout.json) runs `cue_sweep_union`
+[^c4]: [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_cues`

@@ -79,7 +79,7 @@ Paired testing is stricter than the point estimates suggest:
 | 60s beats 30s | 1.35 | [+0.10, +2.86] | significant |
 | 60s beats 90s | 0.67 | [-0.33, +1.76] | **not supported** |
 
-Source: [ultra-voxtral-clip-recheck.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-recheck.json) runs `cmp_len_30v60_kv8` (30s at batch 32, 60s at batch 16, kv8 on both); [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_len_90v60` (60s and 90s at batch 16 with kv8)
+Source: [m2-ultra-voxtral-clip-recheck.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-recheck.json) runs `cmp_len_30v60_kv8` (30s at batch 32, 60s at batch 16, kv8 on both); [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_len_90v60` (60s and 90s at batch 16 with kv8)
 
 So on this clip **60s is the right choice because it is simultaneously the fastest of the <!-- not-measured: 60s is a chunk length setting -->
 long options and never measurably worse**, which is a weaker justification than "longer
@@ -660,9 +660,9 @@ length is not a free choice.
 [^k21]: [ultra-resolution-floor.json](../../benchmarks/results/2026-10/ultra-resolution-floor.json) runs `resolution_floor`
 [^k22]: [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_ov30_0v8`, `cmp_ov30_0v4`
 [^k23]: [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_ov60_0v8`
-[^k24]: [ultra-derived-measures.json](../../benchmarks/results/2026-10/ultra-derived-measures.json) runs `derive_cuts`
+[^k24]: [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_cuts`
 [^k25]: [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_vad_60`, `cmp_vad_30ov8`, `cmp_vad_30`
-[^k27]: [ultra-worstcase-split.json](../../benchmarks/results/2026-10/ultra-worstcase-split.json) runs `derive_worst32_chunks`; [m4-voxtral-worstcase.json](../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst32_c60b32`
+[^k27]: [m2-ultra-worstcase-split.json](../../benchmarks/results/2026-10/m2-ultra-worstcase-split.json) runs `derive_worst32_chunks`; [m4-voxtral-worstcase.json](../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst32_c60b32`
 [^k26]: [ultra-decode-probes.json](../../benchmarks/results/2026-10/ultra-decode-probes.json) runs `probe_encoder_batch_ultra_4bit` (the conv output length in its stdout)
 [^k28]: [m4-voxtral-chunking.json](../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c60b16`, `c30b32`, `c30b32_r2`, `c30b32_r3` (30s/B32 speed is the mean of its 3 runs)
 [^k29]: [m4-voxtral-clip.json](../../benchmarks/results/2026-10/m4-voxtral-clip.json) runs `m4_ov30_0s#overlap 0`, `m4_ov30_4s#overlap 4`, `m4_ov30_8s#overlap 8`

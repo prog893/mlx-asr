@@ -268,7 +268,7 @@ def auto_gain_db(audio: np.ndarray, trigger_dbfs: float = AUTO_TRIGGER_DBFS,
     chunks of a normal recording sit well below the file peak (84.8% of 30s
     chunks are under -6 dBFS over the 7-file subset and the narration clip, with
     up to 70.0dB of spread inside one file; source:
-    ultra-derived-measures.json#derive_gain), so a per-chunk normalizer would be applying tens of dB of differential
+    m2-ultra-derived-measures.json#derive_gain), so a per-chunk normalizer would be applying tens of dB of differential
     gain and flattening the loud/quiet structure the model uses. See
     ``per_chunk_gain_db`` and the measurements in docs/benchmarks/input-level.md.
     """

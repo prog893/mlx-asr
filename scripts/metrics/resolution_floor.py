@@ -20,7 +20,7 @@ import archive_query as q  # noqa: E402
 
 PAIR = (("ultra-voxtral-headline",
          ["vox_default_c30b128_kv8", "vox_default_c30b128_kv8_r2", "vox_default_c30b128_kv8_r3"]),
-        ("ultra-whisper-sizes",
+        ("m2-ultra-whisper-sizes",
          ["whisper_turbo_nocond"] + [f"whisper_turbo_nocond_r{i}" for i in range(2, 7)]))
 SIZES = (5, 7, 17, 20)
 

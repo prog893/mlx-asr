@@ -28,7 +28,7 @@ SWEEPS = {
              ("34.56%", "15.46%", "-19.1")),
             ("kotoba-whisper\nv2.0", "| kotoba-whisper v2.0 |", ("91.31%", "53.26%", "-38.0")),
         ],
-        "source": "ultra-mincut-inputs.json#mincut7_whisper_large-v3_libdef,mincut7_whisper_large-v3_nocond,mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond;ultra-whisper-condition.json#cond7_whisper_large-v3_libdef_r2,cond7_whisper_large-v3_libdef_r3,cond7_whisper_large-v3_nocond_r2,cond7_whisper_large-v3_nocond_r3,cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;ultra-kotoba-sequential.json#kseq_npz_cond_r1,kseq_npz_cond_r2,kseq_npz_cond_r3,kseq_npz_nocond_r1,kseq_npz_nocond_r2,kseq_npz_nocond_r3",
+        "source": "ultra-mincut-inputs.json#mincut7_whisper_large-v3_libdef,mincut7_whisper_large-v3_nocond,mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond;ultra-whisper-condition.json#cond7_whisper_large-v3_libdef_r2,cond7_whisper_large-v3_libdef_r3,cond7_whisper_large-v3_nocond_r2,cond7_whisper_large-v3_nocond_r3,cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;m2-ultra-kotoba-sequential.json#kseq_npz_cond_r1,kseq_npz_cond_r2,kseq_npz_cond_r3,kseq_npz_nocond_r1,kseq_npz_nocond_r2,kseq_npz_nocond_r3",
         "chosen": "large-v3", "chosen_series": "no-condition (False)",
         "chosen_label": "default",
         "label_dy": 14,
@@ -50,7 +50,7 @@ SWEEPS = {
             ("Whisper's own\n30s autodetect", "| Whisper's own 30s autodetect |", ("59.21%",)),
             ("force ja\nfor every file\n(unusable)", "| force `ja` for every file |", (None,)),
         ],
-        "source": "ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef;ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3;ultra-whisper-language.json#lang7_turbo_autodetect_r1,lang7_turbo_autodetect_r2,lang7_turbo_autodetect_r3,lang7_turbo_forceja_en_r1,lang7_turbo_forceja_en_r2,lang7_turbo_forceja_en_r3",
+        "source": "ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef;ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3;m2-ultra-whisper-language.json#lang7_turbo_autodetect_r1,lang7_turbo_autodetect_r2,lang7_turbo_autodetect_r3,lang7_turbo_forceja_en_r1,lang7_turbo_forceja_en_r2,lang7_turbo_forceja_en_r3",
         "chosen": None,
     },
     # Unordered runner configs: markers only, no default (the page names none).
@@ -86,7 +86,7 @@ SWEEPS = {
             ("fw\nturbo\nint8", "| large-v3-turbo int8 | no, CPU |", ("3.6x", "0.0804")),
             ("fw\nv3\nint8", "| large-v3 int8 |", ("1.1x", "0.1318")),
         ],
-        "source": "ultra-whisper-runners.json#rn_mlx_turbo_r1,rn_mlx_turbo_r2,rn_mlx_turbo_r3,rn_cpp_turbo_fp16_t8_r1,rn_cpp_turbo_fp16_t8_r2,rn_cpp_turbo_fp16_t8_r3,rn_cpp_turbo_fp16_t4_r1,rn_cpp_turbo_fp16_t4_r2,rn_cpp_turbo_fp16_t4_r3,rn_cpp_turbo_q5_0_t4_r1,rn_cpp_turbo_q5_0_t4_r2,rn_cpp_turbo_q5_0_t4_r3,rn_mlx_large-v3_r1,rn_mlx_large-v3_r2,rn_mlx_large-v3_r3,rn_fw_turbo_int8_b16_r1,rn_fw_turbo_int8_b16_r2,rn_fw_turbo_int8_b16_r3,rn_cpp_large-v3_q5_0_t4_r1,rn_cpp_large-v3_q5_0_t4_r2,rn_cpp_large-v3_q5_0_t4_r3,rn_fw_turbo_int8_b1_r1,rn_fw_turbo_int8_b1_r2,rn_fw_turbo_int8_b1_r3,rn_fw_large-v3_int8_b1_r1,rn_fw_large-v3_int8_b1_r2,rn_fw_large-v3_int8_b1_r3",
+        "source": "m2-ultra-whisper-runners.json#rn_mlx_turbo_r1,rn_mlx_turbo_r2,rn_mlx_turbo_r3,rn_cpp_turbo_fp16_t8_r1,rn_cpp_turbo_fp16_t8_r2,rn_cpp_turbo_fp16_t8_r3,rn_cpp_turbo_fp16_t4_r1,rn_cpp_turbo_fp16_t4_r2,rn_cpp_turbo_fp16_t4_r3,rn_cpp_turbo_q5_0_t4_r1,rn_cpp_turbo_q5_0_t4_r2,rn_cpp_turbo_q5_0_t4_r3,rn_mlx_large-v3_r1,rn_mlx_large-v3_r2,rn_mlx_large-v3_r3,rn_fw_turbo_int8_b16_r1,rn_fw_turbo_int8_b16_r2,rn_fw_turbo_int8_b16_r3,rn_cpp_large-v3_q5_0_t4_r1,rn_cpp_large-v3_q5_0_t4_r2,rn_cpp_large-v3_q5_0_t4_r3,rn_fw_turbo_int8_b1_r1,rn_fw_turbo_int8_b1_r2,rn_fw_turbo_int8_b1_r3,rn_fw_large-v3_int8_b1_r1,rn_fw_large-v3_int8_b1_r2,rn_fw_large-v3_int8_b1_r3",
         "chosen": None,
     },
 }

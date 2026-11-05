@@ -1,5 +1,5 @@
 {
- "group": "ultra-qwen3-precision",
+ "group": "m2-ultra-qwen3-precision",
  "question": "qwen3-asr precision ladder at 30s windows",
  "docs": [
   "docs/benchmarks/engines/qwen3-asr.md"
