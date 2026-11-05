@@ -15,8 +15,8 @@ SWEEPS = {
         ],
         "chosen": None,
         "min_span": 4,
-        "source": "ultra-voxtral-prompt-trap.json#prompt_trap7_none;"
-                  "ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;"
-                  "ultra-voxtral-headline.json#vox_default_c30b32_kv8",
+        "source": "m2-ultra-voxtral-prompt-trap.json#prompt_trap7_none;"
+                  "m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;"
+                  "m2-ultra-voxtral-headline.json#vox_default_c30b32_kv8",
     },
 }

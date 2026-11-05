@@ -20,7 +20,7 @@ SWEEPS = {
             (960, "| 960ms vs 2400ms |", ("+4.02",), ("[+1.59, +8.91]",)),
         ],
         "chosen": None,
-        "source": "ultra-voxtral-delay.json#delay7_c30b32_d480,delay7_c30b32_d960;ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8",
+        "source": "m2-ultra-voxtral-delay.json#delay7_c30b32_d480,delay7_c30b32_d960;m2-ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8",
         "panels": [{"series": [0], "zero_line": True, "zero": True}],
     },
 }

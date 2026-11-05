@@ -141,8 +141,8 @@ DELAY = {
     "rows": [(480, "25.62%", "35.06%"), (960, "20.51%", "30.36%"),
              (2400, "16.44%", "26.55%")],
     "chosen": 2400,
-    "source": "ultra-voxtral-delay.json#delay7_c30b32_d480,delay7_c30b32_d960;"
-              "ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8",
+    "source": "m2-ultra-voxtral-delay.json#delay7_c30b32_d480,delay7_c30b32_d960;"
+              "m2-ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8",
 }
 
 # Input level: the four fixed-gain arms on a dB axis. `auto` is the default and is a no-op on
@@ -183,7 +183,7 @@ SOURCES = {
                "pm_kotoba_bb5cf5d5b247,pm_kotoba_0c193bf7ced2,pm_kotoba_57d841fe39b5,"
                "pm_kotoba_a773a315fb42,pm_kotoba_71bb5eba3baa,pm_kotoba_a1372c4d2900,"
                "pm_kotoba_c47ad127bc83,pm_kotoba_1da58e1b2b69,pm_kotoba_b3432b40c079"),
-    "WINDOWS": ("ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3,"
+    "WINDOWS": ("m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3,"
                 "kw_kotoba_c20,kw_kotoba_c30,kw_kotoba_c20_r2,kw_kotoba_c20_r3,"
                 "kw_kotoba_c30_r2,kw_kotoba_c30_r3;"
                 "ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3;"

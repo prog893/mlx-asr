@@ -33,7 +33,7 @@ characters / 6 words.
 | 960ms | 20.51% | 30.36% | 31.9x |
 | **2400ms** | **16.44%** | **26.55%** | 31.5x |
 
-Source: [ultra-voxtral-delay.json](../../benchmarks/results/2026-10/ultra-voxtral-delay.json) runs `delay7_c30b32_d480`, `delay7_c30b32_d960`; [ultra-mincut-inputs.json](../../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
+Source: [m2-ultra-voxtral-delay.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-delay.json) runs `delay7_c30b32_d480`, `delay7_c30b32_d960`; [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
 
 Error falls monotonically in both languages, and throughput is flat: the three rows span
 0.3x[^d1] in x-realtime, and the delay does not change the step count. A rerun of the 2400ms
@@ -55,7 +55,7 @@ Paired across files, bootstrapped over files with 20k resamples:
 | 480ms vs 2400ms | +9.07 | [+5.26, +14.27] | 7-0 |
 | 960ms vs 2400ms | +4.02 | [+1.59, +8.91] | 7-0 |
 
-Source: [ultra-voxtral-delay.json](../../benchmarks/results/2026-10/ultra-voxtral-delay.json) runs `delay7_c30b32_d480`, `delay7_c30b32_d960`; [ultra-mincut-inputs.json](../../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
+Source: [m2-ultra-voxtral-delay.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-delay.json) runs `delay7_c30b32_d480`, `delay7_c30b32_d960`; [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
 
 Positive means the lower delay is worse. Winning 7 files to 0 at both comparison points
 makes this the most robust finding in the project: at n=7 the corpus resolves Japanese
@@ -92,7 +92,7 @@ record; the clip confirms that the direction and rough magnitude hold on prepare
 
 [chunking.md](chunking.md) is the next-largest lever and does trade against speed.
 
-[^d1]: [ultra-voxtral-delay.json](../../benchmarks/results/2026-10/ultra-voxtral-delay.json) runs `delay7_c30b32_d480`, `delay7_c30b32_d960`; [ultra-mincut-inputs.json](../../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
-[^d2]: [ultra-voxtral-prompt-trap.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-trap.json) runs `prompt_trap7_none`; [ultra-mincut-inputs.json](../../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
-[^d3]: [ultra-resolution-floor.json](../../benchmarks/results/2026-10/ultra-resolution-floor.json) runs `resolution_floor`
-[^d4]: [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c60b8_kv0_d480`, `hk_c60b8_kv0_d2400`, `score_clip`
+[^d1]: [m2-ultra-voxtral-delay.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-delay.json) runs `delay7_c30b32_d480`, `delay7_c30b32_d960`; [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
+[^d2]: [m2-ultra-voxtral-prompt-trap.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-trap.json) runs `prompt_trap7_none`; [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
+[^d3]: [m2-ultra-resolution-floor.json](../../benchmarks/results/2026-10/m2-ultra-resolution-floor.json) runs `resolution_floor`
+[^d4]: [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c60b8_kv0_d480`, `hk_c60b8_kv0_d2400`, `score_clip`

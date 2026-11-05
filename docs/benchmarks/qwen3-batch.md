@@ -31,7 +31,7 @@ accuracy stays within 0.46 CER points, inside this corpus's noise.[^b1] This clo
 | 4 | 15.37x | 19.56% | 29.03% | 3.82GB |
 | 8 | 9.85x | 19.86% | 28.68% | 6.01GB |
 
-Source: [ultra-qwen3-batch.json](../../benchmarks/results/2026-10/ultra-qwen3-batch.json) runs `qwen3batch_1.7B_8bit_c15_b1#batch 1`, `qwen3batch_1.7B_8bit_c15_b2#batch 2`, `qwen3batch_1.7B_8bit_c15_b4#batch 4`, `qwen3batch_1.7B_8bit_c15_b8#batch 8`
+Source: [m2-ultra-qwen3-batch.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-batch.json) runs `qwen3batch_1.7B_8bit_c15_b1#batch 1`, `qwen3batch_1.7B_8bit_c15_b2#batch 2`, `qwen3batch_1.7B_8bit_c15_b4#batch 4`, `qwen3batch_1.7B_8bit_c15_b8#batch 8`
 
 Batch 1 is fastest, and by a widening margin: 2.7x faster than batch 8.[^b1] Accuracy across
 the four arms spans 0.46 CER points,[^b1] which is inside this corpus's noise, so there is no
@@ -106,7 +106,7 @@ per-group budget:
 | batch 4, budget per group | 5,945 | 6.7 | 17.43% | 25.6x | 3.82GB |
 | batch 4, upstream's file-wide budget | 33,396 | **37.8** | **49.83%** | 1.9x | 13.12GB |
 
-Source: [ultra-qwen3-batch.json](../../benchmarks/results/2026-10/ultra-qwen3-batch.json) runs `qwen3batch_1.7B_8bit_c15_b1#batch 1`, `qwen3batch_1.7B_8bit_c15_b4#batch 4` (the 883s file's row; peak is the run's peak); [m2-ultra-qwen3-batch-budget.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-batch-budget.json) runs `qwen3batch_wholefilebudget_b4_q883#batch 4` (the file-wide budget row)
+Source: [m2-ultra-qwen3-batch.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-batch.json) runs `qwen3batch_1.7B_8bit_c15_b1#batch 1`, `qwen3batch_1.7B_8bit_c15_b4#batch 4` (the 883s file's row; peak is the run's peak); [m2-ultra-qwen3-batch-budget.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-batch-budget.json) runs `qwen3batch_wholefilebudget_b4_q883#batch 4` (the file-wide budget row)
 
 `RUNAWAY_CHARS_PER_S` is 25, so 37.8 chars/s is <!-- not-measured: 25 is the runaway threshold constant -->
 a repetition loop running unchecked: 32 CER points worse and about 19x[^b3] slower than batch 1, with
@@ -128,7 +128,7 @@ decision, which is to keep refusing the flag.
 - [Issue #1](https://github.com/prog893/mlx-asr/issues/1): the request this page closes.
 - [metrics.md](reference/metrics.md): coverage CER/WER.
 
-[^b1]: [ultra-qwen3-batch.json](../../benchmarks/results/2026-10/ultra-qwen3-batch.json) runs `qwen3batch_1.7B_8bit_c15_b1#batch 1`, `qwen3batch_1.7B_8bit_c15_b2#batch 2`, `qwen3batch_1.7B_8bit_c15_b4#batch 4`, `qwen3batch_1.7B_8bit_c15_b8#batch 8`
+[^b1]: [m2-ultra-qwen3-batch.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-batch.json) runs `qwen3batch_1.7B_8bit_c15_b1#batch 1`, `qwen3batch_1.7B_8bit_c15_b2#batch 2`, `qwen3batch_1.7B_8bit_c15_b4#batch 4`, `qwen3batch_1.7B_8bit_c15_b8#batch 8`
 [^b2]: [corpus.json](../../benchmarks/results/corpus.json)
-[^b4]: [m2-ultra-qwen3-precision-c15.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`; [ultra-qwen3-batch.json](../../benchmarks/results/2026-10/ultra-qwen3-batch.json) runs `qwen3batch_1.7B_8bit_c15_b1#batch 1` (paired over the 17 Japanese files)
-[^b3]: [ultra-qwen3-batch.json](../../benchmarks/results/2026-10/ultra-qwen3-batch.json) runs `qwen3batch_1.7B_8bit_c15_b1#batch 1`; [m2-ultra-qwen3-batch-budget.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-batch-budget.json) runs `qwen3batch_wholefilebudget_b4_q883#batch 4`
+[^b4]: [m2-ultra-qwen3-precision-c15.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`; [m2-ultra-qwen3-batch.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-batch.json) runs `qwen3batch_1.7B_8bit_c15_b1#batch 1` (paired over the 17 Japanese files)
+[^b3]: [m2-ultra-qwen3-batch.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-batch.json) runs `qwen3batch_1.7B_8bit_c15_b1#batch 1`; [m2-ultra-qwen3-batch-budget.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-batch-budget.json) runs `qwen3batch_wholefilebudget_b4_q883#batch 4`

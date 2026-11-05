@@ -1,5 +1,5 @@
 {
- "group": "ultra-qmv-wide",
+ "group": "m2-ultra-qmv-wide",
  "question": "Decode steps/s at batch 1-8, default qmv against qmv_wide forced by MLX_METAL_GPU_ARCH=applegpu_g15d, two interleaved runs each",
  "docs": [
   "docs/benchmarks/decode-throughput.md"

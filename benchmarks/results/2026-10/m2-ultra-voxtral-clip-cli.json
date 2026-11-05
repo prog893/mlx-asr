@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-clip-cli",
+ "group": "m2-ultra-voxtral-clip-cli",
  "question": "Voxtral CLI decodes of the 935s clip: chunk length, overlap, KV precision, the weight-precision ladder at 60s / batch 16, fp16 at 30s / batch 32 / overlap 8, an instruction prompt, delay 480 against 2400ms, 8kHz round trip and 1.25x time-stretch, -14dB input with gain none and auto; and their rescore",
  "docs": [
   "docs/benchmarks/chunking.md",

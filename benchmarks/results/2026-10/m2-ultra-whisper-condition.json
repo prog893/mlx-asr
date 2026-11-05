@@ -1,6 +1,6 @@
 {
- "group": "ultra-whisper-condition",
- "question": "Whisper large-v3 and turbo with and without condition_on_previous_text on the 7-file subset, runs r2 and r3 (r1 in ultra-mincut-inputs)",
+ "group": "m2-ultra-whisper-condition",
+ "question": "Whisper large-v3 and turbo with and without condition_on_previous_text on the 7-file subset, runs r2 and r3 (r1 in m2-ultra-mincut-inputs)",
  "docs": [
   "docs/benchmarks/engines/whisper.md"
  ],

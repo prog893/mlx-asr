@@ -16,7 +16,7 @@ The one place a doc number is derived from raw rows, so every page computes it t
   with a 95% interval from a bootstrap over files (20000 resamples, seed 0), the method of
   scripts/benchmarks/compare_engines.py and ci_from_run.py.
 
-GROUP is a run-group name (`ultra-voxtral-headline`) or a path to its JSON. RUN matches a
+GROUP is a run-group name (`m2-ultra-voxtral-headline`) or a path to its JSON. RUN matches a
 run's `run`, or `run#arm` for a sweep arm.
 
 A row's error is its `coverage_cer`, or its plain `cer` where the run scored plain CER (the

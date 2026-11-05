@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-clip-batch1",
+ "group": "m2-ultra-voxtral-clip-batch1",
  "question": "Voxtral CLI on the 935s clip at 30s / kv8: batch 1 against a same-session batch 32 (the whole file in one batch), speed, peak memory and CER",
  "docs": [
   "docs/benchmarks/quantization.md",

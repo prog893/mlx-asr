@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-headline",
+ "group": "m2-ultra-voxtral-headline",
  "question": "Voxtral at the default config (30s / batch 128), repeated for speed spread, and the former 30s / batch 32",
  "docs": [
   "RESULTS.md",

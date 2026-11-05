@@ -30,7 +30,7 @@ SWEEPS = {
             (50, None, ("17.81%", "18.12%", "19.32%")),
             (80, None, ("20.23%", "20.61%", "20.69%")),
         ],
-        "source": "ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8,mincut7_vox_c30b32_kv8_ov8,"
+        "source": "m2-ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8,mincut7_vox_c30b32_kv8_ov8,"
                   "mincut7_vox_c60b16_kv8;ultra-mincut-sweep.json#mincut_sweep_perfile#c30b32_kv8 mc10,mincut_sweep_perfile#c30b32_kv8 mc20,mincut_sweep_perfile#c30b32_kv8 mc30,mincut_sweep_perfile#c30b32_kv8 mc50,mincut_sweep_perfile#c30b32_kv8 mc80,mincut_sweep_perfile#c30b32_kv8_ov8 mc10,mincut_sweep_perfile#c30b32_kv8_ov8 mc20,mincut_sweep_perfile#c30b32_kv8_ov8 mc30,mincut_sweep_perfile#c30b32_kv8_ov8 mc50,mincut_sweep_perfile#c30b32_kv8_ov8 mc80,mincut_sweep_perfile#c60b16_kv8 mc10,mincut_sweep_perfile#c60b16_kv8 mc20,mincut_sweep_perfile#c60b16_kv8 mc30,mincut_sweep_perfile#c60b16_kv8 mc50,mincut_sweep_perfile#c60b16_kv8 mc80",
         "chosen": 30, "chosen_series": "30s b32 kv8",
         "label_dy": -22,   # above the ring sits the ov8 line
@@ -55,7 +55,7 @@ SWEEPS = {
             (50, None, ("16.88%", "17.81%", "21.05%", "26.62%", "39.24%")),
             (80, None, ("17.27%", "20.23%", "26.85%", "28.42%", "44.99%")),
         ],
-        "source": "ultra-mincut-inputs.json#mincut7_whisper_turbo_nocond,mincut7_vox_c30b32_kv8,"
+        "source": "m2-ultra-mincut-inputs.json#mincut7_whisper_turbo_nocond,mincut7_vox_c30b32_kv8,"
                   "mincut7_whisper_large-v3_nocond,mincut7_whisper_turbo_libdef,"
                   "mincut7_whisper_medium_libdef;ultra-mincut-sweep.json#mincut_sweep_perfile#turbo-nocond mc10,mincut_sweep_perfile#turbo-nocond mc20,mincut_sweep_perfile#turbo-nocond mc30,mincut_sweep_perfile#turbo-nocond mc50,mincut_sweep_perfile#turbo-nocond mc80,mincut_sweep_perfile#c30b32_kv8 mc10,mincut_sweep_perfile#c30b32_kv8 mc20,mincut_sweep_perfile#c30b32_kv8 mc30,mincut_sweep_perfile#c30b32_kv8 mc50,mincut_sweep_perfile#c30b32_kv8 mc80,mincut_sweep_perfile#large-v3-nocond mc10,mincut_sweep_perfile#large-v3-nocond mc20,mincut_sweep_perfile#large-v3-nocond mc30,mincut_sweep_perfile#large-v3-nocond mc50,mincut_sweep_perfile#large-v3-nocond mc80,mincut_sweep_perfile#large-v3-turbo mc10,mincut_sweep_perfile#large-v3-turbo mc20,mincut_sweep_perfile#large-v3-turbo mc30,mincut_sweep_perfile#large-v3-turbo mc50,mincut_sweep_perfile#large-v3-turbo mc80,mincut_sweep_perfile#medium mc10,mincut_sweep_perfile#medium mc20,mincut_sweep_perfile#medium mc30,mincut_sweep_perfile#medium mc50,mincut_sweep_perfile#medium mc80",
         "chosen": 30, "chosen_series": "voxtral c30b32_kv8",
@@ -78,7 +78,7 @@ SWEEPS = {
             ("69.6 min", "| 69.6 min |", ("132.9%", "16.6%")),
             ("93.2 min", "| 93.2 min |", ("146.2%", "16.7%")),
         ],
-        "source": ("ultra-voxtral-headline.json#vox_default_c30b128_kv8,"
+        "source": ("m2-ultra-voxtral-headline.json#vox_default_c30b128_kv8,"
                    "vox_default_c30b128_kv8_r2,vox_default_c30b128_kv8_r3;corpus.json"),
         "chosen": None,
     },

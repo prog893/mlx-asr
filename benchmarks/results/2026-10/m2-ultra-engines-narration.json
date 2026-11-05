@@ -1,5 +1,5 @@
 {
- "group": "ultra-engines-narration",
+ "group": "m2-ultra-engines-narration",
  "question": "Every engine on the 935s narration clip: Voxtral 60s / batch 16 / kv8, every Whisper size, kotoba at 10s and 20s windows; 3 runs each",
  "docs": [
   "docs/benchmarks/engines.md"

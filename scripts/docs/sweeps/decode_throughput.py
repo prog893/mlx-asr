@@ -96,7 +96,7 @@ SWEEPS = {
             (4, "| 4 | 61.3 / 61.4 |", ("-14.6%",)),
             (8, "| 8 | 40.5 / 40.5 |", ("-21.0%",)),
         ],
-        "source": "ultra-qmv-wide.json#qmv_default_r1,qmv_default_r2,qmv_wide_r1,qmv_wide_r2",
+        "source": "m2-ultra-qmv-wide.json#qmv_default_r1,qmv_default_r2,qmv_wide_r1,qmv_wide_r2",
     },
     "decode-throughput-stages": {
         "doc": DOC,

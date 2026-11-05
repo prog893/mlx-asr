@@ -121,7 +121,7 @@ def test_excluding_invalid_rows_matches_the_rescore():
     """Voxtral at the default config: 16.29% with the truncated file, 15.84% when that file
     is rescored against a reference cut to its audio. Dropping the file entirely must land
     below the published figure."""
-    g = json.loads((RESULTS / "2026-10" / "ultra-voxtral-headline.json").read_text(encoding="utf-8"))
+    g = json.loads((RESULTS / "2026-10" / "m2-ultra-voxtral-headline.json").read_text(encoding="utf-8"))
     run = next(r for r in g["runs"] if r["run"] == "vox_default_c30b128_kv8")
     rows = _rows(run)
     assert abs(_weighted(rows) - 0.16287) < 5e-4
@@ -396,7 +396,7 @@ def test_query_reads_plain_cer_rows_and_corpus_reference_lengths():
     """Clip runs score plain CER, and some sweeps omit ref_chars; both must still compute
     (the reference length then comes from corpus.json, which is the same count)."""
     q = _query()
-    clip = q.select(q.load_group("ultra-voxtral-clip"), ["ov30_0s#overlap 0"])[0]
+    clip = q.select(q.load_group("m2-ultra-voxtral-clip"), ["ov30_0s#overlap 0"])[0]
     assert q.aggregate(clip) is not None
     gain = q.select(q.load_group("ultra-input-gain"), ["gain7_asrecorded_c30b32_kv8#mode 0"])[0]
     assert round(q.aggregate(gain) * 100, 2) == 16.44  # source: ultra-input-gain.json#gain7_asrecorded_c30b32_kv8#mode 0

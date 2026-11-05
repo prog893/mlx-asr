@@ -5,7 +5,7 @@ Two decisions, made on different inputs because they have different causes:
   batch          sized from memory on every machine (``derive_batch``). Batch is
                  memory-bound: on both benchmarked machines end-to-end speed rises
                  with batch until memory runs out, accuracy shifts by about 0.1 point
-                 (unresolved on both machines; source: ultra-voxtral-batch.json#c30b32,c30b128;
+                 (unresolved on both machines; source: m2-ultra-voxtral-batch.json#c30b32,c30b128;
                  m4-voxtral-batch.json#c60b16,c60b32), and
                  larger batches only speed up files longer than one batch.
   chunk length   per chip, from profiles.json. It is a throughput choice set by
@@ -18,7 +18,7 @@ Peak MLX memory over the 20-file corpus is linear in rows times chunk seconds, o
 top of the weights and a fixed cost:
 
     M2 Ultra 128GB, 30s, 4-bit: 6.56 / 7.23 / 8.14 / 9.17 / 11.33 GB at B=16/32/48/64/128
-                                (source: ultra-voxtral-batch.json#c30b16,c30b32,c30b48,c30b64,c30b128)
+                                (source: m2-ultra-voxtral-batch.json#c30b16,c30b32,c30b48,c30b64,c30b128)
                                 (0.0014 GB per row-second, 3.5 GB fixed beyond weights)
     M4 16GB,       60s, 4-bit: 6.60 / 7.34 / 8.08 GB at B=16/24/32
                                 (source: m4-voxtral-batch.json#c60b16,c60b24,c60b32)
@@ -31,7 +31,7 @@ the registry's weight constant.)
 The Ultra points are not quite linear (B=48 to 64 is steeper than the rest), so the
 constants below are set to cover every measured peak rather than to fit the mean:
 the tightest is the Ultra at B=64 (9.36GB predicted, 9.17 measured), and the M4 at
-B=32 is over-predicted by 16% (9.36 against 8.08; source: ultra-voxtral-batch.json#c30b64;
+B=32 is over-predicted by 16% (9.36 against 8.08; source: m2-ultra-voxtral-batch.json#c30b64;
 m4-voxtral-batch.json#c60b32).
 
 Rows are sized on the nominal chunk length, although a batch is padded to its longest
@@ -103,7 +103,7 @@ GB_PER_ROW_SECOND = 0.0018
 # overhead. The two fits give 3.5 (Ultra) and 2.6 (M4); 3.4 sits just under the
 # Ultra fit, and with GB_PER_ROW_SECOND's margin the formula still covers every
 # measured peak. See the module docstring.
-# source: ultra-voxtral-batch.json#c30b16,c30b32,c30b48,c30b64,c30b128;
+# source: m2-ultra-voxtral-batch.json#c30b16,c30b32,c30b48,c30b64,c30b128;
 # m4-voxtral-batch.json#c60b16,c60b24,c60b32
 FIXED_OVERHEAD_GB = 3.4
 
@@ -266,7 +266,7 @@ def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
     # against 20.4x on the 60-core Ultra, with accuracy tied on both (means of 3 runs
     # except the M4 60s/B16, one run).
     # source: m4-voxtral-chunking.json#c30b32,c30b32_r2,c30b32_r3,c60b16;
-    # ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit
+    # m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit
     # The split is kept so a low-core measurement can change one value without
     # touching this code.
     chunk = chunk_seconds or float(

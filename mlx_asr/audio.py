@@ -202,7 +202,7 @@ def split_with_overlap(
     emitted with no left context and are measurably worse: on the reference clip
     at 30s chunks, edit operations are 1.99x enriched in the first 3s of a chunk
     versus 1.36x in the last 3s and 0.83x elsewhere (source:
-    ultra-voxtral-clip-paired.json#seam_c30). Trailing overlap therefore cannot help (future audio cannot
+    m2-ultra-voxtral-clip-paired.json#seam_c30). Trailing overlap therefore cannot help (future audio cannot
     change an already-emitted token) but leading overlap can, by letting the
     model warm up on audio whose transcript is then thrown away.
 

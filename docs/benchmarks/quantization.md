@@ -161,7 +161,7 @@ The default was set earlier on the clip, before the corpus existed:
 | M2 Ultra 128GB, 4-bit, 60s/B16 | 7.40% | 7.28% | 30.1 | 31.5 |
 | M2 Ultra 128GB, 4-bit, 30s/B32 | 8.66% | 8.63% | 16.0 | 17.1 |
 
-Source: [m4-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m4-voxtral-clip-cli.json) runs `m4_hk_c60b16_kv0_nvfp4`, `m4_hk_c60b16_kv8_nvfp4`, `m4_hk_c60b16_kv0_4bit`, `m4_hk_c60b16_kv8_4bit`, `m4_score_clip` (the two M4 rows: CER from m4_score_clip, decode seconds from each run's stats); [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_4bit`, `hk_c60b16_kv8`, `hk_c30b32_kv0`, `hk_c30b32_kv8`, `score_clip` (the two M2 Ultra rows: CER from score_clip, decode seconds from each run's own timing); one run per cell
+Source: [m4-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m4-voxtral-clip-cli.json) runs `m4_hk_c60b16_kv0_nvfp4`, `m4_hk_c60b16_kv8_nvfp4`, `m4_hk_c60b16_kv0_4bit`, `m4_hk_c60b16_kv8_4bit`, `m4_score_clip` (the two M4 rows: CER from m4_score_clip, decode seconds from each run's stats); [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_4bit`, `hk_c60b16_kv8`, `hk_c30b32_kv0`, `hk_c30b32_kv8`, `score_clip` (the two M2 Ultra rows: CER from score_clip, decode seconds from each run's own timing); one run per cell
 
 No less accurate: every pair is within 0.12 points.[^kc][^km] On speed the machines differ. On
 the M4 kv8 cut decode time by 6.3 seconds on nvfp4 and 7.7 seconds on 4-bit, 7 to 8%,[^km] while on
@@ -323,7 +323,7 @@ fp16 at all. Differences are checked with a paired test over 40 regions of the s
 | nvfp4 (local convert) | 2.5GB | 7.75% | 5.85% | 22.6x | 27.2 | 7.18 |
 | **4-bit affine (hub)** | 2.9GB | **7.40%** | **5.49%** | 22.7x | 27.1 | 9.36 |
 
-Source: [ultra-voxtral-clip.json](../../benchmarks/results/2026-10/ultra-voxtral-clip.json) runs `ladder_c60b16_kv0_fp16#overlap 0`, `ladder_c60b16_kv0_8bit#overlap 0`, `ladder_c60b16_kv0_mxfp8#overlap 0`, `ladder_c60b16_kv0_nvfp4#overlap 0`, `ladder_c60b16_kv0_4bit#overlap 0` (CER and x realtime columns; bytes are file sizes); [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_fp16`, `hk_c60b16_kv0_8bit`, `hk_c60b16_kv0_mxfp8`, `hk_c60b16_kv0_nvfp4`, `hk_c60b16_kv0_4bit`, `score_clip` (a rerun of the same config: kana CER from `score_clip`, decode steps/s as decode steps over decode seconds, and peak GB; its CER matches the first runs on every rung)
+Source: [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `ladder_c60b16_kv0_fp16#overlap 0`, `ladder_c60b16_kv0_8bit#overlap 0`, `ladder_c60b16_kv0_mxfp8#overlap 0`, `ladder_c60b16_kv0_nvfp4#overlap 0`, `ladder_c60b16_kv0_4bit#overlap 0` (CER and x realtime columns; bytes are file sizes); [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_fp16`, `hk_c60b16_kv0_8bit`, `hk_c60b16_kv0_mxfp8`, `hk_c60b16_kv0_nvfp4`, `hk_c60b16_kv0_4bit`, `score_clip` (a rerun of the same config: kana CER from `score_clip`, decode steps/s as decode steps over decode seconds, and peak GB; its CER matches the first runs on every rung)
 
 The whole spread is 0.38 CER points.[^c1] The fp16 and 4-bit hypotheses differ by 86 characters
 against the 4205-character reference (2.0%),[^ke] and fp16's 16 extra errors are 15 more
@@ -337,7 +337,7 @@ script written for the rerun whose normalization may differ from the original co
 | fp16 | 164 | 61 | 102 | 327 |
 | 4bit | 149 | 54 | 108 | 311 |
 
-Source: [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `errs_prec`
+Source: [m2-ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-paired.json) runs `errs_prec`
 
 Paired, fp16 minus 4-bit is +0.38 points with CI [-0.19, +0.95],[^kf] 4-bit lower on 13 regions and
 fp16 on 9 with 18 ties.[^kf] **On this clip, treat all
@@ -422,23 +422,23 @@ shows that inheriting the clip's answer was unsound for Voxtral. The `qwen3-asr`
 [^p2]: [m2-ultra-qwen3-precision-c15.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_8bit_c15`
 [^p3]: [m2-ultra-voxtral-v1.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`
 [^p4]: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8` (paired difference, dropping the files with the largest share of it, and split by material type: subtitled is the five Japanese files [m2-ultra-timestamps.json](../../benchmarks/results/2026-10/m2-ultra-timestamps.json) scores other than the clip, spontaneous the other twelve Japanese files)
-[^p5]: [ultra-voxtral-clip.json](../../benchmarks/results/2026-10/ultra-voxtral-clip.json) runs `ladder_c30b32_kv8_ov8_fp16#overlap 8`, `ov30_8s#overlap 8`
+[^p5]: [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `ladder_c30b32_kv8_ov8_fp16#overlap 8`, `ov30_8s#overlap 8`
 [^p6]: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`, `vox_w8bit_c30b128_kv8`, `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`
 [^p7]: [m4-voxtral-8bit.json](../../benchmarks/results/2026-10/m4-voxtral-8bit.json) runs `m4_c30b32_w8bit_r1`, `m4_c30b32_w8bit_r2`, `m4_c30b32_w8bit_r3`; [m4-voxtral-chunking.json](../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32` (paired against it)
 [^kv]: [ultra-voxtral-kv.json](../../benchmarks/results/2026-10/ultra-voxtral-kv.json) runs `vox_kv0_c60b16_w4bit`, `vox_kv8_c60b16_w4bit`, `vox_kv4_c60b16_w4bit`
 [^w1]: [m2-ultra-whisper-runners.json](../../benchmarks/results/2026-10/m2-ultra-whisper-runners.json) runs `rn_cpp_turbo_fp16_t4_r1`, `rn_cpp_turbo_fp16_t4_r2`, `rn_cpp_turbo_fp16_t4_r3`, `rn_cpp_turbo_q5_0_t4_r1`, `rn_cpp_turbo_q5_0_t4_r2`, `rn_cpp_turbo_q5_0_t4_r3`
 [^c0]: [corpus.json](../../benchmarks/results/corpus.json)
-[^c1]: [ultra-voxtral-clip.json](../../benchmarks/results/2026-10/ultra-voxtral-clip.json) runs `ladder_c60b16_kv0_fp16#overlap 0`, `ladder_c60b16_kv0_8bit#overlap 0`, `ladder_c60b16_kv0_mxfp8#overlap 0`, `ladder_c60b16_kv0_nvfp4#overlap 0`, `ladder_c60b16_kv0_4bit#overlap 0`
-[^c2]: [ultra-voxtral-clip.json](../../benchmarks/results/2026-10/ultra-voxtral-clip.json) runs `ladder_c60b16_kv8_fp16#overlap 0`, `ov60_0s#overlap 0`
-[^kc]: [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_4bit`, `hk_c60b16_kv8`, `hk_c30b32_kv0`, `hk_c30b32_kv8`
-[^kp]: [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_kv_8v0`
-[^ke]: [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `errs_prec`
-[^kf]: [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_prec_fp16v4`
-[^kl]: [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_fp16`, `hk_c60b16_kv0_8bit`, `hk_c60b16_kv0_mxfp8`, `hk_c60b16_kv0_nvfp4`, `hk_c60b16_kv0_4bit` (decode steps over decode seconds)
-[^kk]: [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c30b32_kv8_ov8_fp16`, `hk_c30b32_kv8_ov8`, `score_clip`
-[^rf]: [ultra-resolution-floor.json](../../benchmarks/results/2026-10/ultra-resolution-floor.json) runs `resolution_floor`
-[^kb]: [ultra-voxtral-clip-batch1.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-batch1.json) runs `hk_c30b32_kv8_r2`, `hk_c30b1_kv8`, `score_batch1`
+[^c1]: [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `ladder_c60b16_kv0_fp16#overlap 0`, `ladder_c60b16_kv0_8bit#overlap 0`, `ladder_c60b16_kv0_mxfp8#overlap 0`, `ladder_c60b16_kv0_nvfp4#overlap 0`, `ladder_c60b16_kv0_4bit#overlap 0`
+[^c2]: [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `ladder_c60b16_kv8_fp16#overlap 0`, `ov60_0s#overlap 0`
+[^kc]: [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_4bit`, `hk_c60b16_kv8`, `hk_c30b32_kv0`, `hk_c30b32_kv8`
+[^kp]: [m2-ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-paired.json) runs `cmp_kv_8v0`
+[^ke]: [m2-ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-paired.json) runs `errs_prec`
+[^kf]: [m2-ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-paired.json) runs `cmp_prec_fp16v4`
+[^kl]: [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_fp16`, `hk_c60b16_kv0_8bit`, `hk_c60b16_kv0_mxfp8`, `hk_c60b16_kv0_nvfp4`, `hk_c60b16_kv0_4bit` (decode steps over decode seconds)
+[^kk]: [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c30b32_kv8_ov8_fp16`, `hk_c30b32_kv8_ov8`, `score_clip`
+[^rf]: [m2-ultra-resolution-floor.json](../../benchmarks/results/2026-10/m2-ultra-resolution-floor.json) runs `resolution_floor`
+[^kb]: [m2-ultra-voxtral-clip-batch1.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-batch1.json) runs `hk_c30b32_kv8_r2`, `hk_c30b1_kv8`, `score_batch1`
 [^ql]: [ultra-qwen3-window.json](../../benchmarks/results/2026-10/ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`; [ultra-qwen3-loops.json](../../benchmarks/results/2026-10/ultra-qwen3-loops.json) runs `qwen3loop7_1.7B_bf16_c30` (per-file runaway segment counts)
 [^kx]: [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b16`; [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8` (per-file coverage error, both units, valid rows)
 [^km]: [m4-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m4-voxtral-clip-cli.json) runs `m4_hk_c60b16_kv0_nvfp4`, `m4_hk_c60b16_kv8_nvfp4`, `m4_hk_c60b16_kv0_4bit`, `m4_hk_c60b16_kv8_4bit`, `m4_score_clip`
-[^kq]: [m4-cross-machine-7file.json](../../benchmarks/results/2026-10/m4-cross-machine-7file.json) runs `m4_mincut7_vox_c30b32_kv8_nvfp4`, `m4_mincut7_vox_c30b32_kv8_4bit`; [ultra-mincut-inputs.json](../../benchmarks/results/2026-10/ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8` (per-file coverage error, the unit each file is scored in)
+[^kq]: [m4-cross-machine-7file.json](../../benchmarks/results/2026-10/m4-cross-machine-7file.json) runs `m4_mincut7_vox_c30b32_kv8_nvfp4`, `m4_mincut7_vox_c30b32_kv8_4bit`; [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8` (per-file coverage error, the unit each file is scored in)

@@ -1,5 +1,5 @@
 {
- "group": "ultra-mincut-inputs",
+ "group": "m2-ultra-mincut-inputs",
  "question": "Run outputs scored at several min_cut thresholds",
  "docs": [
   "docs/benchmarks/reference/metrics.md"

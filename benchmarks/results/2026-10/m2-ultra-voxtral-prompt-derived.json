@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-prompt-derived",
+ "group": "m2-ultra-voxtral-prompt-derived",
  "question": "Voxtral topic and terms prompts derived from the references (derive_prompt_terms.py variants freq and names), each in Japanese and English, over the 20-file corpus; prompt texts are not saved",
  "docs": [
   "docs/benchmarks/prompt.md"

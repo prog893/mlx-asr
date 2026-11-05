@@ -1,6 +1,6 @@
 {
- "group": "ultra-voxtral-delay",
- "question": "Voxtral streaming delay at 30s / batch 32 on the 7-file subset (2400ms is mincut7_vox_c30b32_kv8 in ultra-mincut-inputs)",
+ "group": "m2-ultra-voxtral-delay",
+ "question": "Voxtral streaming delay at 30s / batch 32 on the 7-file subset (2400ms is mincut7_vox_c30b32_kv8 in m2-ultra-mincut-inputs)",
  "docs": [
   "docs/benchmarks/delay.md"
  ],

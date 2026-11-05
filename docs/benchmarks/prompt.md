@@ -24,7 +24,7 @@ nothing here transfers to it.
 | `--prompt` | empty | costs English 2.0 to 75.9 WER points in every arm tested; on Japanese no arm resolves a gain, the frequency-derived Japanese term list costs 0.94, and English-language prompts score 1.40 to 4.73 worse (five of six resolved); no measurable vocabulary recall |
 | `--prompt` with `--overlap-seconds` | prompt ignored, overlap kept | the two together scored 18.64% CER with a term-list prompt (12.60% with the short description prompt) against 7.16% for overlap alone |
 
-Source: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description en`, `prompt20_c30b32_kv8#description ja`; [ultra-voxtral-clip.json](../../benchmarks/results/2026-10/ultra-voxtral-clip.json) runs `ov30_4s#overlap 4`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq`, `prompt20_derived_names`; [ultra-voxtral-prompt-overlap-corpus.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-overlap-corpus.json) runs `po_terms_ov4`, `po_desc_ov4`, `po_none_ov4`
+Source: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description en`, `prompt20_c30b32_kv8#description ja`; [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `ov30_4s#overlap 4`; [m2-ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq`, `prompt20_derived_names`; [m2-ultra-voxtral-prompt-overlap-corpus.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-overlap-corpus.json) runs `po_terms_ov4`, `po_desc_ov4`, `po_none_ov4`
 
 **Setup:** [20-file corpus](reference/corpus.md#the-20-file-corpus) (17 Japanese, 3 English) for the
 crossed language experiment, [7-file subset](reference/corpus.md#the-7-file-subset) for the first
@@ -74,7 +74,7 @@ way `run_corpus.py` does.
 | terms, names | en | 30 | 18.30% | +2.57 | [+0.92, +4.48] | 23.54% | +2.04 | [+0.12, +3.14] |
 | terms, names | ja | 119 (31 kept) | 15.80% | +0.08 | [-0.74, +0.76] | 34.66% | +13.15 | [+9.40, +16.12] |
 
-Source: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description en`, `prompt20_c30b32_kv8#description ja`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic en`, `prompt20_derived_freq#topic ja`, `prompt20_derived_freq#terms en`, `prompt20_derived_freq#terms ja`, `prompt20_derived_names#topic en`, `prompt20_derived_names#topic ja`, `prompt20_derived_names#terms en`, `prompt20_derived_names#terms ja` (differences paired over files against the none row, 20000 bootstrap resamples, seed 0)
+Source: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description en`, `prompt20_c30b32_kv8#description ja`; [m2-ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic en`, `prompt20_derived_freq#topic ja`, `prompt20_derived_freq#terms en`, `prompt20_derived_freq#terms ja`, `prompt20_derived_names#topic en`, `prompt20_derived_names#topic ja`, `prompt20_derived_names#terms en`, `prompt20_derived_names#terms ja` (differences paired over files against the none row, 20000 bootstrap resamples, seed 0)
 
 The instruction, description and topic arms fit the 31-token window. Three of the four
 derived term lists do not (61, 96 and 119 tokens), so the model saw only their last 31
@@ -126,7 +126,7 @@ collapses the difference:
 | B | 27.99% to 97.02% | 81.90% to 85.89% |
 | C | 3.29% to 97.56% | not derived |
 
-Source: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq`, `prompt20_derived_names` (covWER, the 13 arms of each English file); [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_prompt` (whitespace-free coverage CER, files A and B only; the derivation reads plain-text references, and C's is a subtitle track)
+Source: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8`; [m2-ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq`, `prompt20_derived_names` (covWER, the 13 arms of each English file); [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_prompt` (whitespace-free coverage CER, files A and B only; the derivation reads plain-text references, and C's is a subtitle track)
 
 So the honest statement is narrower than the aggregate suggested: **a sentence-shaped prompt degrades
 English word segmentation badly, and leaves the transcribed content roughly intact.** That
@@ -216,7 +216,7 @@ subset can. Putting "Transcribe the audio accurately." in the prompt field:
 | Japanese (5 files) | +1.41 CER points | CI spans zero |
 | all 7, pooled | +3.53 | [+0.41, +9.81] |
 
-Source: [ultra-voxtral-prompt-trap.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-trap.json) runs `prompt_trap7_instruction`, `prompt_trap7_none` (paired over files, 20000 bootstrap resamples, seed 0; the Japanese CI is [-0.07, +6.13]; the pooled row weights all 7 files by reference length)
+Source: [m2-ultra-voxtral-prompt-trap.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-trap.json) runs `prompt_trap7_instruction`, `prompt_trap7_none` (paired over files, 20000 bootstrap resamples, seed 0; the Japanese CI is [-0.07, +6.13]; the pooled row weights all 7 files by reference length)
 
 That fits the mechanism exactly. An English instruction is English text the decoder
 believes it just emitted, so it pulls English output badly off-register while barely
@@ -248,7 +248,7 @@ Found while re-running the config matrix. M2 Ultra 128GB, 30s chunks, batch 32, 
 | **prompt + overlap 4s** (term list) | **18.64%** |
 | prompt + overlap 4s (description) | 12.60% |
 
-Source: [ultra-voxtral-prompt-overlap-corpus.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-overlap-corpus.json) runs `po_none_ov0`, `po_terms_ov0`, `po_desc_ov0`, `po_none_ov4`, `po_terms_ov4`, `po_desc_ov4`
+Source: [m2-ultra-voxtral-prompt-overlap-corpus.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-overlap-corpus.json) runs `po_none_ov0`, `po_terms_ov0`, `po_desc_ov0`, `po_none_ov4`, `po_terms_ov4`, `po_desc_ov4`
 
 The output degenerates into repetition loops, with a short phrase repeated a dozen times
 and 148 characters of duplicated text. Both knobs work by handing the decoder text it
@@ -322,7 +322,7 @@ window.
 | **no prompt** | 0 | 0 | 7.28% | - |
 | **generic instruction** ("Transcribe the Japanese audio accurately.") | 7 | 7 | **13.17%** | **+5.90** |
 
-Source: [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv8`, `hk_c60b16_kv8_instr`, `score_clip` (a rerun at the same configuration)
+Source: [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv8`, `hk_c60b16_kv8_instr`, `score_clip` (a rerun at the same configuration)
 
 **Table:** the generic instruction against no prompt, paired, with its 95% CI. <!-- not-measured: 95% is the confidence level -->
 
@@ -330,7 +330,7 @@ Source: [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-vox
 |---|---|---|---|
 | generic instruction vs none | 5.90 | [+1.40, +11.64] | **significant** |
 
-Source: [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_instr_v_none`
+Source: [m2-ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-paired.json) runs `cmp_instr_v_none`
 
 **The ordering result is the informative one.** Reversing the term list so that
 truncation discards the terms you care about scored *identically* to keeping them. If the
@@ -353,13 +353,13 @@ arm is a cost (+0.94 points[^pr4]) and no arm resolved a gain.
 
 [chunking.md](chunking.md) for the overlap side of the conflict.
 
-[^pr1]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description en`, `prompt20_c30b32_kv8#description ja`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic en`, `prompt20_derived_freq#topic ja`, `prompt20_derived_freq#terms en`, `prompt20_derived_freq#terms ja`, `prompt20_derived_names#topic en`, `prompt20_derived_names#topic ja`, `prompt20_derived_names#terms en`, `prompt20_derived_names#terms ja` (word unit, paired against the none row; all twelve arms)
+[^pr1]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description en`, `prompt20_c30b32_kv8#description ja`; [m2-ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic en`, `prompt20_derived_freq#topic ja`, `prompt20_derived_freq#terms en`, `prompt20_derived_freq#terms ja`, `prompt20_derived_names#topic en`, `prompt20_derived_names#topic ja`, `prompt20_derived_names#terms en`, `prompt20_derived_names#terms ja` (word unit, paired against the none row; all twelve arms)
 [^pr2]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`
-[^pr3]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`; [ultra-voxtral-headline.json](../../benchmarks/results/2026-10/ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`
-[^pr4]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description ja`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic ja`, `prompt20_derived_names#topic ja`, `prompt20_derived_freq#terms en`, `prompt20_derived_freq#terms ja`, `prompt20_derived_names#terms ja` (char unit, paired against the none row)
-[^pr5]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#terms en`, `prompt20_derived_freq#terms ja`, `prompt20_derived_names#terms en`, `prompt20_derived_names#terms ja` (word unit, paired against the none row)
-[^pr6]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq`, `prompt20_derived_names` (per-file char rows against the none row)
+[^pr3]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`; [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`
+[^pr4]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#instruction ja`, `prompt20_c30b32_kv8#description ja`; [m2-ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic ja`, `prompt20_derived_names#topic ja`, `prompt20_derived_freq#terms en`, `prompt20_derived_freq#terms ja`, `prompt20_derived_names#terms ja` (char unit, paired against the none row)
+[^pr5]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`; [m2-ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#terms en`, `prompt20_derived_freq#terms ja`, `prompt20_derived_names#terms en`, `prompt20_derived_names#terms ja` (word unit, paired against the none row)
+[^pr6]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8`; [m2-ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq`, `prompt20_derived_names` (per-file char rows against the none row)
 [^prc]: [corpus.json](../../benchmarks/results/corpus.json) (the clip, and `clip180` under `derived`)
 [^pr7]: [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_prompt`
-[^pr9]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#description en`; [ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic en`, `prompt20_derived_freq#terms en`, `prompt20_derived_names#topic en`, `prompt20_derived_names#terms en` (char unit, Japanese files, paired against the none row)
-[^pr10]: [ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-paired.json) runs `cmp_instr_v_none`
+[^pr9]: [m2-ultra-voxtral-prompt.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`, `prompt20_c30b32_kv8#instruction en`, `prompt20_c30b32_kv8#description en`; [m2-ultra-voxtral-prompt-derived.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-derived.json) runs `prompt20_derived_freq#topic en`, `prompt20_derived_freq#terms en`, `prompt20_derived_names#topic en`, `prompt20_derived_names#terms en` (char unit, Japanese files, paired against the none row)
+[^pr10]: [m2-ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-paired.json) runs `cmp_instr_v_none`

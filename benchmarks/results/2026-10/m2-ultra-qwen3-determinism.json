@@ -1,5 +1,5 @@
 {
- "group": "ultra-qwen3-determinism",
+ "group": "m2-ultra-qwen3-determinism",
  "question": "qwen3-asr 1.7B 8-bit at 30s windows on the 7-file subset, every file decoded twice",
  "docs": [
   "docs/benchmarks/engines/qwen3-asr.md"

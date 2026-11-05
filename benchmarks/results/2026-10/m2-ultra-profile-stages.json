@@ -1,5 +1,5 @@
 {
- "group": "ultra-profile-stages",
+ "group": "m2-ultra-profile-stages",
  "question": "Per-stage wall clock (audio load, mel, conv stem, encoder, decode) on the 935s clip, 4-bit at 60s chunks, 3 runs (probes/profile_stages.py)",
  "docs": [
   "docs/benchmarks/decode-throughput.md"

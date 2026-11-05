@@ -288,7 +288,7 @@ be a default. Two interleaved runs of each arm, decode steps/s:
 | 4 | 61.3 / 61.4 | 52.4 / 52.4 | **-14.6%** |
 | 8 | 40.5 / 40.5 | 32.0 / 32.0 | **-21.0%** |
 
-Source: [ultra-qmv-wide.json](../../benchmarks/results/2026-10/ultra-qmv-wide.json) runs `qmv_default_r1`, `qmv_default_r2`, `qmv_wide_r1`, `qmv_wide_r2`
+Source: [m2-ultra-qmv-wide.json](../../benchmarks/results/2026-10/m2-ultra-qmv-wide.json) runs `qmv_default_r1`, `qmv_default_r2`, `qmv_wide_r1`, `qmv_wide_r2`
 
 **Refuted, and reproducibly so.** B=1 is the built-in control: the `M >= 2` guard means it
 takes `qmv` under either setting, and it moved 0.2%,[^q1] which is the noise floor and confirms
@@ -399,8 +399,8 @@ model), and needs no audio: see
 
 [^d1]: [m4-synthetic-decode.json](../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1`, `synth_nvfp4_r2`, `synth_nvfp4_r3`
 [^c0]: [corpus.json](../../benchmarks/results/corpus.json)
-[^q1]: [ultra-qmv-wide.json](../../benchmarks/results/2026-10/ultra-qmv-wide.json) runs `qmv_default_r1`, `qmv_default_r2`, `qmv_wide_r1`, `qmv_wide_r2`
-[^b64]: [ultra-voxtral-batch.json](../../benchmarks/results/2026-10/ultra-voxtral-batch.json) runs `c30b64`, `c30b64_r2`, `c30b64_r3`
+[^q1]: [m2-ultra-qmv-wide.json](../../benchmarks/results/2026-10/m2-ultra-qmv-wide.json) runs `qmv_default_r1`, `qmv_default_r2`, `qmv_wide_r1`, `qmv_wide_r2`
+[^b64]: [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b64`, `c30b64_r2`, `c30b64_r3`
 [^b32]: [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b32`, `c60b32_r1`
 [^d2]: [ultra-synthetic-decode.json](../../benchmarks/results/2026-10/ultra-synthetic-decode.json) runs `synth_ultra_4bit_r1`, `synth_ultra_4bit_r2`, `synth_ultra_4bit_r3`
 [^b48]: [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b32`, `c60b32_r1`, `batch_m4_repeat_20261009__c60b32_r2`, `batch_m4_b64_20261010__c60b32_r2`, `batch_m4_repeat_20261009__c60b32_r3`, `batch_m4_b64_20261010__c60b32_r3`, `c60b32_r4`, `c60b48`, `c60b48_r1`, `c60b48_r2`, `c60b48_r3`, `c60b64`, `c60b64_r1`, `c60b64_r2`, `c60b64_r3`; [m4-voxtral-worstcase.json](../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst64_c60b64`; [m4-synthetic-decode.json](../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1` (the recorded GPU working set)

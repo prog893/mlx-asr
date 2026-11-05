@@ -23,8 +23,8 @@ docs/benchmarks/engines.md):
                 of CER over 6 runs (source: m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6). Needs
                 `condition_on_previous_text=False` on long audio or a repetition
                 loop can feed itself across windows (worth up to 19 points, source:
-                ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;
-                ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond).
+                m2-ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;
+                m2-ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond).
                 Lowest Japanese error on our corpus, though against Voxtral's fp16
                 default the lead does not hold over files; on English voxtral-v1
                 scores lower (24B 16.86% WER against turbo's 18.65%; source:
@@ -35,7 +35,7 @@ docs/benchmarks/engines.md):
                 these weights 63.9 points against the chunked driver at 10s on the
                 same 5 Japanese files
                 (source: m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;
-                ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3).
+                m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3).
                 Japanese only. The weights are a
                 third-party MLX conversion, since the authors publish torch only.
   qwen3-asr     MLX, chunked long-form inside mlx-audio's own loader. Greedy
@@ -273,7 +273,7 @@ class Model:
 
         This is what makes `--chunk-seconds` meaningful outside Voxtral. It is
         the single largest lever on a chunked engine (kotoba spans 23 points
-        across 10-30s windows; source: ultra-kotoba-windows.json#pk_kotoba_c10_s1,kw_kotoba_c30) and it is material-dependent, so it has to be
+        across 10-30s windows; source: m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,kw_kotoba_c30) and it is material-dependent, so it has to be
         reachable. The sequential `mlx-whisper` driver is excluded because its
         30s window is fixed by the model's positional encoding, not a choice."""
         return self.backend in ("mlx-chunked", "mlx-qwen3", "mlx-voxtral-v1",
@@ -302,8 +302,8 @@ REGISTRY: dict[str, Model] = {
             # 4-bit was the default as the speed and memory choice, on the narration
             # clip, where fp16 through 4-bit span 0.38 CER points (a tie), while fp16
             # costs 1.6x the wall clock and 15.28GB of peak memory against 9.36GB
-            # through the CLI. source: ultra-voxtral-clip.json#ladder_c60b16_kv0_4bit,ladder_c60b16_kv0_nvfp4,ladder_c60b16_kv0_mxfp8,ladder_c60b16_kv0_8bit,ladder_c60b16_kv0_fp16,compact_c60b16_kv0_off
-            # source: ultra-voxtral-clip-cli.json#hk_c60b16_kv0_fp16,hk_c60b16_kv0_4bit (peak)
+            # through the CLI. source: m2-ultra-voxtral-clip.json#ladder_c60b16_kv0_4bit,ladder_c60b16_kv0_nvfp4,ladder_c60b16_kv0_mxfp8,ladder_c60b16_kv0_8bit,ladder_c60b16_kv0_fp16,compact_c60b16_kv0_off
+            # source: m2-ultra-voxtral-clip-cli.json#hk_c60b16_kv0_fp16,hk_c60b16_kv0_4bit (peak)
             # The corpus reversed the clip: 4-bit is last of five, 1.09 points behind
             # fp16 (CI [+0.32, +2.07]), so the ladder is exposed because a higher
             # precision does help, on a machine that can afford it.
@@ -423,8 +423,8 @@ REGISTRY: dict[str, Model] = {
             weights_gb=1.6,
             opts={"condition_on_previous_text": False},
             # source: m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6
-            # source: ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;
-            # ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond
+            # source: m2-ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;
+            # m2-ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond
             notes="the speed option: ties large-v3 on the corpus at 1.8x its speed "
                   "and 1.5GB less memory, with a 4-layer decoder. cross-window "
                   "conditioning is disabled by default; leaving it enabled costs 19 "
@@ -439,12 +439,12 @@ REGISTRY: dict[str, Model] = {
             label="Whisper large-v3",
             weights_gb=3.1,
             opts={"condition_on_previous_text": False},
-            # source: ultra-whisper-condition.json#cond7_whisper_large-v3_libdef_r2,cond7_whisper_large-v3_libdef_r3,cond7_whisper_large-v3_nocond_r2,cond7_whisper_large-v3_nocond_r3;
-            # ultra-mincut-inputs.json#mincut7_whisper_large-v3_libdef,mincut7_whisper_large-v3_nocond
+            # source: m2-ultra-whisper-condition.json#cond7_whisper_large-v3_libdef_r2,cond7_whisper_large-v3_libdef_r3,cond7_whisper_large-v3_nocond_r2,cond7_whisper_large-v3_nocond_r3;
+            # m2-ultra-mincut-inputs.json#mincut7_whisper_large-v3_libdef,mincut7_whisper_large-v3_nocond
             notes="ties turbo on the corpus at half its speed; the default because "
                   "its full 32-layer decoder is the safer bet on audio unlike the "
-                  # source: ultra-whisper-condition.json#cond7_whisper_large-v3_libdef_r2,cond7_whisper_large-v3_libdef_r3,cond7_whisper_large-v3_nocond_r2,cond7_whisper_large-v3_nocond_r3;
-                  # ultra-mincut-inputs.json#mincut7_whisper_large-v3_libdef,mincut7_whisper_large-v3_nocond (mean of the three pairs)
+                  # source: m2-ultra-whisper-condition.json#cond7_whisper_large-v3_libdef_r2,cond7_whisper_large-v3_libdef_r3,cond7_whisper_large-v3_nocond_r2,cond7_whisper_large-v3_nocond_r3;
+                  # m2-ultra-mincut-inputs.json#mincut7_whisper_large-v3_libdef,mincut7_whisper_large-v3_nocond (mean of the three pairs)
                   "corpus. Disabling cross-window conditioning is worth 16 points here",
         ),
         Model(
@@ -518,15 +518,15 @@ REGISTRY: dict[str, Model] = {
             # 26.81% at 10s (paired -1.47 points, CI [-2.75, -0.13], 3 runs each)
             # and faster (50.0x against 36.8x).
             # source: ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3;
-            # ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3
+            # m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3
             # Longer windows lose: 10s beat 20s and 30s (26.8 / 31.0 / 49.4%), and
             # 10s beat 20s on the narration clip too (18.64% vs 22.05%). On
-            # source: ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3,kw_kotoba_c20,kw_kotoba_c20_r2,kw_kotoba_c20_r3,kw_kotoba_c30,kw_kotoba_c30_r2,kw_kotoba_c30_r3;
-            # ultra-engines-narration.json#clip_kotoba_c10_r1,clip_kotoba_c20_r1
+            # source: m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3,kw_kotoba_c20,kw_kotoba_c20_r2,kw_kotoba_c20_r3,kw_kotoba_c30,kw_kotoba_c30_r2,kw_kotoba_c30_r3;
+            # m2-ultra-engines-narration.json#clip_kotoba_c10_r1,clip_kotoba_c20_r1
             # clean narration in the earlier sweep 20s won, so sweep it on your
             # own material.
             opts={"chunk_length_s": 15.0},
-            # source: m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3
+            # source: m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3
             notes="Japanese only. Converted to MLX on first use, since the "
                   "authors publish transformers weights only. Needs the CHUNKED "
                   "driver: Whisper's sequential algorithm costs these weights 67 "
@@ -786,7 +786,7 @@ def infer_backend(repo: str) -> str:
     # distil derivatives keep few decoder layers and need the chunked driver;
     # the sequential one costs kotoba 63.9 points on the same 5 Japanese files
     # (docs/benchmarks/engines/kotoba.md)
-    # source: m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3
+    # source: m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3
     if "kotoba" in low or "distil" in low:
         return "mlx-chunked"
     if "whisper" in low:
