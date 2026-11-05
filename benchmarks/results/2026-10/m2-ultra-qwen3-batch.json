@@ -1,5 +1,5 @@
 {
- "group": "ultra-qwen3-batch",
+ "group": "m2-ultra-qwen3-batch",
  "question": "qwen3-asr decoder batch at 15s windows",
  "docs": [
   "docs/benchmarks/qwen3-batch.md"

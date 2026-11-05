@@ -18,7 +18,7 @@ everything (docs/benchmarks/engines.md):
                    costs a 2-layer distil decoder 63.9 points on the same 5
                    Japanese files (source:
                    m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2;
-                   ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3).
+                   m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3).
     qwen3-asr      deterministic and does real language ID, but emits no
                    timestamp finer than its own chunk boundaries, so `-f srt`
                    and `-f vtt` are refused on it: txt and json only.
@@ -208,7 +208,7 @@ def _run_other_backend(a, spec, log, t_start):
     # --chunk-seconds is the one chunking flag that carries over, and only to the
     # chunked drivers: there it picks the window length, which is the largest
     # lever those engines have (23 points across 10-30s on kotoba). The
-    # source: ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3,kw_kotoba_c30,kw_kotoba_c30_r2,kw_kotoba_c30_r3
+    # source: m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3,kw_kotoba_c30,kw_kotoba_c30_r2,kw_kotoba_c30_r3
     # sequential Whisper driver has no such knob, its 30s window is fixed.
     overrides = {}
     if a.chunk_seconds and spec.chunked_long_form:
@@ -252,14 +252,14 @@ def _run_other_backend(a, spec, log, t_start):
         # other than "the knob does not exist". It does: `generate(batch_size=)`
         # batches whole chunks. It is now refused because it was MEASURED and
         # loses: 26.7x at batch 1 against 9.9x at batch 8 over the 20-file corpus,
-        # source: ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1,qwen3batch_1.7B_8bit_c15_b8
+        # source: m2-ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1,qwen3batch_1.7B_8bit_c15_b8
         # monotonic, with accuracy flat inside noise
         # (docs/benchmarks/qwen3-batch.md). Batching whole chunks pads every group
         # to its longest member and finishes at its slowest, neither of which the
         # per-chunk path pays, and there is no weight read to amortize because each
         # chunk's decode is already sequential over its own tokens.
         if spec.backend == "mlx-qwen3" and unsupported == ["--max-batch"]:
-            # source: ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1,qwen3batch_1.7B_8bit_c15_b8
+            # source: m2-ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1,qwen3batch_1.7B_8bit_c15_b8
             hint = (f"{spec.alias} batches whole chunks upstream, and it was measured "
                     f"to be SLOWER: 26.7x at batch 1 against 9.9x at batch 8 on the "
                     f"20-file corpus, for no accuracy gain. Chunks in a batch are "

@@ -1,5 +1,5 @@
 {
- "group": "ultra-kotoba-windows",
+ "group": "m2-ultra-kotoba-windows",
  "question": "kotoba-whisper (MLX chunked driver) by window length over the 20-file corpus; the 10s window has the 3 picker runs",
  "docs": [
   "docs/benchmarks/engines/kotoba.md"

@@ -16,7 +16,7 @@ SWEEPS = {
             (4, "| 4 |", ("15.37x", "19.56%", "29.03%")),
             (8, "| 8 |", ("9.85x", "19.86%", "28.68%")),
         ],
-        "source": "ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1#batch 1,"
+        "source": "m2-ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1#batch 1,"
                   "qwen3batch_1.7B_8bit_c15_b2#batch 2,qwen3batch_1.7B_8bit_c15_b4#batch 4,"
                   "qwen3batch_1.7B_8bit_c15_b8#batch 8",
         "panels": [
@@ -42,7 +42,7 @@ SWEEPS = {
              ("49.83%", "1.9x", "13.12GB", "37.8")),
         ],
         # The first two rows are the 883s file's rows of the batch 1 and batch 4 arms.
-        "source": "ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1#batch 1,"
+        "source": "m2-ultra-qwen3-batch.json#qwen3batch_1.7B_8bit_c15_b1#batch 1,"
                   "qwen3batch_1.7B_8bit_c15_b4#batch 4;"
                   "m2-ultra-qwen3-batch-budget.json#qwen3batch_wholefilebudget_b4_q883#batch 4",
         "panels": [

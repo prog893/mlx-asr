@@ -1,13 +1,13 @@
 {
- "group": "ultra-voxtral-clip-paired",
- "question": "Paired region comparisons and error counts on the 935s clip from the ultra-voxtral-clip-cli decodes: chunk length, overlap, KV precision, fp16 against 4-bit, instruction prompt, VAD against energy cuts; edit types, seam errors, and the gain auto no-op",
+ "group": "m2-ultra-voxtral-clip-paired",
+ "question": "Paired region comparisons and error counts on the 935s clip from the m2-ultra-voxtral-clip-cli decodes: chunk length, overlap, KV precision, fp16 against 4-bit, instruction prompt, VAD against energy cuts; edit types, seam errors, and the gain auto no-op",
  "docs": [
   "docs/benchmarks/chunking.md",
   "docs/benchmarks/quantization.md",
   "docs/benchmarks/prompt.md",
   "docs/benchmarks/input-level.md"
  ],
- "note": "In the commands $PY is the repo venv python, $CLIP the 935s clip (bench_out/corpus_timed/632a295d981d.wav), $REF its reference subtitles (the .srt beside it) and $D the queue directory bench_out/q7_20261015; hypotheses are not saved. Paired differences are first config minus second (positive: the first is worse), over the clip's subtitle regions. score_vad and cmp_vad_* rescore the hypotheses kept by the saved ultra-voxtral-clip vad_* runs ($V is their directory). noop_clip_auto is cmp of two SRTs: empty output with exit 0 means byte-identical.",
+ "note": "In the commands $PY is the repo venv python, $CLIP the 935s clip (bench_out/corpus_timed/632a295d981d.wav), $REF its reference subtitles (the .srt beside it) and $D the queue directory bench_out/q7_20261015; hypotheses are not saved. Paired differences are first config minus second (positive: the first is worse), over the clip's subtitle regions. score_vad and cmp_vad_* rescore the hypotheses kept by the saved m2-ultra-voxtral-clip vad_* runs ($V is their directory). noop_clip_auto is cmp of two SRTs: empty output with exit 0 means byte-identical.",
  "runs": [
   {
    "run": "cmp_instr_v_none",

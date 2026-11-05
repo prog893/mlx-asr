@@ -24,7 +24,7 @@ SWEEPS = {
             ("120s / B8", "| 120s | 8 |", ("17.1x", "7.44%")),
             ("180s / B8", "| 180s | 8 |", ("12.4x", "7.49%")),
         ],
-        "source": "ultra-voxtral-clip.json#chunk_c20b48_kv0#overlap 0,chunk_c30b32_kv0#overlap 0,ov60_0s#overlap 0,chunk_c90b16_kv8#overlap 0,chunk_c120b8_kv8#overlap 0,chunk_c180b8_kv8#overlap 0",
+        "source": "m2-ultra-voxtral-clip.json#chunk_c20b48_kv0#overlap 0,chunk_c30b32_kv0#overlap 0,ov60_0s#overlap 0,chunk_c90b16_kv8#overlap 0,chunk_c120b8_kv8#overlap 0,chunk_c180b8_kv8#overlap 0",
         "chosen": "30s / B32", "chosen_series": "x realtime",
         "chosen_label": "30s chosen (M2 Ultra)",
         "width": 10.4,
@@ -45,7 +45,7 @@ SWEEPS = {
             ("60s vs 30s", "| 60s beats 30s |", ("1.35",), ("[+0.10, +2.86]",)),
             ("60s vs 90s", "| 60s beats 90s |", ("0.67",), ("[-0.33, +1.76]",)),
         ],
-        "source": "m2-ultra-voxtral-clip-recheck.json#cmp_len_30v60_kv8;ultra-voxtral-clip-paired.json#cmp_len_90v60",
+        "source": "m2-ultra-voxtral-clip-recheck.json#cmp_len_30v60_kv8;m2-ultra-voxtral-clip-paired.json#cmp_len_90v60",
         "panels": [{"series": [0], "ylabel": "CER points saved by 60s",
                     "title": "paired difference, 95% CI", "zero_line": True}],
         "width": 6.0,
@@ -99,7 +99,7 @@ SWEEPS = {
             (4, "| 4s | 7.42% |", (None, "7.42%")),
             (8, "| 8s | 7.94% |", (None, "7.94%")),
         ],
-        "source": "ultra-voxtral-clip.json#ov30_0s#overlap 0,ov30_4s#overlap 4,ov30_6s#overlap 6,ov30_7s#overlap 7,ov30_8s#overlap 8,ov30_10s#overlap 10,ov30_12s#overlap 12,ov30_15s#overlap 15,ov60_0s#overlap 0,ov60_4s#overlap 4,ov60_8s#overlap 8",
+        "source": "m2-ultra-voxtral-clip.json#ov30_0s#overlap 0,ov30_4s#overlap 4,ov30_6s#overlap 6,ov30_7s#overlap 7,ov30_8s#overlap 8,ov30_10s#overlap 10,ov30_12s#overlap 12,ov30_15s#overlap 15,ov60_0s#overlap 0,ov60_4s#overlap 4,ov60_8s#overlap 8",
         "chosen": 0,
         "chosen_series": "30s chunks",
     },
@@ -117,8 +117,8 @@ SWEEPS = {
             ("one clip,\n60s chunks", "| one clip, 60s chunks |", ("-0.66",), ("[-1.44, +0.10]",)),
             ("7-file\nsubset", "| 7-file subset |", ("-1.47",), ("[-4.34, +2.33]",)),
         ],
-        "source": ("ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8_ov8,mincut7_vox_c30b32_kv8;"
-                   "ultra-voxtral-clip-paired.json#cmp_ov30_0v8,cmp_ov60_0v8"),
+        "source": ("m2-ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8_ov8,mincut7_vox_c30b32_kv8;"
+                   "m2-ultra-voxtral-clip-paired.json#cmp_ov30_0v8,cmp_ov60_0v8"),
         "panels": [{"series": [0], "ylabel": "error points saved by overlap",
                     "title": "paired difference, 95% CI", "zero_line": True}],
         "width": 6.6,
@@ -140,9 +140,9 @@ SWEEPS = {
             ("60s\nVAD", "| 60s, VAD |", ("10.01%", "9.56%", "23.0x")),
         ],
         # CER and x realtime from the decode runs; lenient CER from score_vad
-        "source": ("ultra-voxtral-clip.json#vad_c30b32_kv8_energy,vad_c30b32_kv8_vad,"
+        "source": ("m2-ultra-voxtral-clip.json#vad_c30b32_kv8_energy,vad_c30b32_kv8_vad,"
                    "vad_c30b32_kv8_ov8_energy,vad_c30b32_kv8_ov8_vad,vad_c60b16_kv8_energy,"
-                   "vad_c60b16_kv8_vad;ultra-voxtral-clip-paired.json#score_vad"),
+                   "vad_c60b16_kv8_vad;m2-ultra-voxtral-clip-paired.json#score_vad"),
         "chosen": "30s\nenergy", "chosen_series": "CER",
         "chosen_label": "default (M2 Ultra)",
         "width": 11.0,
@@ -190,7 +190,7 @@ SWEEPS = {
             ("carry_pair", "| carry_pair |", ("8.51%", "16.7x")),
             ("carry", "| carry |", ("8.51%", "5.1x")),
         ],
-        "source": ("ultra-voxtral-clip.json#carry_none#variant none,"
+        "source": ("m2-ultra-voxtral-clip.json#carry_none#variant none,"
                    "carry_pair#variant carry_pair,carry_seq#variant carry"),
         "chosen": "none", "chosen_series": "x realtime",
         "width": 9.2,
@@ -277,7 +277,7 @@ SWEEPS = {
             ("60s/B16\nov8", "| 60s / B16 / ov8 |", ("15.83%", "18.4x")),
             ("30s/B32\nov0", "| **30s / B32 / ov0** |", ("15.73%", "29.3x")),
         ],
-        "source": "ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit;ultra-voxtral-chunking.json#ch_c30b32_ov8,ch_c30b16_ov0,ch_c60b32_ov0,ch_c60b16_ov8;ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3",
+        "source": "ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit;ultra-voxtral-chunking.json#ch_c30b32_ov8,ch_c30b16_ov0,ch_c60b32_ov0,ch_c60b16_ov8;m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3",
         "chosen": "30s/B32\nov0", "chosen_series": "x realtime",
         "chosen_label": "30s chosen (M2 Ultra)",
         "width": 11.0,
@@ -305,7 +305,7 @@ SWEEPS = {
         ],
         "source": ("ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;"
                    "ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit;"
-                   "ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;"
+                   "m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;"
                    "m4-voxtral-chunking.json#c60b16,c30b32,c30b32_r2,c30b32_r3"),
         "chosen": "30s / B32", "chosen_series": "M2 Ultra 128GB",
         "chosen_label": "30s chosen (M2 Ultra)",
@@ -330,7 +330,7 @@ SWEEPS = {
             ("last 3s", "| last 3s of a chunk |", ("13.5%", "9.9%")),
             ("elsewhere", "| elsewhere |", ("66.7%", "80.1%")),
         ],
-        "source": "ultra-voxtral-clip-paired.json#seam_c30",
+        "source": "m2-ultra-voxtral-clip-paired.json#seam_c30",
         "zero": True,
         "width": 6.6,
     },
@@ -351,7 +351,7 @@ SWEEPS = {
             (64, "| 64 |", ("32.9x", "28.3x", "35.3x", "9.17GB")),
             (128, "| **128** |", ("33.6x", "28.6x", "36.3x", "11.33GB")),
         ],
-        "source": "ultra-voxtral-batch.json#c30b16,c30b32,c30b32_r2,c30b32_r3,c30b48,c30b64,c30b64_r2,c30b64_r3,c30b128",
+        "source": "m2-ultra-voxtral-batch.json#c30b16,c30b32,c30b32_r2,c30b32_r3,c30b48,c30b64,c30b64_r2,c30b64_r3,c30b128",
         "chosen": 128, "chosen_series": "all 20 files",
         "chosen_label": "default (M2 Ultra)",
         "width": 10.4,

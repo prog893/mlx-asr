@@ -24,7 +24,7 @@ SWEEPS = {
             ("M4 16GB", "coverage CER on one 112s file", ("12.56%",)),
             ("M2 Ultra 128GB", "coverage CER on one 112s file", ("18.01%",)),
         ],
-        "source": ("m4-voxtral-chunking.json#c30b32;ultra-voxtral-batch.json#c30b32,c30b32_r2,"
+        "source": ("m4-voxtral-chunking.json#c30b32;m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,"
                    "c30b32_r3"),
         "zero": True, "width": 6.0,
         "chosen": None,
@@ -50,7 +50,7 @@ SWEEPS = {
         ],
         "source": ("m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
                    "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
-                   "whisper_turbo_nocond_r6;ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8"),
+                   "whisper_turbo_nocond_r6;m2-ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8"),
         "panels": [{"series": [0, 1], "zero_line": True}], "width": 7.6,
         "chosen": None,
     },

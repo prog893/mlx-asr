@@ -98,7 +98,7 @@ def transcribe_chunked(audio, model_repo, chunk_length_s=10.0, language=None,
     material-dependent: on our corpus kotoba scored 26.15% at 10s versus 49.57% at
     30s, but on clean narration 20s beat both. Sweep it on your own audio.
     (source: ultra-kotoba-engines.json#k20_hf22_c10_r1,k20_hf22_c30_r1, rows of the 5
-    Japanese files of the 7-file subset; ultra-kotoba-engines-clip.json#kclip_hf22_c10_r1,kclip_hf22_c20_r1,kclip_hf22_c30_r1)
+    Japanese files of the 7-file subset; m2-ultra-kotoba-engines-clip.json#kclip_hf22_c10_r1,kclip_hf22_c20_r1,kclip_hf22_c30_r1)
     """
     from mlx_whisper.transcribe import transcribe
 

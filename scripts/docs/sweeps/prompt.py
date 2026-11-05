@@ -68,7 +68,7 @@ SWEEPS = {
         "source": "m2-ultra-voxtral-prompt.json#prompt20_c30b32_kv8#none -,"
                   "prompt20_c30b32_kv8#instruction en,prompt20_c30b32_kv8#instruction ja,"
                   "prompt20_c30b32_kv8#description en,prompt20_c30b32_kv8#description ja;"
-                  "ultra-voxtral-prompt-derived.json#" + _DERIVED,
+                  "m2-ultra-voxtral-prompt-derived.json#" + _DERIVED,
     },
     "prompt-instruction": {
         "doc": "docs/benchmarks/prompt.md",
@@ -86,7 +86,7 @@ SWEEPS = {
             ("all 7, pooled", "| all 7, pooled |", ("+3.53",), ("[+0.41, +9.81]",)),
         ],
         "panels": [{"series": [0], "zero_line": True}],
-        "source": "ultra-voxtral-prompt-trap.json#prompt_trap7_instruction,prompt_trap7_none",
+        "source": "m2-ultra-voxtral-prompt-trap.json#prompt_trap7_instruction,prompt_trap7_none",
     },
     "prompt-overlap": {
         "doc": "docs/benchmarks/prompt.md",
@@ -107,6 +107,6 @@ SWEEPS = {
             ("description + overlap 4s", "| prompt + overlap 4s (description) |", ("12.60%",)),
         ],
         "chosen": "no prompt, no overlap", "zero": True,
-        "source": "ultra-voxtral-prompt-overlap-corpus.json#po_none_ov0,po_terms_ov0,po_desc_ov0,po_none_ov4,po_terms_ov4,po_desc_ov4",
+        "source": "m2-ultra-voxtral-prompt-overlap-corpus.json#po_none_ov0,po_terms_ov0,po_desc_ov0,po_none_ov4,po_terms_ov4,po_desc_ov4",
     },
 }

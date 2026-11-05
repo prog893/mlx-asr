@@ -62,8 +62,8 @@ def transcribe_mlx_whisper(audio_path: str, model, language=None, log=print,
     models, which is not a stylistic default: leaving conditioning on lets a
     repetition loop feed itself across 30s windows and costs up to 19 points on
     long audio (docs/benchmarks/engines/whisper.md; source:
-    ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3,
-    with ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond). It is applied here rather than left to the user.
+    m2-ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3,
+    with m2-ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond). It is applied here rather than left to the user.
     """
     try:
         from mlx_whisper.transcribe import transcribe

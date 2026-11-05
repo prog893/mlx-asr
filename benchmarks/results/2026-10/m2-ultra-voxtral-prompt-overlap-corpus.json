@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-prompt-overlap-corpus",
+ "group": "m2-ultra-voxtral-prompt-overlap-corpus",
  "question": "Voxtral on the 935s clip at 30s / batch 32 / kv8: no prompt, the fixed description prompt and a derived term-list prompt, each at 0s and 4s overlap",
  "docs": [
   "docs/benchmarks/prompt.md",

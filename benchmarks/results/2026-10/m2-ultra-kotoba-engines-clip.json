@@ -1,5 +1,5 @@
 {
- "group": "ultra-kotoba-engines-clip",
+ "group": "m2-ultra-kotoba-engines-clip",
  "question": "kotoba-whisper on the 935s clip: MLX chunked driver (v2.0) against the authors' transformers pipeline (v2.2, and v2.0 at 15s), windows 10 / 15 / 20 / 30s, 3 runs each",
  "docs": [
   "docs/benchmarks/engines/kotoba.md"

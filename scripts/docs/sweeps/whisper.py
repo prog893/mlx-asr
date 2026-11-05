@@ -28,7 +28,7 @@ SWEEPS = {
              ("34.56%", "15.46%", "-19.1")),
             ("kotoba-whisper\nv2.0", "| kotoba-whisper v2.0 |", ("91.31%", "53.26%", "-38.0")),
         ],
-        "source": "ultra-mincut-inputs.json#mincut7_whisper_large-v3_libdef,mincut7_whisper_large-v3_nocond,mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond;ultra-whisper-condition.json#cond7_whisper_large-v3_libdef_r2,cond7_whisper_large-v3_libdef_r3,cond7_whisper_large-v3_nocond_r2,cond7_whisper_large-v3_nocond_r3,cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;m2-ultra-kotoba-sequential.json#kseq_npz_cond_r1,kseq_npz_cond_r2,kseq_npz_cond_r3,kseq_npz_nocond_r1,kseq_npz_nocond_r2,kseq_npz_nocond_r3",
+        "source": "m2-ultra-mincut-inputs.json#mincut7_whisper_large-v3_libdef,mincut7_whisper_large-v3_nocond,mincut7_whisper_turbo_libdef,mincut7_whisper_turbo_nocond;m2-ultra-whisper-condition.json#cond7_whisper_large-v3_libdef_r2,cond7_whisper_large-v3_libdef_r3,cond7_whisper_large-v3_nocond_r2,cond7_whisper_large-v3_nocond_r3,cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3,cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;m2-ultra-kotoba-sequential.json#kseq_npz_cond_r1,kseq_npz_cond_r2,kseq_npz_cond_r3,kseq_npz_nocond_r1,kseq_npz_nocond_r2,kseq_npz_nocond_r3",
         "chosen": "large-v3", "chosen_series": "no-condition (False)",
         "chosen_label": "default",
         "label_dy": 14,
@@ -50,7 +50,7 @@ SWEEPS = {
             ("Whisper's own\n30s autodetect", "| Whisper's own 30s autodetect |", ("59.21%",)),
             ("force ja\nfor every file\n(unusable)", "| force `ja` for every file |", (None,)),
         ],
-        "source": "ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef;ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3;m2-ultra-whisper-language.json#lang7_turbo_autodetect_r1,lang7_turbo_autodetect_r2,lang7_turbo_autodetect_r3,lang7_turbo_forceja_en_r1,lang7_turbo_forceja_en_r2,lang7_turbo_forceja_en_r3",
+        "source": "m2-ultra-mincut-inputs.json#mincut7_whisper_turbo_libdef;m2-ultra-whisper-condition.json#cond7_whisper_turbo_libdef_r2,cond7_whisper_turbo_libdef_r3;m2-ultra-whisper-language.json#lang7_turbo_autodetect_r1,lang7_turbo_autodetect_r2,lang7_turbo_autodetect_r3,lang7_turbo_forceja_en_r1,lang7_turbo_forceja_en_r2,lang7_turbo_forceja_en_r3",
         "chosen": None,
     },
     # Unordered runner configs: markers only, no default (the page names none).

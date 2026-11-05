@@ -1,5 +1,5 @@
 {
- "group": "ultra-whisper-sizes-7file",
+ "group": "m2-ultra-whisper-sizes-7file",
  "question": "Whisper tiny, base, small and large-v2 at library defaults on the 7-file subset, 3 runs each; turbo greedy (temperature 0), 1 run; tiny with language autodetect, 3 runs",
  "docs": [
   "docs/benchmarks/engines/whisper.md",

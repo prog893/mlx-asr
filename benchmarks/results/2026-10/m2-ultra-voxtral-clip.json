@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-clip",
+ "group": "m2-ultra-voxtral-clip",
  "question": "Voxtral on the 935s clip: chunk length, overlap, VAD, carry-context, silence compaction, and the weight-precision ladder (plain CER, complete reference)",
  "docs": [
   "docs/benchmarks/chunking.md",

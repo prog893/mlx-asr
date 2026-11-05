@@ -162,11 +162,11 @@ mlx-asr audio.wav --stats-json stats.json      # peak_memory_gb in the JSON
 [^p5]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_8bit_c15`, `qwen3_1.7B_8bit_c15`
 [^p6]: [m2-ultra-peak-memory-kotoba.json](../../../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079`
 [^p7]: [ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_wfp16_c60b16_kv8`
-[^p8]: [ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`
-[^p9]: [ultra-voxtral-clip.json](../../../benchmarks/results/2026-10/ultra-voxtral-clip.json) runs `compact_c60b16_kv0_off`
+[^p8]: [m2-ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`
+[^p9]: [m2-ultra-voxtral-clip.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `compact_c60b16_kv0_off`
 [^p10]: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_bf16_c30`
 [^p11]: [ultra-kotoba-conversion.json](../../../benchmarks/results/2026-10/ultra-kotoba-conversion.json) runs `pm_kotoba_cold_r112`, `pm_kotoba_warm_r112`
-[^p12]: [ultra-voxtral-clip-cli.json](../../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_fp16`
+[^p12]: [m2-ultra-voxtral-clip-cli.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_fp16`
 [^p13]: [m4-voxtral-chunking.json](../../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3` (6.87GB on all three)
 [^p14]: [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`
 [^p15]: [m4-voxtral-8bit.json](../../../benchmarks/results/2026-10/m4-voxtral-8bit.json) runs `m4_c30b32_w8bit_r1`, `m4_c30b32_w8bit_r2`, `m4_c30b32_w8bit_r3`

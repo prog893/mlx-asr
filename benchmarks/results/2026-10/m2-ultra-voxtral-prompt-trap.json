@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-prompt-trap",
+ "group": "m2-ultra-voxtral-prompt-trap",
  "question": "Voxtral with no prompt against an instruction prompt on the 7-file subset at 30s / batch 32 / kv8",
  "docs": [
   "docs/benchmarks/prompt.md"

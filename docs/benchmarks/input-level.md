@@ -129,7 +129,7 @@ Attenuating a clip by 14 dB and transcribing it three ways:
 | attenuated -14 dB, `--gain none` | 10.84% |
 | attenuated -14 dB, `--gain auto` | **8.61%** |
 
-Source: [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c30b32_kv8`, `hk_attn14_gainnone`, `hk_attn14_gainauto`, `score_clip`
+Source: [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c30b32_kv8`, `hk_attn14_gainnone`, `hk_attn14_gainauto`, `score_clip`
 
 `auto` recovers essentially all of the 2.21-point loss,[^g3] which is what makes it safe as the
 default: inert on well-recorded material, and it repairs quiet material almost exactly.
@@ -184,6 +184,6 @@ already peaking near full scale, which is exactly what `auto` declines to touch.
 
 [^g1]: [ultra-input-gain.json](../../benchmarks/results/2026-10/ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_m12db_c30b32_kv8#mode -12`, `gain7_m20db_c30b32_kv8#mode -20`, `gain7_p6db_c30b32_kv8#mode +6` (weighted by reference lengths from [corpus.json](../../benchmarks/results/corpus.json))
 [^g2]: [ultra-input-gain.json](../../benchmarks/results/2026-10/ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_p6db_c30b32_kv8#mode +6` (the peak column of the recording in the clamp table)
-[^g3]: [ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/ultra-voxtral-clip-cli.json) runs `hk_c30b32_kv8`, `hk_attn14_gainnone`, `hk_attn14_gainauto`, `score_clip`
+[^g3]: [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c30b32_kv8`, `hk_attn14_gainnone`, `hk_attn14_gainauto`, `score_clip`
 [^g4]: [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_gain`; [m2-ultra-voxtral-clip-recheck.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-recheck.json) runs `noop_clip_auto_sha256` (cmp exit 0, identical SHA-256)
 [^g5]: [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_gain`
