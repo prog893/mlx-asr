@@ -303,7 +303,7 @@ is not measurement noise: expect ~1 point per file even with everything else fix
 
 **Corrected 2026-08-07, by running the identical config on all 18 files on both hosts
 rather than one.** There is no ~1 point floor. 11 of 18 files score *identically* to two
-decimals across the M4 and the Ultra, 16 of 18 agree within 0.16 points, and the 112s file
+decimals across the M4 and the M2 Ultra, 16 of 18 agree within 0.16 points, and the 112s file
 quoted above is the worst case rather than the typical one. The magnitude scales inversely
 with reference length, which is the obvious explanation in hindsight: this file has 422
 reference characters, so one flipped token is worth several points, while the same flip in a
@@ -1399,18 +1399,18 @@ audio"; only more clips can.
 | comparison | diff (points) | 95% CI | verdict |
 |---|---|---|---|
 | **prompt: generic instruction vs none** | 5.90 | [+1.40, +11.64] | **no prompt wins by far** |
-| Ultra: energy vs VAD boundaries, 60s | 3.00 | [+0.74, +5.93] | **energy wins** |
+| M2 Ultra: energy vs VAD boundaries, 60s | 3.00 | [+0.74, +5.93] | **energy wins** |
 | M4 16GB: 30s chunks, overlap 8s vs 0s | 1.88 | [+0.73, +3.23] | **overlap wins** |
-| Ultra: 60s vs 30s chunks | 1.85 | [+0.71, +3.24] | **60s wins** |
-| Ultra: 30s chunks, overlap 8s vs 0s | 1.50 | [+0.36, +2.96] | **overlap wins** |
+| M2 Ultra: 60s vs 30s chunks | 1.85 | [+0.71, +3.24] | **60s wins** |
+| M2 Ultra: 30s chunks, overlap 8s vs 0s | 1.50 | [+0.36, +2.96] | **overlap wins** |
 | U+FFFD fix (same config, before vs after) | 0.40 | [+0.05, +0.81] | **fix wins** |
-| Ultra: 60s chunks, overlap 0s vs 8s | 0.69 | [-1.47, +0.07] | not resolvable |
-| Ultra: 90s vs 60s chunks | 0.62 | [-0.36, +1.69] | not resolvable |
+| M2 Ultra: 60s chunks, overlap 0s vs 8s | 0.69 | [-1.47, +0.07] | not resolvable |
+| M2 Ultra: 90s vs 60s chunks | 0.62 | [-0.36, +1.69] | not resolvable |
 | prompt: term list vs none | 0.19 | [-0.26, +0.60] | not resolvable |
 | prompt: topic sentence vs none | 0.19 | [-0.17, +0.57] | not resolvable |
 | prompt: term order fwd vs reversed | 0.12 | [-0.26, +0.59] | not resolvable |
-| Ultra: fp16 vs 4bit (tuned cfg) | 0.07 | [-0.33, +0.48] | not resolvable |
-| Ultra: kv8 vs unquantized KV | 0.02 | [+0.00, +0.07] | not resolvable |
+| M2 Ultra: fp16 vs 4bit (tuned cfg) | 0.07 | [-0.33, +0.48] | not resolvable |
+| M2 Ultra: kv8 vs unquantized KV | 0.02 | [+0.00, +0.07] | not resolvable |
 | M4 16GB: default (60s) vs --fast (30s+ov8) | 0.02 | [-0.81, +1.00] | not resolvable |
 
 Six claims survive as significant: **a generic instruction in the prompt field is
@@ -1537,13 +1537,13 @@ lenient as the fair number.
 | 28 | 60s chunks, b16, --compact-silence | 8.23% | 42.1s | 22.2x | on this model compaction *helps* (9.13 -> 8.23 at 30s), unlike on the M4 16GB's nvfp4 |
 | 29 | 30s chunks, b32, --compact-silence | 8.59% | 31.3s | 29.8x | del stays flat (123 -> 109), vs 115 -> 338 on M4 16GB nvfp4 |
 
-The Ultra reaches the best accuracy *and* 21x by using long chunks, because the
+The M2 Ultra reaches the best accuracy *and* 21x by using long chunks, because the
 whole clip fits in one batch. On the M4 16GB that choice costs speed. Chunk length
 drives accuracy; batch size drives throughput.
 
 **Silence compaction is model-dependent**, which is the one result that does not
 transfer: identical audio and code, 12% of frames removed, yet nvfp4 on the M4 16GB
-lost huge amounts of text (deletions 3x) while 4-bit affine on the Ultra
+lost huge amounts of text (deletions 3x) while 4-bit affine on the M2 Ultra
 improved by ~0.9 CER points. Chunk cut quality actually got *better* after
 compaction (no cut louder than -50dB, vs 3 cuts above -45dB before), so the
 cause is not worse seams: removing the pauses appears to destabilize the
@@ -1551,7 +1551,7 @@ weaker-quantized model's own segmentation. Left off by default.
 
 ## Weight precision, including unquantized fp16 (M2 Ultra 128GB)
 
-The 16GB M4 16GB cannot hold fp16, so this is the test the Ultra existed for: is
+The 16GB M4 16GB cannot hold fp16, so this is the test the M2 Ultra existed for: is
 quantization costing accuracy at all? Config held fixed at 60s chunks, batch 16,
 delay 2400ms, same prompt; only the weights change. `scripts/benchmarks/sweep_precision.py`.
 
@@ -1672,7 +1672,7 @@ optimum, and collapses at 15s (half the chunk length, where the warm-up region
 starts dominating the chunk and EOS handling gets unreliable). 4s buys most of the
 gain for half the cost of 8s.
 
-**Overlap only pays where seams are dense.** At 60s chunks on the Ultra the point
+**Overlap only pays where seams are dense.** At 60s chunks on the M2 Ultra the point
 estimates go the other way (0s 7.37%, 4s 7.59%, 8s 8.06%), though a paired test
 puts that at -0.69 points with CI [-1.47, +0.07], so "it stops helping" is
 supported while "it hurts" is not. Either way there is nothing to gain at 60s, so
@@ -1910,7 +1910,7 @@ the overlap rows are clean.
 ## Prompt style, ordering and separators
 
 `scripts/benchmarks/ab_prompt.py`, now domain-agnostic: pass `--terms` or a
-`--prompt-file` of labelled variants. Run on the Ultra, 60s chunks, batch 16, kv8,
+`--prompt-file` of labelled variants. Run on the M2 Ultra, 60s chunks, batch 16, kv8,
 scored on text output. 31-token prompt window.
 
 | variant | tokens | kept | CER | vs none |
@@ -1967,7 +1967,7 @@ truncation, silently.
 | bare spaces | 36 | 10.05% | 9.82% |
 
 The machines disagree in sign: every variant helped on the M4 16GB and every one hurt
-on the Ultra, whose no-prompt baseline was the best cell in the table. Models
+on the M2 Ultra, whose no-prompt baseline was the best cell in the table. Models
 differ (nvfp4 vs 4bit affine) so this is not a clean isolation of the prompt,
 but the within-column spread (~0.5 points) is the same size as the
 between-column disagreement. Conclusion: prompt bias is a weak, unreliable
@@ -2020,7 +2020,7 @@ Speed is not comparable between those two rows: the second arm ran while the hos
 unrelated background load and the harness flagged it. Accuracy is unaffected because
 decoding is greedy.
 
-A cross-machine comparison came free with this, since the Ultra had already produced the
+A cross-machine comparison came free with this, since the M2 Ultra had already produced the
 identical 30s config for the headline. That is what withdrew the ~1 point per-file floor
 (see the determinism section above): 11 of 18 files identical, 16 within 0.16 points.
 
@@ -2126,7 +2126,7 @@ looked obviously right and was not.
 
 ### Shorter windows are better on every axis, which no other engine here does
 
-7-file subset, one run per arm, sequential on the idle Ultra:
+7-file subset, one run per arm, sequential on the idle M2 Ultra:
 
 | window | JP covCER | kanaCER | EN covWER | x rt | peak GB |
 |---|---|---|---|---|---|
@@ -2216,7 +2216,7 @@ should not be in a reference table, and following that led somewhere worse: the 
 size-sweep table in engines.md measured `large-v2`, `medium` and `small` at mlx-whisper's
 library defaults, while the CLI ships those three with `condition_on_previous_text=False`.
 
-Re-measured all seven sizes at the shipped config, 20 files, idle Ultra, one arm at a
+Re-measured all seven sizes at the shipped config, 20 files, idle M2 Ultra, one arm at a
 time, with peak GPU memory:
 
 | size | JP covCER | EN covWER | x rt | peak GB | old (library defaults) |
@@ -2439,7 +2439,7 @@ The docs tell users to pass `--language`.
 
 ### Host conditions, and what did not run
 
-The Ultra now hosts other GPU clients permanently, loading models at unpredictable
+The M2 Ultra now hosts other GPU clients permanently, loading models at unpredictable
 times, plus the user's desktop work. Per the user, throughput is measured under those conditions rather than
 voided. Disk was the binding constraint (down to 12GB free at one point): every cache was
 deleted after its run, and the 24B 8bit build came from `convert_drop_source.py`, which
