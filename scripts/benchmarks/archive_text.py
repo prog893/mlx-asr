@@ -20,7 +20,7 @@ import re
 import sys
 from pathlib import Path
 
-from archive_results import Scrubber
+from archive_results import Scrubber, check_unique_keys
 
 PROGRESS = re.compile(r"(Fetching \d+ files|\d+%\|)")
 VAR = re.compile(r"\$\{?(\w+)\}?")
@@ -126,6 +126,7 @@ def main():
         old, _, new = spec.partition("=")
         for run in runs:
             run["run"] = run["run"].replace(old, new)
+    check_unique_keys(runs)
     group = scrub({"group": a.group, "question": a.question, "docs": a.doc, "note": a.note,
                    "runs": runs})
     text = json.dumps(group, indent=1, ensure_ascii=False)

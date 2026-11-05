@@ -417,3 +417,10 @@ def test_queue_commands_keep_a_multi_line_quoted_command(tmp_path):
     cmds = archive_text.queue_commands(qf)
     assert archive_text.command_for("probe", cmds) == '$PY -c "\nimport sys\nprint(1)\n"'
     assert archive_text.command_for("next", cmds) == "echo hi"
+
+
+def test_renamed_runs_must_stay_unique():
+    from archive_results import check_unique_keys
+    check_unique_keys([{"run": "a", "arm": "x"}, {"run": "a", "arm": "y"}, {"run": "b"}])
+    with pytest.raises(SystemExit, match="collide"):
+        check_unique_keys([{"run": "baseline"}, {"run": "baseline"}])

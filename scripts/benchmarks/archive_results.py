@@ -364,6 +364,14 @@ def add_supplement(run: dict, path: Path, keep_ref: bool):
                                "added": [r["file"] for r in added]})
 
 
+def check_unique_keys(runs):
+    """Every run must stay addressable by archive_query: `run`, or `run#arm` for a sweep arm."""
+    keys = [f"{r['run']}#{r['arm']}" if r.get("arm") else r["run"] for r in runs]
+    dup = sorted({k for k in keys if keys.count(k) > 1})
+    if dup:
+        sys.exit(f"REFUSED: run names collide after --rename-runs: {', '.join(dup)}")
+
+
 def run_name(path: Path, runs) -> str:
     """The run's name in its group: the file stem, or `<directory>__<stem>` when another run
     in the same group has the same stem, so every run name in a group is unique."""
@@ -511,6 +519,7 @@ def main():
         old, _, new = spec.partition("=")
         for run in group["runs"]:
             run["run"] = run["run"].replace(old, new)
+    check_unique_keys(group["runs"])
     group = scrub(group)
     if a.revisions:
         revisions = json.load(open(a.revisions))
