@@ -22,7 +22,7 @@ SWEEPS = {
             ("fp32", "| **fp32 (default)** |", ("30.06%", "52.9x", "3.28GB")),
             ("int8", "| int8 |", ("36.55%", "79.9x", "2.72GB")),
         ],
-        "source": "ultra-picker-speed.json#pk_reazon_fp32_default_s1,pk_reazon_fp32_default_s2,pk_reazon_fp32_default_s3;ultra-engines-jp-only.json#jp_reazon_int8_c30_r1,jp_reazon_int8_c30_r2,jp_reazon_int8_c30_r3",
+        "source": "m2-ultra-picker-speed.json#pk_reazon_fp32_default_s1,pk_reazon_fp32_default_s2,pk_reazon_fp32_default_s3;m2-ultra-engines-jp-only.json#jp_reazon_int8_c30_r1,jp_reazon_int8_c30_r2,jp_reazon_int8_c30_r3",
         "chosen": "fp32", "chosen_series": "Japanese CER",
     },
 }

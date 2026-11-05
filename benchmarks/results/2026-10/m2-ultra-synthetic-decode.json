@@ -1,5 +1,5 @@
 {
- "group": "ultra-synthetic-decode",
+ "group": "m2-ultra-synthetic-decode",
  "question": "Synthetic decode throughput and peak memory by batch (mlx-asr-bench, 4-bit, 400 steps, batches 1-128), 3 runs",
  "docs": [
   "docs/benchmarks/decode-throughput.md"
@@ -7,7 +7,7 @@
  "note": "",
  "runs": [
   {
-   "run": "synth_ultra_4bit_r1",
+   "run": "synth_m2_ultra_4bit_r1",
    "command": "mlx-asr-bench --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 400 --batches 1,2,4,8,12,16,24,32,48,64,96,128 --json synth_ultra_4bit_r1.json",
    "params": {
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -120,7 +120,7 @@
    ]
   },
   {
-   "run": "synth_ultra_4bit_r2",
+   "run": "synth_m2_ultra_4bit_r2",
    "command": "mlx-asr-bench --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 400 --batches 1,2,4,8,12,16,24,32,48,64,96,128 --json synth_ultra_4bit_r2.json",
    "params": {
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",
@@ -233,7 +233,7 @@
    ]
   },
   {
-   "run": "synth_ultra_4bit_r3",
+   "run": "synth_m2_ultra_4bit_r3",
    "command": "mlx-asr-bench --model mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit --steps 400 --batches 1,2,4,8,12,16,24,32,48,64,96,128 --json synth_ultra_4bit_r3.json",
    "params": {
     "model": "mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit",

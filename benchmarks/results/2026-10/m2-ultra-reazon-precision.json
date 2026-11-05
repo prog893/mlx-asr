@@ -1,5 +1,5 @@
 {
- "group": "ultra-reazon-precision",
+ "group": "m2-ultra-reazon-precision",
  "question": "reazon-k2 fp32 and int8 over the 20-file corpus (17 Japanese files scored); August 2026 runs, recovered from the committed legacy results",
  "docs": [
   "docs/benchmarks/engines/reazon.md"

@@ -64,8 +64,8 @@ where the reduction order is fixed and fails where it is not.
 
 - A hypothesis file cannot be validated by re-decoding it elsewhere.
 - A config comparison must be run on one machine. Comparing an M4 16GB row against an
-  Ultra row measures hardware plus config rather than config alone.
-- The cross-machine agreement check in this project (M4 16GB nvfp4 versus Ultra 4-bit on
+  M2 Ultra row measures hardware plus config rather than config alone.
+- The cross-machine agreement check in this project (M4 16GB nvfp4 versus M2 Ultra 4-bit on
   the 7-file subset, within 0.8 points on 4 of 7 files and 1.17 to 1.34 points[^d9] apart on the
   other 3)[^d9] cannot by itself separate quantization from hardware. It was set up as a
   quantization comparison and is not one. Run at 4-bit on both machines, the same 7 files
@@ -212,7 +212,7 @@ that happens never to trip fallback, which is not knowable before the run.
 [^d3]: [m4-voxtral-chunking.json](../../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`; [m2-ultra-voxtral-batch.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`
 [^d4]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6` (rows of the 7-file subset); [m2-ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
 [^d5]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
-[^d6]: [m2-ultra-kotoba-windows.json](../../../benchmarks/results/2026-10/m2-ultra-kotoba-windows.json) runs `pk_kotoba_c10_s1`, `pk_kotoba_c10_s2`, `pk_kotoba_c10_s3`; [ultra-kotoba-engines.json](../../../benchmarks/results/2026-10/ultra-kotoba-engines.json) runs `k20_mlx_c15_r1`, `k20_mlx_c15_r2`, `k20_mlx_c15_r3`, `k20_hf22_c15_r1`, `k20_hf22_c15_r2`, `k20_hf22_c15_r3`
+[^d6]: [m2-ultra-kotoba-windows.json](../../../benchmarks/results/2026-10/m2-ultra-kotoba-windows.json) runs `pk_kotoba_c10_s1`, `pk_kotoba_c10_s2`, `pk_kotoba_c10_s3`; [m2-ultra-kotoba-engines.json](../../../benchmarks/results/2026-10/m2-ultra-kotoba-engines.json) runs `k20_mlx_c15_r1`, `k20_mlx_c15_r2`, `k20_mlx_c15_r3`, `k20_hf22_c15_r1`, `k20_hf22_c15_r2`, `k20_hf22_c15_r3`
 [^d7]: [m2-ultra-whisper-sizes-7file.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes-7file.json) runs `w7_turbo_greedy_r1`
-[^d8]: [ultra-kotoba-determinism.json](../../../benchmarks/results/2026-10/ultra-kotoba-determinism.json) runs `kdet112_r1`, `kdet112_r2`, `kdet112_r3`, `kdet112_r4`, `kdet112_r5`
+[^d8]: [m2-ultra-kotoba-determinism.json](../../../benchmarks/results/2026-10/m2-ultra-kotoba-determinism.json) runs `kdet112_r1`, `kdet112_r2`, `kdet112_r3`, `kdet112_r4`, `kdet112_r5`
 [^d9]: [m4-cross-machine-7file.json](../../../benchmarks/results/2026-10/m4-cross-machine-7file.json) runs `m4_mincut7_vox_c30b32_kv8_nvfp4`, `m4_mincut7_vox_c30b32_kv8_4bit`; [m2-ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8` (per-file coverage error, the unit each file is scored in)

@@ -38,7 +38,7 @@ def ladder(gpu_gb: float, quick: bool) -> list:
     else:
         base = [1, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256]
     # KV is roughly 0.11GB per row per 400 steps at this model size; keep a
-    # source: ultra-synthetic-decode.json#synth_ultra_4bit_r1,synth_ultra_4bit_r2,synth_ultra_4bit_r3 (peak slope over batch)
+    # source: m2-ultra-synthetic-decode.json#synth_m2_ultra_4bit_r1,synth_m2_ultra_4bit_r2,synth_m2_ultra_4bit_r3 (peak slope over batch)
     # wide margin so the bench itself never swaps.
     cap = max(8, int(gpu_gb / 0.13))
     return [b for b in base if b <= cap]

@@ -1,5 +1,5 @@
 {
- "group": "ultra-kotoba-conversion",
+ "group": "m2-ultra-kotoba-conversion",
  "question": "kotoba-whisper first use through the CLI on the 112s file: peak memory with the conversion (cold) and without (warm); and v2.0 against v2.2 weights, every tensor",
  "docs": [
   "docs/benchmarks/reference/peak-memory.md",

@@ -14,7 +14,7 @@ loses content on the 112s file. <!-- not-measured: 60s is a window length -->
 |---|---|---|
 | `parakeet --chunk-seconds` | `120` | 300s is 6.50 points worse on average over 16 files and nearly doubles peak memory; 60s ties 120s over 16 files (paired -1.78, CI [-3.49, +0.44]) but loses content on the 112s file (299 against 379 characters) |
 
-Source: [ultra-parakeet-window.json](../../../benchmarks/results/2026-10/ultra-parakeet-window.json) runs `parakeet_c120`, `parakeet_c300`, `parakeet_c60`
+Source: [m2-ultra-parakeet-window.json](../../../benchmarks/results/2026-10/m2-ultra-parakeet-window.json) runs `parakeet_c120`, `parakeet_c300`, `parakeet_c60`
 
 **Setup:** the 17 Japanese files of the [20-file corpus](../reference/corpus.md#the-20-file-corpus) (6.85h[^p0]), M2 Ultra, scored by coverage CER at `min_cut` 30 ([metrics.md](../reference/metrics.md)). The engine decodes greedily.
 
@@ -39,7 +39,7 @@ content (299 characters of a 422-character reference, 31.04% CER against 12.09%)
 | **120s** | 25.78% | 244.7x | 4.77GB |
 | 300s | 32.28% | 204.4x | 8.5GB |
 
-Source: [ultra-parakeet-window.json](../../../benchmarks/results/2026-10/ultra-parakeet-window.json) runs `parakeet_c120`, `parakeet_c300`, `parakeet_c60` (60s over the 16 files the other two scored: 24.00%)
+Source: [m2-ultra-parakeet-window.json](../../../benchmarks/results/2026-10/m2-ultra-parakeet-window.json) runs `parakeet_c120`, `parakeet_c300`, `parakeet_c60` (60s over the 16 files the other two scored: 24.00%)
 
 Paired over 16 files, 300s is +6.50 points worse on average and loses on 10[^p2], with the
 damage concentrated where windows are longest relative to speech density (one file
@@ -79,6 +79,6 @@ kana/lenient CER beside coverage CER. Result file: `benchmarks/parakeet_c120.jso
 - [metrics.md](../reference/metrics.md): coverage CER and `min_cut`
 
 [^p0]: [corpus.json](../../../benchmarks/results/corpus.json)
-[^p1]: [ultra-picker-speed.json](../../../benchmarks/results/2026-10/ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
-[^p2]: [ultra-parakeet-window.json](../../../benchmarks/results/2026-10/ultra-parakeet-window.json) runs `parakeet_c120`, `parakeet_c300`, `parakeet_c60`
-[^p3]: [ultra-picker-speed.json](../../../benchmarks/results/2026-10/ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [ultra-engines-jp-only.json](../../../benchmarks/results/2026-10/ultra-engines-jp-only.json) runs `jp_reazon_int8_c30_r1`, `jp_reazon_int8_c30_r2`, `jp_reazon_int8_c30_r3`
+[^p1]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+[^p2]: [m2-ultra-parakeet-window.json](../../../benchmarks/results/2026-10/m2-ultra-parakeet-window.json) runs `parakeet_c120`, `parakeet_c300`, `parakeet_c60`
+[^p3]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-engines-jp-only.json](../../../benchmarks/results/2026-10/m2-ultra-engines-jp-only.json) runs `jp_reazon_int8_c30_r1`, `jp_reazon_int8_c30_r2`, `jp_reazon_int8_c30_r3`

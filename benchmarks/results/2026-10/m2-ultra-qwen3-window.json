@@ -1,5 +1,5 @@
 {
- "group": "ultra-qwen3-window",
+ "group": "m2-ultra-qwen3-window",
  "question": "qwen3-asr window length on the 7-file subset",
  "docs": [
   "docs/benchmarks/engines/qwen3-asr.md"

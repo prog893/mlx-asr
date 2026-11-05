@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-kv",
+ "group": "m2-ultra-voxtral-kv",
  "question": "Voxtral KV cache precision, with 4-bit and with 8-bit weights",
  "docs": [
   "docs/benchmarks/quantization.md"

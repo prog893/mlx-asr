@@ -76,7 +76,7 @@ ranges.[^b48] The M4 batch stays 32 because B64's worst-case padded file peaked 
 | M2 Ultra 128GB | 96 | 12.98 | 77.1 | 99.7 | 16.16 |
 | M2 Ultra 128GB | 128 | 10.15 | 98.6 | **103.9** | 19.61 |
 
-Source: [m4-synthetic-decode.json](../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1`, `synth_nvfp4_r2`, `synth_nvfp4_r3`; [ultra-synthetic-decode.json](../../benchmarks/results/2026-10/ultra-synthetic-decode.json) runs `synth_ultra_4bit_r1`, `synth_ultra_4bit_r2`, `synth_ultra_4bit_r3`
+Source: [m4-synthetic-decode.json](../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1`, `synth_nvfp4_r2`, `synth_nvfp4_r3`; [m2-ultra-synthetic-decode.json](../../benchmarks/results/2026-10/m2-ultra-synthetic-decode.json) runs `synth_m2_ultra_4bit_r1`, `synth_m2_ultra_4bit_r2`, `synth_m2_ultra_4bit_r3`
 
 Read the M4 rows carefully: **batch 8 costs 5x more per step than batch 1**,[^d1] and
 batch 12 is *cheaper* than batch 8. Batch 1 at 21.3ms[^d1] is close to 2.5GB / 120GB/s = 20.8ms, the <!-- not-measured: 2.5GB is the weight footprint and 120GB/s the nominal M4 memory bandwidth -->
@@ -85,7 +85,7 @@ kernel-path effect. Per-step cost grows roughly linearly with batch in the 2-8 r
 as though the batched quantized matmul falls back to a per-row path and then recovers
 once the batch is large enough to select a tiled kernel.
 
-The Ultra shows the same shape, much shallower, plus a second regression at 48, where x
+The M2 Ultra shows the same shape, much shallower, plus a second regression at 48, where x
 realtime falls from 75.2 at B32 to 71.8.[^d2] At 96 ms/step rises again but x realtime does
 not fall: 95.9 at B64, 99.7 at B96, 103.9 at B128.[^d2]
 
@@ -146,7 +146,7 @@ Decode is not the whole story. Splitting wall clock on the 935s[^c0] clip, 60s c
 | decode (816 steps) | 80.0s | 31.2s |
 | total | 137.2s (6.8x) | 44.4s (21.0x) |
 
-Source: [m4-stage-timing.json](../../benchmarks/results/2026-10/m4-stage-timing.json) runs `m4_stages_nvfp4_c60b16_r1`, `m4_stages_nvfp4_c60b16_r2`, `m4_stages_nvfp4_c60b16_r3` (M4 column); [ultra-stage-timing.json](../../benchmarks/results/2026-10/ultra-stage-timing.json) runs `stages_ultra_4bit_c60b16_r1`, `stages_ultra_4bit_c60b16_r2`, `stages_ultra_4bit_c60b16_r3` (M2 Ultra column); each column the mean of 3 runs, no KV quantization
+Source: [m4-stage-timing.json](../../benchmarks/results/2026-10/m4-stage-timing.json) runs `m4_stages_nvfp4_c60b16_r1`, `m4_stages_nvfp4_c60b16_r2`, `m4_stages_nvfp4_c60b16_r3` (M4 column); [m2-ultra-stage-timing.json](../../benchmarks/results/2026-10/m2-ultra-stage-timing.json) runs `stages_m2_ultra_4bit_c60b16_r1`, `stages_m2_ultra_4bit_c60b16_r2`, `stages_m2_ultra_4bit_c60b16_r3` (M2 Ultra column); each column the mean of 3 runs, no KV quantization
 
 The encoder is 35% of the M4's wall clock at 60s chunks[^s1] and grows as chunks get shorter, since each chunk
 pays its own conv stem and 32-layer causal pass. That caps the short-chunk strategy, though
@@ -266,7 +266,7 @@ inline bool use_qmv_wide(const std::string& mode, metal::Device& d) {
 
 The M2 Ultra reports `applegpu_g14d`, GPU generation 14, and the weights measured here are
 4-bit **affine**, so at 4-bit this machine has never reached `qmv_wide`. The hypothesis was that the gate is
-mistuned for an Ultra: it was justified upstream from an M2 Pro, and an Ultra has a very
+mistuned for an M2 Ultra: it was justified upstream from an M2 Pro, and an M2 Ultra has a very
 different bandwidth-to-core ratio, which is the regime where amortizing weight reads should
 pay more rather than less.
 
@@ -362,8 +362,8 @@ with an optional per-profile cap at the largest batch measured reliable.
 
 The batch is the largest of the sizes in `FAST_BATCHES` (1, 12, 16, 24, 32, 64, 96, 128)
 whose predicted peak fits the budget, then capped by the profile's `max_batch` where one is
-set. The list leaves out 48, where synthetic x realtime drops on both machines (Ultra 75.2 to
-71.8, M4 25.8 to 21.2 from B32).[^d1][^d2] It includes 96, which shows no such drop on the Ultra
+set. The list leaves out 48, where synthetic x realtime drops on both machines (M2 Ultra 75.2 to
+71.8, M4 25.8 to 21.2 from B32).[^d1][^d2] It includes 96, which shows no such drop on the M2 Ultra
 (99.7, between 95.9 at B64 and 103.9 at B128).[^d2]
 
 - **predicted peak**: model weights + 3.4GB + 0.0018GB per row-second of chunk audio. <!-- not-measured: the constants of the batch model in mlx_asr/hardware.py -->
@@ -402,7 +402,7 @@ model), and needs no audio: see
 [^q1]: [m2-ultra-qmv-wide.json](../../benchmarks/results/2026-10/m2-ultra-qmv-wide.json) runs `qmv_default_r1`, `qmv_default_r2`, `qmv_wide_r1`, `qmv_wide_r2`
 [^b64]: [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b64`, `c30b64_r2`, `c30b64_r3`
 [^b32]: [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b32`, `c60b32_r1`
-[^d2]: [ultra-synthetic-decode.json](../../benchmarks/results/2026-10/ultra-synthetic-decode.json) runs `synth_ultra_4bit_r1`, `synth_ultra_4bit_r2`, `synth_ultra_4bit_r3`
+[^d2]: [m2-ultra-synthetic-decode.json](../../benchmarks/results/2026-10/m2-ultra-synthetic-decode.json) runs `synth_m2_ultra_4bit_r1`, `synth_m2_ultra_4bit_r2`, `synth_m2_ultra_4bit_r3`
 [^b48]: [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b32`, `c60b32_r1`, `batch_m4_repeat_20261009__c60b32_r2`, `batch_m4_b64_20261010__c60b32_r2`, `batch_m4_repeat_20261009__c60b32_r3`, `batch_m4_b64_20261010__c60b32_r3`, `c60b32_r4`, `c60b48`, `c60b48_r1`, `c60b48_r2`, `c60b48_r3`, `c60b64`, `c60b64_r1`, `c60b64_r2`, `c60b64_r3`; [m4-voxtral-worstcase.json](../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst64_c60b64`; [m4-synthetic-decode.json](../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1` (the recorded GPU working set)
 [^p1]: [m4-decode-probes.json](../../benchmarks/results/2026-10/m4-decode-probes.json) runs `m4_probe_kvlen_nvfp4_b16`
 [^p2]: [m4-decode-probes.json](../../benchmarks/results/2026-10/m4-decode-probes.json) runs `m4_probe_batch_split_nvfp4`

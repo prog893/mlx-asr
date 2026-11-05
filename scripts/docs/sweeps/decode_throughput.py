@@ -116,8 +116,8 @@ SWEEPS = {
         ],
         "source": ("m4-stage-timing.json#m4_stages_nvfp4_c60b16_r1,m4_stages_nvfp4_c60b16_r2,"
                    "m4_stages_nvfp4_c60b16_r3;"
-                   "ultra-stage-timing.json#stages_ultra_4bit_c60b16_r1,"
-                   "stages_ultra_4bit_c60b16_r2,stages_ultra_4bit_c60b16_r3"),
+                   "m2-ultra-stage-timing.json#stages_m2_ultra_4bit_c60b16_r1,"
+                   "stages_m2_ultra_4bit_c60b16_r2,stages_m2_ultra_4bit_c60b16_r3"),
         "zero": True,
     },
 }

@@ -13,7 +13,7 @@ SWEEPS = {
         "rows": [(60, "| 60s |", ("24.06%", "269.8x", "4.56GB")),
                  (120, "| **120s** |", ("25.78%", "244.7x", "4.77GB")),
                  (300, "| 300s |", ("32.28%", "204.4x", "8.5GB"))],
-        "source": "ultra-parakeet-window.json#parakeet_c120,parakeet_c300,parakeet_c60",
+        "source": "m2-ultra-parakeet-window.json#parakeet_c120,parakeet_c300,parakeet_c60",
         "panels": [{"series": [0], "ylabel": "JP coverage CER %", "title": "accuracy"},
                    {"series": [1], "ylabel": "x realtime", "title": "throughput"},
                    {"series": [2], "ylabel": "peak GPU GB", "title": "memory", "zero": True}],

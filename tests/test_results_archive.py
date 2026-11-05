@@ -398,8 +398,8 @@ def test_query_reads_plain_cer_rows_and_corpus_reference_lengths():
     q = _query()
     clip = q.select(q.load_group("m2-ultra-voxtral-clip"), ["ov30_0s#overlap 0"])[0]
     assert q.aggregate(clip) is not None
-    gain = q.select(q.load_group("ultra-input-gain"), ["gain7_asrecorded_c30b32_kv8#mode 0"])[0]
-    assert round(q.aggregate(gain) * 100, 2) == 16.44  # source: ultra-input-gain.json#gain7_asrecorded_c30b32_kv8#mode 0
+    gain = q.select(q.load_group("m2-ultra-input-gain"), ["gain7_asrecorded_c30b32_kv8#mode 0"])[0]
+    assert round(q.aggregate(gain) * 100, 2) == 16.44  # source: m2-ultra-input-gain.json#gain7_asrecorded_c30b32_kv8#mode 0
 
 
 def test_paired_with_no_common_file_is_a_clear_error():
@@ -417,3 +417,10 @@ def test_queue_commands_keep_a_multi_line_quoted_command(tmp_path):
     cmds = archive_text.queue_commands(qf)
     assert archive_text.command_for("probe", cmds) == '$PY -c "\nimport sys\nprint(1)\n"'
     assert archive_text.command_for("next", cmds) == "echo hi"
+
+
+def test_renamed_runs_must_stay_unique():
+    from archive_results import check_unique_keys
+    check_unique_keys([{"run": "a", "arm": "x"}, {"run": "a", "arm": "y"}, {"run": "b"}])
+    with pytest.raises(SystemExit, match="collide"):
+        check_unique_keys([{"run": "baseline"}, {"run": "baseline"}])

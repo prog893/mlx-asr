@@ -1,5 +1,5 @@
 {
- "group": "ultra-input-gain",
+ "group": "m2-ultra-input-gain",
  "question": "Input gain on the 7-file subset",
  "docs": [
   "docs/benchmarks/input-level.md"

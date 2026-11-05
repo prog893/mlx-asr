@@ -364,6 +364,14 @@ def add_supplement(run: dict, path: Path, keep_ref: bool):
                                "added": [r["file"] for r in added]})
 
 
+def check_unique_keys(runs):
+    """Every run must stay addressable by archive_query: `run`, or `run#arm` for a sweep arm."""
+    keys = [f"{r['run']}#{r['arm']}" if r.get("arm") else r["run"] for r in runs]
+    dup = sorted({k for k in keys if keys.count(k) > 1})
+    if dup:
+        sys.exit(f"REFUSED: run names collide after --rename-runs: {', '.join(dup)}")
+
+
 def run_name(path: Path, runs) -> str:
     """The run's name in its group: the file stem, or `<directory>__<stem>` when another run
     in the same group has the same stem, so every run name in a group is unique."""
@@ -438,6 +446,9 @@ def main():
     p.add_argument("--set", action="append", default=[], metavar="RUN=KEY=VALUE",
                    help="a parameter RUN's JSON does not record correctly, from the queue line "
                         "that ran it (VALUE is JSON, else a string); RUN is the run JSON's stem")
+    p.add_argument("--rename-runs", action="append", default=[], metavar="FROM=TO",
+                   help="replace FROM with TO in every saved run name (the recorded commands "
+                        "keep the names they ran under)")
     p.add_argument("runs", nargs="+")
     a = p.parse_args()
     overrides = {}
@@ -504,7 +515,12 @@ def main():
     for run in group["runs"]:
         if run["run"] in prefixes:
             run["command"] = f"{prefixes[run['run']]} {run['command']}"
+    for spec in a.rename_runs:     # after every lookup by input stem
+        old, _, new = spec.partition("=")
+        for run in group["runs"]:
+            run["run"] = run["run"].replace(old, new)
     group = scrub(group)
+    check_unique_keys(group["runs"])     # after scrubbing, which can rewrite names too
     if a.revisions:
         revisions = json.load(open(a.revisions))
         for run in group["runs"]:

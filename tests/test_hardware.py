@@ -43,7 +43,7 @@ def test_measured_machines_keep_their_chunk_length_from_the_table():
 
 def test_batch_follows_memory_on_the_benchmarked_machines():
     """The two batch sweeps: B32 is the largest that ran reliably on the M4 16GB, and
-    the Ultra 128GB kept speeding up to B128 at 30s."""
+    the M2 Ultra 128GB kept speeding up to B128 at 30s."""
     assert resolve_profile(M4)["batch"] == 32
     assert resolve_profile(ULTRA)["batch"] == 128
 
@@ -101,7 +101,7 @@ def test_m4_budget_admits_b32_and_excludes_b48():
 
 
 def test_b96_is_a_measured_good_batch():
-    """The Ultra synthetic sweep shows no dip at 96 (99.7x between 95.9x at 64 and
+    """The M2 Ultra synthetic sweep shows no dip at 96 (99.7x between 95.9x at 64 and
     103.9x at 128), so a machine whose budget falls between 64 and 128 gets 96."""
     assert 96 in FAST_BATCHES
     assert derive_batch(25.0, 2.5, 60) == 96

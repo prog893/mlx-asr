@@ -129,7 +129,7 @@ SWEEPS = {
             ("reazon\nfp32", "| **reazon-k2 fp32 c30** |", ("30.06%", "27.29%", "52.9x")),
             ("reazon\nint8", "| reazon-k2 int8 c30 |", ("36.55%", None, "79.9x")),
         ],
-        "source": "m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6;m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3;ultra-picker-speed.json#pk_parakeet_default_s1,pk_parakeet_default_s2,pk_parakeet_default_s3,pk_reazon_fp32_default_s1,pk_reazon_fp32_default_s2,pk_reazon_fp32_default_s3;ultra-engines-jp-only.json#jp_reazon_int8_c30_r1,jp_reazon_int8_c30_r2,jp_reazon_int8_c30_r3",
+        "source": "m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6;m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;m2-ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3;m2-ultra-picker-speed.json#pk_parakeet_default_s1,pk_parakeet_default_s2,pk_parakeet_default_s3,pk_reazon_fp32_default_s1,pk_reazon_fp32_default_s2,pk_reazon_fp32_default_s3;m2-ultra-engines-jp-only.json#jp_reazon_int8_c30_r1,jp_reazon_int8_c30_r2,jp_reazon_int8_c30_r3",
         "chosen": "voxtral", "chosen_series": "JP coverage CER",
         "panels": [
             {"series": [0, 1], "ylabel": "CER % (lower is better)", "title": "accuracy"},
@@ -153,7 +153,7 @@ SWEEPS = {
             (20, "chunked, 20s windows", ("31.02%", "67.8x")),
             (30, "chunked, 30s windows", ("49.42%", "77.9x")),
         ],
-        "source": "m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3,kw_kotoba_c20,kw_kotoba_c20_r2,kw_kotoba_c20_r3,kw_kotoba_c30,kw_kotoba_c30_r2,kw_kotoba_c30_r3;ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3",
+        "source": "m2-ultra-kotoba-windows.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3,kw_kotoba_c20,kw_kotoba_c20_r2,kw_kotoba_c20_r3,kw_kotoba_c30,kw_kotoba_c30_r2,kw_kotoba_c30_r3;m2-ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3",
         "chosen": 15,
         "panels": [
             {"series": [0], "ylabel": "JP coverage CER %", "title": "accuracy"},
@@ -175,7 +175,7 @@ SWEEPS = {
             (20, "`chunk_length_s=20`", ("27.82%", "16.55%")),
             (30, "`chunk_length_s=30`", ("49.57%", "39.52%")),
         ],
-        "source": "ultra-kotoba-engines.json#k20_hf22_c10_r1,k20_hf22_c15_r1,k20_hf22_c15_r2,k20_hf22_c15_r3,k20_hf22_c20_r1,k20_hf22_c30_r1;m2-ultra-kotoba-engines-clip.json#kclip_hf22_c10_r1,kclip_hf22_c10_r2,kclip_hf22_c10_r3,kclip_hf22_c15_r1,kclip_hf22_c15_r2,kclip_hf22_c15_r3,kclip_hf22_c20_r1,kclip_hf22_c20_r2,kclip_hf22_c20_r3,kclip_hf22_c30_r1,kclip_hf22_c30_r2,kclip_hf22_c30_r3",
+        "source": "m2-ultra-kotoba-engines.json#k20_hf22_c10_r1,k20_hf22_c15_r1,k20_hf22_c15_r2,k20_hf22_c15_r3,k20_hf22_c20_r1,k20_hf22_c30_r1;m2-ultra-kotoba-engines-clip.json#kclip_hf22_c10_r1,kclip_hf22_c10_r2,kclip_hf22_c10_r3,kclip_hf22_c15_r1,kclip_hf22_c15_r2,kclip_hf22_c15_r3,kclip_hf22_c20_r1,kclip_hf22_c20_r2,kclip_hf22_c20_r3,kclip_hf22_c30_r1,kclip_hf22_c30_r2,kclip_hf22_c30_r3",
         "chosen": None,
         "legend_loc": "upper left",
     },

@@ -165,7 +165,7 @@ SWEEPS = {
             ("VAD", "| VAD |", ("16.18%", "25.95%", "+0.46", "+3.52", "20.3x"),
              (None, None, "[-0.86, +2.09]", "[+0.06, +5.62]", None)),
         ],
-        "source": "ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8;ultra-voxtral-chunking.json#ch_vad_c60b16",
+        "source": "m2-ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8;m2-ultra-voxtral-chunking.json#ch_vad_c60b16",
         "chosen": "energy", "chosen_series": "JP coverage CER",
         "width": 12.0,
         "panels": [
@@ -215,7 +215,7 @@ SWEEPS = {
             ("on", "| `--compact-silence` |", ("15.51%", "22.43%", "-0.21", "20.8x"),
              (None, None, "[-0.69, +0.22]", None)),
         ],
-        "source": "ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8;ultra-voxtral-chunking.json#ch_compact_c60b16_w4bit",
+        "source": "m2-ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8;m2-ultra-voxtral-chunking.json#ch_compact_c60b16_w4bit",
         "chosen": "off", "chosen_series": "JP coverage CER",
         "width": 12.0,
         "panels": [
@@ -248,7 +248,7 @@ SWEEPS = {
             ("nvfp4", "| nvfp4 |", ("15.58%", "15.56%", "+0.02", "20.1x", "20.9x"),
              (None, None, "[-0.95, +0.77]", None, None)),
         ],
-        "source": "ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w8bit_c60b16_kv8,vox_wmxfp8_c60b16_kv8,vox_wnvfp4_c60b16_kv8;ultra-voxtral-chunking.json#ch_compact_c60b16_w4bit,ch_compact_c60b16_w8bit,ch_compact_c60b16_wmxfp8,ch_compact_c60b16_wnvfp4",
+        "source": "m2-ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w8bit_c60b16_kv8,vox_wmxfp8_c60b16_kv8,vox_wnvfp4_c60b16_kv8;m2-ultra-voxtral-chunking.json#ch_compact_c60b16_w4bit,ch_compact_c60b16_w8bit,ch_compact_c60b16_wmxfp8,ch_compact_c60b16_wnvfp4",
         "chosen": None,
         "width": 13.0,
         "panels": [
@@ -277,7 +277,7 @@ SWEEPS = {
             ("60s/B16\nov8", "| 60s / B16 / ov8 |", ("15.83%", "18.4x")),
             ("30s/B32\nov0", "| **30s / B32 / ov0** |", ("15.73%", "29.3x")),
         ],
-        "source": "ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit;ultra-voxtral-chunking.json#ch_c30b32_ov8,ch_c30b16_ov0,ch_c60b32_ov0,ch_c60b16_ov8;m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3",
+        "source": "m2-ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;m2-ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit;m2-ultra-voxtral-chunking.json#ch_c30b32_ov8,ch_c30b16_ov0,ch_c60b32_ov0,ch_c60b16_ov8;m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3",
         "chosen": "30s/B32\nov0", "chosen_series": "x realtime",
         "chosen_label": "30s chosen (M2 Ultra)",
         "width": 11.0,
@@ -303,8 +303,8 @@ SWEEPS = {
             ("60s / B16", "", ("20.4x", "4.66x")),
             ("30s / B32", "", ("29.3x", "6.37x")),
         ],
-        "source": ("ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;"
-                   "ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit;"
+        "source": ("m2-ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;"
+                   "m2-ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit;"
                    "m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;"
                    "m4-voxtral-chunking.json#c60b16,c30b32,c30b32_r2,c30b32_r3"),
         "chosen": "30s / B32", "chosen_series": "M2 Ultra 128GB",

@@ -49,7 +49,7 @@ SWEEPS = {
                    "pm_kotoba_a773a315fb42,pm_kotoba_71bb5eba3baa,pm_kotoba_a1372c4d2900,"
                    "pm_kotoba_c47ad127bc83,pm_kotoba_1da58e1b2b69,pm_kotoba_b3432b40c079;"
                    "m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_8bit_c15,qwen3_1.7B_8bit_c15;"
-                   "ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8;"
+                   "m2-ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8;"
                    "m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
                    "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
                    "whisper_turbo_nocond_r6"),

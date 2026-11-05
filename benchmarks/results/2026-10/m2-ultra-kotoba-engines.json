@@ -1,5 +1,5 @@
 {
- "group": "ultra-kotoba-engines",
+ "group": "m2-ultra-kotoba-engines",
  "question": "kotoba-whisper over the 20-file corpus (17 Japanese files scored): MLX chunked driver against the authors' transformers pipeline at 15s (3 runs each), the pipeline at 10 / 20 / 30s, and v2.0 in the pipeline at 15s",
  "docs": [
   "docs/benchmarks/engines/kotoba.md"

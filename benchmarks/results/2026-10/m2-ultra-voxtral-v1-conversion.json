@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-v1-conversion",
+ "group": "m2-ultra-voxtral-v1-conversion",
  "question": "voxtral-v1 3B 8-bit: the first-use conversion against convert_drop_source.py, tensor by tensor",
  "docs": [
   "docs/benchmarks/engines/voxtral-v1.md"

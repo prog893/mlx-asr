@@ -5,7 +5,7 @@ on the machine: the CLI loads fp16 where it fits and 8-bit on 16GB Macs
 ([how a variant is chosen](../../DEFAULTS.md#how-a-variant-is-chosen)). On the 20-file corpus
 the M2 Ultra 128GB default (fp16, 30s, batch 128) scores 15.20%[^vx1] Japanese coverage CER and
 21.21% English WER at 23.9x realtime[^vx1] (mean of 3 runs), and the M4 16GB default (8-bit,
-30s, batch 32) 15.12% and 21.17% at 6.67x[^vx6]. On the Ultra that ties Whisper
+30s, batch 32) 15.12% and 21.17% at 6.67x[^vx6]. On the M2 Ultra that ties Whisper
 turbo-nocond (mean of 6 runs) on Japanese over files, +1.03 points with CI [-0.11, +2.25][^vx2],
 at 1.02-1.30x its speed[^vx2] ([engines.md](../engines.md#experiment-voxtral-against-whisper)). It needs
 no language hint and no long-form-stability flag, and greedy decoding reproduces
@@ -24,7 +24,7 @@ flags exist only on this engine and the others refuse them.
 | `--prompt` | empty | costs English 2.0 to 75.9 WER points in every arm tested, with no measurable vocabulary recall ([prompt.md](../prompt.md)) |
 | `--gap-seconds`, `--max-chars` | `1.2`, `28` | deliberately not the sweep optimum, since every timed reference is by one editor ([cue-layout.md](../cue-layout.md)) |
 
-Source: [ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`; [m2-ultra-voxtral-prompt.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`; [m2-ultra-voxtral-prompt-derived.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-derived.json) runs `prompt20_derived_names#terms en`, `prompt20_derived_freq#topic en` (the prompt range is the paired English difference against no prompt); [m4-voxtral-chunking.json](../../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`, `c60b16`; [m4-voxtral-worstcase.json](../../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst64_c60b64`; [m4-synthetic-decode.json](../../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1` (the recorded GPU working set); [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_w8bit_c30b128_kv8`, `vox_default_c30b128_kv8`; [m4-voxtral-8bit.json](../../../benchmarks/results/2026-10/m4-voxtral-8bit.json) runs `m4_c30b32_w8bit_r1`, `m4_c30b32_w8bit_r2`, `m4_c30b32_w8bit_r3`
+Source: [m2-ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`; [m2-ultra-voxtral-prompt.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt.json) runs `prompt20_c30b32_kv8#none -`; [m2-ultra-voxtral-prompt-derived.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-derived.json) runs `prompt20_derived_names#terms en`, `prompt20_derived_freq#topic en` (the prompt range is the paired English difference against no prompt); [m4-voxtral-chunking.json](../../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`, `c60b16`; [m4-voxtral-worstcase.json](../../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst64_c60b64`; [m4-synthetic-decode.json](../../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1` (the recorded GPU working set); [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_w8bit_c30b128_kv8`, `vox_default_c30b128_kv8`; [m4-voxtral-8bit.json](../../../benchmarks/results/2026-10/m4-voxtral-8bit.json) runs `m4_c30b32_w8bit_r1`, `m4_c30b32_w8bit_r2`, `m4_c30b32_w8bit_r3`
 
 **Setup:** each lever page states its own material and machine; the figures on this page are from the [20-file corpus](../reference/corpus.md#the-20-file-corpus) (17 Japanese, 3 English, 8.01h[^vxc]) and its earlier, smaller versions, on the M2 Ultra except where a table names the M4 16GB (the shipped default on each machine), scored by coverage CER/WER at `min_cut` 30/6 ([metrics.md](../reference/metrics.md)).
 
@@ -42,9 +42,9 @@ Source: [ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/ultra
 Source: [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m4-voxtral-8bit.json](../../../benchmarks/results/2026-10/m4-voxtral-8bit.json) runs `m4_c30b32_w8bit_r1`, `m4_c30b32_w8bit_r2`, `m4_c30b32_w8bit_r3`
 
 Both replace 4-bit weights, which were the default on every machine before the variant
-selector. Paired on the same machine, fp16 is 0.60 Japanese points below 4-bit on the Ultra
+selector. Paired on the same machine, fp16 is 0.60 Japanese points below 4-bit on the M2 Ultra
 (CI [-1.07, -0.25]) and 8-bit 0.57 below it on the M4 (CI [-1.16, -0.13])[^vx7]; on English
-neither difference is resolved[^vx7]. The cost differs by machine: on the Ultra fp16 runs at
+neither difference is resolved[^vx7]. The cost differs by machine: on the M2 Ultra fp16 runs at
 23.9x against 4-bit's 33.6x and peaks at 17.14GB against 11.33GB[^vx7], while on the M4 8-bit
 is not slower than 4-bit (6.67x against 6.37x)[^vx7].
 
