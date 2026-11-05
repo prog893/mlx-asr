@@ -66,11 +66,11 @@ PEAK = {
     ("qwen3-asr-small", "8bit"): "2.07GB",
     ("qwen3-asr-small", "bf16"): "2.63GB",
     # voxtral at 60s/B16, the config of the saved precision sweep, so both precisions
-    # share one config. The Ultra's shipped config (30s/B128) peaks higher because its
+    # share one config. The M2 Ultra's shipped config (30s/B128) peaks higher because its
     # batch is sized from memory. Lower than the 9.36/15.28GB in quantization.md, which
     # used the narration clip at a different chunk/batch pair.
-    # source: ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_wfp16_c60b16_kv8
-    # source: ultra-voxtral-precision.json#vox_w8bit_c60b16_kv8
+    # source: m2-ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_wfp16_c60b16_kv8
+    # source: m2-ultra-voxtral-precision.json#vox_w8bit_c60b16_kv8
     ("voxtral", "4bit"): "6.77GB",
     ("voxtral", "8bit"): "7.29GB",
     ("voxtral", "fp16"): "12.98GB",
@@ -84,7 +84,7 @@ PEAK = {
     # by moving the conversion cache aside: 3.03GB on the converting run, 2.38GB on
     # every run after. 2.38GB is what a user sees for all but the first decode, so it is
     # what belongs in a table about whether a model fits.
-    # source: ultra-kotoba-conversion.json#pm_kotoba_cold_r112,pm_kotoba_warm_r112
+    # source: m2-ultra-kotoba-conversion.json#pm_kotoba_cold_r112,pm_kotoba_warm_r112
     # source: m2-ultra-peak-memory-kotoba.json (one run per corpus file, max over the runs)
     ("kotoba", None): "2.38GB",
     # voxtral-v1, 30s windows, one window at a time. Same basis (max over the 20 files,
@@ -103,12 +103,12 @@ PEAK = {
 # What the first `--model kotoba` costs, before the conversion is cached. Separate from
 # PEAK because it is a one-off on a fresh machine rather than a property of decoding, and
 # folding it into the table would overstate the model by 0.65GB forever.
-# source: ultra-kotoba-conversion.json#pm_kotoba_cold_r112,pm_kotoba_warm_r112
+# source: m2-ultra-kotoba-conversion.json#pm_kotoba_cold_r112,pm_kotoba_warm_r112
 KOTOBA_FIRST_USE_PEAK = "3.03GB"
 
 # Peak cells that are not a bare figure, so tests/test_models.py does not pin them
 # against PEAK: parakeet covers the 17 Japanese files only, and reazon decodes on CPU.
-# source: ultra-picker-speed.json#pk_parakeet_default_s1,pk_parakeet_default_s2,pk_parakeet_default_s3
+# source: m2-ultra-picker-speed.json#pk_parakeet_default_s1,pk_parakeet_default_s2,pk_parakeet_default_s3
 PEAK_NOTE = {
     ("parakeet", None): "4.77GB (17-file corpus)",
     ("reazon-k2", None): "n/a, CPU",
@@ -134,7 +134,7 @@ _KOTOBA_RUNS = (
 # The line printed under each family's table: the saved run-group its peaks come
 # from (a `Source:` line, see AGENTS.md), or the reason the table has no measurement.
 SOURCE = {
-    "voxtral": "Source: " + _src("ultra-voxtral-precision", "vox_w4bit_c60b16_kv8",
+    "voxtral": "Source: " + _src("m2-ultra-voxtral-precision", "vox_w4bit_c60b16_kv8",
                                  "vox_w8bit_c60b16_kv8", "vox_wfp16_c60b16_kv8") + _HUB,
     "voxtral-v1": "Source: " + _src("m2-ultra-voxtral-v1", "3b_4bit_c30", "3b_8bit_c30",
                                     "3b_bf16_c30", "24b_4bit_c30", "24b_8bit_c30",
@@ -149,7 +149,7 @@ SOURCE = {
         f"qwen3_{z}_{q}_c15" for z in ("0.6B", "1.7B")
         for q in ("4bit", "5bit", "6bit", "8bit", "bf16")))
                  + " (peak at the shipped 15s window; download is the hub repo size)",
-    "parakeet": "Source: " + _src("ultra-picker-speed", "pk_parakeet_default_s1",
+    "parakeet": "Source: " + _src("m2-ultra-picker-speed", "pk_parakeet_default_s1",
                                   "pk_parakeet_default_s2", "pk_parakeet_default_s3") + _HUB,
     "reazon": "<!-- not-measured: hub repo sizes only; reazon decodes on CPU and has no "
               "GPU peak -->",

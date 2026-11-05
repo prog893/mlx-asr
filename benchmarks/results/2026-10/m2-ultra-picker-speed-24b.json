@@ -1,5 +1,5 @@
 {
- "group": "ultra-picker-speed-24b",
+ "group": "m2-ultra-picker-speed-24b",
  "question": "voxtral-v1 24B 8-bit at 30s windows, 3 fresh runs on the corrected corpus, for speed spread",
  "docs": [
   "RESULTS.md",

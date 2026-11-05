@@ -75,6 +75,9 @@ def main():
                    help="a derived input outside the corpus, saved as NAME (listed under "
                         "corpus.json derived)")
     p.add_argument("--out", required=True)
+    p.add_argument("--rename-runs", action="append", default=[], metavar="FROM=TO",
+                   help="replace FROM with TO in every saved run name (the recorded commands "
+                        "keep the names they ran under)")
     p.add_argument("outputs", nargs="+")
     a = p.parse_args()
     stems = {f.stem for c in a.corpus for f in Path(c).iterdir()
@@ -119,6 +122,10 @@ def main():
                     prev[k] = run[k]
             continue
         runs.append(run)
+    for spec in a.rename_runs:
+        old, _, new = spec.partition("=")
+        for run in runs:
+            run["run"] = run["run"].replace(old, new)
     group = scrub({"group": a.group, "question": a.question, "docs": a.doc, "note": a.note,
                    "runs": runs})
     text = json.dumps(group, indent=1, ensure_ascii=False)

@@ -398,8 +398,8 @@ def test_query_reads_plain_cer_rows_and_corpus_reference_lengths():
     q = _query()
     clip = q.select(q.load_group("m2-ultra-voxtral-clip"), ["ov30_0s#overlap 0"])[0]
     assert q.aggregate(clip) is not None
-    gain = q.select(q.load_group("ultra-input-gain"), ["gain7_asrecorded_c30b32_kv8#mode 0"])[0]
-    assert round(q.aggregate(gain) * 100, 2) == 16.44  # source: ultra-input-gain.json#gain7_asrecorded_c30b32_kv8#mode 0
+    gain = q.select(q.load_group("m2-ultra-input-gain"), ["gain7_asrecorded_c30b32_kv8#mode 0"])[0]
+    assert round(q.aggregate(gain) * 100, 2) == 16.44  # source: m2-ultra-input-gain.json#gain7_asrecorded_c30b32_kv8#mode 0
 
 
 def test_paired_with_no_common_file_is_a_clear_error():

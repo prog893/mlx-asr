@@ -1,5 +1,5 @@
 {
- "group": "ultra-parakeet-window",
+ "group": "m2-ultra-parakeet-window",
  "question": "parakeet at its default window and at 300s over the 20-file corpus (17 Japanese files scored), August 2026 runs recovered from the committed legacy results; and at 60s, an October 2026 run",
  "docs": [
   "docs/benchmarks/engines/parakeet.md",

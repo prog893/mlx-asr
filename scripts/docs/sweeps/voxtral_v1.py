@@ -19,7 +19,7 @@ SWEEPS = {
             (120, "| 120s |", ("57.54%", "21.17%")),
         ],
         "chosen": 30, "chosen_series": "Japanese CER",
-        "source": "ultra-voxtral-v1-window.json#sweep_3b_bf16_c15,sweep_3b_bf16_c60,"
+        "source": "m2-ultra-voxtral-v1-window.json#sweep_3b_bf16_c15,sweep_3b_bf16_c60,"
                   "sweep_3b_bf16_c120;m2-ultra-voxtral-v1.json#3b_bf16_c30",
     },
     "voxtral-v1-precision-3b": {

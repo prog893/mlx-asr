@@ -251,7 +251,7 @@ def auto_gain_db(audio: np.ndarray, trigger_dbfs: float = AUTO_TRIGGER_DBFS,
     Derived from the measured behaviour rather than from a fixed loudness target:
 
     - Attenuated input is significantly worse (-12dB costs ~3.0 CER points,
-      -20dB ~7.3, on the Japanese files; source: ultra-input-gain.json#gain7_asrecorded_c30b32_kv8,gain7_m12db_c30b32_kv8,gain7_m20db_c30b32_kv8),
+      -20dB ~7.3, on the Japanese files; source: m2-ultra-input-gain.json#gain7_asrecorded_c30b32_kv8,gain7_m12db_c30b32_kv8,gain7_m20db_c30b32_kv8),
       because the mel front end clamps at an absolute floor and
       quiet detail lands under it. So quiet audio must be brought up.
     - Amplifying audio that is *already* healthy is at best neutral and split by

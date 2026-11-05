@@ -97,13 +97,13 @@ def transcribe_mlx_chunked(audio_path: str, model, language=None, log=print,
 
     Exists because the chunked algorithm is a property of the *driver*, not of the
     framework, so a distil model does not have to leave MLX to be decoded
-    correctly. Measured on our corpus at chunk 10s (source: ultra-picker-speed.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3;
-    ultra-kotoba-engines.json#k20_hf22_c10_r1): 26.81% coverage CER at 36.8x
+    correctly. Measured on our corpus at chunk 10s (source: m2-ultra-picker-speed.json#pk_kotoba_c10_s1,pk_kotoba_c10_s2,pk_kotoba_c10_s3;
+    m2-ultra-kotoba-engines.json#k20_hf22_c10_r1): 26.81% coverage CER at 36.8x
     realtime, against 24.48% at 21.8x through the transformers pipeline. At this
     window the MLX driver is 1.7x the throughput but 2.33 points worse, paired over
     files with CI [+0.17, +4.33], so not a tie. At 15s, the shipped window, the two tie (25.34% against
     26.09%, paired -0.75 points, CI [-3.71, +2.35]) with MLX at 1.8x the throughput
-    (source: ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3,k20_hf22_c15_r1,k20_hf22_c15_r2,k20_hf22_c15_r3;
+    (source: m2-ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3,k20_hf22_c15_r1,k20_hf22_c15_r2,k20_hf22_c15_r3;
     repeat runs of one config averaged per file). Either way the rows are directly comparable to the
     other MLX rows instead of carrying a "not comparable" asterisk.
 
@@ -182,10 +182,10 @@ def qwen3_language(loaded, spec, language=None, log=print) -> str:
 #
 # Measured here on a real recording, which is why this is not a hypothetical: a 1553s
 # Japanese file at a 30s window returned ONE segment and 96.67% coverage CER. Its
-# source: ultra-qwen3-loops.json#q3budget_wholefile_8192,q3budget_wholefile_19950
+# source: m2-ultra-qwen3-loops.json#q3budget_wholefile_8192,q3budget_wholefile_19950
 # first chunk entered a repetition loop, spent the entire
 # 8192-token budget, and left 1520 of 1553 seconds untranscribed. Raising the budget
-# source: ultra-qwen3-loops.json#q3budget_wholefile_19950 (audio_covered_s over duration_s)
+# source: m2-ultra-qwen3-loops.json#q3budget_wholefile_19950 (audio_covered_s over duration_s)
 # does not fix that, it only lets the loop run longer: at a duration-scaled 19950
 # tokens the same file still came back with 33.3 of 1553 seconds (2.1%) covered. The
 # budget has to be per chunk, so that one degenerate window costs one window.
@@ -621,7 +621,7 @@ def reazon_k2_load(repo: str, precision: str = "fp32") -> str:
     one 112s file), which contradicts the near-parity the authors' table shows
     on read-speech benchmarks. Pass precision="int8" explicitly to trade that
     accuracy away for a 4x-smaller download and ~1.5x the speed.
-    (source: ultra-engines-jp-only.json#jp_reazon_int8_c30_r1,jp_reazon_int8_c30_r2,jp_reazon_int8_c30_r3,jp_reazon_fp32_c30_rss;
+    (source: m2-ultra-engines-jp-only.json#jp_reazon_int8_c30_r1,jp_reazon_int8_c30_r2,jp_reazon_int8_c30_r3,jp_reazon_fp32_c30_rss;
     the 4x download ratio is the hub file sizes, not a run)
 
     Only the two published spellings are accepted, and an unrecognised value is

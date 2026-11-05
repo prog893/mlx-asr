@@ -1,5 +1,5 @@
 {
- "group": "ultra-qwen3-loops",
+ "group": "m2-ultra-qwen3-loops",
  "question": "qwen3-asr 1.7B bf16 on the 7-file subset, the batch-1 per-window token budget at 15s windows, and the whole-file and truncation budget probes",
  "docs": [
   "docs/benchmarks/engines/qwen3-asr.md",

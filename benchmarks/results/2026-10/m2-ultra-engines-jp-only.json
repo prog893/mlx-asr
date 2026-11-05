@@ -1,5 +1,5 @@
 {
- "group": "ultra-engines-jp-only",
+ "group": "m2-ultra-engines-jp-only",
  "question": "reazon int8 (3 runs) and fp32 on the 20-file corpus (scored on the 17 Japanese files)",
  "docs": [
   "docs/benchmarks/engines.md"

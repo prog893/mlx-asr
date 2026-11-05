@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-prompt-overlap-clip",
+ "group": "m2-ultra-voxtral-prompt-overlap-clip",
  "question": "Voxtral prompt and overlap on the 935s clip and on its first 180s (clip180)",
  "docs": [
   "docs/benchmarks/prompt.md"

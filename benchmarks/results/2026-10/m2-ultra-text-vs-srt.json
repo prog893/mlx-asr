@@ -1,5 +1,5 @@
 {
- "group": "ultra-text-vs-srt",
+ "group": "m2-ultra-text-vs-srt",
  "question": "Token text against joined SRT text, scored on the 935s clip for six CLI configs",
  "docs": [
   "docs/benchmarks/reference/metrics.md"
@@ -7,7 +7,7 @@
  "note": "",
  "runs": [
   {
-   "run": "tvs_ultra_score",
+   "run": "tvs_m2_ultra_score",
    "command": "scripts/benchmarks/compare_text_vs_srt.py --reference bench_out/corpus_timed/632a295d981d.srt --json tvs_ultra_score.json",
    "params": {
     "reference": "bench_out/corpus_timed/632a295d981d.srt"

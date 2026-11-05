@@ -30,7 +30,7 @@ SWEEPS = {
         "chosen_label": "auto (0 dB here)",
         "label_dy": 12,
         "height": 3.8,
-        "source": "ultra-input-gain.json#gain7_asrecorded_c30b32_kv8#mode 0,gain7_m12db_c30b32_kv8#mode -12,gain7_m20db_c30b32_kv8#mode -20,gain7_p6db_c30b32_kv8#mode +6;ultra-input-gain-extra.json#gain7_m6db_c30b32_kv8#mode -6",
+        "source": "m2-ultra-input-gain.json#gain7_asrecorded_c30b32_kv8#mode 0,gain7_m12db_c30b32_kv8#mode -12,gain7_m20db_c30b32_kv8#mode -20,gain7_p6db_c30b32_kv8#mode +6;m2-ultra-input-gain-extra.json#gain7_m6db_c30b32_kv8#mode -6",
     },
     "input-level-paired": {
         "doc": "docs/benchmarks/input-level.md",
@@ -58,6 +58,6 @@ SWEEPS = {
         ],
         "chosen": None,
         "width": 7.2, "height": 3.8,
-        "source": "ultra-input-gain.json#gain7_asrecorded_c30b32_kv8#mode 0,gain7_m12db_c30b32_kv8#mode -12,gain7_m20db_c30b32_kv8#mode -20,gain7_p6db_c30b32_kv8#mode +6;ultra-input-gain-extra.json#gain7_peak_c30b32_kv8#mode peak",
+        "source": "m2-ultra-input-gain.json#gain7_asrecorded_c30b32_kv8#mode 0,gain7_m12db_c30b32_kv8#mode -12,gain7_m20db_c30b32_kv8#mode -20,gain7_p6db_c30b32_kv8#mode +6;m2-ultra-input-gain-extra.json#gain7_peak_c30b32_kv8#mode peak",
     },
 }

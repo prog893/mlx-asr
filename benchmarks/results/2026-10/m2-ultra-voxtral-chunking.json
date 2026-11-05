@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-chunking",
+ "group": "m2-ultra-voxtral-chunking",
  "question": "Voxtral chunking options over the 20-file corpus: VAD boundaries, silence compaction at four weight precisions, and chunk / batch / overlap combinations",
  "docs": [
   "docs/benchmarks/chunking.md"

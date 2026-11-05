@@ -1,10 +1,10 @@
 {
- "group": "ultra-mincut-sweep",
+ "group": "m2-ultra-mincut-sweep",
  "question": "Coverage error of 8 configs on the 7-file subset at min_cut 10, 20, 30, 50 and 80, per file",
  "docs": [
   "docs/benchmarks/reference/metrics.md"
  ],
- "note": "Rescores the hypotheses kept by the ultra-mincut-inputs runs (bench_out/rerun/hyp/mincut7 on the benchmark machine, not published: they contain corpus text) at five min_cut thresholds, one arm per config and threshold. Its printed table is identical to the q7 run behind ultra-derived-measures mincut_sweep.",
+ "note": "Rescores the hypotheses kept by the m2-ultra-mincut-inputs runs (bench_out/rerun/hyp/mincut7 on the benchmark machine, not published: they contain corpus text) at five min_cut thresholds, one arm per config and threshold. Its printed table is identical to the q7 run behind m2-ultra-derived-measures mincut_sweep.",
  "runs": [
   {
    "run": "mincut_sweep_perfile",

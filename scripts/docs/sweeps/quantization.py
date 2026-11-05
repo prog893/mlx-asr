@@ -29,7 +29,7 @@ SWEEPS = {
                   (None, "[-0.50, +0.12]")),
                  ("kv8", "| **kv8 (default)** |", ("15.72%", None)),
                  ("kv4", "| kv4 |", ("15.45%", "+0.27"), (None, "[-0.51, +1.25]"))],
-        "source": "ultra-voxtral-kv.json#vox_kv0_c60b16_w4bit,vox_kv8_c60b16_w4bit,vox_kv4_c60b16_w4bit",
+        "source": "m2-ultra-voxtral-kv.json#vox_kv0_c60b16_w4bit,vox_kv8_c60b16_w4bit,vox_kv4_c60b16_w4bit",
         "chosen": "kv8", "chosen_series": "JP coverage CER",
         "min_span": 8,
     },

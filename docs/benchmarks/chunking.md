@@ -3,8 +3,8 @@
 Chunk length and overlap default per chip from `mlx_asr/profiles.json`, and batch from GPU
 memory: 30s/B128 on the M2 Ultra 128GB and 30s/B32 on the M4 16GB, overlap 0 on both; chips with no profile also get 30s. On the 20-file corpus 60s versus 30s
 is +0.10 points with a CI of [-1.92, +2.06],[^k1] so the pair is chosen on throughput. 30s/B32
-is faster than 60s/B16 on both machines measured (4-bit weights throughout): 29.3x against 20.4x on the 60-core Ultra[^k2]
-and 6.37x against 4.66x on the 10-core M4 (means of 3 runs where repeated),[^k28] so both profiles ship 30s chunks. At 30s chunks on the Ultra with 4-bit weights, end-to-end speed keeps rising up to
+is faster than 60s/B16 on both machines measured (4-bit weights throughout): 29.3x against 20.4x on the 60-core M2 Ultra[^k2]
+and 6.37x against 4.66x on the 10-core M4 (means of 3 runs where repeated),[^k28] so both profiles ship 30s chunks. At 30s chunks on the M2 Ultra with 4-bit weights, end-to-end speed keeps rising up to
 batch 128 (33.6x against 29.3x at B32, mean of 3 runs),[^k3] all of it on files longer than 32 chunks, while
 accuracy moves by under 0.1 point (paired B128 against B32 is +0.07 points, CI [-0.01, +0.18]).[^k3] Prefix overlap won 1.0-1.5 points[^k4] at 30s chunks on a single
 clip but reversed sign on a real corpus, so it defaults to zero; cut points default to
@@ -17,14 +17,14 @@ an engine that cannot honour it is an error, not a warning.
 
 | setting | default | why |
 |---|---|---|
-| `--chunk-seconds` | per machine: 30s on M2 Ultra and on M4; 30s on chips with no profile | 30s and 60s are indistinguishable on the 20-file corpus, so throughput decides; 30s/B32 is the faster pair on both machines measured (Ultra: 29.3x against 20.4x for 60s/B16; M4: 6.37x against 4.66x for 60s/B16 and 5.80x for 60s/B32) |
+| `--chunk-seconds` | per machine: 30s on M2 Ultra and on M4; 30s on chips with no profile | 30s and 60s are indistinguishable on the 20-file corpus, so throughput decides; 30s/B32 is the faster pair on both machines measured (M2 Ultra: 29.3x against 20.4x for 60s/B16; M4: 6.37x against 4.66x for 60s/B16 and 5.80x for 60s/B32) |
 | batch | from memory, not chip, with a per-profile cap: 128 on M2 Ultra 128GB, 32 on M4 16GB | the largest batch whose predicted peak fits the memory budget; larger batches only speed up files longer than one batch; accuracy shifts by about 0.1 point, unresolved on both machines ([decode-throughput.md](decode-throughput.md#how-the-default-is-chosen)). On the M4 at 30s chunks the formula admits B64, which has not run there, so the profile caps the batch at the measured 32. At 60s B48 and B64 completed the corpus 4 times each at 5.82x and 6.07x mean against B32's 5.80x, but B64 on a worst-case padded file peaked at 11.87GB, 93% of the 12.7GB working set, too close to the limit to call reliable |
 | `--overlap-seconds` | 0 | won on one clip at 30s chunks, reversed sign on the 7-file corpus, and is the only arm slower than the old default |
 | cut points | energy minima; `--vad` opt-in | energy is never behind; VAD ties on Japanese at n=17 and loses all 3 English files |
 | `--compact-silence` | off | accuracy ties on all four precisions; the 4-7% speed gain does not justify silently discarding input |
-| composite flag | none (`--fast` removed) | removed on the reading that the right chunk/batch pair reverses across hardware; the saved runs show 30s/B32 faster on both machines, so that reading does not hold; its 8s overlap cost speed on the Ultra; every lever is set independently |
+| composite flag | none (`--fast` removed) | removed on the reading that the right chunk/batch pair reverses across hardware; the saved runs show 30s/B32 faster on both machines, so that reading does not hold; its 8s overlap cost speed on the M2 Ultra; every lever is set independently |
 
-Source: [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b16`, `c30b32`, `c30b32_r2`, `c30b32_r3`, `c30b48`, `c30b64`, `c30b64_r2`, `c30b64_r3`, `c30b128`; [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b16`, `c60b24`, `c60b24_r2`, `c60b24_r3`, `c60b24_r4`, `c60b32`, `c60b32_r1`, `batch_m4_repeat_20261009__c60b32_r2`, `batch_m4_b64_20261010__c60b32_r2`, `batch_m4_repeat_20261009__c60b32_r3`, `batch_m4_b64_20261010__c60b32_r3`, `c60b32_r4`, `c60b48`, `c60b48_r1`, `c60b48_r2`, `c60b48_r3`, `c60b64`, `c60b64_r1`, `c60b64_r2`, `c60b64_r3`; [m4-voxtral-chunking.json](../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c60b16`, `c30b32`, `c30b32_r2`, `c30b32_r3`; [m4-voxtral-worstcase.json](../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst64_c60b64`; [m4-synthetic-decode.json](../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1` (the recorded GPU working set); [ultra-voxtral-kv.json](../../benchmarks/results/2026-10/ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit`; [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w4bit_c60b16_kv8_r2`, `vox_w8bit_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`; [ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/ultra-voxtral-chunking.json) runs `ch_compact_c60b16_w4bit`, `ch_compact_c60b16_w8bit`, `ch_compact_c60b16_wmxfp8`, `ch_compact_c60b16_wnvfp4`, `ch_c30b32_ov8` (60s/B16 speeds on the M2 Ultra: the mean of vox_w4bit_c60b16_kv8, vox_w4bit_c60b16_kv8_r2 and vox_kv8_c60b16_w4bit, one command; M4 30s/B32: the mean of its 3 runs)
+Source: [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b16`, `c30b32`, `c30b32_r2`, `c30b32_r3`, `c30b48`, `c30b64`, `c30b64_r2`, `c30b64_r3`, `c30b128`; [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b16`, `c60b24`, `c60b24_r2`, `c60b24_r3`, `c60b24_r4`, `c60b32`, `c60b32_r1`, `batch_m4_repeat_20261009__c60b32_r2`, `batch_m4_b64_20261010__c60b32_r2`, `batch_m4_repeat_20261009__c60b32_r3`, `batch_m4_b64_20261010__c60b32_r3`, `c60b32_r4`, `c60b48`, `c60b48_r1`, `c60b48_r2`, `c60b48_r3`, `c60b64`, `c60b64_r1`, `c60b64_r2`, `c60b64_r3`; [m4-voxtral-chunking.json](../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c60b16`, `c30b32`, `c30b32_r2`, `c30b32_r3`; [m4-voxtral-worstcase.json](../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst64_c60b64`; [m4-synthetic-decode.json](../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1` (the recorded GPU working set); [m2-ultra-voxtral-kv.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit`; [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w4bit_c60b16_kv8_r2`, `vox_w8bit_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`; [m2-ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-chunking.json) runs `ch_compact_c60b16_w4bit`, `ch_compact_c60b16_w8bit`, `ch_compact_c60b16_wmxfp8`, `ch_compact_c60b16_wnvfp4`, `ch_c30b32_ov8` (60s/B16 speeds on the M2 Ultra: the mean of vox_w4bit_c60b16_kv8, vox_w4bit_c60b16_kv8_r2 and vox_kv8_c60b16_w4bit, one command; M4 30s/B32: the mean of its 3 runs)
 
 **Setup:** [one clip](reference/corpus.md#the-single-clip) scored by plain CER, and the
 [7-file subset](reference/corpus.md#the-7-file-subset) and [20-file corpus](reference/corpus.md#the-20-file-corpus)
@@ -275,7 +275,7 @@ or after 2026-10-11), energy still leads but not resolvably:
 | energy (default) | **15.72%** | **22.43%** | 19.6x | | | | |
 | VAD | 16.18% | 25.95% | 20.3x | +0.46 | [-0.86, +2.09] | +3.52 | [+0.06, +5.62] |
 
-Source: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/ultra-voxtral-chunking.json) runs `ch_vad_c60b16` (each row one run: energy is vox_w4bit_c60b16_kv8, VAD is ch_vad_c60b16)
+Source: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [m2-ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-chunking.json) runs `ch_vad_c60b16` (each row one run: energy is vox_w4bit_c60b16_kv8, VAD is ch_vad_c60b16)
 
     Japanese: +0.46 points, CI [-0.86, +2.09], VAD wins 10 of 17 files -> not resolvable [^k8]
     English:  +3.52 points, CI [+0.06, +5.62], VAD loses all 3 files -> resolved, but n=3 [^k8]
@@ -364,7 +364,7 @@ after 2026-10-11) it is slightly better rather than worse:
 | off (default) | 15.72% | 22.43% | 19.6x | | |
 | `--compact-silence` | **15.51%** | 22.43% | **20.8x** | -0.21 | [-0.69, +0.22] |
 
-Source: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/ultra-voxtral-chunking.json) runs `ch_compact_c60b16_w4bit` (each row one run: off is vox_w4bit_c60b16_kv8, on is ch_compact_c60b16_w4bit)
+Source: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [m2-ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-chunking.json) runs `ch_compact_c60b16_w4bit` (each row one run: off is vox_w4bit_c60b16_kv8, on is ch_compact_c60b16_w4bit)
 
     -0.21 points, CI [-0.69, +0.22], better on 6 of 8 files that moved -> not resolvable [^k10]
 
@@ -394,7 +394,7 @@ All four are ties on accuracy and all four are faster:
 | mxfp8 | 15.36% | 15.28% | +0.08 | [-0.61, +0.66] | 19.9x | **21.1x** |
 | nvfp4 | 15.58% | 15.56% | +0.02 | [-0.95, +0.77] | 20.1x | **20.9x** |
 
-Source: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`; [ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/ultra-voxtral-chunking.json) runs `ch_compact_c60b16_w4bit`, `ch_compact_c60b16_w8bit`, `ch_compact_c60b16_wmxfp8`, `ch_compact_c60b16_wnvfp4` (each cell one run: the off column is the vox_w*_c60b16_kv8 run of that precision, the on column the ch_compact_c60b16_w* run)
+Source: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`; [m2-ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-chunking.json) runs `ch_compact_c60b16_w4bit`, `ch_compact_c60b16_w8bit`, `ch_compact_c60b16_wmxfp8`, `ch_compact_c60b16_wnvfp4` (each cell one run: the off column is the vox_w*_c60b16_kv8 run of that precision, the on column the ch_compact_c60b16_w* run)
 
 The 4-bit row is the previous experiment's comparison with the sign reversed (on minus off
 there, -0.21, CI [-0.69, +0.22]),[^k10] so its interval is that one negated.
@@ -439,7 +439,7 @@ as one config, and then decomposed, 20 files, M2 Ultra:
 | 60s / B16 / ov8 | 15.83% | 18.4x | overlap alone |
 | **30s / B32 / ov0** | **15.73%** | **29.3x** | chunk + batch |
 
-Source: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/ultra-voxtral-chunking.json) runs `ch_c30b32_ov8`, `ch_c30b16_ov0`, `ch_c60b32_ov0`, `ch_c60b16_ov8`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8_r2`; [ultra-voxtral-kv.json](../../benchmarks/results/2026-10/ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit` (the 60s / B16 / ov0 and 30s / B32 / ov0 speeds are each the mean of 3 runs: vox_w4bit_c60b16_kv8, vox_w4bit_c60b16_kv8_r2, vox_kv8_c60b16_w4bit and the three c30b32 runs; every other row is one run)
+Source: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [m2-ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-chunking.json) runs `ch_c30b32_ov8`, `ch_c30b16_ov0`, `ch_c60b32_ov0`, `ch_c60b16_ov8`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8_r2`; [m2-ultra-voxtral-kv.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit` (the 60s / B16 / ov0 and 30s / B32 / ov0 speeds are each the mean of 3 runs: vox_w4bit_c60b16_kv8, vox_w4bit_c60b16_kv8_r2, vox_kv8_c60b16_w4bit and the three c30b32 runs; every other row is one run)
 
 Every arm is a tie on accuracy against the default (largest difference 0.58 points,[^k12] every
 CI spanning zero), so this is entirely a throughput result.
@@ -457,7 +457,7 @@ Two things fall out, and the second corrects the obvious reading:
 
 ## Experiment: chunk and batch across GPU core counts
 
-**Basis:** M2 Ultra 128GB (60 GPU cores) and M4 16GB (10 GPU cores), 60s/B16 against 30s/B32, 4-bit, on the [20-file corpus](reference/corpus.md#the-20-file-corpus); the Ultra figures are from the previous experiment, the M4 figures from the 30s-versus-60s runs above. <!-- not-measured: chunk length settings -->
+**Basis:** M2 Ultra 128GB (60 GPU cores) and M4 16GB (10 GPU cores), 60s/B16 against 30s/B32, 4-bit, on the [20-file corpus](reference/corpus.md#the-20-file-corpus); the M2 Ultra figures are from the previous experiment, the M4 figures from the 30s-versus-60s runs above. <!-- not-measured: chunk length settings -->
 
 Same change, the two benchmarked machines:
 
@@ -473,9 +473,9 @@ Same change, the two benchmarked machines:
 | M2 Ultra 128GB | 60 | 20.4x | **29.3x** |
 | M4 16GB | 10 | 4.66x | **6.37x** |
 
-Source: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w4bit_c60b16_kv8_r2`; [ultra-voxtral-kv.json](../../benchmarks/results/2026-10/ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m4-voxtral-chunking.json](../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c60b16`, `c30b32`, `c30b32_r2`, `c30b32_r3` (every cell is the mean of 3 runs except the M4 60s / B16 cell, one run)
+Source: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w4bit_c60b16_kv8_r2`; [m2-ultra-voxtral-kv.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m4-voxtral-chunking.json](../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c60b16`, `c30b32`, `c30b32_r2`, `c30b32_r3` (every cell is the mean of 3 runs except the M4 60s / B16 cell, one run)
 
-30s/B32 is the faster pair on both machines, by 44% on the Ultra and 37% on the M4.[^k2][^k28] The
+30s/B32 is the faster pair on both machines, by 44% on the M2 Ultra and 37% on the M4.[^k2][^k28] The
 expectation this experiment was set up to check was the reverse on the M4: halving the chunk
 doubles the chunk count, each chunk pays fixed encoder cost, and with 10 cores the encoder
 is already 35% of wall clock at 60s chunks on the clip (nvfp4).[^k30] On the corpus runs 30s/B32 came out faster on both machines, so both profiles ship 30s
@@ -483,7 +483,7 @@ chunks, and chips with no profile default to 30s whatever their core count. <!--
 On the M4, 30s/B32 is the mean of 3 runs (6.24x to 6.60x) and 60s/B16 is one run.[^k28]
 
 **The flag was removed rather than turned on.** It bundled an 8s overlap that cost speed on
-the Ultra (24.6x for the bundle against 29.3x without it)[^k12] and three levers that are now
+the M2 Ultra (24.6x for the bundle against 29.3x without it)[^k12] and three levers that are now
 set independently in `profiles.json`, per machine. The removal was argued at the time on the
 reading that the right chunk/batch pair reverses across hardware; the runs above do not show
 that reversal. No composite flag replaced it.
@@ -527,7 +527,7 @@ B48, B64 and B128 do identical work and their spread (28.3x to 28.6x)[^k3] is ma
 to 12.6x and 17.2x to 18.8x, since a file of a few chunks cannot fill a batch.[^k3] The 8 longer files are where batch matters: B128 is faster
 than B64 on 6 of them, by 0.2-6.5%, and reaches 40.1x on the 93-minute file against 30.0x at B32 (B64 and B32 as means of 3 runs).[^k3]
 
-B128 is what the Ultra's memory resolves to. Its 11.33GB peak[^k3] is under 10% of the machine's
+B128 is what the M2 Ultra's memory resolves to. Its 11.33GB peak[^k3] is under 10% of the machine's
 working set,[^k17] and the rule the default follows on every machine is the largest batch that fits: on the files a batch already holds whole it
 costs nothing, and on longer files it is the fastest arm measured.
 
@@ -550,8 +550,8 @@ Source: [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batc
 
 JP coverage CER is 15.79% at B16 and 15.68% at B24 and B32;[^k13] EN coverage WER is 22.43% in all
 three.[^k13] Paired over the 17 Japanese files, B32 against B16 is -0.12 points, CI [-0.28, +0.00],[^k13]
-with 2 files changed, both for the better: the opposite direction to the Ultra and, like it,
-unresolved. The shape matches the Ultra: the 12 shorter files run at the same speed at every batch,
+with 2 files changed, both for the better: the opposite direction to the M2 Ultra and, like it,
+unresolved. The shape matches the M2 Ultra: the 12 shorter files run at the same speed at every batch,
 and the 8 longer ones gain about 30-41% from B16 to B24 or B32.[^k13] B24 (5.56x, mean of 4
 runs) and B32 (5.80x, mean of 7) have overlapping run ranges, so they are not separated.[^k13]
 
@@ -640,21 +640,21 @@ explains why short chunks cost encoder time and why the batch that pairs with a 
 length is not a free choice.
 
 [^k1]: [m4-voxtral-chunking.json](../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c60b16`, `c30b32`
-[^k2]: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w4bit_c60b16_kv8_r2`; [ultra-voxtral-kv.json](../../benchmarks/results/2026-10/ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`
+[^k2]: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w4bit_c60b16_kv8_r2`; [m2-ultra-voxtral-kv.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`
 [^k3]: [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b16`, `c30b32`, `c30b32_r2`, `c30b32_r3`, `c30b48`, `c30b64`, `c30b64_r2`, `c30b64_r3`, `c30b128`
 [^k4]: [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `ov30_0s#overlap 0`, `ov30_4s#overlap 4`, `ov30_6s#overlap 6`, `ov30_7s#overlap 7`, `ov30_8s#overlap 8`, `ov30_10s#overlap 10`, `ov30_12s#overlap 12`, `ov30_15s#overlap 15`
 [^k5]: [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c60b16_kv8`, `mincut7_vox_c30b32_kv8`, `mincut7_vox_c30b32_kv8_ov8` (paired differences pooled over Japanese CER and English WER, bootstrapped over the 7 files)
 [^k6]: [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `chunk_c20b48_kv0#overlap 0`, `chunk_c30b32_kv0#overlap 0`, `ov60_0s#overlap 0`, `chunk_c90b16_kv8#overlap 0`, `chunk_c120b8_kv8#overlap 0`, `chunk_c180b8_kv8#overlap 0`
 [^k7]: [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `vad_c30b32_kv8_energy`, `vad_c30b32_kv8_vad`, `vad_c30b32_kv8_ov8_energy`, `vad_c30b32_kv8_ov8_vad`, `vad_c60b16_kv8_energy`, `vad_c60b16_kv8_vad`
-[^k8]: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/ultra-voxtral-chunking.json) runs `ch_vad_c60b16`
+[^k8]: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [m2-ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-chunking.json) runs `ch_vad_c60b16`
 [^k9]: [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `carry_none#variant none`, `carry_pair#variant carry_pair`, `carry_seq#variant carry`
-[^k10]: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/ultra-voxtral-chunking.json) runs `ch_compact_c60b16_w4bit`
-[^k11]: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`; [ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/ultra-voxtral-chunking.json) runs `ch_compact_c60b16_w4bit`, `ch_compact_c60b16_w8bit`, `ch_compact_c60b16_wmxfp8`, `ch_compact_c60b16_wnvfp4`
-[^k12]: [ultra-voxtral-precision.json](../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w4bit_c60b16_kv8_r2`; [ultra-voxtral-kv.json](../../benchmarks/results/2026-10/ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit`; [ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/ultra-voxtral-chunking.json) runs `ch_c30b32_ov8`, `ch_c30b16_ov0`, `ch_c60b32_ov0`, `ch_c60b16_ov8`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`
+[^k10]: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [m2-ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-chunking.json) runs `ch_compact_c60b16_w4bit`
+[^k11]: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`; [m2-ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-chunking.json) runs `ch_compact_c60b16_w4bit`, `ch_compact_c60b16_w8bit`, `ch_compact_c60b16_wmxfp8`, `ch_compact_c60b16_wnvfp4`
+[^k12]: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w4bit_c60b16_kv8_r2`; [m2-ultra-voxtral-kv.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit`; [m2-ultra-voxtral-chunking.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-chunking.json) runs `ch_c30b32_ov8`, `ch_c30b16_ov0`, `ch_c60b32_ov0`, `ch_c60b16_ov8`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`
 [^k13]: [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b16`, `c60b24`, `c60b24_r2`, `c60b24_r3`, `c60b24_r4`, `c60b32`, `c60b32_r1`, `batch_m4_repeat_20261009__c60b32_r2`, `batch_m4_b64_20261010__c60b32_r2`, `batch_m4_repeat_20261009__c60b32_r3`, `batch_m4_b64_20261010__c60b32_r3`, `c60b32_r4`
 [^k14]: [m4-voxtral-worstcase.json](../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst32_c60b32`; [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b16`, `c60b24`, `c60b24_r2`, `c60b24_r3`, `c60b24_r4`, `c60b32`, `c60b32_r1`, `batch_m4_repeat_20261009__c60b32_r2`, `batch_m4_b64_20261010__c60b32_r2`, `batch_m4_repeat_20261009__c60b32_r3`, `batch_m4_b64_20261010__c60b32_r3`, `c60b32_r4`
 [^k16]: [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `compact_c60b16_kv0_off`, `compact_c60b16_kv0_on`, `compact_c30b32_kv0_off`, `compact_c30b32_kv0_on`
-[^k17]: [ultra-synthetic-decode.json](../../benchmarks/results/2026-10/ultra-synthetic-decode.json) runs `synth_ultra_4bit_r1`, `synth_ultra_4bit_r2`, `synth_ultra_4bit_r3` (the machine's recorded GPU working set, 115.4GB)
+[^k17]: [m2-ultra-synthetic-decode.json](../../benchmarks/results/2026-10/m2-ultra-synthetic-decode.json) runs `synth_m2_ultra_4bit_r1`, `synth_m2_ultra_4bit_r2`, `synth_m2_ultra_4bit_r3` (the machine's recorded GPU working set, 115.4GB)
 [^k19]: [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b32`, `c60b32_r1`, `batch_m4_repeat_20261009__c60b32_r2`, `batch_m4_b64_20261010__c60b32_r2`, `batch_m4_repeat_20261009__c60b32_r3`, `batch_m4_b64_20261010__c60b32_r3`, `c60b32_r4`, `c60b48`, `c60b48_r1`, `c60b48_r2`, `c60b48_r3`, `c60b64`, `c60b64_r1`, `c60b64_r2`, `c60b64_r3`
 [^k20]: [m4-voxtral-worstcase.json](../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst64_c60b64`; [m4-synthetic-decode.json](../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1` (the machine's recorded GPU working set)
 [^k21]: [m2-ultra-resolution-floor.json](../../benchmarks/results/2026-10/m2-ultra-resolution-floor.json) runs `resolution_floor`
@@ -663,7 +663,7 @@ length is not a free choice.
 [^k24]: [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_cuts`
 [^k25]: [m2-ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-paired.json) runs `cmp_vad_60`, `cmp_vad_30ov8`, `cmp_vad_30`
 [^k27]: [m2-ultra-worstcase-split.json](../../benchmarks/results/2026-10/m2-ultra-worstcase-split.json) runs `derive_worst32_chunks`; [m4-voxtral-worstcase.json](../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst32_c60b32`
-[^k26]: [ultra-decode-probes.json](../../benchmarks/results/2026-10/ultra-decode-probes.json) runs `probe_encoder_batch_ultra_4bit` (the conv output length in its stdout)
+[^k26]: [m2-ultra-decode-probes.json](../../benchmarks/results/2026-10/m2-ultra-decode-probes.json) runs `probe_encoder_batch_m2_ultra_4bit` (the conv output length in its stdout)
 [^k28]: [m4-voxtral-chunking.json](../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c60b16`, `c30b32`, `c30b32_r2`, `c30b32_r3` (30s/B32 speed is the mean of its 3 runs)
 [^k29]: [m4-voxtral-clip.json](../../benchmarks/results/2026-10/m4-voxtral-clip.json) runs `m4_ov30_0s#overlap 0`, `m4_ov30_4s#overlap 4`, `m4_ov30_8s#overlap 8`
 [^k30]: [m4-stage-timing.json](../../benchmarks/results/2026-10/m4-stage-timing.json) runs `m4_stages_nvfp4_c60b16_r1`, `m4_stages_nvfp4_c60b16_r2`, `m4_stages_nvfp4_c60b16_r3` (mean encode seconds over mean wall clock)

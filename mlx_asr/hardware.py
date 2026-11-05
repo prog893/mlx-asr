@@ -28,9 +28,9 @@ top of the weights and a fixed cost:
 registry's 2.5GB of 4-bit weights subtracted from the intercept; not-measured: 2.5GB is
 the registry's weight constant.)
 
-The Ultra points are not quite linear (B=48 to 64 is steeper than the rest), so the
+The M2 Ultra points are not quite linear (B=48 to 64 is steeper than the rest), so the
 constants below are set to cover every measured peak rather than to fit the mean:
-the tightest is the Ultra at B=64 (9.36GB predicted, 9.17 measured), and the M4 at
+the tightest is the M2 Ultra at B=64 (9.36GB predicted, 9.17 measured), and the M4 at
 B=32 is over-predicted by 16% (9.36 against 8.08; source: m2-ultra-voxtral-batch.json#c30b64;
 m4-voxtral-batch.json#c60b32).
 
@@ -53,7 +53,7 @@ m4-voxtral-worstcase.json#worst64_c60b64), which is too close to the limit to ca
 reliable. At the M4's 30s chunks the formula admits B=64 (9.36GB predicted), which
 has never run there, so the M4 profile caps the batch at the measured 32
 (``max_batch``). On the
-Ultra (115.4GB, source: ultra-synthetic-decode.json#synth_ultra_4bit_r1) memory does not bind below the largest measured-good batch, 128.
+M2 Ultra (115.4GB, source: m2-ultra-synthetic-decode.json#synth_m2_ultra_4bit_r1) memory does not bind below the largest measured-good batch, 128.
 Two machines is a thin fit; a third with a different RAM size is the test.
 
 ## Why the result gets snapped to a list
@@ -67,10 +67,10 @@ measured:
     B = 48     a regression in the synthetic sweep on both machines (M2 Ultra 898
                tok/s at 48 vs 940 at 32; M4 265 vs 322).
 
-B=96 was once excluded as a dip on the Ultra; the synthetic sweep does not show one
+B=96 was once excluded as a dip on the M2 Ultra; the synthetic sweep does not show one
 (x-realtime 95.9 / 99.7 / 103.9 at B=64/96/128), so it is allowed.
 
-(source: ultra-synthetic-decode.json#synth_ultra_4bit_r1,synth_ultra_4bit_r2,synth_ultra_4bit_r3;
+(source: m2-ultra-synthetic-decode.json#synth_m2_ultra_4bit_r1,synth_m2_ultra_4bit_r2,synth_m2_ultra_4bit_r3;
 m4-synthetic-decode.json#synth_nvfp4_r1,synth_nvfp4_r2,synth_nvfp4_r3, means of 3 runs)
 
 These look like scheduling artifacts rather than a memory effect, so no formula
@@ -89,19 +89,19 @@ import mlx.core as mx
 PROFILES_PATH = Path(__file__).with_name("profiles.json")
 
 # Batch sizes that measured well. Excludes 2-8 (slower per step than 1) and 48
-# (a measured regression). 96 sits between 64 and 128 on the Ultra synthetic sweep
+# (a measured regression). 96 sits between 64 and 128 on the M2 Ultra synthetic sweep
 # (99.7x between 95.9x and 103.9x). See the module docstring.
-# source: ultra-synthetic-decode.json#synth_ultra_4bit_r1,synth_ultra_4bit_r2,synth_ultra_4bit_r3
+# source: m2-ultra-synthetic-decode.json#synth_m2_ultra_4bit_r1,synth_m2_ultra_4bit_r2,synth_m2_ultra_4bit_r3
 FAST_BATCHES = (1, 12, 16, 24, 32, 64, 96, 128)
 
 # GB of peak memory per decoded row per second of chunk audio. The two corpus fits
-# give 0.0014 (Ultra) and 0.0015 (M4); 0.0018 is what it takes to cover every
-# measured peak, including the Ultra's steeper B=48-64 step. See the module docstring.
+# give 0.0014 (M2 Ultra) and 0.0015 (M4); 0.0018 is what it takes to cover every
+# measured peak, including the M2 Ultra's steeper B=48-64 step. See the module docstring.
 GB_PER_ROW_SECOND = 0.0018
 
 # Fixed peak beyond the weights: encoder activations, mel buffers, framework
-# overhead. The two fits give 3.5 (Ultra) and 2.6 (M4); 3.4 sits just under the
-# Ultra fit, and with GB_PER_ROW_SECOND's margin the formula still covers every
+# overhead. The two fits give 3.5 (M2 Ultra) and 2.6 (M4); 3.4 sits just under the
+# M2 Ultra fit, and with GB_PER_ROW_SECOND's margin the formula still covers every
 # measured peak. See the module docstring.
 # source: m2-ultra-voxtral-batch.json#c30b16,c30b32,c30b48,c30b64,c30b128;
 # m4-voxtral-batch.json#c60b16,c60b24,c60b32
@@ -263,10 +263,10 @@ def resolve_profile(info: dict | None = None, weights_gb: float = 2.5,
     # The split was made on the belief that short chunks lose on a low-core GPU,
     # where the encoder is compute-bound. Both measured machines show the reverse:
     # 30s/B32 ran 6.37x against 4.66x for 60s/B16 on the 10-core M4, and 29.3x
-    # against 20.4x on the 60-core Ultra, with accuracy tied on both (means of 3 runs
+    # against 20.4x on the 60-core M2 Ultra, with accuracy tied on both (means of 3 runs
     # except the M4 60s/B16, one run).
     # source: m4-voxtral-chunking.json#c30b32,c30b32_r2,c30b32_r3,c60b16;
-    # m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit
+    # m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;m2-ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_w4bit_c60b16_kv8_r2;m2-ultra-voxtral-kv.json#vox_kv8_c60b16_w4bit
     # The split is kept so a low-core measurement can change one value without
     # touching this code.
     chunk = chunk_seconds or float(

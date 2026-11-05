@@ -19,7 +19,7 @@ ties 30s on Japanese CER (paired -0.94, CI [-2.87, +0.76]) and is faster and lig
 | language (`--language`) | forced to English when not passed | the upstream autodetect path leaks a prompt prefix into the transcript from the second window onward |
 | `--max-batch` | refused | swept, and batching loses monotonically ([qwen3-batch.md](../qwen3-batch.md)) |
 
-Source: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15`, `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`; [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_1.7B_8bit_c30`, `qwen3_0.6B_8bit_c30`; [ultra-qwen3-window.json](../../../benchmarks/results/2026-10/ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c15`, `qwen3w7_1.7B_8bit_c30`, `qwen3w7_1.7B_8bit_c60`, `qwen3w7_1.7B_8bit_c120`, `qwen3w7_1.7B_8bit_c300`
+Source: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15`, `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`; [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_1.7B_8bit_c30`, `qwen3_0.6B_8bit_c30`; [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c15`, `qwen3w7_1.7B_8bit_c30`, `qwen3w7_1.7B_8bit_c60`, `qwen3w7_1.7B_8bit_c120`, `qwen3w7_1.7B_8bit_c300`
 
 **Setup:** the [20-file corpus](../reference/corpus.md#the-20-file-corpus), and the
 [7-file subset](../reference/corpus.md#the-7-file-subset) for the window sweep, on an M2 Ultra
@@ -52,7 +52,7 @@ the 7 files would split into 1 to 5 windows each.
 | 120s | 23.55% | 23.93% | 23.33% | 34.62% | 16.2x | 158 | 4.68 |
 | 300s | 64.89% | 78.95% | 64.79% | 36.94% | 9.4x | 66 | 5.77 |
 
-Source: [ultra-qwen3-window.json](../../../benchmarks/results/2026-10/ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c15`, `qwen3w7_1.7B_8bit_c30`, `qwen3w7_1.7B_8bit_c60`, `qwen3w7_1.7B_8bit_c120`, `qwen3w7_1.7B_8bit_c300`
+Source: [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c15`, `qwen3w7_1.7B_8bit_c30`, `qwen3w7_1.7B_8bit_c60`, `qwen3w7_1.7B_8bit_c120`, `qwen3w7_1.7B_8bit_c300`
 
 **Shorter is better on Japanese CER, speed and memory at once, across the whole sweep**, which is unusual here and is the <!-- not-measured: window lengths are configuration values -->
 opposite of the shape Voxtral shows (where 30s versus 60s is a non-effect and longer <!-- not-measured: window lengths are configuration values -->
@@ -173,7 +173,7 @@ Per-file looping-window counts, 1.7B at 30s on the 7-file subset, in corpus orde
 | 8-bit | 3, 0, 18, 0, 32, 39, 51 | 5 of 7 |
 | bf16 | 4, 0, 18, 0, 28, 36, 57 | 5 of 7 |
 
-Source: [ultra-qwen3-window.json](../../../benchmarks/results/2026-10/ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`; [ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/ultra-qwen3-loops.json) runs `qwen3loop7_1.7B_bf16_c30` (looping windows are each row's runaway_segments count)
+Source: [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`; [m2-ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-loops.json) runs `qwen3loop7_1.7B_bf16_c30` (looping windows are each row's runaway_segments count)
 
 Effectively identical, including which files are affected and which are clean. So the
 loops are a property of these weights on this material, not an artifact of the default
@@ -375,7 +375,7 @@ Measured on one 1553s Japanese recording at a 30s window:
 | whole-file budget scaled to duration (19950) | 1 | 2.1% | **96.71%** |
 | **per-window budget (default)** | **52** | **100%** | **17.29%** |
 
-Source: [ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/ultra-qwen3-loops.json) runs `q3budget_wholefile_8192`, `q3budget_wholefile_19950`, `q3trunc_perwindow_1.7B_8bit_c30` (audio covered: the whole-file rows' audio_covered_s over duration_s, 33.3 of 1553.0s for both)
+Source: [m2-ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-loops.json) runs `q3budget_wholefile_8192`, `q3budget_wholefile_19950`, `q3trunc_perwindow_1.7B_8bit_c30` (audio covered: the whole-file rows' audio_covered_s over duration_s, 33.3 of 1553.0s for both)
 
 The first window entered a repetition loop (one short phrase repeated until the budget ran
 out), spent the file's entire budget, and the loop `break`ed. 1519.7 of 1553.0 seconds[^q13]
@@ -449,7 +449,7 @@ corpus: 7-file subset, window fixed at 30s, one run per arm. Only the weights ch
 | 0.6B | **8-bit** | **25.14%** | 26.67% | 29.25% | **27.5x** | **2.36** | **1.01GB** |
 | 0.6B | bf16 | 25.51% | **26.44%** | **29.23%** | 21.1x | 2.92 | 1.57GB |
 
-Source: [ultra-qwen3-window.json](../../../benchmarks/results/2026-10/ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`; [ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/ultra-qwen3-loops.json) runs `qwen3loop7_1.7B_bf16_c30`; [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_0.6B_8bit_c30`, `qwen3_0.6B_bf16_c30` (the 0.6B rows are those runs' rows for the 7 subset files: speed is their audio over their summed wall clock, peak their maximum). The weights column is hub file sizes, not a run. <!-- not-measured: the weights column is hub file sizes -->
+Source: [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`; [m2-ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-loops.json) runs `qwen3loop7_1.7B_bf16_c30`; [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_0.6B_8bit_c30`, `qwen3_0.6B_bf16_c30` (the 0.6B rows are those runs' rows for the 7 subset files: speed is their audio over their summed wall clock, peak their maximum). The weights column is hub file sizes, not a run. <!-- not-measured: the weights column is hub file sizes -->
 
 The 0.6B 8-bit row is its 7-file entry at the same window and config as the others.
 
@@ -513,17 +513,17 @@ because greedy decoding makes further runs information-free.
 
 [^q1]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`, `qwen3_0.6B_8bit_c15` (kana CER: kana_coverage_cer weighted by kana_ref_chars over the 17 Japanese files; looping files: rows with runaway_segments above zero)
 [^q2]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`, `qwen3_0.6B_8bit_c15`; [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
-[^q3]: [ultra-qwen3-window.json](../../../benchmarks/results/2026-10/ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c15`, `qwen3w7_1.7B_8bit_c30`, `qwen3w7_1.7B_8bit_c300`
+[^q3]: [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c15`, `qwen3w7_1.7B_8bit_c30`, `qwen3w7_1.7B_8bit_c300`
 [^q4]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15`, `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`
 [^q5]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r4`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`
-[^q6]: [ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/ultra-qwen3-loops.json) runs `q3budget_wholefile_8192`
-[^q7]: [ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/ultra-qwen3-loops.json) runs `q3trunc_perwindow_1.7B_8bit_c30`; [ultra-qwen3-window.json](../../../benchmarks/results/2026-10/ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`
-[^q8]: [ultra-qwen3-window.json](../../../benchmarks/results/2026-10/ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`; [ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/ultra-qwen3-loops.json) runs `qwen3loop7_1.7B_bf16_c30`; [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_0.6B_8bit_c30`, `qwen3_0.6B_bf16_c30` (their rows for the 7 subset files)
+[^q6]: [m2-ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-loops.json) runs `q3budget_wholefile_8192`
+[^q7]: [m2-ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-loops.json) runs `q3trunc_perwindow_1.7B_8bit_c30`; [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`
+[^q8]: [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`; [m2-ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-loops.json) runs `qwen3loop7_1.7B_bf16_c30`; [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_0.6B_8bit_c30`, `qwen3_0.6B_bf16_c30` (their rows for the 7 subset files)
 [^qc]: [corpus.json](../../../benchmarks/results/corpus.json)
-[^q9]: [ultra-picker-speed.json](../../../benchmarks/results/2026-10/ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3` (coverage CER minus coverage kana CER over the 17 Japanese files)
+[^q9]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3` (coverage CER minus coverage kana CER over the 17 Japanese files)
 [^q10]: [m2-ultra-qwen3-determinism.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-determinism.json) runs `q3det7_1.7B_8bit_c30` (the per-file repeat_identical and repeat_x_realtime fields)
 [^q11]: [m2-ultra-resolution-floor.json](../../../benchmarks/results/2026-10/m2-ultra-resolution-floor.json) runs `resolution_floor` (per-file SD 2.75 of the paired Japanese differences, Voxtral at 4bit, the default then, against Whisper turbo-nocond over 17 files; 95% half-width 1.96 SD / sqrt(n)), computed from [m2-ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
 [^q14]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`, `qwen3_0.6B_8bit_c15`; [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_1.7B_8bit_c30`, `qwen3_0.6B_8bit_c30` (paired over the 17 Japanese files)
 [^q15]: [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_1.7B_4bit_c30`, `qwen3_1.7B_5bit_c30`, `qwen3_1.7B_6bit_c30`, `qwen3_1.7B_8bit_c30`, `qwen3_1.7B_bf16_c30`, `qwen3_0.6B_4bit_c30`, `qwen3_0.6B_5bit_c30`, `qwen3_0.6B_6bit_c30`, `qwen3_0.6B_8bit_c30`, `qwen3_0.6B_bf16_c30` (the 30s ladder; looping files: rows with runaway_segments above zero)
-[^q16]: [ultra-picker-speed.json](../../../benchmarks/results/2026-10/ultra-picker-speed.json) runs `pk_qwen3_0.6B_8bit_c15_s1`, `pk_qwen3_0.6B_8bit_c15_s2`, `pk_qwen3_0.6B_8bit_c15_s3`; [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`
-[^q13]: [ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/ultra-qwen3-loops.json) runs `q3budget_wholefile_8192`, `q3budget_wholefile_19950` (duration_s minus audio_covered_s)
+[^q16]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_0.6B_8bit_c15_s1`, `pk_qwen3_0.6B_8bit_c15_s2`, `pk_qwen3_0.6B_8bit_c15_s3`; [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`
+[^q13]: [m2-ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-loops.json) runs `q3budget_wholefile_8192`, `q3budget_wholefile_19950` (duration_s minus audio_covered_s)

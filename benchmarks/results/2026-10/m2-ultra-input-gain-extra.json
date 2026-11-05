@@ -1,5 +1,5 @@
 {
- "group": "ultra-input-gain-extra",
+ "group": "m2-ultra-input-gain-extra",
  "question": "Input gain modes peak, rms and -6dB on the 7-file subset at 30s / batch 32 / kv8 (sweep_gain.py records no machine state or timing)",
  "docs": [
   "docs/benchmarks/input-level.md"

@@ -438,6 +438,9 @@ def main():
     p.add_argument("--set", action="append", default=[], metavar="RUN=KEY=VALUE",
                    help="a parameter RUN's JSON does not record correctly, from the queue line "
                         "that ran it (VALUE is JSON, else a string); RUN is the run JSON's stem")
+    p.add_argument("--rename-runs", action="append", default=[], metavar="FROM=TO",
+                   help="replace FROM with TO in every saved run name (the recorded commands "
+                        "keep the names they ran under)")
     p.add_argument("runs", nargs="+")
     a = p.parse_args()
     overrides = {}
@@ -504,6 +507,10 @@ def main():
     for run in group["runs"]:
         if run["run"] in prefixes:
             run["command"] = f"{prefixes[run['run']]} {run['command']}"
+    for spec in a.rename_runs:     # after every lookup by input stem
+        old, _, new = spec.partition("=")
+        for run in group["runs"]:
+            run["run"] = run["run"].replace(old, new)
     group = scrub(group)
     if a.revisions:
         revisions = json.load(open(a.revisions))

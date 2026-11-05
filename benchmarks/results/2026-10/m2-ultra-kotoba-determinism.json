@@ -1,5 +1,5 @@
 {
- "group": "ultra-kotoba-determinism",
+ "group": "m2-ultra-kotoba-determinism",
  "question": "kotoba-whisper (MLX chunked driver, 10s windows) decoding the 112s file 5 times",
  "docs": [
   "docs/benchmarks/reference/determinism.md"

@@ -44,7 +44,7 @@ sitting exactly at the floor, one recording:
 | unity | -0.5 | 9.9% | 16.44% | 26.55% |
 | +6dB | 0.0 | 2.8% | 17.09% | 23.96% |
 
-Source: [ultra-input-gain.json](../../benchmarks/results/2026-10/ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_m12db_c30b32_kv8#mode -12`, `gain7_m20db_c30b32_kv8#mode -20`, `gain7_p6db_c30b32_kv8#mode +6`; [ultra-input-gain-extra.json](../../benchmarks/results/2026-10/ultra-input-gain-extra.json) runs `gain7_m6db_c30b32_kv8#mode -6` (peak and clamp columns: the per-file rows of recording 57d841fe39b5; error columns weighted by reference lengths from [corpus.json](../../benchmarks/results/corpus.json))
+Source: [m2-ultra-input-gain.json](../../benchmarks/results/2026-10/m2-ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_m12db_c30b32_kv8#mode -12`, `gain7_m20db_c30b32_kv8#mode -20`, `gain7_p6db_c30b32_kv8#mode +6`; [m2-ultra-input-gain-extra.json](../../benchmarks/results/2026-10/m2-ultra-input-gain-extra.json) runs `gain7_m6db_c30b32_kv8#mode -6` (peak and clamp columns: the per-file rows of recording 57d841fe39b5; error columns weighted by reference lengths from [corpus.json](../../benchmarks/results/corpus.json))
 
 This is a question of level rather than bit depth. The runs read 16-bit PCM copies of the
 recordings (their original bit depth is not recorded, see
@@ -80,7 +80,7 @@ The 7-file subset needed no normalization, and unity gain was already near-optim
 | +6 dB | 17.09% | **23.96%** |
 | rms to -23 dBFS | 17.09% | **23.93%** |
 
-Source: [ultra-input-gain.json](../../benchmarks/results/2026-10/ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_m12db_c30b32_kv8#mode -12`, `gain7_m20db_c30b32_kv8#mode -20`, `gain7_p6db_c30b32_kv8#mode +6`; [ultra-input-gain-extra.json](../../benchmarks/results/2026-10/ultra-input-gain-extra.json) runs `gain7_peak_c30b32_kv8#mode peak`, `gain7_rms_c30b32_kv8#mode rms` (weighted by reference lengths from [corpus.json](../../benchmarks/results/corpus.json))
+Source: [m2-ultra-input-gain.json](../../benchmarks/results/2026-10/m2-ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_m12db_c30b32_kv8#mode -12`, `gain7_m20db_c30b32_kv8#mode -20`, `gain7_p6db_c30b32_kv8#mode +6`; [m2-ultra-input-gain-extra.json](../../benchmarks/results/2026-10/m2-ultra-input-gain-extra.json) runs `gain7_peak_c30b32_kv8#mode peak`, `gain7_rms_c30b32_kv8#mode rms` (weighted by reference lengths from [corpus.json](../../benchmarks/results/corpus.json))
 
 Paired across files, against unity:
 
@@ -98,7 +98,7 @@ Paired across files, against unity:
 | +6dB vs unity | +0.65 | [+0.00, +1.09] | **-2.59** | [-3.19, -1.18] | marginal harm on JP, **helps EN** |
 | peak-normalize vs unity | +0.30 | [-0.11, +0.77] | -0.17 | [-0.60, +0.84] | not resolvable |
 
-Source: [ultra-input-gain.json](../../benchmarks/results/2026-10/ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_m12db_c30b32_kv8#mode -12`, `gain7_m20db_c30b32_kv8#mode -20`, `gain7_p6db_c30b32_kv8#mode +6`; [ultra-input-gain-extra.json](../../benchmarks/results/2026-10/ultra-input-gain-extra.json) runs `gain7_peak_c30b32_kv8#mode peak` (weighted by reference lengths from [corpus.json](../../benchmarks/results/corpus.json))
+Source: [m2-ultra-input-gain.json](../../benchmarks/results/2026-10/m2-ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_m12db_c30b32_kv8#mode -12`, `gain7_m20db_c30b32_kv8#mode -20`, `gain7_p6db_c30b32_kv8#mode +6`; [m2-ultra-input-gain-extra.json](../../benchmarks/results/2026-10/m2-ultra-input-gain-extra.json) runs `gain7_peak_c30b32_kv8#mode peak` (weighted by reference lengths from [corpus.json](../../benchmarks/results/corpus.json))
 
 Each language is aggregated on its own unit and never pooled. With 2 English files the
 English intervals are close to meaningless (issue #12). The peak-normalize arm's interval
@@ -149,7 +149,7 @@ lifted, loud audio must be left alone.
 | -21.3 | +20.3 dB | -1.0 dBFS |
 | -41.3 | +40.3 dB | -1.0 dBFS |
 
-Source: [ultra-input-gain.json](../../benchmarks/results/2026-10/ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0` (the corpus peaks) <!-- not-measured: rows below the first apply the auto rule, gain = -1 dBFS minus peak and never negative -->
+Source: [m2-ultra-input-gain.json](../../benchmarks/results/2026-10/m2-ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0` (the corpus peaks) <!-- not-measured: rows below the first apply the auto rule, gain = -1 dBFS minus peak and never negative -->
 
 Gain is never negative and the target sits below full scale, so `auto` cannot clip.
 Verified as a no-op on all 7 corpus files and on the narration clip: it computes 0.0 dB for
@@ -182,8 +182,8 @@ already peaking near full scale, which is exactly what `auto` declines to touch.
 - [metrics.md](reference/metrics.md): coverage CER/WER and the paired comparison
 - [delay.md](delay.md): the other Voxtral-only lever, measured on the same config
 
-[^g1]: [ultra-input-gain.json](../../benchmarks/results/2026-10/ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_m12db_c30b32_kv8#mode -12`, `gain7_m20db_c30b32_kv8#mode -20`, `gain7_p6db_c30b32_kv8#mode +6` (weighted by reference lengths from [corpus.json](../../benchmarks/results/corpus.json))
-[^g2]: [ultra-input-gain.json](../../benchmarks/results/2026-10/ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_p6db_c30b32_kv8#mode +6` (the peak column of the recording in the clamp table)
+[^g1]: [m2-ultra-input-gain.json](../../benchmarks/results/2026-10/m2-ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_m12db_c30b32_kv8#mode -12`, `gain7_m20db_c30b32_kv8#mode -20`, `gain7_p6db_c30b32_kv8#mode +6` (weighted by reference lengths from [corpus.json](../../benchmarks/results/corpus.json))
+[^g2]: [m2-ultra-input-gain.json](../../benchmarks/results/2026-10/m2-ultra-input-gain.json) runs `gain7_asrecorded_c30b32_kv8#mode 0`, `gain7_p6db_c30b32_kv8#mode +6` (the peak column of the recording in the clamp table)
 [^g3]: [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c30b32_kv8`, `hk_attn14_gainnone`, `hk_attn14_gainauto`, `score_clip`
 [^g4]: [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_gain`; [m2-ultra-voxtral-clip-recheck.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-recheck.json) runs `noop_clip_auto_sha256` (cmp exit 0, identical SHA-256)
 [^g5]: [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_gain`

@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from mlx_asr.models import CONVERT_SEP, REGISTRY, UnknownQuantization, UnknownSize  # noqa: E402
 from mlx_asr.variants import PRIORITY, check_registry, select  # noqa: E402
 
-M4, ULTRA = 12.7, 115.4      # source: m4-synthetic-decode.json#synth_nvfp4_r1; ultra-synthetic-decode.json#synth_ultra_4bit_r1
+M4, ULTRA = 12.7, 115.4      # source: m4-synthetic-decode.json#synth_nvfp4_r1; m2-ultra-synthetic-decode.json#synth_m2_ultra_4bit_r1
 MID, TINY = 24.0, 5.3        # not-measured: hypothetical working sets
 
 

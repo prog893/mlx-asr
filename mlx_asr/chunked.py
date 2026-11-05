@@ -7,7 +7,7 @@ cannot maintain state across windows. kotoba-whisper measured 93.83% coverage CE
 through the sequential driver (mean of two runs; source: m2-ultra-kotoba-sequential.json#kseq_off_cond_r1,kseq_off_cond_r2)
 versus 26.15% through transformers' *chunked* driver, on identical weights, over the
 5 Japanese files of the 7-file subset (docs/benchmarks/engines/kotoba.md). (source:
-ultra-kotoba-engines.json#k20_hf22_c10_r1, its rows of those 5 files.)
+m2-ultra-kotoba-engines.json#k20_hf22_c10_r1, its rows of those 5 files.)
 
 The important part: chunked long-form is a property of the **driver**, not the
 model or the framework. Slice the audio, transcribe each slice independently,
@@ -97,7 +97,7 @@ def transcribe_chunked(audio, model_repo, chunk_length_s=10.0, language=None,
     ``chunk_length_s`` is the one knob that matters here and it is
     material-dependent: on our corpus kotoba scored 26.15% at 10s versus 49.57% at
     30s, but on clean narration 20s beat both. Sweep it on your own audio.
-    (source: ultra-kotoba-engines.json#k20_hf22_c10_r1,k20_hf22_c30_r1, rows of the 5
+    (source: m2-ultra-kotoba-engines.json#k20_hf22_c10_r1,k20_hf22_c30_r1, rows of the 5
     Japanese files of the 7-file subset; m2-ultra-kotoba-engines-clip.json#kclip_hf22_c10_r1,kclip_hf22_c20_r1,kclip_hf22_c30_r1)
     """
     from mlx_whisper.transcribe import transcribe

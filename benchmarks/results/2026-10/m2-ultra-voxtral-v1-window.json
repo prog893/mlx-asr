@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-v1-window",
+ "group": "m2-ultra-voxtral-v1-window",
  "question": "voxtral-v1 3B bf16 by window (15 / 60 / 120s) and 3B 8-bit determinism, 7-file subset",
  "docs": [
   "docs/benchmarks/engines/voxtral-v1.md"

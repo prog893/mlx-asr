@@ -84,7 +84,7 @@ corpus, and kotoba is flat to the last decimal:
 | `voxtral 4bit` | 5.38GB | 6.77GB | 1.39 |
 | `whisper turbo` | 2.54GB | 5.53GB | 2.99 |
 
-Source: [m2-ultra-peak-memory-kotoba.json](../../../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079`; [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_8bit_c15`, `qwen3_1.7B_8bit_c15`; [ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+Source: [m2-ultra-peak-memory-kotoba.json](../../../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079`; [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_8bit_c15`, `qwen3_1.7B_8bit_c15`; [m2-ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
 
 A fixed decode window (10s for kotoba, 15s for qwen3-asr) is what makes a model's memory
 predictable, and it is worth more than a small weight file when the question is whether
@@ -109,7 +109,7 @@ Reproduced deliberately by moving the cache aside, on the 112s file through the 
 | cold | 3.03GB | the old published figure |
 | warm | 2.38GB | every subsequent run |
 
-Source: [ultra-kotoba-conversion.json](../../../benchmarks/results/2026-10/ultra-kotoba-conversion.json) runs `pm_kotoba_cold_r112`, `pm_kotoba_warm_r112`
+Source: [m2-ultra-kotoba-conversion.json](../../../benchmarks/results/2026-10/m2-ultra-kotoba-conversion.json) runs `pm_kotoba_cold_r112`, `pm_kotoba_warm_r112`
 
 Both are real. 2.38GB[^p6] is published because it is what a user sees for all but one run in
 the life of the machine, and the 3.03GB[^p11] one-off is noted in MODELS.md where the conversion
@@ -124,7 +124,7 @@ conversion is deterministic.
   recommended working set (12.71GB), which is close enough <!-- not-measured: device constant from mx.device_info(), not a run result --> to the voxtral fp16 figure
   (12.98GB)[^p7] that fp16 is not usable there.
 - **Default config at measurement time.** Voxtral's figures were measured at the earlier
-  60s/B16 profile; the current Ultra default is fp16 at 30s/B128 ([chunking.md](../chunking.md#experiment-batch-size-end-to-end)), which peaks at 17.14GB[^p14] (11.33GB[^p8] on 4-bit), and the current M4 16GB default is 8bit at 30s/B32, which peaked at 6.78GB[^p15] there (6.87GB[^p13] on 4-bit). A
+  60s/B16 profile; the current M2 Ultra default is fp16 at 30s/B128 ([chunking.md](../chunking.md#experiment-batch-size-end-to-end)), which peaks at 17.14GB[^p14] (11.33GB[^p8] on 4-bit), and the current M4 16GB default is 8bit at 30s/B32, which peaked at 6.78GB[^p15] there (6.87GB[^p13] on 4-bit). A
   different `--chunk-seconds`/`--max-batch` pair moves them, and so does the KV setting:
   `quantization.md` reports 9.36GB[^p9] and 15.28GB[^p12] at the same 60s/B16 pair with
   unquantized KV, for the same two builds on a different clip.
@@ -158,14 +158,14 @@ mlx-asr audio.wav --stats-json stats.json      # peak_memory_gb in the JSON
 
 [^p1]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_tiny_libdef_r2`, `whisper_tiny_libdef_r3`
 [^p3]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond`
-[^p4]: [ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`
+[^p4]: [m2-ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`
 [^p5]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_8bit_c15`, `qwen3_1.7B_8bit_c15`
 [^p6]: [m2-ultra-peak-memory-kotoba.json](../../../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079`
-[^p7]: [ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/ultra-voxtral-precision.json) runs `vox_wfp16_c60b16_kv8`
+[^p7]: [m2-ultra-voxtral-precision.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_wfp16_c60b16_kv8`
 [^p8]: [m2-ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`
 [^p9]: [m2-ultra-voxtral-clip.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `compact_c60b16_kv0_off`
 [^p10]: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_bf16_c30`
-[^p11]: [ultra-kotoba-conversion.json](../../../benchmarks/results/2026-10/ultra-kotoba-conversion.json) runs `pm_kotoba_cold_r112`, `pm_kotoba_warm_r112`
+[^p11]: [m2-ultra-kotoba-conversion.json](../../../benchmarks/results/2026-10/m2-ultra-kotoba-conversion.json) runs `pm_kotoba_cold_r112`, `pm_kotoba_warm_r112`
 [^p12]: [m2-ultra-voxtral-clip-cli.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_fp16`
 [^p13]: [m4-voxtral-chunking.json](../../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3` (6.87GB on all three)
 [^p14]: [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`

@@ -1,5 +1,5 @@
 {
- "group": "ultra-voxtral-precision",
+ "group": "m2-ultra-voxtral-precision",
  "question": "Voxtral weight precision at 60s / batch 16 / kv8 / delay 2400",
  "docs": [
   "docs/benchmarks/quantization.md"

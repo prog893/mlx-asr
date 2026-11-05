@@ -27,7 +27,7 @@ SWEEPS = {
         ],
         "chosen": 15, "chosen_series": "Japanese CER",
         "label_dy": 14,
-        "source": "ultra-qwen3-window.json#qwen3w7_1.7B_8bit_c15,qwen3w7_1.7B_8bit_c30,"
+        "source": "m2-ultra-qwen3-window.json#qwen3w7_1.7B_8bit_c15,qwen3w7_1.7B_8bit_c30,"
                   "qwen3w7_1.7B_8bit_c60,qwen3w7_1.7B_8bit_c120,qwen3w7_1.7B_8bit_c300",
     },
     # Both sizes on ONE y scale, so the 1.7B's narrower spread reads beside the 0.6B's
@@ -99,8 +99,8 @@ SWEEPS = {
             (7, None, ("51", "57")),
         ],
         "legend_loc": "upper left",
-        "source": "ultra-qwen3-window.json#qwen3w7_1.7B_8bit_c30;"
-                  "ultra-qwen3-loops.json#qwen3loop7_1.7B_bf16_c30",
+        "source": "m2-ultra-qwen3-window.json#qwen3w7_1.7B_8bit_c30;"
+                  "m2-ultra-qwen3-loops.json#qwen3loop7_1.7B_bf16_c30",
     },
     # Markers only: unordered engines. No ring, since the engine default is decided on
     # engines.md; this chart only places both sizes against the two existing engines.
@@ -164,7 +164,7 @@ SWEEPS = {
              ("17.29%", "100%")),
         ],
         "chosen": "per window\n(default)", "chosen_series": "coverage CER",
-        "source": "ultra-qwen3-loops.json#q3budget_wholefile_8192,q3budget_wholefile_19950,"
+        "source": "m2-ultra-qwen3-loops.json#q3budget_wholefile_8192,q3budget_wholefile_19950,"
                   "q3trunc_perwindow_1.7B_8bit_c30",
     },
 }
