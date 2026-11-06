@@ -8,8 +8,6 @@ Or explore the comparison results: [RESULTS.md](RESULTS.md).
 
 ## Install
 
-Apple Silicon, macOS 14+.
-
 ```bash
 brew install prog893/tap/mlx-asr
 ```
