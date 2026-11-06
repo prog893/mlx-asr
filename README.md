@@ -101,11 +101,11 @@ chosen by measuring the alternatives, including model sizes and
 precisions, on our own corpus of Japanese and English recordings. New models get the same
 treatment as they are added.
 
-What runs depends on the Mac. Each family's variants are ranked by measured accuracy, and the
+Actual values used depend on the hardware. Each family's variants are ranked by measured accuracy, and the
 CLI loads the best one that fits in memory. Other parameters come from a measured profile if
 your chip and RAM are in [mlx_asr/profiles.json](mlx_asr/profiles.json); otherwise they are
-derived from GPU cores and memory, and the CLI prints which of the two it used. If it says
-`derived`, you can contribute a profile: [CONTRIBUTING.md](CONTRIBUTING.md).
+derived from GPU cores and memory, and the CLI prints which of the two it used. To contribute a profile for your own Mac by
+running the benchmark yourself, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Each default and how strong the evidence behind it is: [docs/DEFAULTS.md](docs/DEFAULTS.md). All results:
 [RESULTS.md](RESULTS.md).
