@@ -76,8 +76,8 @@ Every flag, and which engine accepts it: [docs/MODELS.md](docs/MODELS.md).
 matters far more than precision. Each family's variants are ranked by measured accuracy,
 the larger first within a tie, and the CLI loads the first one that fits the Mac's memory,
 so one `--model` can run a different variant on a 16 GB Mac than on a 128 GB one
-([how a variant is chosen](docs/DEFAULTS.md#how-a-variant-is-chosen)). On Voxtral, higher
-precision scores better, so it runs fp16 where it fits and 8-bit on 16 GB Macs.
+([how a variant is chosen](docs/DEFAULTS.md#how-a-variant-is-chosen)). For example, on Voxtral
+[higher precision scores better](docs/benchmarks/quantization.md#experiment-the-weight-precision-ladder), so it runs fp16 where it fits and 8-bit on 16 GB Macs.
 
 `whisper`, `qwen3-asr` and `voxtral-v1` do better when you set `--language`, and each gets the form it
 wants (a code for Whisper and Voxtral v1, an English name for Qwen) from whatever you type. Voxtral takes
