@@ -92,19 +92,13 @@ wants (a code for Whisper and Voxtral v1, an English name for Qwen) from whateve
 no language flag, and the Japanese-only engines (`kotoba`, `parakeet`, `reazon`) refuse
 `--language` values other than Japanese rather than silently ignoring them.
 
-`--list-models` prints the sizes and precisions each family accepts. The complete
-mapping from every `--model`/`--size`/`--quantization` combination to its Hugging Face
-repo id, with download size and measured peak GPU memory, is in
-[docs/MODELS.md](docs/MODELS.md#the-models); it is generated from the registry, not
-hand-maintained.
+Every `--model`, `--size` and `--quantization` combination, with its Hugging Face repo,
+download size and peak GPU memory, is listed in [docs/MODELS.md](docs/MODELS.md#the-models).
+`--list-models` prints the sizes and precisions each family accepts.
 
-All weights are `mlx-community` MLX builds, except `kotoba` and `voxtral-v1`, which use the
-authors' own weights and convert them locally on first use, and `reazon`, which runs the
-authors' ONNX files. **unsloth and GGUF quants cannot be used here**: unsloth
-publishes no Voxtral, only GGUF for Qwen3-ASR, and unquantized transformers weights for
-Whisper, while GGUF is llama.cpp's format that MLX cannot load. That is a format
-constraint rather than a quality judgement
-([why](docs/MODELS.md#formats-that-will-not-work)).
+The built-in families load weights only from the model authors' own repos and from
+mlx-community. `kotoba` and `voxtral-v1` are converted to MLX on your machine on first use,
+from the authors' weights. `reazon` runs the authors' ONNX files on CPU.
 
 What each model scored: [docs/benchmarks/engines.md](docs/benchmarks/engines.md).
 
