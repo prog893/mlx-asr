@@ -59,12 +59,6 @@ Input is anything libavformat demuxes: wav, flac, mp3, aac/m4a, alac, opus, or t
 track of a video, at any sample rate or bit depth. It gets downmixed to mono and
 resampled to 16kHz before the model sees it. Details in [docs/AUDIO.md](docs/AUDIO.md).
 
-Default parameters are picked based on machine. If your chip and RAM are in
-[mlx_asr/profiles.json](mlx_asr/profiles.json), they come from measurements on that
-machine; otherwise they are derived from GPU cores and memory, and the CLI prints
-which of the two it used. If it says `derived`, you can contribute a profile:
-[CONTRIBUTING.md](CONTRIBUTING.md).
-
 Every flag, and which engine accepts it: [docs/MODELS.md](docs/MODELS.md).
 
 ## The engines
@@ -102,26 +96,23 @@ from the authors' weights. `reazon` runs the authors' ONNX files on CPU.
 
 What each model scored: [docs/benchmarks/engines.md](docs/benchmarks/engines.md).
 
-## Why the defaults are what they are
+## Defaults
 
-Every default was measured, and several went against the obvious choice:
-[docs/DEFAULTS.md](docs/DEFAULTS.md) lists each one with the number behind it. The full
-findings are in [docs/benchmarks/](docs/benchmarks/), one document per lever, indexed by
+The aim is that `mlx-asr file.wav` is good enough with no other flag. Every default except
+subtitle cue layout was chosen by measuring the alternatives, including model sizes and
+precisions, on our own corpus of Japanese and English recordings. New models get the same
+treatment as they are added.
+
+What runs depends on the Mac. Each family's variants are ranked by measured accuracy, and the
+CLI loads the best one that fits in memory. Other parameters come from a measured profile if
+your chip and RAM are in [mlx_asr/profiles.json](mlx_asr/profiles.json); otherwise they are
+derived from GPU cores and memory, and the CLI prints which of the two it used. If it says
+`derived`, you can contribute a profile: [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Each default and the evidence behind it: [docs/DEFAULTS.md](docs/DEFAULTS.md). All results:
 [RESULTS.md](RESULTS.md).
-
-The short version: transcription delay is the biggest lever and it is free; per-step decode
-time is not monotonic in batch size (batches of 2 to 8 take longer per step than one at a
-time, though they still finish sooner: 12.5x to 25.9x against 7.2x on the M2 Ultra[^m2]), so
-the batch is snapped to sizes that measured well; VAD
-cut points and dropping silence both turned out to change nothing measurable, so both stay
-off; higher precision does help Voxtral, so it runs fp16 where memory allows and 8-bit on
-16 GB Macs; and whisper defaults to large-v3 although turbo ties it at 1.8x[^m1] the
-speed, because a tie on 20 files is not evidence the smaller decoder is safe elsewhere.
 
 ## License
 
 MIT, see [LICENSE](LICENSE). Model weights are not redistributed here and follow
 their own licenses; `--list-models` prints the repo id for every model.
-
-[^m1]: [m2-ultra-whisper-sizes.json](benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`, `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r4`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`
-[^m2]: [m2-ultra-synthetic-decode.json](benchmarks/results/2026-10/m2-ultra-synthetic-decode.json) runs `synth_m2_ultra_4bit_r1`, `synth_m2_ultra_4bit_r2`, `synth_m2_ultra_4bit_r3` (synthetic decode, mean of 3 runs per batch size)
