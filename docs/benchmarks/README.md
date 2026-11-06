@@ -1,14 +1,9 @@
-# Benchmarks: what was measured, and what it concluded
+# Benchmark results
 
-One document per **lever**: a thing you can change that might make the output better or
-faster. Each states its corpus, its method, the experiments, and the conclusion, so a
-number can be read without reconstructing the run that produced it.
+The scoring methodology, built for Japanese and for edited rather than verbatim references,
+is in [metrics.md](reference/metrics.md). What the test material is: [corpus.md](reference/corpus.md).
 
-Read [metrics.md](reference/metrics.md) and [corpus.md](reference/corpus.md) before quoting any figure. The
-metrics here are unusual for a reason, and most of the material has editorial references
-that make plain CER meaningless.
-
-## Picking a model
+## Models
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/picker-dark.svg">
@@ -17,7 +12,11 @@ that make plain CER meaningless.
 
 Down and to the right is better: lower error, more speed. Filled points fit a 16GB Mac; the hollow one needs a large-memory machine. The two panels disagree, so pick on the language you transcribe: on Japanese the Whisper sizes and Voxtral lead, on English the voxtral-v1 models do, though English rests on three files. A point whose label carries a note after the model name has a speed measured under different conditions from the rest; [engines.md](engines.md) and [MODELS.md](../MODELS.md) carry the numbers behind every point.
 
-## The levers, largest effect first
+## The levers
+
+A lever is a thing you can change to affect a model's output or speed: the prompt,
+quantization, model size, and so on. Each one has its own document, listed below with its
+conclusion, largest effect first.
 
 | document | lever | conclusion in one line |
 |---|---|---|
