@@ -17,12 +17,11 @@ A value is written exactly as its doc prints it (a string), and parsed for plott
 # JP and EN from the 20-file corpus (JP: the 17 Japanese files; EN: the 3 English
 # files). Speed is the run's own x realtime; `speed_note` is a qualifier the chart
 # prints beside the label (reazon decodes on the CPU). `peak` is GPU memory from
-# MODELS.md, where a 16GB Mac's working set (12.7GB) is the line that matters.
+# MODELS.md.
 PICKER_SOURCE = {
     "jp": "docs/benchmarks/engines.md",
     "peak": "docs/MODELS.md",
 }
-M16_WORKING_SET_GB = 12.7  # source: m4-synthetic-decode.json#synth_nvfp4_r1 (machine gpu_working_set_gb)
 
 PICKER = [
     # name, JP CER, EN WER, x realtime, peak, speed_note, source of the JP/EN/speed row

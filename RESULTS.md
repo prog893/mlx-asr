@@ -11,7 +11,7 @@ re-measured 2026-08-19 after a reference-loading fix (see below):
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/benchmarks/img/picker-dark.svg">
-  <img alt="Error against speed for every engine at its defaults, Japanese and English panels; filled points fit a 16GB Mac" src="docs/benchmarks/img/picker-light.svg">
+  <img alt="Error against speed for every engine at its defaults, Japanese and English panels; the best trade-offs are highlighted" src="docs/benchmarks/img/picker-light.svg">
 </picture>
 
 | engine | JP coverage CER | EN coverage WER | x realtime |

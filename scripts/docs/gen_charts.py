@@ -78,7 +78,7 @@ def _jp_en_lines(ax, t, xs, jp, en, ordinal=False, en_files=2):
 # Label offsets in points, per engine, to keep names off each other. Hand-set because
 # there are ten fixed points and an automatic placer moves them on every data change.
 _PICKER_OFFSETS = {
-    "jp": {"voxtral": (8, 2), "whisper large-v3": (-8, 3), "whisper turbo": (8, 4),
+    "jp": {"voxtral": (8, 7), "whisper large-v3": (-8, 3), "whisper turbo": (8, -7),
            "qwen3-asr 1.7B": (8, 2), "qwen3-asr 0.6B": (8, -2),
            "voxtral-v1 3B 8bit": (8, -2), "voxtral-v1 24B 8bit": (8, 2), "kotoba": (8, -10),
            "parakeet": (-8, 8), "reazon": (8, 2)},
@@ -88,31 +88,36 @@ _PICKER_OFFSETS = {
 }
 
 
+def _pareto(points):
+    """Names of the points no other point beats on both error and speed."""
+    return {n for n, x, y in points
+            if not any(x2 >= x and y2 <= y and (x2, y2) != (x, y) for _, x2, y2 in points)}
+
+
 def picker(t):
     fig, (ax_jp, ax_en) = _grid(t, 1, 2, 10.0, 4.4)
     for ax, key, idx, title in ((ax_jp, "jp", 1, "Japanese: 17 files"),
                                 (ax_en, "en", 2, "English: 3 files only")):
+        points = [(row[0], cd.num(row[3]), cd.pct(row[idx])) for row in cd.PICKER
+                  if row[idx] is not None]
+        front = _pareto(points)
+        line = sorted((x, y) for n, x, y in points if n in front)
+        ax.plot([x for x, _ in line], [y for _, y in line], color=t["s1"], linewidth=1,
+                linestyle="--", zorder=3)
         for row in cd.PICKER:
-            name, value, speed, peak, note = row[0], row[idx], row[3], row[4], row[5]
+            name, value, speed, note = row[0], row[idx], row[3], row[5]
             if value is None:
                 continue
             x, y = cd.num(speed), cd.pct(value)
-            if peak is None:
-                # A CPU engine has no GPU peak, so it is neither a measured fit nor a
-                # measured miss; its own marker says so rather than borrowing "fits".
-                ax.scatter([x], [y], s=70, zorder=4, marker="D", facecolors="none",
-                           edgecolors=t["s1"], linewidths=2)
-            elif cd.num(peak) <= cd.M16_WORKING_SET_GB:
-                ax.scatter([x], [y], s=70, zorder=4, facecolors=t["s1"],
-                           edgecolors=t["surface"], linewidths=2)
-            else:
-                ax.scatter([x], [y], s=70, zorder=4, facecolors="none",
-                           edgecolors=t["s1"], linewidths=2)
+            best = name in front
+            ax.scatter([x], [y], s=70, zorder=4, facecolors=t["s1"] if best else t["muted"],
+                       edgecolors=t["surface"], linewidths=2)
             label = name + (f" ({note})" if note else "")
             dx, dy = _PICKER_OFFSETS[key].get(name, (8, 2))
             ax.annotate(label, (x, y), xytext=(dx, dy), textcoords="offset points",
                         ha="left" if dx >= 0 else "right", va="center",
-                        color=t["ink"], fontsize=8.5)
+                        color=t["ink"] if best else t["ink2"], fontsize=8.5,
+                        fontweight="bold" if best else "normal")
         _log_x(ax, [2, 5, 10, 20, 50, 100, 250], lambda x: f"{x:g}x")
         ax.set_xlim(2, 600 if key == "jp" else 120)
         ax.set_xlabel("speed, x realtime (log scale, right is faster)")
@@ -124,19 +129,15 @@ def picker(t):
                     arrowprops=dict(arrowstyle="->", color=t["muted"], lw=1))
     ax_jp.set_ylim(6, 40)
     ax_en.set_ylim(15, 27)
-    # Fill legend: the one encoding the labels do not carry.
-    h_fit = ax_jp.scatter([], [], s=70, facecolors=t["s1"], edgecolors=t["surface"])
-    h_big = ax_jp.scatter([], [], s=70, facecolors="none", edgecolors=t["s1"],
-                          linewidths=2)
-    h_cpu = ax_jp.scatter([], [], s=70, marker="D", facecolors="none",
-                          edgecolors=t["s1"], linewidths=2)
+    h_best = ax_jp.scatter([], [], s=70, facecolors=t["s1"], edgecolors=t["surface"])
+    h_rest = ax_jp.scatter([], [], s=70, facecolors=t["muted"], edgecolors=t["surface"])
     # One row above both panels, never over the data.
-    fig.legend([h_fit, h_big, h_cpu], ["fits a 16GB Mac (GPU peak under 12.7GB)",
-                                       "needs more GPU memory",
-                                       "runs on the CPU, no GPU peak"],
-               loc="lower left", bbox_to_anchor=(0.01, 1.0), ncol=3, frameon=False,
+    fig.legend([h_best, h_rest], ["best trade-off: no other engine is both faster and "
+                                  "more accurate",
+                                  "another engine is both faster and more accurate"],
+               loc="lower left", bbox_to_anchor=(0.01, 1.0), ncol=2, frameon=False,
                labelcolor=t["ink2"], fontsize=8.5, borderaxespad=0)
-    _caption(fig, t, "M2 Ultra. CPU marks an engine that runs on the CPU. Each model at its "
+    _caption(fig, t, "M2 Ultra. (CPU) marks an engine that runs on the CPU. Each model at its "
                      "default precision. Source: RESULTS.md, engines.md, MODELS.md.")
     fig.tight_layout()
     return fig
