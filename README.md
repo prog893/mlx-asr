@@ -112,5 +112,8 @@ Each default and how strong the evidence behind it is: [docs/DEFAULTS.md](docs/D
 
 ## License
 
-MIT, see [LICENSE](LICENSE). Model weights are not redistributed here and follow
-their own licenses; `--list-models` prints the repo id for every model.
+[MIT](LICENSE)
+
+Model weights are not redistributed here and follow their own licenses. The Hugging Face
+repo of every model, where its license is stated, is listed in
+[docs/MODELS.md](docs/MODELS.md#the-models).
