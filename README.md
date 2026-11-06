@@ -96,8 +96,8 @@ What each model scored: [docs/benchmarks/engines.md](docs/benchmarks/engines.md)
 
 ## Defaults
 
-The aim is that `mlx-asr file.wav` is good enough with no other flag. Every default except
-subtitle cue layout was chosen by measuring the alternatives, including model sizes and
+The aim is that `mlx-asr file.wav` is good enough with no other flag. The defaults were
+chosen by measuring the alternatives, including model sizes and
 precisions, on our own corpus of Japanese and English recordings. New models get the same
 treatment as they are added.
 
@@ -107,7 +107,7 @@ your chip and RAM are in [mlx_asr/profiles.json](mlx_asr/profiles.json); otherwi
 derived from GPU cores and memory, and the CLI prints which of the two it used. If it says
 `derived`, you can contribute a profile: [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Each default and the evidence behind it: [docs/DEFAULTS.md](docs/DEFAULTS.md). All results:
+Each default and how strong the evidence behind it is: [docs/DEFAULTS.md](docs/DEFAULTS.md). All results:
 [RESULTS.md](RESULTS.md).
 
 ## License
