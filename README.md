@@ -1,14 +1,10 @@
 # mlx-asr
 
-One CLI over seven speech-to-text engines on Apple Silicon. Point it at a file, get
-a subtitle file. Runs locally, with sensible defaults per machine.
+One CLI over seven speech-to-text engines on Apple Silicon, and a comparative study of ASR
+models focused on Japanese.
 
-The tuning and measurement here are aimed at **Japanese**: the defaults were chosen
-against Japanese audio, the accuracy work uses character-level metrics suited to a
-script with no word boundaries, and three engines (`kotoba`, `parakeet`, `reazon`) are
-Japanese-only. English is
-measured and works; other languages are inherited from the upstream models and
-untested here. See [docs/benchmarks/](docs/benchmarks/).
+Point it at a file, get a subtitle file. Runs locally, with sensible defaults per machine.
+Or explore the comparison results: [RESULTS.md](RESULTS.md).
 
 ## Install
 
@@ -17,9 +13,6 @@ Apple Silicon, macOS 14+.
 ```bash
 brew install prog893/tap/mlx-asr
 ```
-
-Weights download on first use into `~/.cache/huggingface`, about 9GB for the default <!-- not-measured: Hugging Face repo size of the default weights, not a run -->
-model: the fp16 Voxtral build, which a 16GB Mac converts to 8bit once.
 
 <details>
 <summary>From source, for development or to run the benchmarks</summary>
@@ -56,9 +49,9 @@ The Homebrew formula lives in [scripts/homebrew/](scripts/homebrew/).
 mlx-asr interview.m4a                     # writes interview.srt next to it
 mlx-asr talk.mp4 -f json                  # timestamps + metadata as JSON
 mlx-asr talk.mp4 -f all -o out/talk       # srt, vtt, txt and json together
-mlx-asr earnings.wav --prompt "EBITDA, ARR, Grafana"   # bias toward domain terms
-mlx-asr interview.m4a --model whisper --language ja        # large-v3 by default
-mlx-asr interview.m4a --model whisper --size small --language ja
+mlx-asr earnings.wav --prompt "EBITDA, ARR, Grafana"   # Voxtral only: bias toward domain terms
+mlx-asr interview.m4a --model whisper --language ja      # whisper uses large-v3 by default
+mlx-asr interview.m4a --model whisper --size small --language ja   # override the size
 mlx-asr --list-models
 ```
 
@@ -72,39 +65,7 @@ machine; otherwise they are derived from GPU cores and memory, and the CLI print
 which of the two it used. If it says `derived`, you can contribute a profile:
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
-These work on every engine:
-
-| flag | default | what it does |
-|---|---|---|
-| `--model NAME_OR_REPO` | `voxtral` | which model family, or a Hugging Face repo id |
-| `--size SIZE` | per family | which size within the family (`whisper`, `qwen3-asr`); errors on families with one |
-| `--quantization PRECISION` | per model | weight precision, where more than one build is published |
-| `-f, --output-format` | `srt` | `srt`, `vtt`, `txt`, `json`, or `all` |
-| `-o, --output PATH` | input stem | output path; with `-f all` it is a path stem |
-| `--stats-json PATH` | off | write timing, resolved config and machine info |
-| `--quiet` | off | silence progress output |
-| `--list-models` | | print the engines and their caveats, then exit |
-
-The rest belong to one engine. Pass one the current engine cannot use and it is an
-error, not a warning: nothing is silently ignored.
-
-```console
-$ mlx-asr audio.wav --model whisper --max-batch 32 --vad
-error: --max-batch, --vad: not supported by --model whisper-large-v3. These are
-Voxtral-only, because the engines do not share a long-form algorithm. Drop the
-flag, or use the default --model voxtral.
-```
-
-The same applies to output formats an engine cannot honestly produce, so `-f srt` on
-`qwen3-asr` exits 2 rather than writing a file whose cue times are decode-window
-boundaries.
-
-`--prompt` is one of those, Voxtral only. It takes domain terms or a topic sentence in the
-same language as the audio, not an instruction: the decoder treats it as text it already
-emitted, so "transcribe accurately" makes things worse. On English audio any prompt wrecks
-word spacing, so leave it empty there.
-
-Reference: [docs/MODELS.md](docs/MODELS.md).
+Every flag, and which engine accepts it: [docs/MODELS.md](docs/MODELS.md).
 
 ## The engines
 
