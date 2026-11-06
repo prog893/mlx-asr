@@ -1,8 +1,5 @@
 # Benchmark results
 
-The scoring methodology, built for Japanese and for edited rather than verbatim references,
-is in [metrics.md](reference/metrics.md). What the test material is: [corpus.md](reference/corpus.md).
-
 ## Models
 
 <picture>
@@ -10,7 +7,7 @@ is in [metrics.md](reference/metrics.md). What the test material is: [corpus.md]
   <img alt="Error against speed for every engine at its defaults, Japanese and English panels; filled points fit a 16GB Mac" src="img/picker-light.svg">
 </picture>
 
-Down and to the right is better: lower error, more speed. Filled points fit a 16GB Mac; the hollow one needs a large-memory machine. The two panels disagree, so pick on the language you transcribe: on Japanese the Whisper sizes and Voxtral lead, on English the voxtral-v1 models do, though English rests on three files. A point whose label carries a note after the model name has a speed measured under different conditions from the rest; [engines.md](engines.md) and [MODELS.md](../MODELS.md) carry the numbers behind every point.
+Down and to the right is better: lower error, more speed. Filled points fit a 16GB Mac; the hollow one needs a large-memory machine. The two panels disagree, so pick on the language you transcribe: on Japanese the Whisper sizes and Voxtral lead, on English the voxtral-v1 models do, though English rests on three files. A point whose label carries a note after the model name has a speed measured under different conditions from the rest; [engines.md](engines.md) and [MODELS.md](../MODELS.md) carry the numbers behind every point. Error is scored with a methodology built for Japanese and for edited rather than verbatim references ([metrics.md](reference/metrics.md)); the test material is described in [corpus.md](reference/corpus.md).
 
 ## The levers
 
