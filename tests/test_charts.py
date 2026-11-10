@@ -27,15 +27,15 @@ IMG = ROOT / "docs" / "benchmarks" / "img"
 # The MODELS.md row each picker point takes its peak from: a repo id or row prefix
 # unique to that row.
 PEAK_ROW = {
-    "voxtral": "| 1 | `fp16`",
-    "whisper large-v3": "whisper-large-v3-mlx)",
-    "whisper turbo": "whisper-large-v3-turbo)",
-    "qwen3-asr 1.7B": "Qwen3-ASR-1.7B-8bit)",
-    "qwen3-asr 0.6B": "Qwen3-ASR-0.6B-8bit)",
-    "voxtral-v1 3B 8bit": "| `3B` | `8bit`",
-    "voxtral-v1 24B 8bit": "| `24B` | `8bit`",
-    "kotoba": "kotoba-whisper-v2.0)",
-    "parakeet": "parakeet-tdt_ctc-0.6b-ja)",
+    "voxtral fp16": "| 1 | `fp16`",
+    "whisper large-v3 fp16": "whisper-large-v3-mlx)",
+    "whisper turbo fp16": "whisper-large-v3-turbo)",
+    "qwen3-asr 1.7B 8bit": "Qwen3-ASR-1.7B-8bit)",
+    "qwen3-asr 0.6B bf16": "Qwen3-ASR-0.6B-bf16)",
+    "voxtral-v1 3B bf16": "| `3B` | `bf16`",
+    "voxtral-v1 24B bf16": "| `24B` | `bf16`",
+    "kotoba fp16": "kotoba-whisper-v2.0)",
+    "parakeet fp32": "parakeet-tdt_ctc-0.6b-ja)",
 }
 GAIN_ROW = {-20: "-20 dB", -12: "-12 dB", 0: "unity", 6: "+6 dB"}
 

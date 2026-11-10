@@ -10,38 +10,29 @@ A value is written exactly as its doc prints it (a string), and parsed for plott
 
 # --- the picker: one point per engine/size at its defaults ------------------------------
 #
-# Defaults on the M2 Ultra 128GB, where the speeds were measured; Voxtral's is fp16 there
-# (a 16GB Mac loads 8-bit instead, docs/DEFAULTS.md "How a variant is chosen").
-# voxtral-v1 is the exception: its points are 8bit, the precision with three speed runs
-# per size, and are labelled so; on the M2 Ultra the selector loads bf16 for either size.
+# Each engine at the precision the M2 Ultra 128GB loads by default, where the speeds were
+# measured (a 16GB Mac loads smaller variants, docs/DEFAULTS.md "How a variant is chosen").
 # JP and EN from the 20-file corpus (JP: the 17 Japanese files; EN: the 3 English
 # files). Speed is the run's own x realtime; `speed_note` is a qualifier the chart
 # prints beside the label (reazon decodes on the CPU). `peak` is GPU memory from
 # MODELS.md.
 PICKER_SOURCE = {
-    "jp": "docs/benchmarks/engines.md",
+    "jp": "docs/benchmarks/README.md",
     "peak": "docs/MODELS.md",
 }
 
 PICKER = [
     # name, JP CER, EN WER, x realtime, peak, speed_note, source of the JP/EN/speed row
-    ("voxtral", "15.20%", "21.21%", "23.9x", "12.98GB", "", "RESULTS.md"),
-    ("whisper large-v3", "14.51%", "18.59%", "11.5x", "7.00GB", "",
-     "docs/benchmarks/engines/whisper.md"),
-    ("whisper turbo", "14.17%", "18.65%", "21.0x", "5.53GB", "",
-     "docs/benchmarks/engines/whisper.md"),
-    ("qwen3-asr 1.7B", "18.62%", "24.72%", "24.6x", "3.74GB", "", "RESULTS.md"),
-    ("qwen3-asr 0.6B", "22.31%", "22.95%", "35.5x", "2.07GB", "", "RESULTS.md"),
-    ("voxtral-v1 3B 8bit", "36.14%", "17.86%", "14.1x", "7.28GB", "",
-     "RESULTS.md"),
-    ("voxtral-v1 24B 8bit", "27.20%", "16.86%", "3.4x", "27.92GB", "",
-     "RESULTS.md"),
-    ("kotoba", "25.34%", None, "50.0x", "2.38GB", "",
-     "docs/benchmarks/engines.md"),
-    ("parakeet", "25.68%", None, "261.8x", "4.77GB", "",
-     "docs/benchmarks/engines.md"),
-    ("reazon", "30.06%", None, "52.9x", None, "CPU",
-     "docs/benchmarks/engines.md"),
+    ("voxtral fp16", "15.20%", "21.21%", "23.9x", "12.98GB", "", "docs/benchmarks/README.md"),
+    ("whisper large-v3 fp16", "14.51%", "18.59%", "11.5x", "7.00GB", "", "docs/benchmarks/README.md"),
+    ("whisper turbo fp16", "14.17%", "18.65%", "21.0x", "5.53GB", "", "docs/benchmarks/README.md"),
+    ("qwen3-asr 1.7B 8bit", "18.62%", "24.72%", "24.6x", "3.74GB", "", "docs/benchmarks/README.md"),
+    ("qwen3-asr 0.6B bf16", "22.31%", "22.91%", "30.4x", "2.63GB", "", "docs/benchmarks/README.md"),
+    ("voxtral-v1 3B bf16", "36.84%", "17.77%", "10.0x", "10.91GB", "", "docs/benchmarks/README.md"),
+    ("voxtral-v1 24B bf16", "26.98%", "16.86%", "2.4x", "50.08GB", "", "docs/benchmarks/README.md"),
+    ("kotoba fp16", "25.34%", None, "50.0x", "2.38GB", "", "docs/benchmarks/README.md"),
+    ("parakeet fp32", "25.68%", None, "261.8x", "4.77GB", "", "docs/benchmarks/README.md"),
+    ("reazon fp32", "30.06%", None, "52.9x", None, "CPU", "docs/benchmarks/README.md"),
 ]
 
 # --- sweeps: (doc, title, x label, rows, chosen x) ---------------------------------

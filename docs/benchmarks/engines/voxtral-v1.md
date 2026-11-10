@@ -249,7 +249,7 @@ is the run's own.
 - [metrics.md](../reference/metrics.md): coverage CER/WER and the paired comparisons.
 - [corpus.md](../reference/corpus.md): the 20-file corpus and the 7-file subset.
 - [peak-memory.md](../reference/peak-memory.md): how the peak figures are measured across engines.
-- [RESULTS.md](../../../RESULTS.md): the headline rows for both sizes.
+- [Benchmark results](../README.md): the headline rows for both sizes.
 
 [^v1a]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_v1_3B_8bit_c30_s1`, `pk_v1_3B_8bit_c30_s2`, `pk_v1_3B_8bit_c30_s3`; [m2-ultra-picker-speed-24b.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed-24b.json) runs `pk_v1_24B_8bit_c30_s1`, `pk_v1_24B_8bit_c30_s2`, `pk_v1_24B_8bit_c30_s3`
 [^v1b]: [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`; [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_1.7B_8bit_c15_s1`, `pk_qwen3_1.7B_8bit_c15_s2`, `pk_qwen3_1.7B_8bit_c15_s3`

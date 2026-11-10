@@ -771,8 +771,7 @@ def test_markdown_tables_are_separated_from_following_prose():
     """
     import re
 
-    for doc in sorted((ROOT / "docs").rglob("*.md")) + [ROOT / "README.md",
-                                                        ROOT / "RESULTS.md"]:
+    for doc in sorted((ROOT / "docs").rglob("*.md")) + [ROOT / "README.md"]:
         text = doc.read_text(encoding="utf-8")
         # A line starting with | (a row), then a line starting with a letter, backtick
         # or bold marker (prose), with no blank line between them.
@@ -785,7 +784,7 @@ def test_markdown_tables_are_separated_from_following_prose():
 
 def _docs():
     return sorted((ROOT / "docs").rglob("*.md")) + [
-        ROOT / "README.md", ROOT / "RESULTS.md", ROOT / "CONTRIBUTING.md"]
+        ROOT / "README.md", ROOT / "CONTRIBUTING.md"]
 
 
 def _slug(heading: str) -> str:

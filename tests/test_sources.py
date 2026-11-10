@@ -30,7 +30,7 @@ RESULTS = ROOT / "benchmarks" / "results"
 NON_GROUP = {"corpus.json", "revisions.json"}       # catalog files: cited without runs
 SURFACES = sorted(
     {str(p.relative_to(ROOT)) for p in (ROOT / "docs").rglob("*.md")}
-    | {"README.md", "RESULTS.md", "CONTRIBUTING.md", "mlx_asr/profiles.json",
+    | {"README.md", "CONTRIBUTING.md", "mlx_asr/profiles.json",
        "scripts/docs/chart_data.py"}
     | {str(p.relative_to(ROOT)) for p in (ROOT / "mlx_asr").glob("*.py")}
     | {str(p.relative_to(ROOT)) for p in (ROOT / "scripts/docs/sweeps").glob("*.py")})

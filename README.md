@@ -4,7 +4,7 @@ One CLI over seven speech-to-text engines on Apple Silicon, and a comparative st
 models focused on Japanese.
 
 Point it at a file, get a subtitle file. Runs locally, with sensible defaults per machine.
-Or explore the comparison results: [RESULTS.md](RESULTS.md).
+Or explore the comparison results: [docs/benchmarks/](docs/benchmarks/).
 
 ## Install
 
@@ -108,7 +108,7 @@ derived from GPU cores and memory, and the CLI prints which of the two it used. 
 running the benchmark yourself, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Each default and how strong the evidence behind it is: [docs/DEFAULTS.md](docs/DEFAULTS.md). All results:
-[RESULTS.md](RESULTS.md).
+[docs/benchmarks/](docs/benchmarks/).
 
 ## License
 

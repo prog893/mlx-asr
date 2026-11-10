@@ -78,13 +78,15 @@ def _jp_en_lines(ax, t, xs, jp, en, ordinal=False, en_files=2):
 # Label offsets in points, per engine, to keep names off each other. Hand-set because
 # there are ten fixed points and an automatic placer moves them on every data change.
 _PICKER_OFFSETS = {
-    "jp": {"voxtral": (8, 7), "whisper large-v3": (-8, 3), "whisper turbo": (8, -7),
-           "qwen3-asr 1.7B": (8, 2), "qwen3-asr 0.6B": (8, -2),
-           "voxtral-v1 3B 8bit": (8, -2), "voxtral-v1 24B 8bit": (8, 2), "kotoba": (8, -10),
-           "parakeet": (-8, 8), "reazon": (8, 2)},
-    "en": {"voxtral": (8, 2), "whisper large-v3": (-8, 6), "whisper turbo": (8, 6),
-           "qwen3-asr 1.7B": (8, 2), "qwen3-asr 0.6B": (8, -2),
-           "voxtral-v1 3B 8bit": (8, -9), "voxtral-v1 24B 8bit": (8, 2)},
+    "jp": {"voxtral fp16": (8, 7), "whisper large-v3 fp16": (-8, 3),
+           "whisper turbo fp16": (8, -7), "qwen3-asr 1.7B 8bit": (8, 2),
+           "qwen3-asr 0.6B bf16": (8, -2), "voxtral-v1 3B bf16": (8, -2),
+           "voxtral-v1 24B bf16": (8, 2), "kotoba fp16": (8, -10), "parakeet fp32": (-8, 8),
+           "reazon fp32": (8, 2)},
+    "en": {"voxtral fp16": (8, 2), "whisper large-v3 fp16": (-8, 6),
+           "whisper turbo fp16": (8, 6), "qwen3-asr 1.7B 8bit": (8, 2),
+           "qwen3-asr 0.6B bf16": (8, -2), "voxtral-v1 3B bf16": (8, -9),
+           "voxtral-v1 24B bf16": (8, 2)},
 }
 
 
@@ -96,6 +98,8 @@ def _pareto(points):
 
 def picker(t):
     fig, (ax_jp, ax_en) = _grid(t, 1, 2, 10.0, 4.4)
+    fig.suptitle("Each engine at its default precision on an M2 Ultra 128GB", x=0.01, ha="left",
+                 y=1.09, fontsize=11, fontweight="bold", color=t["ink"])
     for ax, key, idx, title in ((ax_jp, "jp", 1, "Japanese: 17 files"),
                                 (ax_en, "en", 2, "English: 3 files only")):
         points = [(row[0], cd.num(row[3]), cd.pct(row[idx])) for row in cd.PICKER
@@ -137,8 +141,8 @@ def picker(t):
                                   "another engine is both faster and more accurate"],
                loc="lower left", bbox_to_anchor=(0.01, 1.0), ncol=2, frameon=False,
                labelcolor=t["ink2"], fontsize=8.5, borderaxespad=0)
-    _caption(fig, t, "M2 Ultra. (CPU) marks an engine that runs on the CPU. Each model at its "
-                     "default precision. Source: RESULTS.md, engines.md, MODELS.md.")
+    _caption(fig, t, "(CPU) marks an engine that runs on the CPU. Source: the headline table "
+                     "in docs/benchmarks/README.md.")
     fig.tight_layout()
     return fig
 

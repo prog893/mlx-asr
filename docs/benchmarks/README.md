@@ -9,6 +9,26 @@
 
 Down and to the right is better: lower error, more speed. Highlighted points are the best trade-offs: no other engine is both faster and more accurate. The two panels disagree, so pick on the language you transcribe: on Japanese the Whisper sizes and Voxtral lead, on English the voxtral-v1 models do, though English rests on three files. A point whose label carries a note after the model name has a speed measured under different conditions from the rest; [engines.md](engines.md) and [MODELS.md](../MODELS.md) carry the numbers behind every point. Error is scored with a methodology built for Japanese and for edited rather than verbatim references ([metrics.md](reference/metrics.md)); the test material is described in [corpus.md](reference/corpus.md).
 
+Each engine at the precision the M2 Ultra 128GB (Mac14,14) loads by default, over 20
+recordings, 8.01h[^r1] of Japanese and English. Rows without English cover the 17 Japanese files,
+since those engines are Japanese-only. Whisper samples, so its rows are means of 6 runs; the
+greedy engines' reruns score identically.
+
+| engine | precision | JP coverage CER | EN coverage WER | x realtime | runs |
+|---|---|---|---|---|---|
+| voxtral (default) | fp16 | 15.20% | 21.21% | 23.9x | 3 |
+| whisper large-v3 | fp16 | 14.51% | 18.59% | 11.5x | 6 |
+| whisper turbo | fp16 | 14.17% | 18.65% | 21.0x | 6 |
+| qwen3-asr 1.7B | 8bit | 18.62% | 24.72% | 24.6x | 3 |
+| qwen3-asr 0.6B | bf16 | 22.31% | 22.91% | 30.4x | 1 |
+| voxtral-v1 24B | bf16 | 26.98% | 16.86% | 2.4x | 1 |
+| voxtral-v1 3B | bf16 | 36.84% | 17.77% | 10.0x | 1 |
+| kotoba | fp16 | 25.34% | n/a | 50.0x | 3 |
+| parakeet | fp32 | 25.68% | n/a | 261.8x | 3 |
+| reazon | fp32, CPU | 30.06% | n/a | 52.9x | 3 |
+
+Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r4`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`, `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_1.7B_8bit_c15_s1`, `pk_qwen3_1.7B_8bit_c15_s2`, `pk_qwen3_1.7B_8bit_c15_s3`, `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-qwen3-precision-c15.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_bf16_c15`; [m2-ultra-voxtral-v1.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `24b_bf16_c30`, `3b_bf16_c30`; [m2-ultra-kotoba-engines.json](../../benchmarks/results/2026-10/m2-ultra-kotoba-engines.json) runs `k20_mlx_c15_r1`, `k20_mlx_c15_r2`, `k20_mlx_c15_r3`
+
 ## The levers
 
 A lever is a thing you can change to affect a model's output or speed: the prompt,
@@ -40,6 +60,10 @@ Source: [m2-ultra-voxtral-delay.json](../../benchmarks/results/2026-10/m2-ultra-
 | [metrics.md](reference/metrics.md) | why coverage CER exists, which metric to trust, how to compare two configs |
 | [determinism.md](reference/determinism.md) | what reproduces (one machine) and what does not (across machines, and Whisper at all) |
 | [peak-memory.md](reference/peak-memory.md) | what each model costs in GPU memory, and why Whisper's figure depends on how long your audio is |
+
+[JOURNAL.md](../../JOURNAL.md) is the chronological log the findings were distilled from,
+including the runs that produced nothing and the conclusions that were later withdrawn.
+Read it for history, not for current numbers.
 
 ## Read this before quoting a number
 
@@ -111,6 +135,59 @@ timing column is affected: greedy decoding does not depend on machine state, so 
 columns of such a run remain valid. Resident swap deliberately does not trigger the
 warning, because macOS never reclaims it and a host that paged days ago still reports
 gigabytes while idle.
+
+## Ideas tested and rejected
+
+Check here before proposing performance work. Each of these was measured, not reasoned
+about.
+
+| idea | result |
+|---|---|
+| Batching the encoder | 0.91-0.98x. It is compute-bound at ~4950 FLOP/byte, so batching cannot help. <!-- not-measured: ~4950 FLOP/byte is arithmetic, 3270 GFLOP over 0.66GB of weights --> |
+| `mx.compile` on the decode step | At most 2% faster at any batch size, and slower at others. |
+| Reshaping to dodge the batch valley | `fold` is bit-exact but worth at most 0.4%, and up to 3% slower on 4-bit; splitting is 1.0-4.1x worse. |
+| Forcing MLX's `qmv_wide` kernel at the batch valley | 15-21% *slower* at B=2-8 on a gen-14 M2 Ultra, reproducibly. MLX's gen-15 gate is right. |
+| Prefix overlap at long chunks | No benefit once seams are sparse. |
+| Carrying decoder context across seams | Recovers 0.12 of the ~1.5 points seams cost, at 2x wall clock. |
+| Silero VAD cut points | 1.1-2.7 points worse than energy minima, significantly. |
+| Lower sampling rate (8kHz) | No speed change: the step count depends on duration (816 steps either way, 43.6s against 43.2s on the narration clip). Costs 0.95 CER points (8.35% against 7.40%). |
+| Time-stretching audio 1.25x | Shortens the audio by a fifth but not the decode in proportion: 13 chunks instead of 16, 806 steps against 816, 39.6s against 43.2s of wall clock on the narration clip. Costs 2.47 CER points (9.87% against 7.40%). |
+| Raising `--delay-ms` past 2400 | 2400 is the maximum the model supports. |
+| Chunks longer than 60s | Slower, and no better on accuracy. |
+| Extending cue ends to the next cue's start | Makes break F1 worse. |
+
+Source: [m2-ultra-decode-probes.json](../../benchmarks/results/2026-10/m2-ultra-decode-probes.json) runs `probe_encoder_batch_m2_ultra_4bit`, `probe_encoder_batch_m2_ultra_nvfp4`, `probe_batch_split_m2_ultra_4bit`, `probe_batch_split_m2_ultra_nvfp4`, `probe_compile_m2_ultra_4bit`, `probe_compile_m2_ultra_nvfp4`; [m2-ultra-qmv-wide.json](../../benchmarks/results/2026-10/m2-ultra-qmv-wide.json) runs `qmv_default_r1`, `qmv_default_r2`, `qmv_wide_r1`, `qmv_wide_r2`; [m2-ultra-voxtral-clip.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip.json) runs `carry_none`, `carry_pair`, `carry_seq`, `vad_c30b32_kv8_energy`, `vad_c30b32_kv8_vad`, `vad_c30b32_kv8_ov8_energy`, `vad_c30b32_kv8_ov8_vad`, `vad_c60b16_kv8_energy`, `vad_c60b16_kv8_vad`, `ov60_0s`, `ov60_4s`, `ov60_8s`, `chunk_c30b32_kv0`, `chunk_c90b16_kv8`, `chunk_c120b8_kv8`, `chunk_c180b8_kv8`; [m2-ultra-cue-layout.json](../../benchmarks/results/2026-10/m2-ultra-cue-layout.json) runs `cue_sweep_union`; [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c60b16_kv0_4bit`, `hk_c60b16_kv0_8k16k`, `hk_c60b16_kv0_atempo125`, `score_clip`
+
+## Open
+
+**Timing quality is n=7** and needs more authored subtitle tracks. None of the 13
+recordings added in the final corpus growth had them.
+
+**Cue defaults have never been tested against a reference this project did not author.**
+Until there is a second, independent set, "good cue segmentation" is not something this
+corpus can measure, only agreement with one editor's conventions.
+
+**The English side is n=3.** Every English conclusion, including the prompt-instruction
+result and Whisper's English win, rests on three recordings. The direction is consistent;
+the magnitudes should not be quoted as general.
+
+**Competing-runner numbers are n=1.** That is why they support "no fastest claim survives"
+and nothing stronger.
+
+**Two quantization repos could not be evaluated** (`...-6bit`, `ellamind/...-8bit-mlx`):
+both ship configs mlx-audio misroutes. Low value, since a local 8-bit conversion is measured
+on the corpus instead (14.78% against 4-bit's 15.72%)[^r12].
+
+**`--compact-silence` splits by quantization** and the mechanism is a hypothesis. Off by
+default.
+
+**Cross-machine output differs, but by far less than first reported.** Identical audio,
+config and weights give different output on different chips, so a config comparison must
+stay on one machine. Measured over 20 files rather than one, though, 11 score identically[^r8]
+and 18 agree within 0.16 points; the 5.45-point case[^r8] that established this is the shortest
+file in the corpus, and the effect scales inversely with reference length. The earlier
+"~1 point per file floor" was an extrapolation from n=1 and is withdrawn. <!-- not-measured: quotes the withdrawn claim, not a current figure --> See
+[determinism.md](reference/determinism.md).
 
 ## Scope
 
@@ -205,3 +282,6 @@ result, which is why they are kept: check
 [^b2]: [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8` (per-file row of the subtitle-shaped English reference)
 [^b3]: [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8` (Japanese per-file rows)
 [^b4]: [m2-ultra-resolution-floor.json](../../benchmarks/results/2026-10/m2-ultra-resolution-floor.json) runs `resolution_floor`
+[^r1]: [corpus.json](../../benchmarks/results/corpus.json), durations of the 20 files the headline runs score
+[^r8]: [m4-voxtral-chunking.json](../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`; [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`
+[^r12]: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8`

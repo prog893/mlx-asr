@@ -2,7 +2,7 @@
 
 ## Every benchmark run leaves its raw results in the repo
 
-Any run whose numbers appear anywhere (docs, README, RESULTS.md, chart data, code comments,
+Any run whose numbers appear anywhere (docs, README, chart data, code comments,
 model notes, profiles.json, CLI help) is saved as raw per-file rows, the way PR #14 did
 for October 2026. A number without saved rows is not published.
 
@@ -34,7 +34,7 @@ for October 2026. A number without saved rows is not published.
 
 ## Every published number cites its run data
 
-Every measured number anywhere (docs, README, RESULTS.md, chart specs, code comments,
+Every measured number anywhere (docs, README, chart specs, code comments,
 profiles.json, CLI help) links to the saved run-group it is computed from, and the
 value is computed from that group's rows with `scripts/metrics/archive_query.py`, never
 copied from an older page.
