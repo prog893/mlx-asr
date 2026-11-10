@@ -11,7 +11,8 @@ Down and to the right is better: lower error, more speed. Highlighted points are
 
 Each engine at the precision the M2 Ultra 128GB (Mac14,14) loads by default, over 20
 recordings, 8.01h[^r1] of Japanese and English. Rows without English cover the 17 Japanese files,
-since those engines are Japanese-only. Whisper samples, so its rows are means of 6 runs; the
+since those engines are Japanese-only. The voxtral-v1 rows score 16 of the 17: one recording's
+audio was replaced after they ran, so their rows for it are flagged invalid. Whisper samples, so its rows are means of 6 runs; the
 greedy engines' reruns score identically.
 
 | engine | precision | JP coverage CER | EN coverage WER | x realtime | runs |
@@ -27,7 +28,7 @@ greedy engines' reruns score identically.
 | parakeet | fp32 | 25.68% | n/a | 261.8x | 3 |
 | reazon | fp32, CPU | 30.06% | n/a | 52.9x | 3 |
 
-Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r4`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`, `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_1.7B_8bit_c15_s1`, `pk_qwen3_1.7B_8bit_c15_s2`, `pk_qwen3_1.7B_8bit_c15_s3`, `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-qwen3-precision-c15.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_bf16_c15`; [m2-ultra-voxtral-v1.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `24b_bf16_c30`, `3b_bf16_c30`; [m2-ultra-kotoba-engines.json](../../benchmarks/results/2026-10/m2-ultra-kotoba-engines.json) runs `k20_mlx_c15_r1`, `k20_mlx_c15_r2`, `k20_mlx_c15_r3`
+Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r4`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`, `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_1.7B_8bit_c15_s1`, `pk_qwen3_1.7B_8bit_c15_s2`, `pk_qwen3_1.7B_8bit_c15_s3`, `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-qwen3-precision-c15.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_bf16_c15`; [m2-ultra-voxtral-v1.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `24b_bf16_c30`, `3b_bf16_c30` (16 valid Japanese files); [m2-ultra-kotoba-engines.json](../../benchmarks/results/2026-10/m2-ultra-kotoba-engines.json) runs `k20_mlx_c15_r1`, `k20_mlx_c15_r2`, `k20_mlx_c15_r3`
 
 ## The levers
 
