@@ -1,7 +1,7 @@
 # Engine: reazon-k2
 
 reazon-k2 does not change the default. At fp32 it scores 30.06% coverage CER on the 17[^r1]
-Japanese files at 52.9x on CPU (mean of 3 runs), against turbo-nocond's 14.17% and parakeet's 25.68%[^r1]
+Japanese files at 52.9x on CPU (mean of 3 runs), against turbo-nocond's 14.26% and parakeet's 25.68%[^r1]
 ([engines.md](../engines.md#experiment-the-japanese-only-engines-against-the-multilingual-defaults)).
 On spontaneous, code-switching studio audio, training-domain match does not beat
 Whisper's breadth. Decoded as one window, a 112s file loses content (305 characters
@@ -71,6 +71,6 @@ kana/lenient CER beside coverage CER. Result files: `benchmarks/reazon_fp32_c30.
 - [metrics.md](../reference/metrics.md): coverage CER and `min_cut`
 
 [^r0]: [corpus.json](../../../benchmarks/results/corpus.json)
-[^r1]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`; [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`
+[^r1]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`; [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`
 [^r2]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-engines-jp-only.json](../../../benchmarks/results/2026-10/m2-ultra-engines-jp-only.json) runs `jp_reazon_int8_c30_r1`, `jp_reazon_int8_c30_r2`, `jp_reazon_int8_c30_r3`
 [^r3]: [m2-ultra-reazon-window.json](../../../benchmarks/results/2026-10/m2-ultra-reazon-window.json) runs `reazon_fp32_whole_r112`; [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`

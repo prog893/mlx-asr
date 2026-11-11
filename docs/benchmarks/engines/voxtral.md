@@ -6,8 +6,8 @@ on the machine: the CLI loads fp16 where it fits and 8-bit on 16GB Macs
 the M2 Ultra 128GB default (fp16, 30s, batch 128) scores 15.20%[^vx1] Japanese coverage CER and
 21.21% English WER at 23.9x realtime[^vx1] (mean of 3 runs), and the M4 16GB default (8-bit,
 30s, batch 32) 15.12% and 21.17% at 6.67x[^vx6]. On the M2 Ultra that ties Whisper
-turbo-nocond (mean of 6 runs) on Japanese over files, +1.03 points with CI [-0.11, +2.25][^vx2],
-at 1.02-1.30x its speed[^vx2] ([engines.md](../engines.md#experiment-voxtral-against-whisper)). It needs
+turbo-nocond (mean of 6 runs) on Japanese over files, +0.94 points with CI [-0.13, +2.08][^vx2],
+at 1.01-1.22x its speed[^vx2] ([engines.md](../engines.md#experiment-voxtral-against-whisper)). It needs
 no language hint and no long-form-stability flag, and greedy decoding reproduces
 byte-identically on one machine, so one run is a score rather than a draw. Most of its
 settings are levers with their own page, linked from the table below; several of those
@@ -94,7 +94,7 @@ complete, Voxtral scores 7.28% plain CER, ahead of turbo-nocond's 10.42%[^vx4]
 - [voxtral-v1.md](voxtral-v1.md): the earlier, non-realtime Voxtral models, a separate engine family
 
 [^vx1]: [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`
-[^vx2]: [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6` (paired on the per-file mean of each side's runs, bootstrap over the 17 Japanese files; speed ratio range: slowest Voxtral run over fastest Whisper run, and fastest over slowest)
+[^vx2]: [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6` (paired on the per-file mean of each side's runs, bootstrap over the 17 Japanese files; speed ratio range: slowest Voxtral run over fastest Whisper run, and fastest over slowest)
 [^vx3]: [m2-ultra-voxtral-batch.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m2-ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`
 [^vx4]: [m2-ultra-engines-narration.json](../../../benchmarks/results/2026-10/m2-ultra-engines-narration.json) runs `clip_vox_c60b16_kv8_r1`, `clip_vox_c60b16_kv8_r2`, `clip_vox_c60b16_kv8_r3`, `clip_whisper_turbo_nocond_r1`, `clip_whisper_turbo_nocond_r2`, `clip_whisper_turbo_nocond_r3`
 [^vxc]: [corpus.json](../../../benchmarks/results/corpus.json)

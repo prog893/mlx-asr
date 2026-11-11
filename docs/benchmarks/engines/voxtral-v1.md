@@ -2,13 +2,13 @@
 
 `--model voxtral-v1` adds two sizes and changes no default engine. Its size and precision
 are chosen by memory ([How a variant is chosen](../../DEFAULTS.md#how-a-variant-is-chosen)),
-and its windows are 30s. On the M2 Ultra 128GB that is the 24B at bf16, which scores 26.98%[^v1s]
+and its windows are 30s. On the M2 Ultra 128GB that is the 24B at bf16, which scores 26.75%[^v1s]
 Japanese coverage CER and 16.86% English coverage WER at 2.4x realtime in 50.08GB (one run)[^v1s];
 on a 16GB Mac it is the 3B at 8bit, which scores 36.14% and 17.86% at 14.1x in 7.11 to 7.27GB[^v1a]
 (each the mean of 3 runs on the M2 Ultra)[^v1a]. On Japanese both are behind every
-other multilingual engine here (voxtral 15.20% at its M2 Ultra default, fp16[^v1b]; whisper turbo 14.17%[^v1b]; qwen3-asr 1.7B
+other multilingual engine here (voxtral 15.20% at its M2 Ultra default, fp16[^v1b]; whisper turbo 14.26%[^v1b]; qwen3-asr 1.7B
 18.62%)[^v1b]; on English the 24B's 16.86%[^v1s] is the lowest figure measured in this project with
-the language given, against 18.65% for whisper turbo and 21.21% for voxtral at fp16[^v1b], but that is
+the language given, against 18.77% for whisper turbo and 21.21% for voxtral at fp16[^v1b], but that is
 three files, and the 24B at bf16 costs 50GB and runs at 2.4x[^v1s].
 
 | setting | default | why |
@@ -19,7 +19,7 @@ three files, and the 24B at bf16 costs 50GB and runs at 2.4x[^v1s].
 | decode window | 30s | Lowest Japanese CER in the sweep, though 15s and 60s are not resolved against it; Japanese collapses at 120s. English prefers 60s by about a point (two files), which is not enough to move a default chosen on Japanese. |
 | `--language` | as given; detected when omitted | Detection switches whole Japanese windows into other languages, so pass it for Japanese. |
 
-Source: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `3b_bf16_c30`, `24b_4bit_c30`, `24b_8bit_c30`, `24b_bf16_c30`; [m2-ultra-voxtral-v1-window.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1-window.json) runs `sweep_3b_bf16_c60`.
+Source: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `24b_4bit_c30`, `24b_8bit_c30`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30`, `24b_bf16_c30`; [m2-ultra-voxtral-v1-window.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1-window.json) runs `sweep_3b_bf16_c60`.
 
 **Setup:** the [7-file subset](../reference/corpus.md#the-7-file-subset) (5 Japanese, 2 English,
 5.18h[^v1c]) for the window sweep and the [20-file corpus](../reference/corpus.md#the-20-file-corpus) (17
@@ -42,11 +42,11 @@ details are under [How the runs were made](#how-the-runs-were-made).
 | window | JP coverage CER | EN coverage WER | x realtime | peak |
 |---|---|---|---|---|
 | 15s | 45.81% | 22.47% | 10.5x | 10.86GB |
-| **30s (default)** | **44.27%** | 21.70% | 10.0x | 10.91GB |
+| **30s (default)** | **44.27%** | 21.70% | 10.5x | 10.91GB |
 | 60s | 45.97% | **20.72%** | 6.4x | 10.91GB |
 | 120s | 57.54% | 21.17% | 4.6x | 11.13GB |
 
-Source: [m2-ultra-voxtral-v1-window.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1-window.json) runs `sweep_3b_bf16_c15`, `sweep_3b_bf16_c60`, `sweep_3b_bf16_c120`; [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_bf16_c30` (the 30s row: its rows for the 7 subset files; speed and peak are that 20-file run's)
+Source: [m2-ultra-voxtral-v1-window.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1-window.json) runs `sweep_3b_bf16_c15`, `sweep_3b_bf16_c60`, `sweep_3b_bf16_c120`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30` (the 30s row: its rows for the 7 subset files; speed and peak are that 20-file run's)
 
 Japanese is nominally best at 30s and collapses at 120s (+13.27, CI [+7.70, +17.15])[^v1w]. Paired over files, 60s against 30s is <!-- not-measured: window lengths are configuration values -->
 +1.70 points, CI [-0.13, +3.87][^v1w], 30s winning 4 of 5 files; 15s against 30s is not
@@ -75,9 +75,9 @@ repetition loop in a longer window writes more text before it is cut off.
 |---|---|---|---|---|---|---|
 | 4bit | 44.60% | 50.62% | 18.08% | 14.0x | 5.25GB | 3.55GB |
 | **8bit (default on 16GB)** | **36.41%** | **39.23%** | 17.86% | 12.9x | 7.28GB | 5.57GB |
-| **bf16 (default with `--size 3B` on 128GB)** | 36.84% | 39.98% | **17.77%** | 10.0x | 10.91GB | 9.37GB |
+| **bf16 (default with `--size 3B` on 128GB)** | 36.76% | 39.71% | **17.77%** | 10.5x | 10.91GB | 9.37GB |
 
-Source: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `3b_bf16_c30` (16 valid Japanese files). The weights column is the on-disk size of each build, not a run. <!-- not-measured: the weights column is on-disk build sizes -->
+Source: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30` (16 valid Japanese files each); [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30` (17 valid Japanese files). The weights column is the on-disk size of each build, not a run. <!-- not-measured: the weights column is on-disk build sizes -->
 
 8bit ties bf16: -0.42 points on Japanese, CI [-1.23, +0.50], and +0.09 on English, CI[^v1p]
 [-0.06, +0.19][^v1p]. 4bit does not tie 8bit: **+8.18 points on Japanese, CI [+4.87, +11.99],
@@ -102,13 +102,13 @@ build; a 16GB Mac, where it does not fit, runs 8bit at 7.28GB[^v1p].
 |---|---|---|---|---|---|---|---|---|
 | 4bit | 28.06% | 32.05% | 17.89% | +0.62 [-2.72, +3.99] | +1.03 [+0.06, +2.87] | **4.3x** | **16.27GB** | 14.7GB |
 | 8bit | 27.44% | 28.82% | **16.86%** | 0.00 | 0.00 | 3.1x | 27.92GB | 26.4GB |
-| **bf16 (default on 128GB)** | **26.98%** | 28.91% | **16.86%** | -0.46 [-1.60, +0.27] | 0.00 (exact tie) | 2.4x | 50.08GB | 48.5GB |
+| **bf16 (default on 128GB)** | **26.75%** | 28.48% | **16.86%** | -0.46 [-1.60, +0.27] | 0.00 (exact tie) | 2.4x | 50.08GB | 48.5GB |
 
-Source: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `24b_4bit_c30`, `24b_8bit_c30`, `24b_bf16_c30` (16 valid Japanese files). The weights column is the on-disk size of each build, not a run. <!-- not-measured: the weights column is on-disk build sizes -->
+Source: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `24b_4bit_c30`, `24b_8bit_c30` (16 valid Japanese files each); [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `24b_bf16_c30` (17 valid Japanese files). The weights column is the on-disk size of each build, not a run. <!-- not-measured: the weights column is on-disk build sizes -->
 
 **Size is worth far more than precision here.** bf16 24B against the 3B at 8bit, the 16GB default, is -9.43[^v1s]
 points on Japanese, CI [-11.07, -7.92], better on all 16 files, and -1.01 on English, CI[^v1s]
-[-3.15, -0.10], all three files[^v1s]. It still loops, on 9 to 13 of the 16 Japanese files
+[-3.15, -0.10], all three files[^v1s]. It still loops, on 9 to 13 of the Japanese files (of 16 valid at 4bit and 8bit, 17 at bf16)
 depending on precision, so the loops are a property of the family rather than of the small
 model.
 
@@ -142,10 +142,10 @@ and all 1190 tensors and the config were bit-identical[^v1k].
 
 | language | JP coverage CER | EN coverage WER | Latin-script share of JP output | files with loops |
 |---|---|---|---|---|
-| forced from the reference | 36.84% | 17.77% | 0.6% | 13 |
+| forced from the reference | 36.76% | 17.77% | 0.6% | 13 |
 | detected by the model | 35.70% | **16.36%** | **30.7%** | 10 |
 
-Source: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_bf16_c30`, `3b_bf16_c30_auto` (loops counted over the 16 valid Japanese files); [m2-ultra-derived-measures.json](../../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_v1latin` (Latin-script share: half- and full-width Latin letters over non-whitespace characters of the hypothesis, pooled over the 12 Japanese recordings whose references are transcripts, as counted by the run's derive_text_stats.py; the other files are not counted)
+Source: [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30`; [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_bf16_c30_auto` (loops counted over the valid Japanese files: 17 forced, 16 detected); [m2-ultra-derived-measures.json](../../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_v1latin` (Latin-script share: half- and full-width Latin letters over non-whitespace characters of the hypothesis, pooled over the 12 Japanese recordings whose references are transcripts, as counted by the run's derive_text_stats.py; the other files are not counted)
 
 On English, detection is better on all three files (-1.42, CI [-2.70, -0.06])[^v1l], and its
 output contains no other script. On Japanese the aggregate moves by -1.14 (CI [-3.18,
@@ -252,13 +252,13 @@ is the run's own.
 - [Benchmark results](../README.md): the headline rows for both sizes.
 
 [^v1a]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_v1_3B_8bit_c30_s1`, `pk_v1_3B_8bit_c30_s2`, `pk_v1_3B_8bit_c30_s3`; [m2-ultra-picker-speed-24b.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed-24b.json) runs `pk_v1_24B_8bit_c30_s1`, `pk_v1_24B_8bit_c30_s2`, `pk_v1_24B_8bit_c30_s3`
-[^v1b]: [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`; [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_1.7B_8bit_c15_s1`, `pk_qwen3_1.7B_8bit_c15_s2`, `pk_qwen3_1.7B_8bit_c15_s3`
-[^v1w]: [m2-ultra-voxtral-v1-window.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1-window.json) runs `sweep_3b_bf16_c15`, `sweep_3b_bf16_c60`, `sweep_3b_bf16_c120`; [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_bf16_c30` (its rows for the 7 subset files)
-[^v1p]: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `3b_bf16_c30`
+[^v1b]: [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`; [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_1.7B_8bit_c15_s1`, `pk_qwen3_1.7B_8bit_c15_s2`, `pk_qwen3_1.7B_8bit_c15_s3`
+[^v1w]: [m2-ultra-voxtral-v1-window.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1-window.json) runs `sweep_3b_bf16_c15`, `sweep_3b_bf16_c60`, `sweep_3b_bf16_c120`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30` (its rows for the 7 subset files)
+[^v1p]: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30`
 [^v1q]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_8bit_c15`
-[^v1s]: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `24b_bf16_c30`, `3b_8bit_c30`
-[^v1t]: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `24b_4bit_c30`, `24b_8bit_c30`, `24b_bf16_c30`
-[^v1l]: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_bf16_c30`, `3b_bf16_c30_auto`
+[^v1s]: [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `24b_bf16_c30`; [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_8bit_c30`
+[^v1t]: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `24b_4bit_c30`, `24b_8bit_c30`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `24b_bf16_c30`
+[^v1l]: [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30`; [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_bf16_c30_auto`
 [^v1c]: [corpus.json](../../../benchmarks/results/corpus.json); [revisions.json](../../../benchmarks/results/revisions.json) (the runs used the previous 558.2s copy of `71bb5eba3baa`)
 [^v1h]: [m2-ultra-voxtral-v1.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_8bit_c30` (sum of the rows' duration_s, which include the previous 558.2s copy of file 71bb5eba3baa); [revisions.json](../../../benchmarks/results/revisions.json)
 [^v1d]: [m2-ultra-voxtral-v1-window.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-v1-window.json) runs `det_3b_8bit`

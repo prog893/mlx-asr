@@ -40,17 +40,17 @@ SWEEPS = {
         "series": ["JP coverage CER", "EN coverage WER"],
         "rows": [
             ("run 1", _RUNS, ("-1.46", "-4.58")),
-            ("run 2", _RUNS, ("-1.35", "-4.41")),
-            ("run 3", _RUNS, ("-1.00", "-4.29")),
-            ("run 4", _RUNS, ("-0.90", "-4.02")),
-            ("run 5", _RUNS, ("-0.77", "-3.19")),
+            ("run 2", _RUNS, ("-1.35", "-4.29")),
+            ("run 3", _RUNS, ("-0.90", "-4.02")),
+            ("run 4", _RUNS, ("-0.77", "-3.50")),
+            ("run 5", _RUNS, ("-0.05", "-3.19")),
             ("run 6", _RUNS, ("-0.01", "-3.14")),
             ("mean", "| mean minus Voxtral, 95% t-interval (points) |",
-             ("-0.92", "-3.94"), ("[-1.46, -0.37]", "[-4.60, -3.28]")),
+             ("-0.76", "-3.79"), ("[-1.41, -0.11]", "[-4.42, -3.16]")),
         ],
         "source": ("m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
-                   "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
-                   "whisper_turbo_nocond_r6;m2-ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8"),
+                   "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5;"
+                   "m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6;m2-ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8"),
         "panels": [{"series": [0, 1], "zero_line": True}], "width": 7.6,
         "chosen": None,
     },

@@ -126,7 +126,7 @@ SWEEPS = {
         "width": 13.0, "height": 3.9,
         "rows": [
             ("whisper-turbo\nno-condition", "| whisper-turbo, no-condition |",
-             ("14.17%", "18.65%", None, None)),
+             ("14.26%", "18.77%", None, None)),
             ("voxtral", "| voxtral (default on 128GB, fp16) |", ("15.20%", "21.21%", "23.9x", None)),
             ("qwen3-asr\n1.7B", "| qwen3-asr (1.7B) |",
              ("18.62%", "24.72%", "23.0x", "3.74")),
@@ -134,8 +134,9 @@ SWEEPS = {
              ("22.31%", "22.95%", "36.4x", "2.07")),
         ],
         "source": "m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
-                  "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
-                  "whisper_turbo_nocond_r6;m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,"
+                  "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5;"
+                  "m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6;"
+                  "m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,"
                   "vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;"
                   "m2-ultra-qwen3-precision-c15.json#qwen3_1.7B_8bit_c15,qwen3_0.6B_8bit_c15",
     },

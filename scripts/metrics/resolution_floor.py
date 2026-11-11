@@ -21,7 +21,8 @@ import archive_query as q  # noqa: E402
 PAIR = (("m2-ultra-voxtral-headline",
          ["vox_default_c30b128_kv8", "vox_default_c30b128_kv8_r2", "vox_default_c30b128_kv8_r3"]),
         ("m2-ultra-whisper-sizes",
-         ["whisper_turbo_nocond"] + [f"whisper_turbo_nocond_r{i}" for i in range(2, 7)]))
+         ["whisper_turbo_nocond"] + [f"whisper_turbo_nocond_r{i}" for i in range(2, 6)]
+         + ["m2-ultra-headline-remeasure:whisper_turbo_nocond_r6"]))   # r6 re-measured 2026-11
 SIZES = (5, 7, 17, 20)
 
 

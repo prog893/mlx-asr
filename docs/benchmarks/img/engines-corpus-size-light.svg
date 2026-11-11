@@ -61,68 +61,68 @@ L 444.886947 41.3
    <g id="matplotlib.axis_2">
     <g id="ytick_1">
      <g id="line2d_5">
-      <path d="M 54.168 203.651328 
-L 470.448 203.651328 
+      <path d="M 54.168 209.485478 
+L 470.448 209.485478 
 " clip-path="url(#p7130e37392)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_6"/>
      <g id="text_4">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="207.401328" transform="rotate(-0 50.668 207.401328)">14.0</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="213.235478" transform="rotate(-0 50.668 213.235478)">14.0</text>
      </g>
     </g>
     <g id="ytick_2">
      <g id="line2d_7">
-      <path d="M 54.168 174.693114 
-L 470.448 174.693114 
+      <path d="M 54.168 179.331742 
+L 470.448 179.331742 
 " clip-path="url(#p7130e37392)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_8"/>
      <g id="text_5">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="178.443114" transform="rotate(-0 50.668 178.443114)">14.5</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="183.081742" transform="rotate(-0 50.668 183.081742)">14.5</text>
      </g>
     </g>
     <g id="ytick_3">
      <g id="line2d_9">
-      <path d="M 54.168 145.734901 
-L 470.448 145.734901 
+      <path d="M 54.168 149.178006 
+L 470.448 149.178006 
 " clip-path="url(#p7130e37392)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_10"/>
      <g id="text_6">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="149.484901" transform="rotate(-0 50.668 149.484901)">15.0</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="152.928006" transform="rotate(-0 50.668 152.928006)">15.0</text>
      </g>
     </g>
     <g id="ytick_4">
      <g id="line2d_11">
-      <path d="M 54.168 116.776687 
-L 470.448 116.776687 
+      <path d="M 54.168 119.02427 
+L 470.448 119.02427 
 " clip-path="url(#p7130e37392)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_12"/>
      <g id="text_7">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="120.526687" transform="rotate(-0 50.668 120.526687)">15.5</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="122.77427" transform="rotate(-0 50.668 122.77427)">15.5</text>
      </g>
     </g>
     <g id="ytick_5">
      <g id="line2d_13">
-      <path d="M 54.168 87.818474 
-L 470.448 87.818474 
+      <path d="M 54.168 88.870534 
+L 470.448 88.870534 
 " clip-path="url(#p7130e37392)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_14"/>
      <g id="text_8">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="91.568474" transform="rotate(-0 50.668 91.568474)">16.0</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="92.620534" transform="rotate(-0 50.668 92.620534)">16.0</text>
      </g>
     </g>
     <g id="ytick_6">
      <g id="line2d_15">
-      <path d="M 54.168 58.860261 
-L 470.448 58.860261 
+      <path d="M 54.168 58.716798 
+L 470.448 58.716798 
 " clip-path="url(#p7130e37392)" style="fill: none; stroke: #e1e0d9; stroke-linecap: round"/>
      </g>
      <g id="line2d_16"/>
      <g id="text_9">
-      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="62.610261" transform="rotate(-0 50.668 62.610261)">16.5</text>
+      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #52514e" x="50.668" y="62.466798" transform="rotate(-0 50.668 62.466798)">16.5</text>
      </g>
     </g>
     <g id="text_10">
@@ -141,7 +141,7 @@ L 470.448 214.840781
    </g>
    <g id="line2d_17">
     <path d="M 79.729053 62.335246 
-L 444.886947 103.455909 
+L 444.886947 105.153551 
 " clip-path="url(#p7130e37392)" style="fill: none; stroke: #2a78d6; stroke-width: 2; stroke-linecap: round"/>
     <defs>
      <path id="m18ba76b1aa" d="M 0 3 
@@ -158,11 +158,11 @@ z
     </defs>
     <g clip-path="url(#p7130e37392)">
      <use xlink:href="#m18ba76b1aa" x="79.729053" y="62.335246" style="fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2"/>
-     <use xlink:href="#m18ba76b1aa" x="444.886947" y="103.455909" style="fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2"/>
+     <use xlink:href="#m18ba76b1aa" x="444.886947" y="105.153551" style="fill: #2a78d6; stroke: #fcfcfb; stroke-width: 2"/>
     </g>
    </g>
    <g id="line2d_18">
-    <path d="M 79.729053 119.093344 
+    <path d="M 79.729053 121.436569 
 L 444.886947 193.805535 
 " clip-path="url(#p7130e37392)" style="fill: none; stroke: #eb6834; stroke-width: 2; stroke-linecap: round"/>
     <defs>
@@ -174,7 +174,7 @@ z
 " style="stroke: #fcfcfb; stroke-linejoin: miter"/>
     </defs>
     <g clip-path="url(#p7130e37392)">
-     <use xlink:href="#m658b94c491" x="79.729053" y="119.093344" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
+     <use xlink:href="#m658b94c491" x="79.729053" y="121.436569" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
      <use xlink:href="#m658b94c491" x="444.886947" y="193.805535" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
     </g>
    </g>
@@ -210,7 +210,7 @@ L 130.201828 29.682466
   </g>
   <g id="text_14">
    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 263.541587)">Japanese files only; Whisper is a mean of 3 or 6 runs, Voxtral one deterministic 4-bit run. The</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 271.991948)">17-file Whisper point is the 6-run mean (14.22 / 13.92 / 14.20 / 14.69 / 13.96 / 14.02), the same runs</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 271.991948)">17-file Whisper point is the 6-run mean (14.22 / 13.92 / 14.20 / 14.69 / 13.96 / 14.56), the same runs</text>
    <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 280.391841)">as the Voxtral against Whisper table. Source: engines.md.</text>
   </g>
  </g>

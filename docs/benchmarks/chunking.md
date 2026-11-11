@@ -100,7 +100,7 @@ speed. Between-file variance dwarfs the effect.
 
 The corpus later grew to 20 files, lowering the resolution floor (the 95%[^k21] half-width of a
 paired corpus difference, from the per-file Japanese spread of Voxtral at 4-bit, the default then, against Whisper
-turbo-nocond over 6 runs, SD 2.75 points) from 2.04 points at n=7 to 1.20 at n=20.[^k21] A
+turbo-nocond over 6 runs, SD 2.57 points) from 1.91 points at n=7 to 1.13 at n=20.[^k21] A
 +1.67-point effect[^k5] lies between the two, which made this the one small-corpus result that
 more audio might plausibly turn into a decision. It did not.
 
@@ -657,7 +657,7 @@ length is not a free choice.
 [^k17]: [m2-ultra-synthetic-decode.json](../../benchmarks/results/2026-10/m2-ultra-synthetic-decode.json) runs `synth_m2_ultra_4bit_r1`, `synth_m2_ultra_4bit_r2`, `synth_m2_ultra_4bit_r3` (the machine's recorded GPU working set, 115.4GB)
 [^k19]: [m4-voxtral-batch.json](../../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b32`, `c60b32_r1`, `batch_m4_repeat_20261009__c60b32_r2`, `batch_m4_b64_20261010__c60b32_r2`, `batch_m4_repeat_20261009__c60b32_r3`, `batch_m4_b64_20261010__c60b32_r3`, `c60b32_r4`, `c60b48`, `c60b48_r1`, `c60b48_r2`, `c60b48_r3`, `c60b64`, `c60b64_r1`, `c60b64_r2`, `c60b64_r3`
 [^k20]: [m4-voxtral-worstcase.json](../../benchmarks/results/2026-10/m4-voxtral-worstcase.json) runs `worst64_c60b64`; [m4-synthetic-decode.json](../../benchmarks/results/2026-10/m4-synthetic-decode.json) runs `synth_nvfp4_r1` (the machine's recorded GPU working set)
-[^k21]: [m2-ultra-resolution-floor.json](../../benchmarks/results/2026-10/m2-ultra-resolution-floor.json) runs `resolution_floor`
+[^k21]: [m2-ultra-resolution-floor-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-resolution-floor-remeasure.json) runs `resolution_floor`
 [^k22]: [m2-ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-paired.json) runs `cmp_ov30_0v8`, `cmp_ov30_0v4`
 [^k23]: [m2-ultra-voxtral-clip-paired.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-paired.json) runs `cmp_ov60_0v8`
 [^k24]: [m2-ultra-derived-measures.json](../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_cuts`

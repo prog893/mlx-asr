@@ -25,10 +25,10 @@ SWEEPS = {
                         "| x realtime |"],
         "rows": [
             ("voxtral", None, ("15.20%", "21.21%", "23.9x"), (None, None, None)),
-            ("whisper\nturbo-nocond", None, ("14.17%", "18.65%", "21.0"),
-             ("[13.87, 14.47]", "[18.13, 19.17]", "[18.5, 23.2]")),
+            ("whisper\nturbo-nocond", None, ("14.26%", "18.77%", "21.9"),
+             ("[13.93, 14.58]", "[18.28, 19.25]", "[19.7, 23.5]")),
         ],
-        "source": "m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6",
+        "source": "m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5;m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6",
         "chosen": "voxtral", "chosen_series": "JP coverage CER (17 files)",
         "panels": [
             {"series": [0, 1], "ylabel": "error % (lower is better)", "title": "accuracy"},
@@ -48,10 +48,10 @@ SWEEPS = {
         "connect": False,
         "series": ["Voxtral minus Whisper (positive: Whisper better)"],
         "rows": [
-            ("bootstrap over 17 files", "| **bootstrap over 17 files** |", ("+1.03",),
-             ("[-0.11, +2.25]",)),
+            ("bootstrap over 17 files", "| **bootstrap over 17 files** |", ("+0.94",),
+             ("[-0.13, +2.08]",)),
         ],
-        "source": "m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6",
+        "source": "m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5;m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6",
         "chosen": None,
         "panels": [{"series": [0], "ylabel": "Voxtral minus Whisper, JP CER points",
                     "zero_line": True}],
@@ -62,7 +62,7 @@ SWEEPS = {
         "title": "Voxtral vs Whisper turbo-nocond as the corpus grew",
         "basis": "Japanese files only; Whisper is a mean of 3 or 6 runs, Voxtral one "
                  "deterministic 4-bit run.\nThe 17-file Whisper point is the 6-run mean "
-                 "(14.22 / 13.92 / 14.20 / 14.69 / 13.96 / 14.02),\nthe same runs as the Voxtral "
+                 "(14.22 / 13.92 / 14.20 / 14.69 / 13.96 / 14.56),\nthe same runs as the Voxtral "
                  "against Whisper table.",
         "xlabel": "Japanese files in the corpus", "ylabel": "JP coverage CER %",
         "scale": "linear",
@@ -70,9 +70,9 @@ SWEEPS = {
         "series": ["voxtral", "whisper turbo-nocond (mean)"],
         "rows": [
             (5, "| original | 5 |", ("16.44%", "15.46%")),
-            (17, "| final | 17 |", ("15.73%", "14.17%")),
+            (17, "| final | 17 |", ("15.73%", "14.26%")),
         ],
-        "source": "m2-ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8,mincut7_whisper_turbo_nocond;m2-ultra-whisper-condition.json#cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;m2-ultra-voxtral-headline.json#vox_default_c30b32_kv8;m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6",
+        "source": "m2-ultra-mincut-inputs.json#mincut7_vox_c30b32_kv8,mincut7_whisper_turbo_nocond;m2-ultra-whisper-condition.json#cond7_whisper_turbo_nocond_r2,cond7_whisper_turbo_nocond_r3;m2-ultra-voxtral-batch.json#c30b32,c30b32_r2,c30b32_r3;m2-ultra-voxtral-headline.json#vox_default_c30b32_kv8;m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5;m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6",
         "chosen": None,
         "legend_loc": "center right",
     },
@@ -113,7 +113,7 @@ SWEEPS = {
     "engines-japanese-only": {
         "doc": "docs/benchmarks/engines.md",
         "title": "Japanese-only engines against the multilingual defaults",
-        "basis": "17 Japanese files, M2 Ultra. Whisper's 18.5-23.2x run "
+        "basis": "17 Japanese files, M2 Ultra. Whisper's 19.7-23.5x run "
                  "range is not drawn.\nNeither Japanese-only engine is more accurate than "
                  "Voxtral, so they do not change the default; parakeet wins only on speed.",
         "xlabel": "engine", "ylabel": "CER %",
@@ -122,14 +122,14 @@ SWEEPS = {
         "series": ["JP coverage CER", "kana CER", "x realtime"],
         "rows": [
             ("whisper\nturbo-nocond", "| whisper-turbo no-cond (6-run mean) |",
-             ("14.17%", None, None)),
+             ("14.26%", None, None)),
             ("voxtral", "| voxtral |", ("15.20%", None, "23.9x")),
             ("kotoba\n15s", "| kotoba chunk15s |", ("25.34%", None, "50.0x")),
             ("parakeet\nc120", "| **parakeet c120** |", ("25.68%", "22.79%", "261.8x")),
             ("reazon\nfp32", "| **reazon-k2 fp32 c30** |", ("30.06%", "27.29%", "52.9x")),
             ("reazon\nint8", "| reazon-k2 int8 c30 |", ("36.55%", None, "79.9x")),
         ],
-        "source": "m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6;m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;m2-ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3;m2-ultra-picker-speed.json#pk_parakeet_default_s1,pk_parakeet_default_s2,pk_parakeet_default_s3,pk_reazon_fp32_default_s1,pk_reazon_fp32_default_s2,pk_reazon_fp32_default_s3;m2-ultra-engines-jp-only.json#jp_reazon_int8_c30_r1,jp_reazon_int8_c30_r2,jp_reazon_int8_c30_r3",
+        "source": "m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5;m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6;m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;m2-ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3;m2-ultra-picker-speed.json#pk_parakeet_default_s1,pk_parakeet_default_s2,pk_parakeet_default_s3,pk_reazon_fp32_default_s1,pk_reazon_fp32_default_s2,pk_reazon_fp32_default_s3;m2-ultra-engines-jp-only.json#jp_reazon_int8_c30_r1,jp_reazon_int8_c30_r2,jp_reazon_int8_c30_r3",
         "chosen": "voxtral", "chosen_series": "JP coverage CER",
         "panels": [
             {"series": [0, 1], "ylabel": "CER % (lower is better)", "title": "accuracy"},

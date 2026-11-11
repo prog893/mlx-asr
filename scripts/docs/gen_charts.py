@@ -141,8 +141,8 @@ def picker(t):
                                   "another engine is both faster and more accurate"],
                loc="lower left", bbox_to_anchor=(0.01, 1.0), ncol=2, frameon=False,
                labelcolor=t["ink2"], fontsize=8.5, borderaxespad=0)
-    _caption(fig, t, "(CPU) marks an engine that runs on the CPU. The voxtral-v1 points score 16 of the 17 "
-                     "Japanese files. Source: the headline table in docs/benchmarks/README.md.")
+    _caption(fig, t, "(CPU) marks an engine that runs on the CPU. Source: the headline table "
+                     "in docs/benchmarks/README.md.")
     fig.tight_layout()
     return fig
 

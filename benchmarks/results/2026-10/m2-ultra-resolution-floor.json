@@ -9,6 +9,7 @@
  "runs": [
   {
    "run": "resolution_floor",
+   "invalid": "computed from whisper_turbo_nocond_r6, which was later marked invalid; recomputed as 2026-11/m2-ultra-resolution-floor-remeasure.json#resolution_floor",
    "output": "stdout",
    "command": ".venv/bin/python scripts/metrics/resolution_floor.py",
    "params": {},

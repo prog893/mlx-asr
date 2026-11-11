@@ -24,12 +24,12 @@ PICKER_SOURCE = {
 PICKER = [
     # name, JP CER, EN WER, x realtime, peak, speed_note, source of the JP/EN/speed row
     ("voxtral fp16", "15.20%", "21.21%", "23.9x", "12.98GB", "", "docs/benchmarks/README.md"),
-    ("whisper large-v3 fp16", "14.51%", "18.59%", "11.5x", "7.00GB", "", "docs/benchmarks/README.md"),
-    ("whisper turbo fp16", "14.17%", "18.65%", "21.0x", "5.53GB", "", "docs/benchmarks/README.md"),
+    ("whisper large-v3 fp16", "14.71%", "18.51%", "11.3x", "7.00GB", "", "docs/benchmarks/README.md"),
+    ("whisper turbo fp16", "14.26%", "18.77%", "21.9x", "5.53GB", "", "docs/benchmarks/README.md"),
     ("qwen3-asr 1.7B 8bit", "18.62%", "24.72%", "24.6x", "3.74GB", "", "docs/benchmarks/README.md"),
     ("qwen3-asr 0.6B bf16", "22.31%", "22.91%", "30.4x", "2.63GB", "", "docs/benchmarks/README.md"),
-    ("voxtral-v1 3B bf16", "36.84%", "17.77%", "10.0x", "10.91GB", "", "docs/benchmarks/README.md"),
-    ("voxtral-v1 24B bf16", "26.98%", "16.86%", "2.4x", "50.08GB", "", "docs/benchmarks/README.md"),
+    ("voxtral-v1 3B bf16", "36.76%", "17.77%", "10.5x", "10.91GB", "", "docs/benchmarks/README.md"),
+    ("voxtral-v1 24B bf16", "26.75%", "16.86%", "2.4x", "50.08GB", "", "docs/benchmarks/README.md"),
     ("kotoba fp16", "25.34%", None, "50.0x", "2.38GB", "", "docs/benchmarks/README.md"),
     ("parakeet fp32", "25.68%", None, "261.8x", "4.77GB", "", "docs/benchmarks/README.md"),
     ("reazon fp32", "30.06%", None, "52.9x", None, "CPU", "docs/benchmarks/README.md"),
@@ -46,8 +46,8 @@ WHISPER_SIZES = {
     "basis": "20 files, default config (no-condition on small and larger)",
     "rows": [("tiny", "51.00%", "31.84%"), ("base", "30.67%", "25.93%"),
              ("small", "21.45%", "21.71%"), ("medium", "21.37%", "18.62%"),
-             ("large-v2", "17.74%", "17.72%"), ("large-v3", "14.51%", "18.59%"),
-             ("turbo", "14.17%", "18.65%")],
+             ("large-v2", "17.74%", "17.72%"), ("large-v3", "14.71%", "18.51%"),
+             ("turbo", "14.26%", "18.77%")],
     "chosen": "large-v3",
     "source": ("m2-ultra-whisper-sizes.json#whisper_large-v2_nocond_r2,"
                 "whisper_large-v2_nocond_r3,whisper_large-v2_nocond,whisper_large-v3_nocond_r2,"
@@ -56,9 +56,10 @@ WHISPER_SIZES = {
                 "whisper_small_nocond_r3,whisper_small_nocond,whisper_turbo_nocond_r2,"
                 "whisper_turbo_nocond_r3,whisper_turbo_nocond,whisper_base_libdef_r2,"
                 "whisper_base_libdef_r3,whisper_base_libdef,whisper_tiny_libdef_r2,"
-                "whisper_tiny_libdef_r3,whisper_tiny_libdef,whisper_large-v3_nocond_r4,"
+                "whisper_tiny_libdef_r3,whisper_tiny_libdef,"
                 "whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6,whisper_turbo_nocond_r4,"
-                "whisper_turbo_nocond_r5,whisper_turbo_nocond_r6"),
+                "whisper_turbo_nocond_r5;"
+                "m2-ultra-headline-remeasure.json#whisper_large-v3_nocond_r4,whisper_turbo_nocond_r6"),
 }
 
 WINDOWS = [
@@ -104,11 +105,11 @@ PRECISION = [
      "chosen": "8bit"},
     {"name": "voxtral-v1 3B", "doc": "docs/benchmarks/engines/voxtral-v1.md",
      "rows": [("4bit", "44.60%", "5.25GB"), ("8bit", "36.41%", "7.28GB"),
-              ("bf16", "36.84%", "10.91GB")],
+              ("bf16", "36.76%", "10.91GB")],
      "chosen": "8bit"},
     {"name": "voxtral-v1 24B", "doc": "docs/benchmarks/engines/voxtral-v1.md",
      "rows": [("4bit", "28.06%", "16.27GB"), ("8bit", "27.44%", "27.92GB"),
-              ("bf16", "26.98%", "50.08GB")],
+              ("bf16", "26.75%", "50.08GB")],
      "chosen": "8bit"},
 ]
 
@@ -151,16 +152,17 @@ SOURCES = {
     "PICKER": ("m2-ultra-voxtral-precision-default.json#vox_wfp16_c30b128_kv8,"
                "vox_wfp16_c30b128_kv8_r2,vox_wfp16_c30b128_kv8_r3;"
                "m2-ultra-whisper-sizes.json#whisper_large-v3_nocond,whisper_large-v3_nocond_r2,"
-               "whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,"
+               "whisper_large-v3_nocond_r3,"
                "whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6,whisper_turbo_nocond,"
                "whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,"
-               "whisper_turbo_nocond_r5,whisper_turbo_nocond_r6;"
+               "whisper_turbo_nocond_r5;"
+               "m2-ultra-headline-remeasure.json#whisper_large-v3_nocond_r4,whisper_turbo_nocond_r6,"
+               "3b_bf16_c30,24b_bf16_c30;"
                "m2-ultra-picker-speed.json#pk_qwen3_1.7B_8bit_c15_s1,pk_qwen3_1.7B_8bit_c15_s2,"
                "pk_qwen3_1.7B_8bit_c15_s3,"
                "pk_parakeet_default_s1,pk_parakeet_default_s2,pk_parakeet_default_s3,"
                "pk_reazon_fp32_default_s1,pk_reazon_fp32_default_s2,pk_reazon_fp32_default_s3;"
                "m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_bf16_c15,qwen3_1.7B_8bit_c15;"
-               "m2-ultra-voxtral-v1.json#3b_bf16_c30,24b_bf16_c30;"
                "m2-ultra-kotoba-engines.json#k20_mlx_c15_r1,k20_mlx_c15_r2,k20_mlx_c15_r3;"
                "m2-ultra-voxtral-precision.json#vox_wfp16_c60b16_kv8;"
                "m2-ultra-peak-memory-kotoba.json#pm_kotoba_7f8150fdef0e,pm_kotoba_c18b2f5aa2a2,"
@@ -177,7 +179,7 @@ SOURCES = {
                 "m2-ultra-qwen3-window.json#qwen3w7_1.7B_8bit_c120,qwen3w7_1.7B_8bit_c15,"
                 "qwen3w7_1.7B_8bit_c30,qwen3w7_1.7B_8bit_c300,qwen3w7_1.7B_8bit_c60;"
                 "m2-ultra-voxtral-v1-window.json#sweep_3b_bf16_c15,sweep_3b_bf16_c60,"
-                "sweep_3b_bf16_c120;m2-ultra-voxtral-v1.json#3b_bf16_c30;"
+                "sweep_3b_bf16_c120;m2-ultra-headline-remeasure.json#3b_bf16_c30;"
                 "m2-ultra-parakeet-window.json#parakeet_c120,parakeet_c300"),
     "PRECISION": ("m2-ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8,vox_wnvfp4_c60b16_kv8,"
                   "vox_w8bit_c60b16_kv8,vox_wmxfp8_c60b16_kv8,vox_wfp16_c60b16_kv8;"
@@ -185,7 +187,8 @@ SOURCES = {
                   "qwen3_0.6B_6bit_c15,qwen3_0.6B_8bit_c15,qwen3_0.6B_bf16_c15,"
                   "qwen3_1.7B_4bit_c15,qwen3_1.7B_5bit_c15,qwen3_1.7B_6bit_c15,"
                   "qwen3_1.7B_8bit_c15,qwen3_1.7B_bf16_c15;m2-ultra-voxtral-v1.json#3b_4bit_c30,"
-                  "3b_8bit_c30,3b_bf16_c30,24b_4bit_c30,24b_8bit_c30,24b_bf16_c30"),
+                  "3b_8bit_c30,24b_4bit_c30,24b_8bit_c30;"
+                  "m2-ultra-headline-remeasure.json#3b_bf16_c30,24b_bf16_c30"),
     "BATCH": ("m2-ultra-synthetic-decode.json#synth_m2_ultra_4bit_r1,synth_m2_ultra_4bit_r2,"
               "synth_m2_ultra_4bit_r3;m4-synthetic-decode.json#synth_nvfp4_r1,synth_nvfp4_r2,"
               "synth_nvfp4_r3"),

@@ -59,8 +59,8 @@ Source: [m2-ultra-voxtral-delay.json](../../benchmarks/results/2026-10/m2-ultra-
 
 Positive means the lower delay is worse. Winning 7 files to 0 at both comparison points
 makes this the most robust finding in the project: at n=7 the corpus resolves Japanese
-effects of about 2.04 points[^d3] (the 95% half-width from the per-file spread of Voxtral at 4-bit, the default then,
-against Whisper turbo-nocond over 6 runs, SD 2.75 points),[^d3] and this one is 9.[^d1]
+effects of about 1.91 points[^d3] (the 95% half-width from the per-file spread of Voxtral at 4-bit, the default then,
+against Whisper turbo-nocond over 6 runs, SD 2.57 points),[^d3] and this one is 9.[^d1]
 
 Every other lever in this project is small, machine-dependent, or trades speed for
 accuracy. This one is large, reproduces on every file, holds on prepared speech as well
@@ -94,5 +94,5 @@ record; the clip confirms that the direction and rough magnitude hold on prepare
 
 [^d1]: [m2-ultra-voxtral-delay.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-delay.json) runs `delay7_c30b32_d480`, `delay7_c30b32_d960`; [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
 [^d2]: [m2-ultra-voxtral-prompt-trap.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-trap.json) runs `prompt_trap7_none`; [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
-[^d3]: [m2-ultra-resolution-floor.json](../../benchmarks/results/2026-10/m2-ultra-resolution-floor.json) runs `resolution_floor`
+[^d3]: [m2-ultra-resolution-floor-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-resolution-floor-remeasure.json) runs `resolution_floor`
 [^d4]: [m2-ultra-voxtral-clip-cli.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-clip-cli.json) runs `hk_c60b8_kv0_d480`, `hk_c60b8_kv0_d2400`, `score_clip`

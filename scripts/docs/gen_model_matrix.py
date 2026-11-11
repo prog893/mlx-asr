@@ -91,7 +91,7 @@ PEAK = {
     # load included) from run_qwen3.py, which resets the counter before the load as the
     # CLI does before run().
     # Flat across the corpus, like qwen3-asr, because the window fixes the working set.
-    # source: m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30,24b_4bit_c30,24b_8bit_c30,24b_bf16_c30
+    # source: m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,24b_4bit_c30,24b_8bit_c30;m2-ultra-headline-remeasure.json#3b_bf16_c30,24b_bf16_c30
     ("voxtral-v1-3b", "4bit"): "5.25GB",
     ("voxtral-v1-3b", "8bit"): "7.28GB",
     ("voxtral-v1-3b", "bf16"): "10.91GB",
@@ -117,8 +117,8 @@ PEAK_NOTE = {
 _R = "../benchmarks/results/2026-10"
 
 
-def _src(group: str, *runs: str) -> str:
-    return f"[{group}.json]({_R}/{group}.json) runs " + ", ".join(f"`{r}`" for r in runs)
+def _src(group: str, *runs: str, root: str = _R) -> str:
+    return f"[{group}.json]({root}/{group}.json) runs " + ", ".join(f"`{r}`" for r in runs)
 
 
 _HUB = " (peak; download is the hub repo size)"
@@ -137,8 +137,9 @@ SOURCE = {
     "voxtral": "Source: " + _src("m2-ultra-voxtral-precision", "vox_w4bit_c60b16_kv8",
                                  "vox_w8bit_c60b16_kv8", "vox_wfp16_c60b16_kv8") + _HUB,
     "voxtral-v1": "Source: " + _src("m2-ultra-voxtral-v1", "3b_4bit_c30", "3b_8bit_c30",
-                                    "3b_bf16_c30", "24b_4bit_c30", "24b_8bit_c30",
-                                    "24b_bf16_c30") + _HUB,
+                                    "24b_4bit_c30", "24b_8bit_c30") + "; "
+                  + _src("m2-ultra-headline-remeasure", "3b_bf16_c30", "24b_bf16_c30",
+                         root="../benchmarks/results/2026-11") + _HUB,
     "whisper": "Source: " + _src("m2-ultra-whisper-sizes", "whisper_tiny_libdef",
                                  "whisper_base_libdef", "whisper_small_nocond",
                                  "whisper_medium_nocond", "whisper_large-v2_nocond",
