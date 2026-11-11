@@ -64,6 +64,9 @@ Compatible flags for `--model voxtral`:
 | `--max-chars` | int | `28` | split a cue at this many characters |
 | `--max-dur-seconds` | float | `7.0` | hard cap on cue duration |
 
+`--language` is refused: the model has no language token to set. Its tokenizer carries a
+thousand special tokens and none of them names a language.
+
 `--prompt` takes domain terms or a topic sentence in the audio's own language, not an
 instruction: an imperative there makes things worse, and on English audio any prompt wrecks
 word spacing ([benchmarks/prompt.md](benchmarks/prompt.md)).
@@ -103,7 +106,11 @@ Compatible flags for `--model voxtral-v1`:
 | `--size` | `3B` `24B` | by memory | which checkpoint |
 | `--quantization` | `4bit` `8bit` `bf16` | by memory | weight precision |
 | `--chunk-seconds` | float | `30` | independent window length |
-| `--language` | any spelling | autodetect | set it; see [CLI.md](CLI.md#--language) |
+| `--language` | any spelling ([CLI.md](CLI.md#--language)) | autodetect | recommended; see below |
+
+Pass `--language`. Left to detect the language, the model sends whole windows of Japanese
+audio out in English or Turkish
+([benchmarks/engines/voxtral-v1.md](benchmarks/engines/voxtral-v1.md#experiment-leaving-the-language-to-the-model)).
 
 It writes no subtitles: `-f srt`, `-f vtt` and `-f all` are refused with an error.
 
@@ -136,7 +143,10 @@ Compatible flags for `--model whisper`:
 | flag | values | default | effect |
 |---|---|---|---|
 | `--size` | see matrix | by memory: the first of `large-v3`, `turbo`, `large-v2`, `medium`, `small`, `base`, `tiny` that fits | which checkpoint |
-| `--language` | any spelling | autodetect | set it; see [CLI.md](CLI.md#--language) |
+| `--language` | any spelling ([CLI.md](CLI.md#--language)) | autodetect | recommended; see below |
+
+Pass `--language`. Whisper's autodetect reads only the first 30 seconds, and on this
+project's material it returned Russian for Japanese audio and cost 25[^n4] CER points.
 
 `condition_on_previous_text=False` is applied to `small` and larger and is not a flag,
 because enabling it is never right on long audio. `tiny` and `base` keep the library
@@ -205,7 +215,7 @@ Compatible flags for `--model qwen3-asr`:
 | `--size` | `0.6B` `1.7B` | `1.7B` | which checkpoint |
 | `--quantization` | `4bit` `5bit` `6bit` `8bit` `bf16`/`none` | `8bit` | weight precision |
 | `--chunk-seconds` | float | `15` | decode window. Shorter is better on accuracy, speed and memory here |
-| `--language` | any spelling | `English` | never autodetects, so set it |
+| `--language` | any spelling ([CLI.md](CLI.md#--language)) | `English` | recommended: it never autodetects, so omitting it transcribes as English |
 
 It writes no subtitles. Segment times are decode-window boundaries rather than speech,
 so `-f srt`, `-f vtt` and `-f all` are refused with an error instead of writing a file
@@ -429,3 +439,4 @@ a comparison ([benchmarks/reference/determinism.md](benchmarks/reference/determi
 [^peak-kotoba]: [m2-ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079` (peak, maximum over the files, at the 10s window shipped then; download is the hub repo size)
 [^peak-qwen3-asr]: [m2-ultra-qwen3-precision-c15.json](../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`, `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15` (peak at the shipped 15s window; download is the hub repo size)
 [^peak-parakeet]: [m2-ultra-picker-speed.json](../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3` (peak; download is the hub repo size)
+[^n4]: [m2-ultra-whisper-language.json](../benchmarks/results/2026-10/m2-ultra-whisper-language.json) runs `lang7_turbo_autodetect_r1`, `lang7_turbo_autodetect_r2`, `lang7_turbo_autodetect_r3`; [m2-ultra-mincut-inputs.json](../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_whisper_turbo_libdef`; [m2-ultra-whisper-condition.json](../benchmarks/results/2026-10/m2-ultra-whisper-condition.json) runs `cond7_whisper_turbo_libdef_r2`, `cond7_whisper_turbo_libdef_r3` (autodetect against forced Japanese, both at library defaults, mean of 3 runs each)

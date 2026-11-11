@@ -1,7 +1,7 @@
 # Command-line flags
 
-The flags every model accepts, and how `--language` is read. The flags each model family
-takes, and which ones each refuses, are in [MODELS.md](MODELS.md).
+Flags that work the same on every model, and how a `--language` value is read. Which
+flags each model takes: [MODELS.md](MODELS.md).
 
 ## Global flags
 
@@ -19,14 +19,6 @@ The only flags every model accepts.
 
 ## `--language`
 
-Recommended whenever the engine takes one. Whisper's autodetect reads only the first 30
-seconds, and on this project's material it returned Russian for Japanese audio and cost 25[^n4]
-CER points. `qwen3-asr` does not autodetect at all: omitting the flag forces English.
-`voxtral-v1` detects the language when the flag is omitted, and on Japanese that sends
-whole windows out in English or Turkish instead
-([benchmarks/engines/voxtral-v1.md](benchmarks/engines/voxtral-v1.md#experiment-leaving-the-language-to-the-model)),
-so pass it.
-
 Any spelling works on any model that takes one. These are all Japanese:
 
 ```bash
@@ -43,10 +35,3 @@ before the audio is read, listing what that model accepts.
 
 Accepted names come from each checkpoint's own published vocabulary, so a model that drops
 a language stops accepting it without a change here.
-
-`voxtral` refuses the flag: it has no language token to set. Its tokenizer carries a
-thousand special tokens and not one of them names a language or a task, unlike Whisper's
-`<|ja|>`. `kotoba`, `parakeet` and `reazon` transcribe Japanese only, so they are pinned to
-`ja` and refuse any other value.
-
-[^n4]: [m2-ultra-whisper-language.json](../benchmarks/results/2026-10/m2-ultra-whisper-language.json) runs `lang7_turbo_autodetect_r1`, `lang7_turbo_autodetect_r2`, `lang7_turbo_autodetect_r3`; [m2-ultra-mincut-inputs.json](../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_whisper_turbo_libdef`; [m2-ultra-whisper-condition.json](../benchmarks/results/2026-10/m2-ultra-whisper-condition.json) runs `cond7_whisper_turbo_libdef_r2`, `cond7_whisper_turbo_libdef_r3` (autodetect against forced Japanese, both at library defaults, mean of 3 runs each)
