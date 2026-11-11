@@ -11,17 +11,17 @@ The only flags every model accepts.
 |---|---|---|---|
 | `--model` | family name or HF repo id | `voxtral` | a repo id gets its backend inferred from the name |
 | `--list-models` | flag | off | prints each model with its sizes, precisions and caveats, then exits |
-| `-f, --output-format` | `srt` `vtt` `txt` `json` `all` | `srt` | `all` writes one file per format. `srt`, `vtt` and `all` exit 2 on `qwen3-asr` and `voxtral-v1` |
-| `-o, --output` | path | input stem + extension | with `-f all` this is a path **stem**, not a directory; parent dirs are created |
+| `-f, --output-format` | `srt` `vtt` `txt` `json` `all` | `srt` | `all` writes one file per format. `srt`, `vtt` and `all` are an error on `qwen3-asr` and `voxtral-v1` |
+| `-o, --output` | path | input stem + extension | with `-f all` this is a path stem, not a directory; parent dirs are created |
 | `--quiet` | flag | off | silences stdout entirely. Download progress bars still appear: those are huggingface_hub writing to stderr |
 | `--stats-json` | path | none | timing, peak memory, resolved config, and machine info |
 | `-h, --help` | flag | | |
 
 ## `--language`
 
-Recommended whenever the engine takes one. **Whisper's autodetect reads only the first 30
+Recommended whenever the engine takes one. Whisper's autodetect reads only the first 30
 seconds, and on this project's material it returned Russian for Japanese audio and cost 25[^n4]
-CER points.** `qwen3-asr` does not autodetect at all: omitting the flag forces English.
+CER points. `qwen3-asr` does not autodetect at all: omitting the flag forces English.
 `voxtral-v1` detects the language when the flag is omitted, and on Japanese that sends
 whole windows out in English or Turkish instead
 ([benchmarks/engines/voxtral-v1.md](benchmarks/engines/voxtral-v1.md#experiment-leaving-the-language-to-the-model)),
@@ -38,7 +38,7 @@ mlx-asr a.wav --model qwen3-asr --language ja_JP    -f txt
 
 Each model wants a different form internally (whisper an ISO 639-1 code, qwen3-asr an
 English name) and the CLI converts, so you never have to know which. Region and script
-subtags are dropped: `en-US` and `en-GB` both give `en`. An unrecognised value exits 2
+subtags are dropped: `en-US` and `en-GB` both give `en`. An unrecognised value is an error
 before the audio is read, listing what that model accepts.
 
 Accepted names come from each checkpoint's own published vocabulary, so a model that drops

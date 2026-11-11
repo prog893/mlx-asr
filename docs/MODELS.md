@@ -6,18 +6,18 @@ flags each family takes.
 `--model` picks a family; `--size` and `--quantization` pick the variant inside it. In the
 tables:
 
-- **priority**: the order variants are tried in when neither flag is passed. The CLI loads
+- priority: the order variants are tried in when neither flag is passed. The CLI loads
   the first one that fits the Mac's memory, starting from 1. A pinned `--size` or
   `--quantization` keeps only the matching rows, tried in the same order. How the order was
   set: [DEFAULTS.md](DEFAULTS.md#how-a-variant-is-chosen).
-- **weights**: the Hugging Face repo the weights are downloaded from, which also states the
+- weights: the Hugging Face repo the weights are downloaded from, which also states the
   model's license.
-- **quantized on first use**: no loadable build of that precision is published, so the
+- quantized on first use: no loadable build of that precision is published, so the
   first run downloads the linked repo and quantizes it locally, once.
-- **converted to MLX on first use**: the repo is published in transformers format, so the
+- converted to MLX on first use: the repo is published in transformers format, so the
   first run converts it to MLX locally, once.
 - A family with no `--size` or `--quantization` column has one size or one precision, and
-  passing that flag exits 2.
+  passing that flag is an error.
 
 Quantized and converted builds are cached in `mlx-asr-converted/` inside the Hugging Face cache
 (`~/.cache/huggingface/hub/` by default), and later runs load the cached copy.
@@ -30,7 +30,7 @@ Quantized and converted builds are cached in `mlx-asr-converted/` inside the Hug
 
 Mistral AI's Voxtral Mini 4B Realtime, the 2602 release (February 2026). A streaming
 model: its causal audio encoder transcribes at a configurable delay, which `--delay-ms`
-sets. The card lists 13 languages. Apache-2.0. The default model.
+sets. The card lists 13 languages. The default model.
 
 | priority | `--quantization` | weights | download | peak GPU memory |
 |---|---|---|---|---|
@@ -46,7 +46,7 @@ Example:
 mlx-asr audio.wav --model voxtral # writes audio.srt
 ```
 
-Flags specific to `--model voxtral`:
+Compatible flags for `--model voxtral`:
 
 | flag | values | default | effect |
 |---|---|---|---|
@@ -76,7 +76,7 @@ word spacing ([benchmarks/prompt.md](benchmarks/prompt.md)).
 
 Mistral AI's first Voxtral release, 2507 (July 2025): Voxtral Mini 3B, built on Ministral
 3B, and Voxtral Small 24B. Speech-understanding models with a dedicated transcription mode
-and automatic language detection; the card lists eight languages. Apache-2.0.
+and automatic language detection; the card lists eight languages.
 
 | priority | `--size` | `--quantization` | weights | download | peak GPU memory |
 |---|---|---|---|---|---|
@@ -89,13 +89,18 @@ and automatic language detection; the card lists eight languages. Apache-2.0.
 
 Source: [m2-ultra-voxtral-v1.json](../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `24b_4bit_c30`, `24b_8bit_c30`; [m2-ultra-headline-remeasure.json](../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30`, `24b_bf16_c30` (peak; download is the hub repo size)
 
+The weights come from Mistral's own repos. They are published as safetensors that MLX loads
+as they are, so `bf16` needs no conversion. `8bit` and `4bit` are quantized from them on
+first use, which downloads the bf16 weights first (9.37GB for 3B, 48.54GB for 24B). The <!-- not-measured: hub repo sizes -->
+audio encoder stays bf16 at every precision.
+
 Example:
 
 ```bash
 mlx-asr audio.wav --model voxtral-v1 --language en -f txt
 ```
 
-Flags specific to `--model voxtral-v1`:
+Compatible flags for `--model voxtral-v1`:
 
 | flag | values | default | effect |
 |---|---|---|---|
@@ -104,12 +109,7 @@ Flags specific to `--model voxtral-v1`:
 | `--chunk-seconds` | float | `30` | independent window length |
 | `--language` | any spelling | autodetect | set it; see [CLI.md](CLI.md#--language) |
 
-Writes no subtitles: `-f srt`, `-f vtt` and `-f all` exit 2.
-
-`voxtral-v1` comes from the authors' own repos. `bf16` loads their weights as published;
-`8bit` and `4bit` are quantized from them on first use and cached in the same directory,
-so the first run of a precision downloads the bf16 weights (9.37GB for 3B, 48.54GB for <!-- not-measured: hub repo sizes -->
-24B) and quantizes once. The audio encoder stays bf16 at every precision.
+It writes no subtitles: `-f srt`, `-f vtt` and `-f all` are refused with an error.
 
 ### Whisper
 
@@ -117,7 +117,7 @@ so the first run of a precision downloads the bf16 weights (9.37GB for 3B, 48.54
 
 OpenAI's Whisper: the original sizes from September 2022, large-v2 from December 2022,
 large-v3 from November 2023, and turbo, large-v3 with its decoder cut from 32 layers to 4,
-from October 2024. 99 languages. Apache-2.0; turbo is MIT.
+from October 2024. 99 languages.
 
 | priority | `--size` | weights | download | peak GPU memory |
 |---|---|---|---|---|
@@ -137,7 +137,7 @@ Example:
 mlx-asr audio.wav --model whisper --language ja
 ```
 
-Flags specific to `--model whisper`:
+Compatible flags for `--model whisper`:
 
 | flag | values | default | effect |
 |---|---|---|---|
@@ -154,7 +154,7 @@ default.
 
 Kotoba-Whisper v2.0, from Kotoba Technologies and Asahi Ushio (September 2024). Whisper
 large-v3 distilled to 2 decoder layers and trained on the ReazonSpeech corpus. Japanese
-only. Apache-2.0.
+only.
 
 | weights | download | peak GPU memory |
 |---|---|---|
@@ -162,32 +162,30 @@ only. Apache-2.0.
 
 Source: [m2-ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079` (peak, maximum over the files, at the 10s window shipped then; download is the hub repo size)
 
+The alias points at v2.0 because v2.2 holds identical ASR weights (all 539 tensors equal in
+value); v2.2 adds diarization and punctuation as separate torch models. The conversion to MLX
+loads the whole checkpoint, so a run with no converted copy cached yet peaks at 3.03GB[^n7]
+instead of 2.38GB[^n2].
+
 Example:
 
 ```bash
 mlx-asr audio.wav --model kotoba
 ```
 
-Flags specific to `--model kotoba`:
+Compatible flags for `--model kotoba`:
 
 | flag | values | default | effect |
 |---|---|---|---|
 | `--chunk-seconds` | float | `15` | independent window length, and this model's largest lever. Material-dependent, so sweep it on your own audio |
 | `--language` | | forced `ja` | Japanese-only weights |
 
-The `kotoba` alias points at v2.0 because v2.2 holds identical ASR weights (all 539
-tensors equal in value); its diarization and punctuation are separate torch models. It
-ships in transformers format, so it converts to MLX on first use and caches under
-`~/.cache/huggingface/hub/mlx-asr-converted/`. That first run peaks at 3.03GB[^n7] rather than
-2.38GB[^n2], because the conversion loads the whole checkpoint; every run after is the table
-figure.
-
 ### Qwen3-ASR
 
 `--model qwen3-asr`
 
 Alibaba's Qwen3-ASR (January 2026), built on Qwen3-Omni. The card lists 30 languages and
-22 Chinese dialects, with language identification. Apache-2.0.
+22 Chinese dialects, with language identification.
 
 | priority | `--size` | `--quantization` | weights | download | peak GPU memory |
 |---|---|---|---|---|---|
@@ -210,7 +208,7 @@ Example:
 mlx-asr audio.wav --model qwen3-asr --language ja -f txt
 ```
 
-Flags specific to `--model qwen3-asr`:
+Compatible flags for `--model qwen3-asr`:
 
 | flag | values | default | effect |
 |---|---|---|---|
@@ -219,18 +217,16 @@ Flags specific to `--model qwen3-asr`:
 | `--chunk-seconds` | float | `15` | decode window. Shorter is better on accuracy, speed and memory here |
 | `--language` | any spelling | `English` | never autodetects, so set it |
 
-Three behaviours specific to this model:
+It writes no subtitles. Segment times are decode-window boundaries rather than speech,
+so `-f srt`, `-f vtt` and `-f all` are refused with an error instead of writing a file
+whose cue times are fiction. `txt` and `json` work, and the JSON carries `cue_source: "chunk_boundaries"`.
 
-**It writes no subtitles.** Segment times are decode-window boundaries rather than speech,
-so `-f srt`, `-f vtt` and `-f all` exit 2 instead of writing a file whose cue times are
-fiction. `txt` and `json` work, and the JSON carries `cue_source: "chunk_boundaries"`.
-
-**`--max-batch` exits 2.** `batch_size` exists upstream, and it was measured to be slower at
+`--max-batch` is refused. `batch_size` exists upstream, and it was measured to be slower at
 every batch size tried, with no accuracy gain: batching whole chunks pads each group to its
 longest member and ends with its slowest, and there is no weight read to amortize, so one
 chunk at a time wins ([benchmarks/qwen3-batch.md](benchmarks/qwen3-batch.md)).
 
-**Repetition loops occur on some material** and are a property of the weights. Each is
+Repetition loops occur on some material and are a property of the weights. Each is
 capped to one window and the CLI warns when it sees one. `mlx_asr` drives the chunk loop
 rather than the library, because upstream's `max_tokens` is a per-file budget whose
 exhaustion stops transcription silently.
@@ -241,7 +237,6 @@ exhaustion stops transcription silently.
 
 NVIDIA NeMo's Parakeet TDT-CTC 0.6B for Japanese (May 2024), a hybrid FastConformer model
 that transcribes with punctuation. Japanese only. Runs through mlx-audio's own driver.
-CC-BY-4.0.
 
 | weights | download | peak GPU memory |
 |---|---|---|
@@ -255,22 +250,21 @@ Example:
 mlx-asr audio.wav --model parakeet
 ```
 
-Flags specific to `--model parakeet`:
+Compatible flags for `--model parakeet`:
 
 | flag | values | default | effect |
 |---|---|---|---|
 | `--chunk-seconds` | float | `120` | independent window length |
-| `--language` | | forced `ja` | Japanese-only weights; any other value exits 2 |
+| `--language` | | forced `ja` | Japanese-only weights; any other value is an error |
 
 ### ReazonSpeech
 
 `--model reazon`
 
 ReazonSpeech k2-v2 from Reazon Human Interaction Lab (July 2024): a character-based
-Zipformer RNN-T trained on the ReazonSpeech v2.0 corpus. Japanese only. Apache-2.0.
-
-The authors' ONNX build, decoded on CPU through sherpa-onnx (`uv sync --extra reazon`).
-Not an MLX engine: its throughput is not comparable to the GPU rows.
+Zipformer RNN-T trained on the ReazonSpeech v2.0 corpus. Japanese only. Runs the authors'
+ONNX build on CPU through sherpa-onnx (`uv sync --extra reazon`), so it is not an MLX
+engine and its throughput is not comparable to the GPU rows.
 
 | weights | download | peak GPU memory |
 |---|---|---|
@@ -284,12 +278,12 @@ Example:
 mlx-asr audio.wav --model reazon
 ```
 
-Flags specific to `--model reazon`:
+Compatible flags for `--model reazon`:
 
 | flag | values | default | effect |
 |---|---|---|---|
 | `--chunk-seconds` | float | `30` | independent window length |
-| `--language` | | forced `ja` | Japanese-only weights; any other value exits 2 |
+| `--language` | | forced `ja` | Japanese-only weights; any other value is an error |
 
 ## About the tables
 
@@ -318,7 +312,7 @@ each figure came from.
 ## Flag support matrix
 
 Most flags belong to one model, because the models do not share a long-form algorithm.
-Passing an unsupported flag exits 2 without transcribing, rather than being ignored, so
+Passing an unsupported flag stops with an error before transcribing, rather than being ignored, so
 the output always matches the arguments:
 
 ```console
@@ -328,7 +322,7 @@ because the engines do not share a long-form algorithm. Drop the flag, or use th
 default --model voxtral.
 ```
 
-`-` means the flag exits 2 on that model.
+`-` means the flag is an error on that model.
 
 | flag | `voxtral` | `voxtral-v1` | `whisper` | `kotoba` | `qwen3-asr` |
 |---|---|---|---|---|---|
@@ -353,12 +347,12 @@ window length. Whisper refuses it, since its 30s window is fixed by the model's 
 encoding.
 
 `--delay-ms`, `--gain`, `--peak-dbfs` and `--rms-dbfs` ship with working values rather
-than off, so the other models accept them at their default and only exit 2 if you change
+than off, so the other models accept them at their default and only error out if you change
 them.
 
 ## Bring your own model
 
-`--model` takes any Hugging Face repo id or local directory, in **MLX format only**:
+`--model` takes any Hugging Face repo id or local directory, in MLX format only:
 safetensors plus a `config.json`. The backend is inferred from the id, so
 `--model Qwen/Qwen3-ASR-1.7B` behaves like `--model qwen3-asr`, including its 15s window
 and refused output formats. `--size` and `--quantization` are refused, since the id
@@ -381,13 +375,13 @@ The backend is matched on the id, first hit wins:
 `qwen3-asr` is checked before `whisper` and `distil` so that an id carrying both,
 `Qwen3-ASR-1.7B-whisper-distilled`, reaches the loader that can read its config.
 
-**Rule 5 is a guess, and a wrong guess is not caught gracefully.** An id that names no
+Rule 5 is a guess, and a wrong guess is not caught gracefully. An id that names no
 known architecture is handed to the Voxtral loader, which fails deep in the stack rather
 than at the CLI boundary: an id that does not exist on the hub raises
 `RepositoryNotFoundError`, and a real checkpoint of the wrong architecture raises an
 `AttributeError` for a config field the model does not have. Both arrive as a Python
 traceback, after the audio has been decoded and the weights downloaded. Everything else
-here exits 2 with a sentence; this path does not, so check the id before pointing at
+here stops with a one-line error; this path does not, so check the id before pointing at
 something exotic.
 
 ### Formats that will not work
