@@ -424,3 +424,38 @@ def test_renamed_runs_must_stay_unique():
     check_unique_keys([{"run": "a", "arm": "x"}, {"run": "a", "arm": "y"}, {"run": "b"}])
     with pytest.raises(SystemExit, match="collide"):
         check_unique_keys([{"run": "baseline"}, {"run": "baseline"}])
+
+
+def _group_text(runs):
+    group = {"group": "g", "question": "q", "docs": [], "note": "", "runs": runs}
+    return json.dumps(group, indent=1, ensure_ascii=False) + "\n"
+
+
+def test_invalidate_adds_exactly_one_line():
+    import invalidate_run
+    text = _group_text([{"run": "a", "command": "x", "files": []},
+                        {"run": "b", "command": "y", "files": []}])
+    out = invalidate_run.invalidate(text, "b", "busy at start; re-measured as g2.json#b")
+    added = [ln for ln in out.splitlines() if ln not in text.splitlines()]
+    assert added == ['   "invalid": "busy at start; re-measured as g2.json#b",']
+    assert len(out.splitlines()) == len(text.splitlines()) + 1
+    with pytest.raises(SystemExit, match="already invalid"):
+        invalidate_run.invalidate(out, "b", "again")
+    with pytest.raises(SystemExit, match="matches 0 runs"):
+        invalidate_run.invalidate(text, "c", "r")
+
+
+def test_invalidate_refuses_a_file_that_is_not_in_saved_form():
+    import invalidate_run
+    text = _group_text([{"run": "a", "files": []}]).replace('"note": ""', '"note":  ""')
+    with pytest.raises(SystemExit, match="REFUSED"):
+        invalidate_run.invalidate(text, "a", "r")
+
+
+def test_query_skips_invalid_runs_and_refuses_to_name_one():
+    q = _query()
+    group = {"group": "g", "runs": [{"run": "a", "files": []},
+                                    {"run": "b", "invalid": "busy", "files": []}]}
+    assert [r["run"] for r in q.select(group, [])] == ["a"]
+    with pytest.raises(SystemExit, match="is invalid: busy"):
+        q.select(group, ["b"])

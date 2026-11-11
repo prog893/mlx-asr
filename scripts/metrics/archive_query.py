@@ -4,7 +4,9 @@
     .venv/bin/python scripts/metrics/archive_query.py GROUP --paired RUN_A RUN_B [--unit char]
 
 A paired side may be `RUN+RUN+...` (repeat runs averaged per file first, as for the sampling
-engines) and may name another group as `GROUP:RUN+...`.
+engines) and may name another group as `GROUP:RUN+...`. A RUN may also be `GROUP:RUN`, so one
+mean can span the groups a config's repeats were saved in. Runs marked `invalid` are skipped
+when no run is named and refused when one is.
 
 The one place a doc number is derived from raw rows, so every page computes it the same way:
 
@@ -78,13 +80,22 @@ def run_key(run: dict) -> str:
 
 
 def select(group: dict, names) -> list[dict]:
+    """The named runs, or every usable run when none is named. A name may be `GROUP:RUN` for a
+    run in another group, so one mean can span the groups a config's repeats were saved in.
+    A run marked `invalid` is skipped when none is named and refused when it is."""
     if not names:
-        return group["runs"]
+        return [r for r in group["runs"] if "invalid" not in r]
     out = []
     for n in names:
-        hit = [r for r in group["runs"] if run_key(r) == n or (r["run"] == n and not r.get("arm"))]
+        g = group
+        if ":" in n:
+            gname, n = n.split(":", 1)
+            g = load_group(gname)
+        hit = [r for r in g["runs"] if run_key(r) == n or (r["run"] == n and not r.get("arm"))]
         if len(hit) != 1:
-            sys.exit(f"{group['group']}: run {n!r} matches {len(hit)} runs")
+            sys.exit(f"{g['group']}: run {n!r} matches {len(hit)} runs")
+        if "invalid" in hit[0]:
+            sys.exit(f"{g['group']}: run {n!r} is invalid: {hit[0]['invalid']}")
         out += hit
     return out
 
@@ -143,7 +154,7 @@ def side(spec: str, default_group: dict) -> dict:
     """One side of a paired comparison: `RUN`, `RUN+RUN+...` (repeat runs averaged per file,
     over the files every run scored validly) or `GROUP:RUN+...` for a run in another group."""
     group = default_group
-    if ":" in spec:
+    if ":" in spec.split("+")[0]:
         gname, spec = spec.split(":", 1)
         group = load_group(gname)
     runs = select(group, spec.split("+"))

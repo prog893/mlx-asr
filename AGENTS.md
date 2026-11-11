@@ -18,16 +18,19 @@ for October 2026. A number without saved rows is not published.
   state); do not run a benchmark in a mode that skips it.
 - Add each new group to that month's `README.md` run-group table (a test fails otherwise),
   and any new corpus file to `benchmarks/results/corpus.json` with `archive_corpus.py`.
-- Adding runs to an existing group: rebuild the whole group from all its run JSONs, so
-  aggregates and intervals recompute from every row.
-- Adding or replacing one corpus file in saved runs: `replay_supplement.py` reruns each
-  run's recorded config on the new file plus a canary, on the same machine model and
-  software, and `archive_results.py --supplement RUN.json=SUPP.json` merges the rows,
-  refusing if the canary differs.
+- A saved file is append-only. Each new batch of runs (a different date or purpose) is a new
+  group in that month's directory, never added to an existing group. The only edit an existing
+  group file accepts is marking a whole run, or a row, `invalid` with a reason; nothing in it is
+  deleted or rewritten. Mark a run with `scripts/benchmarks/invalidate_run.py`, which adds that
+  one line and refuses any other change.
+- A row or run is usable when it has no `invalid` key and ignored when it has one. The tools
+  skip invalid rows and runs, and a doc that cites an invalid run fails `tests/test_sources.py`.
 - Replaced corpus audio goes in `benchmarks/results/revisions.json`; rows that used the old
-  copy are flagged `invalid`, never deleted.
-- Save only valid runs. A run measured while other GPU work was resident, and then
-  re-measured, is not kept; only the re-measurement is.
+  copy are flagged `invalid`. Existing `supplement` rows (a replaced file re-scored and merged
+  into its old run) predate the append-only rule; a new re-score is saved as a new group.
+- Save only valid runs. A run measured while other GPU work was resident and then re-measured
+  is marked `invalid`, with the reason naming the re-measurement, and the re-measurement is
+  cited instead.
 - Save before publishing: the doc's table or chart names its source run-group file and
   runs (a `Source:` line or a `"source"` field).
 - `uv run pytest tests/test_results_archive.py` must pass before committing.

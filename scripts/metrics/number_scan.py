@@ -119,12 +119,15 @@ def md_blocks(text: str):
         i += 1
 
 
-def group_runs(path: Path):
-    """The set of run names (and run#arm) in a run-group JSON."""
+def group_runs(path: Path, usable: bool = False):
+    """The set of run names (and run#arm) in a run-group JSON; with `usable`, only the runs
+    not marked `invalid`."""
     import json
     g = json.loads(path.read_text(encoding="utf-8"))
     names = set()
     for r in g.get("runs", []):
+        if usable and "invalid" in r:
+            continue
         names.add(r["run"])
         if r.get("arm"):
             names.add(f"{r['run']}#{r['arm']}")
