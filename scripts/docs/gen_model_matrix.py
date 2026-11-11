@@ -114,6 +114,21 @@ PEAK_NOTE = {
     ("reazon-k2", None): "n/a, CPU",
 }
 
+# The heading of each family's section in docs/MODELS.md.
+FAMILY_NAME = {
+    "voxtral": "Voxtral Realtime",
+    "voxtral-v1": "Voxtral (2025)",
+    "whisper": "Whisper",
+    "kotoba": "Kotoba-Whisper",
+    "qwen3-asr": "Qwen3-ASR",
+    "parakeet": "Parakeet",
+    "reazon": "ReazonSpeech",
+}
+
+# Published in transformers format, so the chunked driver converts it to MLX once
+# (mlx_asr/chunked.py). The registry id is the plain repo, unlike `source:precision`.
+CONVERTED_TO_MLX = {"kotoba"}
+
 _R = "../benchmarks/results/2026-10"
 
 
@@ -188,10 +203,13 @@ def main():
         # A family with a priority list has no single default: the first entry that
         # fits the machine runs (mlx_asr/variants.py), so the table shows the order.
         rank = {(s, q): i + 1 for i, (s, q, _) in enumerate(PRIORITY.get(fam, []))}
-        print(f"### `--model {fam}`\n")
+        multi_quant = any(m.quant_repos for m in entries)
+        print(f"### {FAMILY_NAME[fam]}\n\n`--model {fam}`\n")
 
+        # A flag with one value has no column: passing it exits 2 (stated in the doc).
         cols = ((["priority"] if rank else []) + (["`--size`"] if multi_size else [])
-                + ["`--quantization`", "weights", "download", "peak GPU memory"])
+                + (["`--quantization`"] if multi_quant else [])
+                + ["weights", "download", "peak GPU memory"])
         print("| " + " | ".join(cols) + " |")
         print("|" + "---|" * len(cols))
 
@@ -200,7 +218,7 @@ def main():
                       if m.quant_repos else [None])
             for q in quants:
                 repo = m.quant_repos[q] if q else m.repo
-                # `source:precision` is converted on first use from `source`, so the
+                # `source:precision` is quantized on first use from `source`, so the
                 # link and the download are the source's.
                 source = repo.split(CONVERT_SEP)[0]
                 exists, gb = (True, 0.0) if a.offline else hub_size_gb(source)
@@ -215,11 +233,14 @@ def main():
                     mark = (" **default**" if not rank and m.size == default_size
                             and q == quants[0] else "")
                     cells.append(f"`{m.size}`{mark}")
-                cells.append((f"`{q}`" + (" **default**" if not rank and repo == m.repo
-                                          else "")) if q else "-")
+                if multi_quant:
+                    cells.append((f"`{q}`" + (" **default**" if not rank
+                                              and repo == m.repo else "")) if q else "-")
                 # The repo id is the link, so there is no separate link column.
                 if source != repo:
-                    cells.append(f"[{source}]({HF}/{source}), converted on first use")
+                    cells.append(f"[{source}]({HF}/{source}), quantized on first use")
+                elif m.alias in CONVERTED_TO_MLX:
+                    cells.append(f"[{repo}]({HF}/{repo}), converted to MLX on first use")
                 else:
                     cells.append(f"[{repo}]({HF}/{repo})")
                 cells.append(f"{gb:.2f}GB" if gb else "?")

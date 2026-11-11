@@ -720,34 +720,35 @@ def test_an_unlisted_qwen3_repo_gets_the_qwen3_defaults():
 def _table_rows(table: str) -> dict:
     """(family, size, quant) -> {"weights", "peak"} for every row of the MODELS.md tables.
 
-    `size` is "" in a single-size family's table, which has no `--size` column, and
-    `quant` is "-" where the family publishes one precision.
+    A family's section starts at its `--model X` line. Columns are read by header name:
+    `size` is "" where the table has no `--size` column (one size), and `quant` is "-"
+    where it has no `--quantization` column (one precision). The per-family flag tables
+    (first header cell `flag`) are skipped.
     """
     import re
 
-    rows, family, multi, ranked = {}, None, False, False
+    rows, family, cols = {}, None, None
     for line in table.splitlines():
-        m = re.match(r"### `--model ([\w\-]+)`", line)
+        m = re.fullmatch(r"`--model ([\w\-]+)`", line)
         if m:
-            family = m.group(1)
+            family, cols = m.group(1), None
             continue
-        if not line.startswith("| ") or line.startswith("|---") or family is None:
+        if not line.startswith("|"):
+            cols = None             # a table ends at the first non-table line
+            continue
+        if family is None or line.startswith("|---"):
             continue
         cells = [c.strip() for c in line.strip("|").split("|")]
-        if cells[0] == "priority":       # a family whose default is chosen by memory
-            ranked = True
-            cells = cells[1:]
-        elif cells[0] in ("`--size`", "`--quantization`"):
-            ranked = False
-        elif ranked:
-            cells = cells[1:]
-        if cells[0] in ("`--size`", "`--quantization`"):
-            multi = cells[0] == "`--size`"
+        if cols is None:
+            cols = cells if cells[0] != "flag" else []
             continue
-        size = re.sub(r"[`*]|default", "", cells[0]).strip() if multi else ""
-        quant = re.sub(r"[`*]|default", "", cells[1 if multi else 0]).strip()
-        weights = cells[2 if multi else 1]
-        rows[(family, size, quant)] = {"weights": weights, "peak": cells[-1]}
+        if not cols:
+            continue
+        row = dict(zip(cols, cells))
+        size = re.sub(r"[`*]|default", "", row.get("`--size`", "")).strip()
+        quant = re.sub(r"[`*]|default", "", row.get("`--quantization`", "-")).strip()
+        rows[(family, size, quant)] = {"weights": row["weights"],
+                                       "peak": row["peak GPU memory"]}
     return rows
 
 

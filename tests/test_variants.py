@@ -110,13 +110,15 @@ def test_the_docs_priority_column_matches_the_code():
 
     doc = (Path(__file__).resolve().parents[1] / "docs" / "MODELS.md").read_text()
     for fam, entries in PRIORITY.items():
-        block = doc.split(f"### `--model {fam}`")[1].split("\n### ")[0]
-        ranked = {}
+        block = doc.split(f"\n`--model {fam}`\n")[1].split("\n### ")[0]
+        ranked, cols = {}, None
         for line in block.splitlines():
             cells = [c.strip(" `*") for c in line.strip("|").split("|")]
-            if line.startswith("| ") and cells[0].isdigit():
-                size = cells[1] if len(cells) == 6 else ""
-                quant = cells[2] if len(cells) == 6 else cells[1]
-                ranked[int(cells[0])] = (size, "" if quant == "-" else quant)
+            if line.startswith("| priority "):
+                cols = cells
+            elif cols and line.startswith("| ") and cells[0].isdigit():
+                row = dict(zip(cols, cells))
+                ranked[int(cells[0])] = (row.get("--size", ""),
+                                         row.get("--quantization", ""))
         assert [ranked[i] for i in sorted(ranked)] == [e[:2] for e in entries], fam
         assert not re.search(r"\*\*default\*\*", block), fam

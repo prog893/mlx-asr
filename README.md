@@ -57,7 +57,7 @@ Input is anything libavformat demuxes: wav, flac, mp3, aac/m4a, alac, opus, or t
 track of a video, at any sample rate or bit depth. It gets downmixed to mono and
 resampled to 16kHz before the model sees it. Details in [docs/AUDIO.md](docs/AUDIO.md).
 
-Every flag, and which engine accepts it: [docs/MODELS.md](docs/MODELS.md).
+Flags every engine takes: [docs/CLI.md](docs/CLI.md). Each engine's own flags: [docs/MODELS.md](docs/MODELS.md).
 
 ## The engines
 
