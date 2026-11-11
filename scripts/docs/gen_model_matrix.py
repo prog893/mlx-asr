@@ -146,27 +146,29 @@ _KOTOBA_RUNS = (
     "pm_kotoba_71bb5eba3baa", "pm_kotoba_a1372c4d2900", "pm_kotoba_c47ad127bc83",
     "pm_kotoba_1da58e1b2b69", "pm_kotoba_b3432b40c079")
 
-# The line printed under each family's table: the saved run-group its peaks come
-# from (a `Source:` line, see AGENTS.md), or the reason the table has no measurement.
+# The footnote each family's `peak GPU memory` header points at: the saved run-group its
+# peaks come from (AGENTS.md). reazon has no measurement; NOT_MEASURED_NOTE says why.
 SOURCE = {
-    "voxtral": "Source: " + _src("m2-ultra-voxtral-precision", "vox_w4bit_c60b16_kv8",
-                                 "vox_w8bit_c60b16_kv8", "vox_wfp16_c60b16_kv8") + _HUB,
-    "voxtral-v1": "Source: " + _src("m2-ultra-voxtral-v1", "3b_4bit_c30", "3b_8bit_c30",
-                                    "24b_4bit_c30", "24b_8bit_c30") + "; "
+    "voxtral": _src("m2-ultra-voxtral-precision", "vox_w4bit_c60b16_kv8",
+                    "vox_w8bit_c60b16_kv8", "vox_wfp16_c60b16_kv8") + _HUB,
+    "voxtral-v1": _src("m2-ultra-voxtral-v1", "3b_4bit_c30", "3b_8bit_c30",
+                       "24b_4bit_c30", "24b_8bit_c30") + "; "
                   + _src("m2-ultra-headline-remeasure", "3b_bf16_c30", "24b_bf16_c30",
                          root="../benchmarks/results/2026-11") + _HUB,
-    "whisper": "Source: " + _src("m2-ultra-whisper-sizes", "whisper_tiny_libdef",
-                                 "whisper_base_libdef", "whisper_small_nocond",
-                                 "whisper_medium_nocond", "whisper_large-v2_nocond",
-                                 "whisper_large-v3_nocond", "whisper_turbo_nocond") + _HUB,
-    "kotoba": "Source: " + _src("m2-ultra-peak-memory-kotoba", *_KOTOBA_RUNS)
+    "whisper": _src("m2-ultra-whisper-sizes", "whisper_tiny_libdef",
+                    "whisper_base_libdef", "whisper_small_nocond",
+                    "whisper_medium_nocond", "whisper_large-v2_nocond",
+                    "whisper_large-v3_nocond", "whisper_turbo_nocond") + _HUB,
+    "kotoba": _src("m2-ultra-peak-memory-kotoba", *_KOTOBA_RUNS)
               + " (peak, maximum over the files, at the 10s window shipped then; download is the hub repo size)",
-    "qwen3-asr": "Source: " + _src("m2-ultra-qwen3-precision-c15", *(
+    "qwen3-asr": _src("m2-ultra-qwen3-precision-c15", *(
         f"qwen3_{z}_{q}_c15" for z in ("0.6B", "1.7B")
         for q in ("4bit", "5bit", "6bit", "8bit", "bf16")))
                  + " (peak at the shipped 15s window; download is the hub repo size)",
-    "parakeet": "Source: " + _src("m2-ultra-picker-speed", "pk_parakeet_default_s1",
-                                  "pk_parakeet_default_s2", "pk_parakeet_default_s3") + _HUB,
+    "parakeet": _src("m2-ultra-picker-speed", "pk_parakeet_default_s1",
+                     "pk_parakeet_default_s2", "pk_parakeet_default_s3") + _HUB,
+}
+NOT_MEASURED_NOTE = {
     "reazon": "<!-- not-measured: hub repo sizes only; reazon decodes on CPU and has no "
               "GPU peak -->",
 }
@@ -207,9 +209,10 @@ def main():
         print(f"### {FAMILY_NAME[fam]}\n\n`--model {fam}`\n")
 
         # A flag with one value has no column: passing it exits 2 (stated in the doc).
+        peak = "peak GPU memory" + (f"[^peak-{fam}]" if fam in SOURCE else "")
         cols = ((["priority"] if rank else []) + (["`--size`"] if multi_size else [])
                 + (["`--quantization`"] if multi_quant else [])
-                + ["weights", "download", "peak GPU memory"])
+                + ["weights", "download", peak])
         print("| " + " | ".join(cols) + " |")
         print("|" + "---|" * len(cols))
 
@@ -253,8 +256,12 @@ def main():
         # Trailing blank line per table. Without it GitHub swallows the next paragraph
         # into the final row as if it were more table.
         print()
-        if fam in SOURCE:
-            print(SOURCE[fam] + "\n")
+        if fam in NOT_MEASURED_NOTE:
+            print(NOT_MEASURED_NOTE[fam] + "\n")
+
+    # The definitions, for the footnote list at the bottom of the page.
+    for fam, src in SOURCE.items():
+        print(f"[^peak-{fam}]: {src}")
 
     print(f"{sum(len(v) for v in families().values())} entries checked.",
           file=sys.stderr)

@@ -32,13 +32,11 @@ Mistral AI's Voxtral Mini 4B Realtime, the 2602 release (February 2026). A strea
 model: its causal audio encoder transcribes at a configurable delay, which `--delay-ms`
 sets. The card lists 13 languages. The default model.
 
-| priority | `--quantization` | weights | download | peak GPU memory |
+| priority | `--quantization` | weights | download | peak GPU memory[^peak-voxtral] |
 |---|---|---|---|---|
 | 3 | `4bit` | [mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit) | 3.15GB | 6.77GB |
 | 2 | `8bit` | [mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16), quantized on first use | 8.89GB | 7.29GB |
 | 1 | `fp16` | [mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16) | 8.89GB | 12.98GB |
-
-Source: [m2-ultra-voxtral-precision.json](../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8` (peak; download is the hub repo size)
 
 Example:
 
@@ -78,7 +76,7 @@ Mistral AI's first Voxtral release, 2507 (July 2025): Voxtral Mini 3B, built on 
 3B, and Voxtral Small 24B. Speech-understanding models with a dedicated transcription mode
 and automatic language detection; the card lists eight languages.
 
-| priority | `--size` | `--quantization` | weights | download | peak GPU memory |
+| priority | `--size` | `--quantization` | weights | download | peak GPU memory[^peak-voxtral-v1] |
 |---|---|---|---|---|---|
 | 6 | `3B` | `4bit` | [mistralai/Voxtral-Mini-3B-2507](https://huggingface.co/mistralai/Voxtral-Mini-3B-2507), quantized on first use | 9.37GB | 5.25GB |
 | 5 | `3B` | `8bit` | [mistralai/Voxtral-Mini-3B-2507](https://huggingface.co/mistralai/Voxtral-Mini-3B-2507), quantized on first use | 9.37GB | 7.28GB |
@@ -86,8 +84,6 @@ and automatic language detection; the card lists eight languages.
 | 3 | `24B` | `4bit` | [mistralai/Voxtral-Small-24B-2507](https://huggingface.co/mistralai/Voxtral-Small-24B-2507), quantized on first use | 48.54GB | 16.27GB |
 | 2 | `24B` | `8bit` | [mistralai/Voxtral-Small-24B-2507](https://huggingface.co/mistralai/Voxtral-Small-24B-2507), quantized on first use | 48.54GB | 27.92GB |
 | 1 | `24B` | `bf16` | [mistralai/Voxtral-Small-24B-2507](https://huggingface.co/mistralai/Voxtral-Small-24B-2507) | 48.54GB | 50.08GB |
-
-Source: [m2-ultra-voxtral-v1.json](../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `24b_4bit_c30`, `24b_8bit_c30`; [m2-ultra-headline-remeasure.json](../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30`, `24b_bf16_c30` (peak; download is the hub repo size)
 
 The weights come from Mistral's own repos. They are published as safetensors that MLX loads
 as they are, so `bf16` needs no conversion. `8bit` and `4bit` are quantized from them on
@@ -119,7 +115,7 @@ OpenAI's Whisper: the original sizes from September 2022, large-v2 from December
 large-v3 from November 2023, and turbo, large-v3 with its decoder cut from 32 layers to 4,
 from October 2024. 99 languages.
 
-| priority | `--size` | weights | download | peak GPU memory |
+| priority | `--size` | weights | download | peak GPU memory[^peak-whisper] |
 |---|---|---|---|---|
 | 7 | `tiny` | [mlx-community/whisper-tiny-mlx](https://huggingface.co/mlx-community/whisper-tiny-mlx) | 0.07GB | 3.98GB |
 | 6 | `base` | [mlx-community/whisper-base-mlx](https://huggingface.co/mlx-community/whisper-base-mlx) | 0.14GB | 4.07GB |
@@ -128,8 +124,6 @@ from October 2024. 99 languages.
 | 3 | `large-v2` | [mlx-community/whisper-large-v2-mlx](https://huggingface.co/mlx-community/whisper-large-v2-mlx) | 3.08GB | 6.97GB |
 | 1 | `large-v3` | [mlx-community/whisper-large-v3-mlx](https://huggingface.co/mlx-community/whisper-large-v3-mlx) | 3.08GB | 7.00GB |
 | 2 | `turbo` | [mlx-community/whisper-large-v3-turbo](https://huggingface.co/mlx-community/whisper-large-v3-turbo) | 1.61GB | 5.53GB |
-
-Source: [m2-ultra-whisper-sizes.json](../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond` (peak; download is the hub repo size)
 
 Example:
 
@@ -156,16 +150,14 @@ Kotoba-Whisper v2.0, from Kotoba Technologies and Asahi Ushio (September 2024). 
 large-v3 distilled to 2 decoder layers and trained on the ReazonSpeech corpus. Japanese
 only.
 
-| weights | download | peak GPU memory |
+| weights | download | peak GPU memory[^peak-kotoba] |
 |---|---|---|
 | [kotoba-tech/kotoba-whisper-v2.0](https://huggingface.co/kotoba-tech/kotoba-whisper-v2.0), converted to MLX on first use | 1.52GB | 2.38GB |
-
-Source: [m2-ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079` (peak, maximum over the files, at the 10s window shipped then; download is the hub repo size)
 
 The alias points at v2.0 because v2.2 holds identical ASR weights (all 539 tensors equal in
 value); v2.2 adds diarization and punctuation as separate torch models. The conversion to MLX
 loads the whole checkpoint, so a run with no converted copy cached yet peaks at 3.03GB[^n7]
-instead of 2.38GB[^n2].
+instead of 2.38GB[^peak-kotoba].
 
 Example:
 
@@ -187,7 +179,7 @@ Compatible flags for `--model kotoba`:
 Alibaba's Qwen3-ASR (January 2026), built on Qwen3-Omni. The card lists 30 languages and
 22 Chinese dialects, with language identification.
 
-| priority | `--size` | `--quantization` | weights | download | peak GPU memory |
+| priority | `--size` | `--quantization` | weights | download | peak GPU memory[^peak-qwen3-asr] |
 |---|---|---|---|---|---|
 | 10 | `0.6B` | `4bit` | [mlx-community/Qwen3-ASR-0.6B-4bit](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-4bit) | 0.71GB | 1.77GB |
 | 9 | `0.6B` | `5bit` | [mlx-community/Qwen3-ASR-0.6B-5bit](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-5bit) | 0.79GB | 1.85GB |
@@ -199,8 +191,6 @@ Alibaba's Qwen3-ASR (January 2026), built on Qwen3-Omni. The card lists 30 langu
 | 4 | `1.7B` | `6bit` | [mlx-community/Qwen3-ASR-1.7B-6bit](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-6bit) | 2.04GB | 3.31GB |
 | 1 | `1.7B` | `8bit` | [mlx-community/Qwen3-ASR-1.7B-8bit](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-8bit) | 2.47GB | 3.74GB |
 | 3 | `1.7B` | `bf16` | [mlx-community/Qwen3-ASR-1.7B-bf16](https://huggingface.co/mlx-community/Qwen3-ASR-1.7B-bf16) | 4.08GB | 5.35GB |
-
-Source: [m2-ultra-qwen3-precision-c15.json](../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`, `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15` (peak at the shipped 15s window; download is the hub repo size)
 
 Example:
 
@@ -238,11 +228,9 @@ exhaustion stops transcription silently.
 NVIDIA NeMo's Parakeet TDT-CTC 0.6B for Japanese (May 2024), a hybrid FastConformer model
 that transcribes with punctuation. Japanese only. Runs through mlx-audio's own driver.
 
-| weights | download | peak GPU memory |
+| weights | download | peak GPU memory[^peak-parakeet] |
 |---|---|---|
 | [mlx-community/parakeet-tdt_ctc-0.6b-ja](https://huggingface.co/mlx-community/parakeet-tdt_ctc-0.6b-ja) | 2.49GB | 4.77GB (17-file corpus) |
-
-Source: [m2-ultra-picker-speed.json](../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3` (peak; download is the hub repo size)
 
 Example:
 
@@ -434,5 +422,10 @@ on one machine. `whisper` samples whenever a segment trips its fallback threshol
 a comparison ([benchmarks/reference/determinism.md](benchmarks/reference/determinism.md)).
 
 [^n1]: [m2-ultra-whisper-sizes.json](../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond` (the runner's own peak per size, which is what the table column prints)
-[^n2]: [m2-ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079`
 [^n7]: [m2-ultra-kotoba-conversion.json](../benchmarks/results/2026-10/m2-ultra-kotoba-conversion.json) runs `pm_kotoba_cold_r112`, `pm_kotoba_warm_r112` (the 112s file through the CLI, with the first-use conversion and then with it cached)
+[^peak-voxtral]: [m2-ultra-voxtral-precision.json](../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8` (peak; download is the hub repo size)
+[^peak-voxtral-v1]: [m2-ultra-voxtral-v1.json](../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `24b_4bit_c30`, `24b_8bit_c30`; [m2-ultra-headline-remeasure.json](../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30`, `24b_bf16_c30` (peak; download is the hub repo size)
+[^peak-whisper]: [m2-ultra-whisper-sizes.json](../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond` (peak; download is the hub repo size)
+[^peak-kotoba]: [m2-ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079` (peak, maximum over the files, at the 10s window shipped then; download is the hub repo size)
+[^peak-qwen3-asr]: [m2-ultra-qwen3-precision-c15.json](../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`, `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15` (peak at the shipped 15s window; download is the hub repo size)
+[^peak-parakeet]: [m2-ultra-picker-speed.json](../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3` (peak; download is the hub repo size)

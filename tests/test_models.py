@@ -739,8 +739,9 @@ def _table_rows(table: str) -> dict:
         if family is None or line.startswith("|---"):
             continue
         cells = [c.strip() for c in line.strip("|").split("|")]
-        if cols is None:
-            cols = cells if cells[0] != "flag" else []
+        if cols is None:            # header; a column may carry its source footnote
+            cols = ([re.sub(r"\[\^[\w-]+\]", "", c) for c in cells]
+                    if cells[0] != "flag" else [])
             continue
         if not cols:
             continue

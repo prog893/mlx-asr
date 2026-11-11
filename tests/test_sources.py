@@ -4,8 +4,8 @@ The convention is in AGENTS.md and scripts/metrics/number_scan.py. Two contracts
 
 - every source marker anywhere on the published surface resolves: the linked file exists
   under benchmarks/results/, and every run it names exists in that run-group;
-- every page in DONE is fully sourced: each table holding a measured number has a `Source:`
-  line under it, each prose line holding one carries a footnote that is a marker, each chart
+- every page in DONE is fully sourced: each table holding a measured number has a source
+  footnote on its header row (or a legacy `Source:` line under it), each prose line holding one carries a footnote that is a marker, each chart
   spec has a `"source"`, each measured figure in code has a `source:` comment, and each
   profile has a `"runs"` field.
 
@@ -109,9 +109,13 @@ def _md_unsourced(page: Path) -> list[str]:
     for kind, *rest in md_blocks(text):
         if kind == "table":
             block, after = rest
-            if any(measured(ln) for _, ln in block) and not SOURCE_LINE.match(after) \
-                    and not NOT_MEASURED.search(after):
-                bad.append(f"table at line {block[0][0]} has no Source: line under it")
+            # Sourced by a footnote on its header row (the style for pages read through
+            # since 2026-11-12), or by a legacy `Source:` line under it.
+            header_refs = set(FOOTREF.findall(block[0][1]))
+            if any(measured(ln) for _, ln in block) and not header_refs & defs \
+                    and not SOURCE_LINE.match(after) and not NOT_MEASURED.search(after):
+                bad.append(f"table at line {block[0][0]} has no source footnote on its "
+                           f"header and no Source: line under it")
         else:
             lineno, line = rest
             if SOURCE_LINE.match(line) or FOOTDEF.match(line) or not measured(line) \

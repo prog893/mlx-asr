@@ -32,7 +32,7 @@ for October 2026. A number without saved rows is not published.
   is marked `invalid`, with the reason naming the re-measurement, and the re-measurement is
   cited instead.
 - Save before publishing: the doc's table or chart names its source run-group file and
-  runs (a `Source:` line or a `"source"` field).
+  runs (a footnote or a `"source"` field).
 - `uv run pytest tests/test_results_archive.py` must pass before committing.
 
 ## Every published number cites its run data
@@ -42,15 +42,21 @@ profiles.json, CLI help) links to the saved run-group it is computed from, and t
 value is computed from that group's rows with `scripts/metrics/archive_query.py`, never
 copied from an older page.
 
-- Markdown table: a `Source:` line directly under it; prose: a footnote reference after the
-  number, its definition at the bottom of the page. Paths are relative to the page; several
-  groups are separated by `;`:
+- Markdown cites with footnotes only, so run ids sit in the footnote list at the bottom of
+  the page rather than in the text. A table: a footnote reference in its header row, on the
+  measured column. Prose: a footnote reference after the number. Paths are relative to the
+  page; several groups are separated by `;`:
 
 ```
-Source: [group.json](../../benchmarks/results/2026-10/group.json) runs `run_a`, `run_b`
-16.21%[^p1]
-[^p1]: [group.json](../../benchmarks/results/2026-10/group.json) runs `run_a`
+| model | CER[^p1] |
+16.21%[^p2]
+[^p1]: [group.json](../../benchmarks/results/2026-10/group.json) runs `run_a`, `run_b`
+[^p2]: [group.json](../../benchmarks/results/2026-10/group.json) runs `run_a`
 ```
+
+- Older pages still carry a `Source:` line under a table. Before a page is handed to the
+  user for a read-through, convert its `Source:` lines to header footnotes; do not add new
+  `Source:` lines.
 
 - Chart specs in scripts/docs: `"source": "group.json#run_a,run_b;group2.json#run"`; bare
   row lists get an entry in the module's `SOURCES` dict.
