@@ -19,7 +19,7 @@ tables:
 - A family with no `--size` or `--quantization` column has one size or one precision, and
   passing that flag exits 2.
 
-Both results are cached in `mlx-asr-converted/` inside the Hugging Face cache
+Quantized and converted builds are cached in `mlx-asr-converted/` inside the Hugging Face cache
 (`~/.cache/huggingface/hub/` by default), and later runs load the cached copy.
 
 ## The models
