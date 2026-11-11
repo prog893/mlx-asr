@@ -30,7 +30,7 @@ RESULTS = ROOT / "benchmarks" / "results"
 NON_GROUP = {"corpus.json", "revisions.json"}       # catalog files: cited without runs
 SURFACES = sorted(
     {str(p.relative_to(ROOT)) for p in (ROOT / "docs").rglob("*.md")}
-    | {"README.md", "RESULTS.md", "CONTRIBUTING.md", "mlx_asr/profiles.json",
+    | {"README.md", "CONTRIBUTING.md", "mlx_asr/profiles.json",
        "scripts/docs/chart_data.py"}
     | {str(p.relative_to(ROOT)) for p in (ROOT / "mlx_asr").glob("*.py")}
     | {str(p.relative_to(ROOT)) for p in (ROOT / "scripts/docs/sweeps").glob("*.py")})
@@ -51,6 +51,9 @@ def _check_link(path: Path, runs: list[str], where: str):
     known = group_runs(path)
     missing = [r for r in runs if r not in known]
     assert not missing, f"{where}: runs {missing} are not in {path.name}"
+    usable = group_runs(path, usable=True)
+    invalid = [r for r in runs if r not in usable]
+    assert not invalid, f"{where}: runs {invalid} are marked invalid in {path.name}"
 
 
 def _md_markers(page: Path):

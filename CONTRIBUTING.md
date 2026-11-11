@@ -88,8 +88,8 @@ uv run python scripts/benchmarks/compare_engines.py a.json b.json               
 Report the difference with its confidence interval and say how many files it covers. Note
 the two scripts answer different questions: the first says "better on this clip", the
 second says "better on this kind of audio", and only the second speaks to generalization.
-The resolution depends on how many files you run: with a per-file paired SD of 2.75 points[^c1]
-on Japanese, the 95% half-width is 2.04 points at n=7 and 1.20 at n=20[^c1]. State which
+The resolution depends on how many files you run: with a per-file paired SD of 2.57 points[^c1]
+on Japanese, the 95% half-width is 1.91 points at n=7 and 1.13 at n=20[^c1]. State which
 you used.
 
 The greedy engines (`voxtral`, `voxtral-v1`, `qwen3-asr`, `parakeet`, `reazon`) decode
@@ -132,4 +132,4 @@ filenames, absolute paths and hostnames before posting.
 
 `scripts/benchmarks/` imports `scripts/metrics/` and never the reverse.
 
-[^c1]: [m2-ultra-resolution-floor.json](benchmarks/results/2026-10/m2-ultra-resolution-floor.json) runs `resolution_floor` (Voxtral at 4-bit, the default then, [m2-ultra-voxtral-headline.json](benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`, against Whisper turbo-nocond, [m2-ultra-whisper-sizes.json](benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`, paired per file)
+[^c1]: [m2-ultra-resolution-floor-remeasure.json](benchmarks/results/2026-11/m2-ultra-resolution-floor-remeasure.json) runs `resolution_floor` (Voxtral at 4-bit, the default then, [m2-ultra-voxtral-headline.json](benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`, against Whisper turbo-nocond, [m2-ultra-whisper-sizes.json](benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, [m2-ultra-headline-remeasure.json](benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`, paired per file)

@@ -133,7 +133,12 @@ def main():
     if scrub.leaks(text):
         print(f"REFUSED {a.group}: {scrub.leaks(text)} private strings survived", file=sys.stderr)
         return 1
-    Path(a.out).write_text(text + "\n", encoding="utf-8")
+    try:     # exclusive create: saved groups are append-only (AGENTS.md), never overwritten
+        with open(a.out, "x", encoding="utf-8") as fh:
+            fh.write(text + "\n")
+    except FileExistsError:
+        print(f"REFUSED {a.group}: {a.out} exists; save a new group instead", file=sys.stderr)
+        return 1
     print(f"{a.group}: {len(runs)} runs -> {a.out}")
     return 0
 

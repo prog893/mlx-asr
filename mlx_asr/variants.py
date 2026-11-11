@@ -32,7 +32,7 @@ PRIORITY: dict[str, list[tuple[str, str, float | None]]] = {
     "voxtral": [("", "fp16", None), ("", "8bit", None), ("", "4bit", None)],
     # 24B beats 3B by 8.97 points; within a size bf16 ties 8bit; 24B 4bit is worse on
     # English (+1.03, CI [+0.06, +2.87]), 3B 4bit on Japanese (+8.18).
-    # source: m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30,24b_4bit_c30,24b_8bit_c30,24b_bf16_c30
+    # source: m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,24b_4bit_c30,24b_8bit_c30;m2-ultra-headline-remeasure.json#3b_bf16_c30,24b_bf16_c30
     "voxtral-v1": [("24B", "bf16", 50.08), ("24B", "8bit", 27.92), ("24B", "4bit", 16.27),
                    ("3B", "bf16", 10.91), ("3B", "8bit", 7.28), ("3B", "4bit", 5.25)],
     # large-v3 ties turbo (6 runs each); then by accuracy, medium tying small.

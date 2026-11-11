@@ -20,7 +20,7 @@ SWEEPS = {
         ],
         "chosen": 30, "chosen_series": "Japanese CER",
         "source": "m2-ultra-voxtral-v1-window.json#sweep_3b_bf16_c15,sweep_3b_bf16_c60,"
-                  "sweep_3b_bf16_c120;m2-ultra-voxtral-v1.json#3b_bf16_c30",
+                  "sweep_3b_bf16_c120;m2-ultra-headline-remeasure.json#3b_bf16_c30",
     },
     "voxtral-v1-precision-3b": {
         "doc": _DOC,
@@ -35,14 +35,14 @@ SWEEPS = {
             ("4bit", "| 4bit |", ("44.60%", "18.08%", "5.25GB")),
             ("8bit", "| **8bit (default on 16GB)** |", ("36.41%", "17.86%", "7.28GB")),
             ("bf16", "| **bf16 (default with `--size 3B` on 128GB)** |",
-             ("36.84%", "17.77%", "10.91GB")),
+             ("36.76%", "17.77%", "10.91GB")),
         ],
         "panels": [
             {"series": [0, 1], "ylabel": "error % (lower is better)", "title": "accuracy"},
             {"series": [2], "ylabel": "peak GPU memory (GB)", "zero": True, "title": "cost"},
         ],
         "chosen": "8bit", "chosen_label": "default on 16GB", "chosen_series": "Japanese CER",
-        "source": "m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30,3b_bf16_c30",
+        "source": "m2-ultra-voxtral-v1.json#3b_4bit_c30,3b_8bit_c30;m2-ultra-headline-remeasure.json#3b_bf16_c30",
     },
     "voxtral-v1-precision-24b": {
         "doc": _DOC,
@@ -62,7 +62,7 @@ SWEEPS = {
             ("8bit", "| 8bit |",
              ("27.44%", "16.86%", "0.00", "0.00", "27.92GB")),
             ("bf16", "| **bf16 (default on 128GB)** |",
-             ("26.98%", "16.86%", "-0.46", "0.00", "50.08GB"),
+             ("26.75%", "16.86%", "-0.46", "0.00", "50.08GB"),
              (None, None, "[-1.60, +0.27]", None, None)),
         ],
         "panels": [
@@ -72,7 +72,7 @@ SWEEPS = {
             {"series": [4], "ylabel": "peak GPU memory (GB)", "zero": True, "title": "cost"},
         ],
         "chosen": "bf16", "chosen_label": "default on 128GB", "chosen_series": "Japanese CER",
-        "source": "m2-ultra-voxtral-v1.json#24b_4bit_c30,24b_8bit_c30,24b_bf16_c30",
+        "source": "m2-ultra-voxtral-v1.json#24b_4bit_c30,24b_8bit_c30;m2-ultra-headline-remeasure.json#24b_bf16_c30",
     },
     "voxtral-v1-language": {
         "doc": _DOC,
@@ -83,7 +83,7 @@ SWEEPS = {
         "scale": "category", "connect": False,
         "series": ["Japanese CER", "English WER (3 files)", "Latin-script share of JP output"],
         "rows": [
-            ("forced", "| forced from the reference |", ("36.84%", "17.77%", "0.6%")),
+            ("forced", "| forced from the reference |", ("36.76%", "17.77%", "0.6%")),
             ("detected", "| detected by the model |", ("35.70%", "16.36%", "30.7%")),
         ],
         "panels": [
@@ -92,6 +92,6 @@ SWEEPS = {
              "title": "wrong-script output"},
         ],
         "chosen": None, "width": 7.6,
-        "source": "m2-ultra-voxtral-v1.json#3b_bf16_c30,3b_bf16_c30_auto;m2-ultra-derived-measures.json#derive_v1latin",
+        "source": "m2-ultra-headline-remeasure.json#3b_bf16_c30;m2-ultra-voxtral-v1.json#3b_bf16_c30_auto;m2-ultra-derived-measures.json#derive_v1latin",
     },
 }

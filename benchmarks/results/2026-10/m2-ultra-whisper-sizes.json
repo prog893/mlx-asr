@@ -12076,6 +12076,7 @@
   },
   {
    "run": "whisper_large-v3_nocond_r4",
+   "invalid": "started with 7.4GB of GPU memory in use; re-measured on an idle machine as 2026-11/m2-ultra-headline-remeasure.json#whisper_large-v3_nocond_r4",
    "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-mlx --no-condition --min-cut 30 --min-cut-words 6 --label whisper_large-v3_nocond_r4 --json whisper_large-v3_nocond_r4.json",
    "params": {
     "corpus": "bench_out/corpus_all",
@@ -14922,6 +14923,7 @@
   },
   {
    "run": "whisper_turbo_nocond_r6",
+   "invalid": "started with 7.3GB of GPU memory in use; re-measured on an idle machine as 2026-11/m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6",
    "command": "scripts/benchmarks/run_whisper.py --corpus bench_out/corpus_all --model mlx-community/whisper-large-v3-turbo --no-condition --min-cut 30 --min-cut-words 6 --label whisper_turbo_nocond_r6 --json whisper_turbo_nocond_r6.json",
    "params": {
     "corpus": "bench_out/corpus_all",

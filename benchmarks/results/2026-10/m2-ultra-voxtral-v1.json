@@ -2011,6 +2011,7 @@
   },
   {
    "run": "3b_bf16_c30",
+   "invalid": "ran before a corpus recording was replaced, so one Japanese row is invalid; re-measured on the current corpus as 2026-11/m2-ultra-headline-remeasure.json#3b_bf16_c30",
    "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus_all --model voxtral-v1 --size 3B --quantization bf16 --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --require-idle --wait-for-idle 30.0 --json 3b_bf16_c30.json",
    "params": {
     "corpus": "bench_out/corpus_all",
@@ -4006,6 +4007,7 @@
   },
   {
    "run": "24b_bf16_c30",
+   "invalid": "started with 7.3GB of GPU memory in use, and ran before a corpus recording was replaced; re-measured as 2026-11/m2-ultra-headline-remeasure.json#24b_bf16_c30",
    "command": "scripts/benchmarks/run_qwen3.py --corpus bench_out/corpus_all --model voxtral-v1 --size 24B --quantization bf16 --language-mode forced --chunk-seconds 30.0 --min-cut 30 --min-cut-words 6 --repeat 1 --wait-for-idle 0.0 --json 24b_bf16_c30.json",
    "params": {
     "corpus": "bench_out/corpus_all",

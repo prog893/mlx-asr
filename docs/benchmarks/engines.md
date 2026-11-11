@@ -3,16 +3,16 @@
 `voxtral` is the default engine, and `large-v3` is Whisper's default size (since
 2026-10-06; it ties turbo on the 20-file corpus and the tie goes to capacity). On the M2
 Ultra, against Voxtral's fp16 default, Whisper with `condition_on_previous_text=False` is
-about 1.0 point[^e1] ahead on Japanese. The rerun interval resolves that lead and neither
-test over files does (bootstrap +1.03 points, CI [-0.11, +2.25][^e1]; 8 of 17 files won,
+about 0.9 point[^e1] ahead on Japanese. The rerun interval resolves that lead and neither
+test over files does (bootstrap +0.94 points, CI [-0.13, +2.08][^e1]; 8 of 17 files won,
 p=1.00)[^e1], so on Japanese the two engines tie. Against the 4-bit build Voxtral shipped
-before, the bootstrap did resolve a 1.56-point lead[^e10]. That comparison was measured with large-v3-turbo, and since `large-v3` ties turbo,
+before, the bootstrap did resolve a 1.47-point lead[^e10]. That comparison was measured with large-v3-turbo, and since `large-v3` ties turbo,
 the verdict is about the engine rather than one size. Voxtral is the default because it is
-1.03-1.29x faster[^e1], needs no language hint and no long-form-stability flag, and reproduces
+1.01-1.21x faster[^e1], needs no language hint and no long-form-stability flag, and reproduces
 on a given machine. No "fastest on Apple Silicon" claim survives measurement.
 
 Neither Japanese-specialized engine changes the default. Parakeet scores 25.68%[^e7]
-coverage CER against turbo-nocond's 14.17%[^e1], losing on 16 of 17 files[^e7]; reazon-k2 fp32
+coverage CER against turbo-nocond's 14.26%[^e1], losing on 16 of 17 files[^e7]; reazon-k2 fp32
 scores 30.06%[^e7].
 
 Settings and sweeps specific to one engine family are on that family's page:
@@ -23,9 +23,9 @@ Settings and sweeps specific to one engine family are on that family's page:
 
 | setting | default | why |
 |---|---|---|
-| `--model` (engine family) | `voxtral` | 1.03-1.29x faster than turbo-nocond on the M2 Ultra, no language hint, no stability flag, deterministic on one machine; ties Whisper on Japanese over files (+1.03 points, CI [-0.11, +2.25]) |
+| `--model` (engine family) | `voxtral` | 1.01-1.21x faster than turbo-nocond on the M2 Ultra, no language hint, no stability flag, deterministic on one machine; ties Whisper on Japanese over files (+0.94 points, CI [-0.13, +2.08]) |
 
-Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`
 
 **Setup:** [20-file corpus](reference/corpus.md#the-20-file-corpus) (17 Japanese, 3 English, 8.01h[^e0]) for the comparisons, the [7-file subset](reference/corpus.md#the-7-file-subset) for the superseded tables, and [the single clip](reference/corpus.md#the-single-clip) for the narration comparison; M2 Ultra, scored by coverage CER/WER at `min_cut` 30/6 ([metrics.md](reference/metrics.md)).
 
@@ -55,18 +55,18 @@ re-measured 2026-08-19 after a reference-loading fix: 15.73% Japanese, 21.50% En
 
 | | Voxtral (deterministic) | turbo-nocond, 6 runs | verdict |
 |---|---|---|---|
-| JP coverage CER, 17 files | 15.20% | 14.22 / 13.92 / 14.20 / 14.69 / 13.96 / 14.02 -> **14.17% ±0.28** | CI [13.87, 14.47] entirely below -> **whisper** |
-| EN coverage WER, 3 files | 21.21% | 18.62 / 18.34 / 18.18 / 19.31 / 19.20 / 18.25 -> **18.65% ±0.49** | CI [18.13, 19.17] entirely below -> **whisper** |
-| x realtime | **23.9x** (mean of 3 runs, 23.7 to 24.0x) | 23.2 / 21.1 / 19.7 / 21.6 / 22.2 / 18.5x -> **21.0x** | **voxtral, ~1.1x** |
+| JP coverage CER, 17 files | 15.20% | 14.22 / 13.92 / 14.20 / 14.69 / 13.96 / 14.56 -> **14.26% ±0.31** | CI [13.93, 14.58] entirely below -> **whisper** |
+| EN coverage WER, 3 files | 21.21% | 18.62 / 18.34 / 18.18 / 19.31 / 19.20 / 18.96 -> **18.77% ±0.46** | CI [18.28, 19.25] entirely below -> **whisper** |
+| x realtime | **23.9x** (mean of 3 runs, 23.7 to 24.0x) | 23.2 / 21.1 / 19.7 / 21.6 / 22.2 / 23.5x -> **21.9x** | **voxtral, ~1.1x** |
 
-Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`
 
 Whisper wins accuracy on both units, in all 6 runs, with the whole interval below
-Voxtral's fixed value. Voxtral is 1.03-1.29x faster depending on the Whisper run, since
-Whisper's sampling ladder makes its own throughput vary by more than 20%[^e1]. Per file the
-ordering is stable on three quarters of the corpus and not on the rest: Whisper wins 8 of
-20 files in all 6 runs, loses 7 of 20 in all 6, and the other 5 change sign between
-runs[^e1]. The aggregate lead therefore rests on 8 files, against 7 where Voxtral is ahead
+Voxtral's fixed value. Voxtral is 1.01-1.21x faster depending on the Whisper run, since
+Whisper's sampling ladder makes its own throughput vary by almost 20%[^e1]. Per file the
+ordering is stable on 14 of the 20 files and not on the rest: Whisper wins 8 of
+20 files in all 6 runs, loses 6 of 20 in all 6, and the other 6 change sign between
+runs[^e1]. The aggregate lead therefore rests on 8 files, against 6 where Voxtral is ahead
 in every run, which is why the tests over files below do not resolve it.
 
 The method matters for the Whisper column. Its temperature-fallback ladder samples, so a
@@ -100,7 +100,7 @@ bootstrap over *files*. At Voxtral's fp16 default it does not resolve:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/engines-generalization-dark.svg">
-  <img alt="Voxtral fp16 minus Whisper Japanese CER from the bootstrap over 17 files, +1.03 points with a 95% interval from -0.11 to +2.25, which includes zero" src="img/engines-generalization-light.svg">
+  <img alt="Voxtral fp16 minus Whisper Japanese CER from the bootstrap over 17 files, +0.94 points with a 95% interval from -0.13 to +2.08, which includes zero" src="img/engines-generalization-light.svg">
 </picture>
 
 **Table:** four tests of whether Whisper's Japanese lead holds, from reruns to resampling over files, and the verdict of each.
@@ -108,17 +108,17 @@ bootstrap over *files*. At Voxtral's fp16 default it does not resolve:
 | test | result | verdict |
 |---|---|---|
 | 6 repeat runs vs the fixed baseline | 6/6 beat it | whisper |
-| run-distribution t-interval | [13.87, 14.47], below 15.20 | whisper |
-| **bootstrap over 17 files** | **+1.03, CI [-0.11, +2.25]** (against the per-file mean of the 6 runs) | **tie** |
+| run-distribution t-interval | [13.93, 14.58], below 15.20 | whisper |
+| **bootstrap over 17 files** | **+0.94, CI [-0.13, +2.08]** (against the per-file mean of the 6 runs) | **tie** |
 | sign test over files | 8 of 17 won, p=1.000 | tie |
 
-Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`
 
 The two rerun tests resolve in Whisper's favour; the two tests over files do not: Voxtral
 is ahead on 9 of the 17 files, and the bootstrap interval includes zero, its lower bound at
--0.11 points[^e1]. The file bootstrap is the test that answers the generalization question,
+-0.13 points[^e1]. The file bootstrap is the test that answers the generalization question,
 so at the fp16 default the Japanese result is a tie. Against the earlier 4-bit arm the same
-bootstrap gave +1.56, CI [+0.24, +3.09][^e10], and the sign test 12 of 17 files, p=0.14[^e10]:
+bootstrap gave +1.47, CI [+0.21, +2.91][^e10], and the sign test 12 of 17 files, p=0.14[^e10]:
 higher precision closed the resolved part of the gap.
 
 ## Experiment: the Whisper margin as the corpus grew
@@ -135,9 +135,9 @@ higher precision closed the resolved part of the gap.
 | corpus | JP files | voxtral | turbo-nocond | verdict |
 |---|---|---|---|---|
 | original | 5 | 16.44% | 15.46% ±0.73 (n=3) | not resolvable |
-| final | 17 | 15.73% | 14.17% ±0.28 (n=6) | whisper better, and resolved over files |
+| final | 17 | 15.73% | 14.26% ±0.31 (n=6) | whisper better, and resolved over files |
 
-Source: [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`, `mincut7_whisper_turbo_nocond`; [m2-ultra-whisper-condition.json](../../benchmarks/results/2026-10/m2-ultra-whisper-condition.json) runs `cond7_whisper_turbo_nocond_r2`, `cond7_whisper_turbo_nocond_r3`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+Source: [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`, `mincut7_whisper_turbo_nocond`; [m2-ultra-whisper-condition.json](../../benchmarks/results/2026-10/m2-ultra-whisper-condition.json) runs `cond7_whisper_turbo_nocond_r2`, `cond7_whisper_turbo_nocond_r3`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`
 
 The ordering held at every corpus size and only became resolvable as n grew. Voxtral's own
 number barely moved (16.44 -> 15.73)[^e4] while the corpus more than tripled, which
@@ -204,22 +204,22 @@ audio in general; on the long spontaneous files the flag lowers both
 
 | engine | JP coverage CER | kana CER | x realtime | peak |
 |---|---|---|---|---|
-| whisper-turbo no-cond (6-run mean) | **14.17%** | - | 18.5-23.2x | 5.53GB |
+| whisper-turbo no-cond (6-run mean) | **14.26%** | - | 19.7-23.5x | 5.53GB |
 | voxtral | 15.20% | - | 23.9x | - |
 | kotoba chunk15s | 25.34% | - | 50.0x | - |
 | **parakeet c120** | 25.68% | 22.79% | **261.8x** | 4.77GB |
 | **reazon-k2 fp32 c30** | 30.06% | 27.29% | 52.9x | 3.28GB RSS |
 | reazon-k2 int8 c30 | 36.55% | - | 79.9x | 2.72GB RSS |
 
-Source: [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`; [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-kotoba-engines.json](../../benchmarks/results/2026-10/m2-ultra-kotoba-engines.json) runs `k20_mlx_c15_r1`, `k20_mlx_c15_r2`, `k20_mlx_c15_r3`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-engines-jp-only.json](../../benchmarks/results/2026-10/m2-ultra-engines-jp-only.json) runs `jp_reazon_int8_c30_r1`, `jp_reazon_int8_c30_r2`, `jp_reazon_int8_c30_r3`, `jp_reazon_fp32_c30_rss` (means of the runs; the separate fp32 RSS run peaked at 3.08GB)
+Source: [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`; [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-kotoba-engines.json](../../benchmarks/results/2026-10/m2-ultra-kotoba-engines.json) runs `k20_mlx_c15_r1`, `k20_mlx_c15_r2`, `k20_mlx_c15_r3`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-engines-jp-only.json](../../benchmarks/results/2026-10/m2-ultra-engines-jp-only.json) runs `jp_reazon_int8_c30_r1`, `jp_reazon_int8_c30_r2`, `jp_reazon_int8_c30_r3`, `jp_reazon_fp32_c30_rss` (means of the runs; the separate fp32 RSS run peaked at 3.08GB)
 
 Kana CER is reported beside coverage CER because both models' text style
 (punctuation, numerals) differs from an editorial reference without the transcription
 being wrong. Both engines decode greedily.
 
-Per file against turbo (17 common files, per-file mean of the 6 runs): parakeet wins once, by 2.3 points[^e7] on the
-prepared-narration-style `bb5cf5d5b247`, and loses everywhere else by 0.1 to 22.3 points[^e7]
-(mean +10.0). Reazon wins none of the 17 and loses by 1.2 to 25.6 points (mean +14.1)[^e7].
+Per file against turbo (17 common files, per-file mean of the 6 runs): parakeet wins once, by 4.3 points[^e7] on the
+prepared-narration-style `bb5cf5d5b247`, and loses everywhere else by 0.5 to 22.3 points[^e7]
+(mean +9.9). Reazon wins one of the 17, the same file by 0.7 points, and loses the rest by 6.3 to 25.6 points (mean +14.0)[^e7].
 The losses are not concentrated in one or two files that could be excluded as
 pathological: they are the shape of the whole corpus.
 
@@ -260,19 +260,19 @@ defect fixed on 2026-08-19. Reference lines were joined with no separator, so on
 word-level path the last word of each line fused to the first of the next. One
 subtitle-shaped reference carried 131 such fusions and scored far worse than its correct
 3.29%[^e10]; with the fix the 4-bit Voxtral English aggregate reads 21.50%[^e10] and Whisper's
-18.65%[^e10], both lower than before. Japanese could not be affected, having no word spaces. Every English
+18.77%[^e10], both lower than before. Japanese could not be affected, having no word spaces. Every English
 number published before that date is superseded; see [metrics.md](reference/metrics.md).
 
 Throughput changed more than accuracy did. The 4-bit Voxtral arm measured 27.6-30.0x[^e10] and Whisper
-18.5-23.2x[^e10], both faster than the earlier figures. The previous figures came from the
+19.7-23.5x[^e10], both faster than the earlier figures. The previous figures came from the
 session with no recorded machine state, so the cause of the difference cannot be checked.
 That is the argument for recording state automatically
 rather than noting it by hand, which the runners now do.
 
 ### Why the default is Voxtral
 
-`voxtral` is the default because, against Whisper's nominal 1.0-point Japanese lead that the
-tests over files do not resolve[^e1], it is faster (1.03-1.29x on the M2 Ultra), needs no language hint, needs no stability flag, has better-behaved
+`voxtral` is the default because, against Whisper's nominal 0.9-point Japanese lead that the
+tests over files do not resolve[^e1], it is faster (1.01-1.21x on the M2 Ultra), needs no language hint, needs no stability flag, has better-behaved
 timestamps ([timestamps.md](timestamps.md)), and reproduces on a given machine
 ([determinism.md](reference/determinism.md)). Whisper is one flag away for anyone who wants the
 accuracy.
@@ -288,7 +288,7 @@ keeping it. Both refuse `-f srt`.
 evidence this project has against the "just fine-tune on domain data" hypothesis from
 the corpus side: parakeet-ja was trained on tens of thousands of hours of naturalistic
 Japanese including spontaneous speech, which is exactly this corpus's material, and
-still scores 11.5 points[^e7] behind a multilingual Whisper checkpoint in our harness. On
+still scores 11.4 points[^e7] behind a multilingual Whisper checkpoint in our harness. On
 this corpus, domain match alone did not produce the more accurate engine; which other
 properties account for the gap was not measured.
 
@@ -347,12 +347,12 @@ The English side is n=3. The clean-narration comparison is n=1.
 - [timestamps.md](timestamps.md): timestamp behaviour by engine
 
 [^e0]: [corpus.json](../../benchmarks/results/corpus.json)
-[^e1]: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6` (paired on the per-file mean of each side's runs, bootstrap over files, 20000 resamples, seed 0)
+[^e1]: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6` (paired on the per-file mean of each side's runs, bootstrap over files, 20000 resamples, seed 0)
 [^e2]: [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_1.7B_8bit_c15_s1`, `pk_qwen3_1.7B_8bit_c15_s2`, `pk_qwen3_1.7B_8bit_c15_s3`, `pk_qwen3_0.6B_8bit_c15_s1`, `pk_qwen3_0.6B_8bit_c15_s2`, `pk_qwen3_0.6B_8bit_c15_s3`
 [^e3]: [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_v1_3B_8bit_c30_s1`, `pk_v1_3B_8bit_c30_s2`, `pk_v1_3B_8bit_c30_s3`; [m2-ultra-picker-speed-24b.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed-24b.json) runs `pk_v1_24B_8bit_c30_s1`, `pk_v1_24B_8bit_c30_s2`, `pk_v1_24B_8bit_c30_s3`
-[^e4]: [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`, `mincut7_whisper_turbo_nocond`; [m2-ultra-whisper-condition.json](../../benchmarks/results/2026-10/m2-ultra-whisper-condition.json) runs `cond7_whisper_turbo_nocond_r2`, `cond7_whisper_turbo_nocond_r3`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+[^e4]: [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`, `mincut7_whisper_turbo_nocond`; [m2-ultra-whisper-condition.json](../../benchmarks/results/2026-10/m2-ultra-whisper-condition.json) runs `cond7_whisper_turbo_nocond_r2`, `cond7_whisper_turbo_nocond_r3`; [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`
 [^e5]: [m2-ultra-engines-narration.json](../../benchmarks/results/2026-10/m2-ultra-engines-narration.json) runs `clip_vox_c60b16_kv8_r1`, `clip_vox_c60b16_kv8_r2`, `clip_vox_c60b16_kv8_r3`, `clip_whisper_large-v3_nocond_r1`, `clip_whisper_large-v3_nocond_r2`, `clip_whisper_large-v3_nocond_r3`, `clip_whisper_turbo_nocond_r1`, `clip_whisper_turbo_nocond_r2`, `clip_whisper_turbo_nocond_r3`, `clip_whisper_small_libdef_r1`, `clip_whisper_small_libdef_r2`, `clip_whisper_small_libdef_r3`, `clip_whisper_medium_libdef_r1`, `clip_whisper_medium_libdef_r2`, `clip_whisper_medium_libdef_r3`, `clip_whisper_large-v2_libdef_r1`, `clip_whisper_large-v2_libdef_r2`, `clip_whisper_large-v2_libdef_r3`, `clip_whisper_base_libdef_r1`, `clip_whisper_base_libdef_r2`, `clip_whisper_base_libdef_r3`, `clip_whisper_tiny_libdef_r1`, `clip_whisper_tiny_libdef_r2`, `clip_whisper_tiny_libdef_r3`; [m2-ultra-whisper-runners.json](../../benchmarks/results/2026-10/m2-ultra-whisper-runners.json) runs `rn_mlx_turbo_r1`, `rn_mlx_turbo_r2`, `rn_mlx_turbo_r3`, `rn_mlx_large-v3_r1`, `rn_mlx_large-v3_r2`, `rn_mlx_large-v3_r3`; [m2-ultra-kotoba-engines-clip.json](../../benchmarks/results/2026-10/m2-ultra-kotoba-engines-clip.json) runs `kclip_hf22_c20_r1`, `kclip_hf22_c20_r2`, `kclip_hf22_c20_r3`
 [^e6]: [m2-ultra-mincut-inputs.json](../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`, `mincut7_whisper_turbo_nocond`, `mincut7_whisper_large-v3_nocond`, `mincut7_whisper_turbo_libdef`, `mincut7_whisper_large-v3_libdef`, `mincut7_whisper_medium_libdef`; [m2-ultra-whisper-condition.json](../../benchmarks/results/2026-10/m2-ultra-whisper-condition.json) runs `cond7_whisper_turbo_nocond_r2`, `cond7_whisper_turbo_nocond_r3`, `cond7_whisper_large-v3_nocond_r2`, `cond7_whisper_large-v3_nocond_r3`, `cond7_whisper_turbo_libdef_r2`, `cond7_whisper_turbo_libdef_r3`, `cond7_whisper_large-v3_libdef_r2`, `cond7_whisper_large-v3_libdef_r3`; [m2-ultra-whisper-language.json](../../benchmarks/results/2026-10/m2-ultra-whisper-language.json) runs `lang7_turbo_autodetect_r1`, `lang7_turbo_autodetect_r2`, `lang7_turbo_autodetect_r3`; [m2-ultra-whisper-sizes-7file.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes-7file.json) runs `w7_large-v2_libdef_r1`, `w7_large-v2_libdef_r2`, `w7_large-v2_libdef_r3`, `w7_small_libdef_r1`, `w7_small_libdef_r2`, `w7_small_libdef_r3`, `w7_base_libdef_r1`, `w7_base_libdef_r2`, `w7_base_libdef_r3`, `w7_tiny_libdef_r1`, `w7_tiny_libdef_r2`, `w7_tiny_libdef_r3`
-[^e7]: [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`; [corpus.json](../../benchmarks/results/corpus.json)
+[^e7]: [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`; [corpus.json](../../benchmarks/results/corpus.json)
 [^e8]: [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32` (the run's recorded aggregate, which includes the row measured on the superseded copy)
-[^e10]: [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6` (the earlier 4-bit arm at 30s b32)
+[^e10]: [m2-ultra-voxtral-batch.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6` (the earlier 4-bit arm at 30s b32)

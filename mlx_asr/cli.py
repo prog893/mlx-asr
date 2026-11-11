@@ -278,9 +278,9 @@ def _run_other_backend(a, spec, log, t_start):
         else:
             to_iso(a.language, spec.alias)
     if not spec.deterministic:
-        # source: m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_turbo_nocond_r6,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r4,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6
+        # source: m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6;m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6,whisper_large-v3_nocond_r4
         log(f"[{spec.backend}] this engine samples, so repeat runs differ "
-            f"(0.8 to 1.8 CER points for Whisper on our corpus); it is not "
+            f"(0.8 to 1.2 CER points for Whisper on our corpus); it is not "
             f"reproducible like voxtral")
     if spec.languages != "multilingual" and not a.language:
         log(f"[{spec.backend}] {spec.alias} is {spec.languages}-only; "

@@ -4,7 +4,7 @@
 tried, in what order, and which conclusions were later withdrawn, which is the part that
 would otherwise be re-litigated. For what the project currently concludes, read
 [docs/benchmarks/](docs/benchmarks/), which is organised by lever and carries the
-methodology alongside each result. [RESULTS.md](RESULTS.md) is the index.
+methodology alongside each result. [docs/benchmarks/README.md](docs/benchmarks/README.md) is the index.
 
 Three consequences of reading a log rather than a findings document:
 

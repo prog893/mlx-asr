@@ -1,7 +1,7 @@
 # Engine: parakeet
 
 Parakeet does not change the default. It scores 25.68% coverage CER on the 17 Japanese[^p1]
-files against turbo-nocond's 14.17%, losing on 16 of 17 files[^p1]
+files against turbo-nocond's 14.26%, losing on 16 of 17 files[^p1]
 ([engines.md](../engines.md#experiment-the-japanese-only-engines-against-the-multilingual-defaults)).
 Parakeet is the fastest engine measured in this project: 261.8x realtime (mean of 3 runs)[^p1],
 3.3x the next fastest configuration (reazon-k2 int8 at 79.9x)[^p3] and 4.9x reazon's fp32
@@ -79,6 +79,6 @@ kana/lenient CER beside coverage CER. Result file: `benchmarks/parakeet_c120.jso
 - [metrics.md](../reference/metrics.md): coverage CER and `min_cut`
 
 [^p0]: [corpus.json](../../../benchmarks/results/corpus.json)
-[^p1]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+[^p1]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`
 [^p2]: [m2-ultra-parakeet-window.json](../../../benchmarks/results/2026-10/m2-ultra-parakeet-window.json) runs `parakeet_c120`, `parakeet_c300`, `parakeet_c60`
 [^p3]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-engines-jp-only.json](../../../benchmarks/results/2026-10/m2-ultra-engines-jp-only.json) runs `jp_reazon_int8_c30_r1`, `jp_reazon_int8_c30_r2`, `jp_reazon_int8_c30_r3`

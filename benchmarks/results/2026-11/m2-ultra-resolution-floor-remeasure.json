@@ -1,0 +1,25 @@
+{
+ "group": "m2-ultra-resolution-floor-remeasure",
+ "question": "Per-file paired spread and the smallest resolvable corpus difference (95% half-width by n), Voxtral default against Whisper turbo-nocond, computed from saved rows, with turbo r6 re-measured",
+ "docs": [
+  "docs/benchmarks/reference/metrics.md",
+  "docs/benchmarks/reference/corpus.md"
+ ],
+ "note": "Recomputed after whisper_turbo_nocond_r6 was re-measured (2026-11/m2-ultra-headline-remeasure.json); replaces m2-ultra-resolution-floor.json#resolution_floor, which is marked invalid.",
+ "runs": [
+  {
+   "run": "resolution_floor",
+   "output": "stdout",
+   "command": ".venv/bin/python scripts/metrics/resolution_floor.py",
+   "params": {},
+   "machine": {},
+   "aggregate": null,
+   "measures": {},
+   "files": [],
+   "missing": [
+    "machine state at start (not recorded by this output)"
+   ],
+   "stdout": "char: 17 files, mean paired difference +1.60 points, per-file SD 2.57; 95% half-width n=5: 2.25, n=7: 1.91, n=17: 1.22, n=20: 1.13\nword: 3 files, mean paired difference +1.15 points, per-file SD 4.30; 95% half-width n=5: 3.77, n=7: 3.18, n=17: 2.04, n=20: 1.88"
+  }
+ ]
+}

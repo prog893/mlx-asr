@@ -130,15 +130,15 @@ identical `turbo-nocond` config on identical audio, 7-file corpus:
 
 | | JP coverage CER | EN coverage WER |
 |---|---|---|
-| the 6 runs | 14.98, 15.09, 15.44, 15.54, 15.67, 16.43% | 21.97, 22.14, 22.25, 22.52, 23.35, 23.40% |
-| mean, SD | 15.53%, SD 0.52 | 22.61%, SD 0.62 |
-| 95% t-interval on the mean | [14.99%, 16.07%] | [21.95%, 23.26%] |
+| the 6 runs | 14.98, 15.09, 15.54, 15.67, 16.39, 16.43% | 21.97, 22.25, 22.52, 23.05, 23.35, 23.40% |
+| mean, SD | 15.69%, SD 0.62 | 22.76%, SD 0.60 |
+| 95% t-interval on the mean | [15.03%, 16.34%] | [22.13%, 23.39%] |
 | Voxtral (deterministic) | 16.44% | 26.55% |
 | runs beating Voxtral | 6 of 6 | 6 of 6 |
-| Whisper run minus Voxtral (points) | -1.46, -1.35, -1.00, -0.90, -0.77, -0.01 | -4.58, -4.41, -4.29, -4.02, -3.19, -3.14 |
-| mean minus Voxtral, 95% t-interval (points) | -0.92 [-1.46, -0.37] | -3.94 [-4.60, -3.28] |
+| Whisper run minus Voxtral (points) | -1.46, -1.35, -0.90, -0.77, -0.05, -0.01 | -4.58, -4.29, -4.02, -3.50, -3.19, -3.14 |
+| mean minus Voxtral, 95% t-interval (points) | -0.76 [-1.41, -0.11] | -3.79 [-4.42, -3.16] |
 
-Source: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6` (rows of the 7-file subset); [m2-ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
+Source: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6` (rows of the 7-file subset); [m2-ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
 
 The right test here is one-sample: only one side has sampling error, so the Whisper mean
 gets a t-interval and Voxtral enters as a constant. Bootstrapping over files answers a
@@ -155,7 +155,7 @@ audio and no guarantee from the engine, so it cannot be relied on in advance.
 
 Two further observations:
 
-- **SD collapses as the corpus grows**, from 0.52 at 7 files to 0.28 at 20.[^d5] More files
+- **SD collapses as the corpus grows**, from 0.62 at 7 files to 0.31 at 20.[^d5] More files
   means each file's sampling luck matters less to the aggregate. That is a reason to
   distrust small-corpus repeatability figures, and no evidence that Whisper became
   deterministic.
@@ -197,7 +197,7 @@ that happens never to trip fallback, which is not knowable before the run.
   bootstraps over files.
 - Report Whisper from at least 3 runs, with mean and spread, and never from one. The
   run-to-run range on the 7-file subset is 1.45 points on Japanese,[^d4] larger than the
-  0.92-point mean gap to Voxtral on the same files,[^d4] and 0.77 points on the 20-file
+  0.76-point mean gap to Voxtral on the same files,[^d4] and 0.77 points on the 20-file
   corpus,[^d5] so a single run can misstate a sub-point effect.
 - Never compare across machines and attribute the difference to a config.
 - If a hypothesis file needs checking, re-run it on the machine that produced it.
@@ -210,8 +210,8 @@ that happens never to trip fallback, which is not knowable before the run.
 [^d1]: [corpus.json](../../../benchmarks/results/corpus.json)
 [^d2]: [m2-ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`; [m2-ultra-voxtral-prompt-trap.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-prompt-trap.json) runs `prompt_trap7_none`
 [^d3]: [m4-voxtral-chunking.json](../../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`; [m2-ultra-voxtral-batch.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`
-[^d4]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6` (rows of the 7-file subset); [m2-ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
-[^d5]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+[^d4]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6` (rows of the 7-file subset); [m2-ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_vox_c30b32_kv8`
+[^d5]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`
 [^d6]: [m2-ultra-kotoba-windows.json](../../../benchmarks/results/2026-10/m2-ultra-kotoba-windows.json) runs `pk_kotoba_c10_s1`, `pk_kotoba_c10_s2`, `pk_kotoba_c10_s3`; [m2-ultra-kotoba-engines.json](../../../benchmarks/results/2026-10/m2-ultra-kotoba-engines.json) runs `k20_mlx_c15_r1`, `k20_mlx_c15_r2`, `k20_mlx_c15_r3`, `k20_hf22_c15_r1`, `k20_hf22_c15_r2`, `k20_hf22_c15_r3`
 [^d7]: [m2-ultra-whisper-sizes-7file.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes-7file.json) runs `w7_turbo_greedy_r1`
 [^d8]: [m2-ultra-kotoba-determinism.json](../../../benchmarks/results/2026-10/m2-ultra-kotoba-determinism.json) runs `kdet112_r1`, `kdet112_r2`, `kdet112_r3`, `kdet112_r4`, `kdet112_r5`

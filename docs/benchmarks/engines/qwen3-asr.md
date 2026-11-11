@@ -2,7 +2,7 @@
 
 Qwen3-ASR is available as two sizes and neither becomes the default engine: on the 20-file
 corpus at its 15s window the 1.7B scores 18.62% Japanese coverage CER at 23.0x realtime[^q1], behind Voxtral
-at its M2 Ultra default, fp16 (15.20%, 23.86x, mean of 3 runs), and Whisper turbo-nocond (14.17%, mean of 6 runs)[^q2], so it is last of the three on accuracy
+at its M2 Ultra default, fp16 (15.20%, 23.86x, mean of 3 runs), and Whisper turbo-nocond (14.26%, mean of 6 runs)[^q2], so it is last of the three on accuracy
 and about as fast as Voxtral. Within the family the default size is the 1.7B, 3.7 points ahead[^q1]
 of the 0.6B (22.31%; paired 3.69, CI [+2.89, +4.43])[^q1]; the 0.6B runs at 36.4x in 2.07GB[^q1],
 faster than Voxtral's 23.86x[^q2] and in a fraction of its memory. The default precision is 8bit, which no
@@ -195,20 +195,20 @@ M2 Ultra 128GB with the same scorers and the same cached audio as the rows above
 
 | engine | JP coverage CER | EN coverage WER | x realtime | peak GB |
 |---|---|---|---|---|
-| whisper-turbo, no-condition | **14.17%** ±0.28 | **18.65%** ±0.49 | 18.5-23.2x | |
+| whisper-turbo, no-condition | **14.26%** ±0.31 | **18.77%** ±0.46 | 19.7-23.5x | |
 | voxtral (default on 128GB, fp16) | 15.20% | 21.21% | 23.9x | |
 | qwen3-asr (1.7B) | 18.62% | 24.72% | 23.0x | 3.74 |
 | qwen3-asr-small (0.6B) | 22.31% | **22.95%** | **36.4x** | **2.07** |
 
-Source: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6` (mean ± sample standard deviation over 6 runs, speed range); [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3` (speed is their mean); [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`, `qwen3_0.6B_8bit_c15`
+Source: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6` (mean ± sample standard deviation over 6 runs, speed range); [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3` (speed is their mean); [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`, `qwen3_0.6B_8bit_c15`
 
 Both runs: 20 files, complete, at the 15s window shipped since 2026-10-27, with the same flags <!-- not-measured: window length is a configuration value -->
 as the earlier 30s runs. The Whisper default has <!-- not-measured: window lengths are configuration values -->
-since moved to large-v3, which scores 14.51% / 18.59% (mean of 6 runs)[^q5] on the same corpus
+since moved to large-v3, which scores 14.71% / 18.51% (mean of 6 runs)[^q5] on the same corpus
 ([engines.md](../engines.md)); the comparison below is unchanged by that.
 
 **Neither size displaces either default on Japanese.** The 1.7B is 3.4 points behind[^q2]
-Voxtral and 4.5 behind Whisper; the 0.6B is 7.1 and 8.1 behind. Nothing in this table
+Voxtral and 4.4 behind Whisper; the 0.6B is 7.1 and 8.1 behind. Nothing in this table
 recommends the 1.7B as an engine: it is third of three on accuracy and no faster than Voxtral.
 
 The 0.6B is the more useful row, and only on two axes it was not being judged on. It runs
@@ -454,7 +454,7 @@ Source: [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultr
 The 0.6B 8-bit row is its 7-file entry at the same window and config as the others.
 
 **bf16 bought nothing here and cost about a quarter of the throughput.** On the 1.7B it is +0.19
-points[^q8], which against this corpus's resolution at n=7 (a 95% half-width of 2.04 points)[^q11] is a tie, for **1.31x the wall
+points[^q8], which against this corpus's resolution at n=7 (a 95% half-width of 1.91 points)[^q11] is a tie, for **1.31x the wall
 clock** and **1.4x the peak memory**[^q8]. On the 0.6B it is nominally behind, 0.37 points[^q8],
 and 1.30x slower[^q8]: it would drop that model from 27.5x to 21.1x[^q8],
 which would remove the main reason to offer it at all.
@@ -472,8 +472,8 @@ so kana CER gives no reason to prefer either precision.
 Settled on this page, for contrast: that windows above 30s cost accuracy (swept
 15/30/60/120/300 on 7 files; 15s and 30s tie); determinism (7/7 byte-identical[^q10], so one run per config); that neither size is <!-- not-measured: window lengths are configuration values -->
 more accurate than the two existing engines on this corpus, on a 20-file margin of 2.8
-points[^q2], which is above this corpus's resolution at n=20 (a 95% half-width of 1.20
-points) and at n=7 (2.04)[^q11]; and
+points[^q2], which is above this corpus's resolution at n=20 (a 95% half-width of 1.13
+points) and at n=7 (1.91)[^q11]; and
 that the timestamp limitation is structural and not a tuning problem, which is why
 `-f srt` is refused whatever the CER.
 
@@ -512,17 +512,17 @@ because greedy decoding makes further runs information-free.
 * [../DEFAULTS.md](../../DEFAULTS.md): the rationale for every default, this engine's included.
 
 [^q1]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`, `qwen3_0.6B_8bit_c15` (kana CER: kana_coverage_cer weighted by kana_ref_chars over the 17 Japanese files; looping files: rows with runaway_segments above zero)
-[^q2]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`, `qwen3_0.6B_8bit_c15`; [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+[^q2]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`, `qwen3_0.6B_8bit_c15`; [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`
 [^q3]: [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c15`, `qwen3w7_1.7B_8bit_c30`, `qwen3w7_1.7B_8bit_c300`
 [^q4]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15`, `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`
-[^q5]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r4`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`
+[^q5]: [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_large-v3_nocond_r4`
 [^q6]: [m2-ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-loops.json) runs `q3budget_wholefile_8192`
 [^q7]: [m2-ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-loops.json) runs `q3trunc_perwindow_1.7B_8bit_c30`; [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`
 [^q8]: [m2-ultra-qwen3-window.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-window.json) runs `qwen3w7_1.7B_8bit_c30`; [m2-ultra-qwen3-loops.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-loops.json) runs `qwen3loop7_1.7B_bf16_c30`; [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_0.6B_8bit_c30`, `qwen3_0.6B_bf16_c30` (their rows for the 7 subset files)
 [^qc]: [corpus.json](../../../benchmarks/results/corpus.json)
 [^q9]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3` (coverage CER minus coverage kana CER over the 17 Japanese files)
 [^q10]: [m2-ultra-qwen3-determinism.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-determinism.json) runs `q3det7_1.7B_8bit_c30` (the per-file repeat_identical and repeat_x_realtime fields)
-[^q11]: [m2-ultra-resolution-floor.json](../../../benchmarks/results/2026-10/m2-ultra-resolution-floor.json) runs `resolution_floor` (per-file SD 2.75 of the paired Japanese differences, Voxtral at 4bit, the default then, against Whisper turbo-nocond over 17 files; 95% half-width 1.96 SD / sqrt(n)), computed from [m2-ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+[^q11]: [m2-ultra-resolution-floor-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-resolution-floor-remeasure.json) runs `resolution_floor` (per-file SD 2.57 of the paired Japanese differences, Voxtral at 4bit, the default then, against Whisper turbo-nocond over 17 files; 95% half-width 1.96 SD / sqrt(n)), computed from [m2-ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`
 [^q14]: [m2-ultra-qwen3-precision-c15.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_1.7B_8bit_c15`, `qwen3_0.6B_8bit_c15`; [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_1.7B_8bit_c30`, `qwen3_0.6B_8bit_c30` (paired over the 17 Japanese files)
 [^q15]: [m2-ultra-qwen3-precision.json](../../../benchmarks/results/2026-10/m2-ultra-qwen3-precision.json) runs `qwen3_1.7B_4bit_c30`, `qwen3_1.7B_5bit_c30`, `qwen3_1.7B_6bit_c30`, `qwen3_1.7B_8bit_c30`, `qwen3_1.7B_bf16_c30`, `qwen3_0.6B_4bit_c30`, `qwen3_0.6B_5bit_c30`, `qwen3_0.6B_6bit_c30`, `qwen3_0.6B_8bit_c30`, `qwen3_0.6B_bf16_c30` (the 30s ladder; looping files: rows with runaway_segments above zero)
 [^q16]: [m2-ultra-picker-speed.json](../../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_0.6B_8bit_c15_s1`, `pk_qwen3_0.6B_8bit_c15_s2`, `pk_qwen3_0.6B_8bit_c15_s3`; [m2-ultra-voxtral-precision-default.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`

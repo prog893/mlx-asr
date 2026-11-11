@@ -317,7 +317,7 @@ def test_set_replaces_a_parameter_the_runner_did_not_record(tmp_path):
 
 def _archive_text(tmp_path, *extra):
     import subprocess
-    (tmp_path / "corpus").mkdir()
+    (tmp_path / "corpus").mkdir(exist_ok=True)
     (tmp_path / "corpus" / "rec_a.wav").write_bytes(b"")
     queue = tmp_path / "queue.zsh"
     queue.write_text("run probe_x $PY probe.py $D/clipvar/rec_a_quiet.wav\n"
@@ -424,3 +424,59 @@ def test_renamed_runs_must_stay_unique():
     check_unique_keys([{"run": "a", "arm": "x"}, {"run": "a", "arm": "y"}, {"run": "b"}])
     with pytest.raises(SystemExit, match="collide"):
         check_unique_keys([{"run": "baseline"}, {"run": "baseline"}])
+
+
+def _group_text(runs):
+    group = {"group": "g", "question": "q", "docs": [], "note": "", "runs": runs}
+    return json.dumps(group, indent=1, ensure_ascii=False) + "\n"
+
+
+def test_invalidate_adds_exactly_one_line():
+    import invalidate_run
+    text = _group_text([{"run": "a", "command": "x", "files": []},
+                        {"run": "b", "command": "y", "files": []}])
+    out = invalidate_run.invalidate(text, "b", "busy at start; re-measured as g2.json#b")
+    added = [ln for ln in out.splitlines() if ln not in text.splitlines()]
+    assert added == ['   "invalid": "busy at start; re-measured as g2.json#b",']
+    assert len(out.splitlines()) == len(text.splitlines()) + 1
+    with pytest.raises(SystemExit, match="already invalid"):
+        invalidate_run.invalidate(out, "b", "again")
+    with pytest.raises(SystemExit, match="matches 0 runs"):
+        invalidate_run.invalidate(text, "c", "r")
+
+
+def test_invalidate_refuses_a_file_that_is_not_in_saved_form():
+    import invalidate_run
+    text = _group_text([{"run": "a", "files": []}]).replace('"note": ""', '"note":  ""')
+    with pytest.raises(SystemExit, match="REFUSED"):
+        invalidate_run.invalidate(text, "a", "r")
+
+
+def test_query_skips_invalid_runs_and_refuses_to_name_one():
+    q = _query()
+    group = {"group": "g", "runs": [{"run": "a", "files": []},
+                                    {"run": "b", "invalid": "busy", "files": []}]}
+    assert [r["run"] for r in q.select(group, [])] == ["a"]
+    with pytest.raises(SystemExit, match="is invalid: busy"):
+        q.select(group, ["b"])
+
+
+def test_invalidate_one_arm_of_a_sweep():
+    import invalidate_run
+    text = _group_text([{"run": "s", "arm": "x", "files": []},
+                        {"run": "s", "arm": "y", "files": []}])
+    out = invalidate_run.invalidate(text, "s#y", "r")
+    runs = json.loads(out)["runs"]
+    assert "invalid" not in runs[0] and runs[1]["invalid"] == "r"
+    assert len(out.splitlines()) == len(text.splitlines()) + 1
+    with pytest.raises(SystemExit, match="matches 2 runs"):
+        invalidate_run.invalidate(text, "s", "r")
+
+
+def test_a_saved_group_is_never_overwritten(tmp_path):
+    r, out = _archive_text(tmp_path)
+    assert r.returncode == 0, r.stderr
+    before = out.read_text()
+    r, _ = _archive_text(tmp_path)
+    assert r.returncode == 1 and "exists" in r.stderr
+    assert out.read_text() == before

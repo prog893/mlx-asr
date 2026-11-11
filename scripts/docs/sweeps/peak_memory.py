@@ -20,8 +20,8 @@ SWEEPS = {
             (93.2, "| 93.2 min |", ("5.53GB",)),
         ],
         "source": ("m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
-                   "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
-                   "whisper_turbo_nocond_r6;corpus.json"),
+                   "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5;"
+                   "m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6;corpus.json"),
     },
     "peak-memory-range": {
         "doc": "docs/benchmarks/reference/peak-memory.md",
@@ -51,8 +51,8 @@ SWEEPS = {
                    "m2-ultra-qwen3-precision-c15.json#qwen3_0.6B_8bit_c15,qwen3_1.7B_8bit_c15;"
                    "m2-ultra-voxtral-precision.json#vox_w4bit_c60b16_kv8;"
                    "m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,"
-                   "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,"
-                   "whisper_turbo_nocond_r6"),
+                   "whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5;"
+                   "m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6"),
         "chosen": None,
     },
 }

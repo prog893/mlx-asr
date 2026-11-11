@@ -45,7 +45,7 @@ characters / 6 words, defined in [metrics.md](metrics.md). The scoring unit and 
 language are both taken per file from the reference script, the two units are aggregated
 separately and never averaged together, and speaker-label lines are stripped before
 scoring. Comparisons between configs are a length-weighted bootstrap over files
-(`scripts/benchmarks/compare_engines.py`), whose 95% half-width is about **1.20 points[^k4] at
+(`scripts/benchmarks/compare_engines.py`), whose 95% half-width is about **1.13 points[^k4] at
 n=20** for Voxtral at 4-bit, the default then, against Whisper turbo-nocond[^k4].
 
 ### How it grew
@@ -75,7 +75,7 @@ every sweep run before then used it, and some sweeps still do:
 - parts of the chunking and determinism work ([chunking.md](../chunking.md),
   [determinism.md](determinism.md))
 
-At n=7 the file-level 95% half-width is about **2.04 points**, against 1.20 at n=20[^k4]. A
+At n=7 the file-level 95% half-width is about **1.91 points**, against 1.13 at n=20[^k4]. A
 "not resolvable" verdict on this subset means the effect is smaller than about 2 points[^k4],
 which is weaker than saying it is small; see [metrics.md](metrics.md).
 
@@ -194,7 +194,7 @@ metric.
 More than feels necessary. Between-file variation on this corpus is larger than most
 of the config effects being tested: the same unchanged config spans 5.5% to 24.1% coverage CER across the 17 Japanese files[^k2] and 3.3% to 28.0% coverage WER across the 3 English
 ones.[^k2] Resolution depends on how many files an experiment uses: a 95% half-width of
-roughly 2.0 points at 7 files and 1.2 at all 20[^k4], so anything smaller than that needs either a paired
+roughly 1.9 points at 7 files and 1.1 at all 20[^k4], so anything smaller than that needs either a paired
 test or more audio. Several single-clip findings here reversed sign when a real corpus
 arrived ([The single clip](#the-single-clip)).
 
@@ -212,5 +212,5 @@ as well ([determinism.md](determinism.md)).
 [^k1]: [corpus.json](../../../benchmarks/results/corpus.json)
 [^k2]: [m2-ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`
 [^k3]: [m2-ultra-mincut-inputs.json](../../../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_whisper_turbo_libdef`; [m2-ultra-whisper-condition.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-condition.json) runs `cond7_whisper_turbo_libdef_r2`, `cond7_whisper_turbo_libdef_r3`; [m2-ultra-whisper-language.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-language.json) runs `lang7_turbo_autodetect_r1`, `lang7_turbo_autodetect_r2`, `lang7_turbo_autodetect_r3`
-[^k4]: [m2-ultra-resolution-floor.json](../../../benchmarks/results/2026-10/m2-ultra-resolution-floor.json) runs `resolution_floor` (per-file SD 2.75 of the paired Japanese differences over 17 files; 95% half-width 1.96 SD / sqrt(n)), computed from [m2-ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`, `whisper_turbo_nocond_r6`
+[^k4]: [m2-ultra-resolution-floor-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-resolution-floor-remeasure.json) runs `resolution_floor` (per-file SD 2.57 of the paired Japanese differences over 17 files; 95% half-width 1.96 SD / sqrt(n)), computed from [m2-ultra-voxtral-headline.json](../../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b128_kv8`, `vox_default_c30b128_kv8_r2`, `vox_default_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-headline-remeasure.json](../../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_turbo_nocond_r6`
 [^k5]: [m2-ultra-derived-measures.json](../../../benchmarks/results/2026-10/m2-ultra-derived-measures.json) runs `derive_reflen_c`, `derive_reflen` (reference characters after the scorer's normalization)
