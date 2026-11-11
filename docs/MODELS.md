@@ -1,7 +1,7 @@
 # Models
 
 The models `mlx-asr` runs, the variants of each, where their weights come from, and the
-flags each family takes. Flags every model shares: [CLI.md](CLI.md).
+flags each family takes.
 
 `--model` picks a family; `--size` and `--quantization` pick the variant inside it. In the
 tables:
@@ -13,19 +13,16 @@ tables:
 - **weights**: the Hugging Face repo the weights are downloaded from, which also states the
   model's license.
 - **quantized on first use**: no loadable build of that precision is published, so the
-  first run downloads the linked repo and quantizes it locally, once, into
-  `~/.cache/huggingface/hub/mlx-asr-converted/`. Later runs load that copy.
+  first run downloads the linked repo and quantizes it locally, once.
 - **converted to MLX on first use**: the repo is published in transformers format, so the
-  first run converts it to MLX, once, into the same directory.
+  first run converts it to MLX locally, once.
 - A family with no `--size` or `--quantization` column has one size or one precision, and
   passing that flag exits 2.
 
-## The models
+Both results are cached in `mlx-asr-converted/` inside the Hugging Face cache
+(`~/.cache/huggingface/hub/` by default), and later runs load the cached copy.
 
-`voxtral`, `voxtral-v1`, `qwen3-asr`, `parakeet` and `reazon` decode greedily and rerun byte-identically
-on one machine. `whisper` samples whenever a segment trips its fallback thresholds, and
-`kotoba` runs on Whisper's decoder so it samples too, which makes neither safe to rerun for
-a comparison ([benchmarks/reference/determinism.md](benchmarks/reference/determinism.md)).
+## The models
 
 ### Voxtral Realtime
 
@@ -401,6 +398,13 @@ python -m mlx_audio.convert \
   --mlx-path ./voxtral-8bit --quantize --q-bits 8 --q-group-size 64
 mlx-asr audio.wav --model ./voxtral-8bit
 ```
+
+## Reproducibility
+
+`voxtral`, `voxtral-v1`, `qwen3-asr`, `parakeet` and `reazon` decode greedily and rerun byte-identically
+on one machine. `whisper` samples whenever a segment trips its fallback thresholds, and
+`kotoba` runs on Whisper's decoder so it samples too, which makes neither safe to rerun for
+a comparison ([benchmarks/reference/determinism.md](benchmarks/reference/determinism.md)).
 
 [^n1]: [m2-ultra-whisper-sizes.json](../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond` (the runner's own peak per size, which is what the table column prints)
 [^n2]: [m2-ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079`
