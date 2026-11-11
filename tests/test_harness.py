@@ -541,6 +541,19 @@ def test_quantization_is_refused_rather_than_ignored_everywhere_it_cannot_apply(
         assert fragment in r.stderr, (model, r.stderr)
 
 
+def test_a_non_japanese_language_is_refused_on_every_japanese_only_model(tmp_path):
+    """kotoba, parakeet and reazon transcribe Japanese only, so `--language en` is a
+    usage error on each, raised before the audio is read (the file here does not
+    exist). kotoba used to hand `en` to its decoder and say nothing."""
+    for model in ("kotoba", "parakeet", "reazon"):
+        r = subprocess.run(
+            CLI + [str(tmp_path / "nope.wav"), "--model", model,
+                   "--language", "en", "-f", "txt"],
+            capture_output=True, text=True, cwd=ROOT)
+        assert r.returncode == 2, (model, r.returncode, r.stderr)
+        assert "Japanese-only" in r.stderr, (model, r.stderr)
+
+
 def test_an_unpublished_precision_errors_before_any_download(tmp_path):
     """2bit is not published for these weights, so it must be a usage error rather
     than a 404 from the hub after the user has waited for a download."""

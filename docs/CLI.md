@@ -44,9 +44,9 @@ before the audio is read, listing what that model accepts.
 Accepted names come from each checkpoint's own published vocabulary, so a model that drops
 a language stops accepting it without a change here.
 
-Two models refuse the flag, for different reasons. `voxtral` has no language token to set:
-its tokenizer carries a thousand special tokens and not one of them names a language or a
-task, unlike Whisper's `<|ja|>`. `kotoba` has the tokens but is finetuned on Japanese
-alone, so it is pinned to `ja` and says so.
+`voxtral` refuses the flag: it has no language token to set. Its tokenizer carries a
+thousand special tokens and not one of them names a language or a task, unlike Whisper's
+`<|ja|>`. `kotoba`, `parakeet` and `reazon` transcribe Japanese only, so they are pinned to
+`ja` and refuse any other value.
 
 [^n4]: [m2-ultra-whisper-language.json](../benchmarks/results/2026-10/m2-ultra-whisper-language.json) runs `lang7_turbo_autodetect_r1`, `lang7_turbo_autodetect_r2`, `lang7_turbo_autodetect_r3`; [m2-ultra-mincut-inputs.json](../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_whisper_turbo_libdef`; [m2-ultra-whisper-condition.json](../benchmarks/results/2026-10/m2-ultra-whisper-condition.json) runs `cond7_whisper_turbo_libdef_r2`, `cond7_whisper_turbo_libdef_r3` (autodetect against forced Japanese, both at library defaults, mean of 3 runs each)

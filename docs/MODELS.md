@@ -178,7 +178,7 @@ Compatible flags for `--model kotoba`:
 | flag | values | default | effect |
 |---|---|---|---|
 | `--chunk-seconds` | float | `15` | independent window length, and this model's largest lever. Material-dependent, so sweep it on your own audio |
-| `--language` | | forced `ja` | Japanese-only weights |
+| `--language` | | forced `ja` | Japanese-only weights; any other value is an error |
 
 ### Qwen3-ASR
 
@@ -324,26 +324,26 @@ default --model voxtral.
 
 `-` means the flag is an error on that model.
 
-| flag | `voxtral` | `voxtral-v1` | `whisper` | `kotoba` | `qwen3-asr` |
-|---|---|---|---|---|---|
-| `--size` | - | `3B` `24B` | `tiny` `base` `small` `medium` `large-v2` `large-v3` `turbo` | - | `0.6B` `1.7B` |
-| `--quantization` | `4bit` `8bit` `fp16` | `4bit` `8bit` `bf16` | - | - | `4bit` `5bit` `6bit` `8bit` `bf16` |
-| `--language` | - | yes | yes | forced `ja` | yes |
-| `--chunk-seconds` | yes | yes | - | yes | yes |
-| `-f srt` / `vtt` / `all` | yes | - | yes | yes | - |
-| `--delay-ms` | yes | - | - | - | - |
-| `--max-batch` | yes | - | - | - | - |
-| `--kv-bits` / `--no-kv-quant` | yes | - | - | - | - |
-| `--overlap-seconds` | yes | - | - | - | - |
-| `--prompt` | yes | - | - | - | - |
-| `--vad` | yes | - | - | - | - |
-| `--compact-silence` | yes | - | - | - | - |
-| `--gain` / `--peak-dbfs` / `--rms-dbfs` | yes | - | - | - | - |
-| `--gap-seconds` / `--max-chars` / `--max-dur-seconds` | yes | - | - | - | - |
+| flag | `voxtral` | `voxtral-v1` | `whisper` | `kotoba` | `qwen3-asr` | `parakeet` | `reazon` |
+|---|---|---|---|---|---|---|---|
+| `--size` | - | `3B` `24B` | `tiny` `base` `small` `medium` `large-v2` `large-v3` `turbo` | - | `0.6B` `1.7B` | - | - |
+| `--quantization` | `4bit` `8bit` `fp16` | `4bit` `8bit` `bf16` | - | - | `4bit` `5bit` `6bit` `8bit` `bf16` | - | - |
+| `--language` | - | yes | yes | forced `ja` | yes | forced `ja` | forced `ja` |
+| `--chunk-seconds` | yes | yes | - | yes | yes | yes | yes |
+| `-f srt` / `vtt` / `all` | yes | - | yes | yes | - | yes | yes |
+| `--delay-ms` | yes | - | - | - | - | - | - |
+| `--max-batch` | yes | - | - | - | - | - | - |
+| `--kv-bits` / `--no-kv-quant` | yes | - | - | - | - | - | - |
+| `--overlap-seconds` | yes | - | - | - | - | - | - |
+| `--prompt` | yes | - | - | - | - | - | - |
+| `--vad` | yes | - | - | - | - | - | - |
+| `--compact-silence` | yes | - | - | - | - | - | - |
+| `--gain` / `--peak-dbfs` / `--rms-dbfs` | yes | - | - | - | - | - | - |
+| `--gap-seconds` / `--max-chars` / `--max-dur-seconds` | yes | - | - | - | - | - | - |
 
 `--chunk-seconds` means something different on each engine that takes it: Voxtral's chunk
-is a batched decode unit, while kotoba, qwen3-asr and voxtral-v1 use it as an independent
-window length. Whisper refuses it, since its 30s window is fixed by the model's positional
+is a batched decode unit, while kotoba, qwen3-asr, voxtral-v1, parakeet and reazon use it as an
+independent window length. Whisper refuses it, since its 30s window is fixed by the model's positional
 encoding.
 
 `--delay-ms`, `--gain`, `--peak-dbfs` and `--rms-dbfs` ship with working values rather

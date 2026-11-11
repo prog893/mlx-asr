@@ -89,8 +89,8 @@ download size and peak GPU memory, is listed in [docs/MODELS.md](docs/MODELS.md#
 `--list-models` prints the sizes and precisions each family accepts.
 
 The built-in families load weights only from the model authors' own repos and from
-mlx-community. `kotoba` and `voxtral-v1` are converted to MLX on your machine on first use,
-from the authors' weights. `reazon` runs the authors' ONNX files on CPU.
+mlx-community. On first use, `kotoba` is converted to MLX on your machine and the
+`voxtral-v1` 8bit and 4bit builds are quantized there, both from the authors' weights. `reazon` runs the authors' ONNX files on CPU.
 
 What each model scored: [docs/benchmarks/engines.md](docs/benchmarks/engines.md).
 
