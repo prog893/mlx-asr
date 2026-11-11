@@ -28,7 +28,9 @@ Quantized and converted builds are cached in `mlx-asr-converted/` inside the Hug
 
 `--model voxtral`
 
-The default model.
+Mistral AI's Voxtral Mini 4B Realtime, the 2602 release (February 2026). A streaming
+model: its causal audio encoder transcribes at a configurable delay, which `--delay-ms`
+sets. The card lists 13 languages. Apache-2.0. The default model.
 
 | priority | `--quantization` | weights | download | peak GPU memory |
 |---|---|---|---|---|
@@ -38,15 +40,19 @@ The default model.
 
 Source: [m2-ultra-voxtral-precision.json](../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8` (peak; download is the hub repo size)
 
+Example:
+
 ```bash
-mlx-asr audio.wav                                            # writes audio.srt
+mlx-asr audio.wav --model voxtral # writes audio.srt
 ```
+
+Flags specific to `--model voxtral`:
 
 | flag | values | default | effect |
 |---|---|---|---|
 | `--delay-ms` | int | `2400` | transcription delay, and the largest accuracy lever here. 2400 is also the model's maximum |
-| `--chunk-seconds` | float | per machine | audio per batch row. A throughput knob rather than an accuracy one |
-| `--max-batch` | int | per machine | chunks decoded together. Sized from GPU memory, then snapped to batch sizes that measured well: per-step time is not monotonic, so 2-11 are never chosen |
+| `--chunk-seconds` | float | per machine ([DEFAULTS.md](DEFAULTS.md#chunking-and-windows)) | audio per batch row. A throughput knob rather than an accuracy one |
+| `--max-batch` | int | from GPU memory ([DEFAULTS.md](DEFAULTS.md#chunking-and-windows)) | chunks decoded together. Sized from GPU memory, then snapped to batch sizes that measured well: per-step time is not monotonic, so 2-11 are never chosen |
 | `--quantization` | `4bit` `8bit` `fp16`/`none` | by memory | weight precision: `fp16` where it fits a useful batch, else `8bit`, else `4bit` ([DEFAULTS.md](DEFAULTS.md#how-a-variant-is-chosen)). `8bit` is quantized from the fp16 build on first use. Also sets the weight footprint used to size the batch |
 | `--kv-bits` | `4` `8` | `8` | quantize the KV cache |
 | `--no-kv-quant` | flag | off | disable KV quantization |
@@ -60,22 +66,6 @@ mlx-asr audio.wav                                            # writes audio.srt
 | `--max-chars` | int | `28` | split a cue at this many characters |
 | `--max-dur-seconds` | float | `7.0` | hard cap on cue duration |
 
-`--chunk-seconds`, `--overlap-seconds` and `--kv-bits` each default to a value measured
-**for your machine**, from `mlx_asr/profiles.json`; `--max-batch` is sized from your GPU
-memory. Each is overridden independently. There is no flag that sets several at once: a
-`--fast` used to, and it was removed because the trade it encoded was believed to reverse
-across hardware. Shorter chunks mean more of them and each pays fixed encoder cost, which is
-cheap on a 60-core GPU (measured 44%[^n3] faster there). On the 10-core M4 an earlier
-measurement had them slower, but the saved M4 runs show the reverse: 30s/B32 at 6.37x (mean of 3 runs)[^n5]
-against 4.66x for 60s/B16 and 5.80x for 60s/B32[^n5], so the M4 profile ships 30s as well,
-with its batch capped at the measured 32. Chunk length stays a per-machine value so that a
-measurement can change one machine without changing the others
-([benchmarks/chunking.md](benchmarks/chunking.md)).
-
-If your chip is not in `profiles.json` the values are derived from GPU cores and memory
-instead, and the CLI says `derived` rather than `profile` so you know which you got.
-Contributing a measured profile is in [CONTRIBUTING.md](../CONTRIBUTING.md).
-
 `--prompt` takes domain terms or a topic sentence in the audio's own language, not an
 instruction: an imperative there makes things worse, and on English audio any prompt wrecks
 word spacing ([benchmarks/prompt.md](benchmarks/prompt.md)).
@@ -83,6 +73,10 @@ word spacing ([benchmarks/prompt.md](benchmarks/prompt.md)).
 ### Voxtral (2025)
 
 `--model voxtral-v1`
+
+Mistral AI's first Voxtral release, 2507 (July 2025): Voxtral Mini 3B, built on Ministral
+3B, and Voxtral Small 24B. Speech-understanding models with a dedicated transcription mode
+and automatic language detection; the card lists eight languages. Apache-2.0.
 
 | priority | `--size` | `--quantization` | weights | download | peak GPU memory |
 |---|---|---|---|---|---|
@@ -95,9 +89,13 @@ word spacing ([benchmarks/prompt.md](benchmarks/prompt.md)).
 
 Source: [m2-ultra-voxtral-v1.json](../benchmarks/results/2026-10/m2-ultra-voxtral-v1.json) runs `3b_4bit_c30`, `3b_8bit_c30`, `24b_4bit_c30`, `24b_8bit_c30`; [m2-ultra-headline-remeasure.json](../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `3b_bf16_c30`, `24b_bf16_c30` (peak; download is the hub repo size)
 
+Example:
+
 ```bash
 mlx-asr audio.wav --model voxtral-v1 --language en -f txt
 ```
+
+Flags specific to `--model voxtral-v1`:
 
 | flag | values | default | effect |
 |---|---|---|---|
@@ -117,6 +115,10 @@ so the first run of a precision downloads the bf16 weights (9.37GB for 3B, 48.54
 
 `--model whisper`
 
+OpenAI's Whisper: the original sizes from September 2022, large-v2 from December 2022,
+large-v3 from November 2023, and turbo, large-v3 with its decoder cut from 32 layers to 4,
+from October 2024. 99 languages. Apache-2.0; turbo is MIT.
+
 | priority | `--size` | weights | download | peak GPU memory |
 |---|---|---|---|---|
 | 7 | `tiny` | [mlx-community/whisper-tiny-mlx](https://huggingface.co/mlx-community/whisper-tiny-mlx) | 0.07GB | 3.98GB |
@@ -129,9 +131,13 @@ so the first run of a precision downloads the bf16 weights (9.37GB for 3B, 48.54
 
 Source: [m2-ultra-whisper-sizes.json](../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond` (peak; download is the hub repo size)
 
+Example:
+
 ```bash
 mlx-asr audio.wav --model whisper --language ja
 ```
+
+Flags specific to `--model whisper`:
 
 | flag | values | default | effect |
 |---|---|---|---|
@@ -146,15 +152,23 @@ default.
 
 `--model kotoba`
 
+Kotoba-Whisper v2.0, from Kotoba Technologies and Asahi Ushio (September 2024). Whisper
+large-v3 distilled to 2 decoder layers and trained on the ReazonSpeech corpus. Japanese
+only. Apache-2.0.
+
 | weights | download | peak GPU memory |
 |---|---|---|
 | [kotoba-tech/kotoba-whisper-v2.0](https://huggingface.co/kotoba-tech/kotoba-whisper-v2.0), converted to MLX on first use | 1.52GB | 2.38GB |
 
 Source: [m2-ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079` (peak, maximum over the files, at the 10s window shipped then; download is the hub repo size)
 
+Example:
+
 ```bash
 mlx-asr audio.wav --model kotoba
 ```
+
+Flags specific to `--model kotoba`:
 
 | flag | values | default | effect |
 |---|---|---|---|
@@ -172,6 +186,9 @@ figure.
 
 `--model qwen3-asr`
 
+Alibaba's Qwen3-ASR (January 2026), built on Qwen3-Omni. The card lists 30 languages and
+22 Chinese dialects, with language identification. Apache-2.0.
+
 | priority | `--size` | `--quantization` | weights | download | peak GPU memory |
 |---|---|---|---|---|---|
 | 10 | `0.6B` | `4bit` | [mlx-community/Qwen3-ASR-0.6B-4bit](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-4bit) | 0.71GB | 1.77GB |
@@ -187,9 +204,13 @@ figure.
 
 Source: [m2-ultra-qwen3-precision-c15.json](../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`, `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15` (peak at the shipped 15s window; download is the hub repo size)
 
+Example:
+
 ```bash
 mlx-asr audio.wav --model qwen3-asr --language ja -f txt
 ```
+
+Flags specific to `--model qwen3-asr`:
 
 | flag | values | default | effect |
 |---|---|---|---|
@@ -218,7 +239,9 @@ exhaustion stops transcription silently.
 
 `--model parakeet`
 
-Japanese only. NVIDIA's FastConformer-TDT through mlx-audio's own driver.
+NVIDIA NeMo's Parakeet TDT-CTC 0.6B for Japanese (May 2024), a hybrid FastConformer model
+that transcribes with punctuation. Japanese only. Runs through mlx-audio's own driver.
+CC-BY-4.0.
 
 | weights | download | peak GPU memory |
 |---|---|---|
@@ -226,9 +249,13 @@ Japanese only. NVIDIA's FastConformer-TDT through mlx-audio's own driver.
 
 Source: [m2-ultra-picker-speed.json](../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3` (peak; download is the hub repo size)
 
+Example:
+
 ```bash
 mlx-asr audio.wav --model parakeet
 ```
+
+Flags specific to `--model parakeet`:
 
 | flag | values | default | effect |
 |---|---|---|---|
@@ -239,9 +266,11 @@ mlx-asr audio.wav --model parakeet
 
 `--model reazon`
 
-Japanese only. ReazonSpeech k2-v2, the authors' ONNX build, decoded on CPU
-through sherpa-onnx (`uv sync --extra reazon`). Not an MLX engine: its throughput
-is not comparable to the GPU rows.
+ReazonSpeech k2-v2 from Reazon Human Interaction Lab (July 2024): a character-based
+Zipformer RNN-T trained on the ReazonSpeech v2.0 corpus. Japanese only. Apache-2.0.
+
+The authors' ONNX build, decoded on CPU through sherpa-onnx (`uv sync --extra reazon`).
+Not an MLX engine: its throughput is not comparable to the GPU rows.
 
 | weights | download | peak GPU memory |
 |---|---|---|
@@ -249,9 +278,13 @@ is not comparable to the GPU rows.
 
 <!-- not-measured: hub repo sizes only; reazon decodes on CPU and has no GPU peak -->
 
+Example:
+
 ```bash
 mlx-asr audio.wav --model reazon
 ```
+
+Flags specific to `--model reazon`:
 
 | flag | values | default | effect |
 |---|---|---|---|
@@ -408,6 +441,4 @@ a comparison ([benchmarks/reference/determinism.md](benchmarks/reference/determi
 
 [^n1]: [m2-ultra-whisper-sizes.json](../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_tiny_libdef`, `whisper_base_libdef`, `whisper_small_nocond`, `whisper_medium_nocond`, `whisper_large-v2_nocond`, `whisper_large-v3_nocond`, `whisper_turbo_nocond` (the runner's own peak per size, which is what the table column prints)
 [^n2]: [m2-ultra-peak-memory-kotoba.json](../benchmarks/results/2026-10/m2-ultra-peak-memory-kotoba.json) runs `pm_kotoba_7f8150fdef0e`, `pm_kotoba_c18b2f5aa2a2`, `pm_kotoba_9aefd8f2352e`, `pm_kotoba_07fd66556725`, `pm_kotoba_c29657df52e9`, `pm_kotoba_cbeb19543902`, `pm_kotoba_b88caf8c0924`, `pm_kotoba_bbdabfabfb4f`, `pm_kotoba_1672083b2499`, `pm_kotoba_5b44e078553d`, `pm_kotoba_a73e94506f13`, `pm_kotoba_bb5cf5d5b247`, `pm_kotoba_0c193bf7ced2`, `pm_kotoba_57d841fe39b5`, `pm_kotoba_a773a315fb42`, `pm_kotoba_71bb5eba3baa`, `pm_kotoba_a1372c4d2900`, `pm_kotoba_c47ad127bc83`, `pm_kotoba_1da58e1b2b69`, `pm_kotoba_b3432b40c079`
-[^n3]: [m2-ultra-voxtral-batch.json](../benchmarks/results/2026-10/m2-ultra-voxtral-batch.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`; [m2-ultra-voxtral-precision.json](../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_w4bit_c60b16_kv8_r2`; [m2-ultra-voxtral-kv.json](../benchmarks/results/2026-10/m2-ultra-voxtral-kv.json) runs `vox_kv8_c60b16_w4bit`
-[^n5]: [m4-voxtral-chunking.json](../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`, `c30b32_r2`, `c30b32_r3`, `c60b16`; [m4-voxtral-batch.json](../benchmarks/results/2026-10/m4-voxtral-batch.json) runs `c60b32`, `c60b32_r1`, `batch_m4_repeat_20261009__c60b32_r2`, `batch_m4_repeat_20261009__c60b32_r3`, `c60b32_r4`, `batch_m4_b64_20261010__c60b32_r2`, `batch_m4_b64_20261010__c60b32_r3` (mean of 7 runs)
 [^n7]: [m2-ultra-kotoba-conversion.json](../benchmarks/results/2026-10/m2-ultra-kotoba-conversion.json) runs `pm_kotoba_cold_r112`, `pm_kotoba_warm_r112` (the 112s file through the CLI, with the first-use conversion and then with it cached)
