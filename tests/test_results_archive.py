@@ -317,7 +317,7 @@ def test_set_replaces_a_parameter_the_runner_did_not_record(tmp_path):
 
 def _archive_text(tmp_path, *extra):
     import subprocess
-    (tmp_path / "corpus").mkdir()
+    (tmp_path / "corpus").mkdir(exist_ok=True)
     (tmp_path / "corpus" / "rec_a.wav").write_bytes(b"")
     queue = tmp_path / "queue.zsh"
     queue.write_text("run probe_x $PY probe.py $D/clipvar/rec_a_quiet.wav\n"
@@ -459,3 +459,24 @@ def test_query_skips_invalid_runs_and_refuses_to_name_one():
     assert [r["run"] for r in q.select(group, [])] == ["a"]
     with pytest.raises(SystemExit, match="is invalid: busy"):
         q.select(group, ["b"])
+
+
+def test_invalidate_one_arm_of_a_sweep():
+    import invalidate_run
+    text = _group_text([{"run": "s", "arm": "x", "files": []},
+                        {"run": "s", "arm": "y", "files": []}])
+    out = invalidate_run.invalidate(text, "s#y", "r")
+    runs = json.loads(out)["runs"]
+    assert "invalid" not in runs[0] and runs[1]["invalid"] == "r"
+    assert len(out.splitlines()) == len(text.splitlines()) + 1
+    with pytest.raises(SystemExit, match="matches 2 runs"):
+        invalidate_run.invalidate(text, "s", "r")
+
+
+def test_a_saved_group_is_never_overwritten(tmp_path):
+    r, out = _archive_text(tmp_path)
+    assert r.returncode == 0, r.stderr
+    before = out.read_text()
+    r, _ = _archive_text(tmp_path)
+    assert r.returncode == 1 and "exists" in r.stderr
+    assert out.read_text() == before

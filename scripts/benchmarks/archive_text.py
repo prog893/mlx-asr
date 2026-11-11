@@ -130,6 +130,9 @@ def main():
                    "runs": runs})
     check_unique_keys(group["runs"])     # after scrubbing, which can rewrite names too
     text = json.dumps(group, indent=1, ensure_ascii=False)
+    if Path(a.out).exists():     # saved groups are append-only (AGENTS.md)
+        print(f"REFUSED {a.group}: {a.out} exists; save a new group instead", file=sys.stderr)
+        return 1
     if scrub.leaks(text):
         print(f"REFUSED {a.group}: {scrub.leaks(text)} private strings survived", file=sys.stderr)
         return 1

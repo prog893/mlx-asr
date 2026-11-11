@@ -530,6 +530,11 @@ def main():
                 "Every run was made after every audio revision in revisions.json, so it used "
                 "the current copies.")
     text = json.dumps(group, indent=1, ensure_ascii=False)
+    # saved groups are append-only (AGENTS.md): a new batch is a new group, and the only edit
+    # an existing one accepts is invalidate_run.py's added line
+    if Path(a.out).exists():
+        print(f"REFUSED {a.group}: {a.out} exists; save a new group instead", file=sys.stderr)
+        return 1
     if scrub.leaks(text):
         print(f"REFUSED {a.group}: {scrub.leaks(text)} private strings survived", file=sys.stderr)
         return 1
