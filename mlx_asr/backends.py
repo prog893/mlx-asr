@@ -443,9 +443,9 @@ def _refuse_non_japanese(language, model):
 
     code = to_iso(language, model.alias)
     if code != "ja":
-        _die(f"{model.alias} is a Japanese-only model and takes no language "
-             f"token; --language {language!r} (-> {code}) is refused rather "
-             f"than ignored. The weights transcribe Japanese only.")
+        _die(f"{model.alias} is a Japanese-only model; --language {language!r} "
+             f"(-> {code}) is refused rather than ignored. The weights transcribe "
+             f"Japanese only.")
 
 
 def _language_source(model) -> str:

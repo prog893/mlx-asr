@@ -277,6 +277,10 @@ def _run_other_backend(a, spec, log, t_start):
             to_english_name(a.language, None, spec.alias)
         else:
             to_iso(a.language, spec.alias)
+        # A Japanese-only model has nothing to forward a language to, so `en` is
+        # refused here, before the decode, rather than handed to the weights.
+        from .backends import _refuse_non_japanese
+        _refuse_non_japanese(a.language, spec)
     if not spec.deterministic:
         # source: m2-ultra-whisper-sizes.json#whisper_turbo_nocond,whisper_turbo_nocond_r2,whisper_turbo_nocond_r3,whisper_turbo_nocond_r4,whisper_turbo_nocond_r5,whisper_large-v3_nocond,whisper_large-v3_nocond_r2,whisper_large-v3_nocond_r3,whisper_large-v3_nocond_r5,whisper_large-v3_nocond_r6;m2-ultra-headline-remeasure.json#whisper_turbo_nocond_r6,whisper_large-v3_nocond_r4
         log(f"[{spec.backend}] this engine samples, so repeat runs differ "
