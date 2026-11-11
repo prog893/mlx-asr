@@ -142,7 +142,7 @@ Compatible flags for `--model whisper`:
 
 | flag | values | default | effect |
 |---|---|---|---|
-| `--size` | see matrix | by memory: the first of `large-v3`, `turbo`, `large-v2`, `medium`, `small`, `base`, `tiny` that fits | which checkpoint |
+| `--size` | `tiny` `base` `small` `medium` `large-v2` `large-v3` `turbo` | by memory: the first of `large-v3`, `turbo`, `large-v2`, `medium`, `small`, `base`, `tiny` that fits | which checkpoint |
 | `--language` | any spelling ([CLI.md](CLI.md#--language)) | autodetect | recommended; see below |
 
 Pass `--language`. Whisper's autodetect reads only the first 30 seconds, and on this
