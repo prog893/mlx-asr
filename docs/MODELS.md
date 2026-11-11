@@ -32,7 +32,7 @@ Mistral AI's Voxtral Mini 4B Realtime, the 2602 release (February 2026). A strea
 model: its causal audio encoder transcribes at a configurable delay, which `--delay-ms`
 sets. The card lists 13 languages. The default model.
 
-| priority | `--quantization` | weights | download | peak GPU memory[^peak-voxtral] |
+| priority | `--quantization` | weights | download<!-- not-measured: hub repo size --> | peak GPU memory[^peak-voxtral] |
 |---|---|---|---|---|
 | 3 | `4bit` | [mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-4bit) | 3.15GB | 6.77GB |
 | 2 | `8bit` | [mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16](https://huggingface.co/mlx-community/Voxtral-Mini-4B-Realtime-2602-fp16), quantized on first use | 8.89GB | 7.29GB |
@@ -79,7 +79,7 @@ Mistral AI's first Voxtral release, 2507 (July 2025): Voxtral Mini 3B, built on 
 3B, and Voxtral Small 24B. Speech-understanding models with a dedicated transcription mode
 and automatic language detection; the card lists eight languages.
 
-| priority | `--size` | `--quantization` | weights | download | peak GPU memory[^peak-voxtral-v1] |
+| priority | `--size` | `--quantization` | weights | download<!-- not-measured: hub repo size --> | peak GPU memory[^peak-voxtral-v1] |
 |---|---|---|---|---|---|
 | 6 | `3B` | `4bit` | [mistralai/Voxtral-Mini-3B-2507](https://huggingface.co/mistralai/Voxtral-Mini-3B-2507), quantized on first use | 9.37GB | 5.25GB |
 | 5 | `3B` | `8bit` | [mistralai/Voxtral-Mini-3B-2507](https://huggingface.co/mistralai/Voxtral-Mini-3B-2507), quantized on first use | 9.37GB | 7.28GB |
@@ -122,7 +122,7 @@ OpenAI's Whisper: the original sizes from September 2022, large-v2 from December
 large-v3 from November 2023, and turbo, large-v3 with its decoder cut from 32 layers to 4,
 from October 2024. 99 languages.
 
-| priority | `--size` | weights | download | peak GPU memory[^peak-whisper] |
+| priority | `--size` | weights | download<!-- not-measured: hub repo size --> | peak GPU memory[^peak-whisper] |
 |---|---|---|---|---|
 | 7 | `tiny` | [mlx-community/whisper-tiny-mlx](https://huggingface.co/mlx-community/whisper-tiny-mlx) | 0.07GB | 3.98GB |
 | 6 | `base` | [mlx-community/whisper-base-mlx](https://huggingface.co/mlx-community/whisper-base-mlx) | 0.14GB | 4.07GB |
@@ -160,12 +160,12 @@ Kotoba-Whisper v2.0, from Kotoba Technologies and Asahi Ushio (September 2024). 
 large-v3 distilled to 2 decoder layers and trained on the ReazonSpeech corpus. Japanese
 only.
 
-| weights | download | peak GPU memory[^peak-kotoba] |
+| weights | download<!-- not-measured: hub repo size --> | peak GPU memory[^peak-kotoba] |
 |---|---|---|
 | [kotoba-tech/kotoba-whisper-v2.0](https://huggingface.co/kotoba-tech/kotoba-whisper-v2.0), converted to MLX on first use | 1.52GB | 2.38GB |
 
 The alias points at v2.0 because v2.2 holds identical ASR weights (all 539 tensors equal in
-value); v2.2 adds diarization and punctuation as separate torch models. The conversion to MLX
+value[^n8]); v2.2 adds diarization and punctuation as separate torch models. The conversion to MLX
 loads the whole checkpoint, so a run with no converted copy cached yet peaks at 3.03GB[^n7]
 instead of 2.38GB[^peak-kotoba].
 
@@ -189,7 +189,7 @@ Compatible flags for `--model kotoba`:
 Alibaba's Qwen3-ASR (January 2026), built on Qwen3-Omni. The card lists 30 languages and
 22 Chinese dialects, with language identification.
 
-| priority | `--size` | `--quantization` | weights | download | peak GPU memory[^peak-qwen3-asr] |
+| priority | `--size` | `--quantization` | weights | download<!-- not-measured: hub repo size --> | peak GPU memory[^peak-qwen3-asr] |
 |---|---|---|---|---|---|
 | 10 | `0.6B` | `4bit` | [mlx-community/Qwen3-ASR-0.6B-4bit](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-4bit) | 0.71GB | 1.77GB |
 | 9 | `0.6B` | `5bit` | [mlx-community/Qwen3-ASR-0.6B-5bit](https://huggingface.co/mlx-community/Qwen3-ASR-0.6B-5bit) | 0.79GB | 1.85GB |
@@ -212,8 +212,8 @@ Compatible flags for `--model qwen3-asr`:
 
 | flag | values | default | effect |
 |---|---|---|---|
-| `--size` | `0.6B` `1.7B` | `1.7B` | which checkpoint |
-| `--quantization` | `4bit` `5bit` `6bit` `8bit` `bf16`/`none` | `8bit` | weight precision |
+| `--size` | `0.6B` `1.7B` | by memory | which checkpoint |
+| `--quantization` | `4bit` `5bit` `6bit` `8bit` `bf16`/`none` | by memory | weight precision |
 | `--chunk-seconds` | float | `15` | decode window. Shorter is better on accuracy, speed and memory here |
 | `--language` | any spelling ([CLI.md](CLI.md#--language)) | `English` | recommended: it never autodetects, so omitting it transcribes as English |
 
@@ -238,7 +238,7 @@ exhaustion stops transcription silently.
 NVIDIA NeMo's Parakeet TDT-CTC 0.6B for Japanese (May 2024), a hybrid FastConformer model
 that transcribes with punctuation. Japanese only. Runs through mlx-audio's own driver.
 
-| weights | download | peak GPU memory[^peak-parakeet] |
+| weights | download<!-- not-measured: hub repo size --> | peak GPU memory[^peak-parakeet] |
 |---|---|---|
 | [mlx-community/parakeet-tdt_ctc-0.6b-ja](https://huggingface.co/mlx-community/parakeet-tdt_ctc-0.6b-ja) | 2.49GB | 4.77GB (17-file corpus) |
 
@@ -264,7 +264,7 @@ Zipformer RNN-T trained on the ReazonSpeech v2.0 corpus. Japanese only. Runs the
 ONNX build on CPU through sherpa-onnx (`uv sync --extra reazon`), so it is not an MLX
 engine and its throughput is not comparable to the GPU rows.
 
-| weights | download | peak GPU memory |
+| weights | download<!-- not-measured: hub repo size --> | peak GPU memory |
 |---|---|---|
 | [reazon-research/reazonspeech-k2-v2](https://huggingface.co/reazon-research/reazonspeech-k2-v2) | 0.78GB | n/a, CPU |
 
@@ -294,8 +294,8 @@ loosely: whisper `tiny` downloads 0.07GB<!-- not-measured: 0.07GB is the hub dow
 the 30s mel window and decoder activations rather than the weights. That is why the whole
 whisper ladder lands between 4 and 7GB[^n1] regardless of size.
 
-Every figure is the maximum over the 20-file corpus on an M2 Ultra, one method for all of
-them, so the column can be read against itself. Method and caveats:
+Every figure is the maximum over the 20-file corpus on an M2 Ultra (for parakeet, which is
+Japanese-only, its 17 Japanese files), one method for all of them, so the column can be read against itself. Method and caveats:
 [benchmarks/reference/peak-memory.md](benchmarks/reference/peak-memory.md).
 
 Every run also prints its own peak, since the figure moves with the machine, the audio and
@@ -440,3 +440,4 @@ a comparison ([benchmarks/reference/determinism.md](benchmarks/reference/determi
 [^peak-qwen3-asr]: [m2-ultra-qwen3-precision-c15.json](../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_4bit_c15`, `qwen3_0.6B_5bit_c15`, `qwen3_0.6B_6bit_c15`, `qwen3_0.6B_8bit_c15`, `qwen3_0.6B_bf16_c15`, `qwen3_1.7B_4bit_c15`, `qwen3_1.7B_5bit_c15`, `qwen3_1.7B_6bit_c15`, `qwen3_1.7B_8bit_c15`, `qwen3_1.7B_bf16_c15` (peak at the shipped 15s window; download is the hub repo size)
 [^peak-parakeet]: [m2-ultra-picker-speed.json](../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3` (peak; download is the hub repo size)
 [^n4]: [m2-ultra-whisper-language.json](../benchmarks/results/2026-10/m2-ultra-whisper-language.json) runs `lang7_turbo_autodetect_r1`, `lang7_turbo_autodetect_r2`, `lang7_turbo_autodetect_r3`; [m2-ultra-mincut-inputs.json](../benchmarks/results/2026-10/m2-ultra-mincut-inputs.json) runs `mincut7_whisper_turbo_libdef`; [m2-ultra-whisper-condition.json](../benchmarks/results/2026-10/m2-ultra-whisper-condition.json) runs `cond7_whisper_turbo_libdef_r2`, `cond7_whisper_turbo_libdef_r3` (autodetect against forced Japanese, both at library defaults, mean of 3 runs each)
+[^n8]: [m2-ultra-kotoba-conversion.json](../benchmarks/results/2026-10/m2-ultra-kotoba-conversion.json) runs `kotoba_tensor_diff`

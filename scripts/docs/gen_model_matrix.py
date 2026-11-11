@@ -212,7 +212,9 @@ def main():
         peak = "peak GPU memory" + (f"[^peak-{fam}]" if fam in SOURCE else "")
         cols = ((["priority"] if rank else []) + (["`--size`"] if multi_size else [])
                 + (["`--quantization`"] if multi_quant else [])
-                + ["weights", "download", peak])
+                # Hub repo sizes, not measurements; tests/test_sources.py checks each
+                # measured column's header for a source.
+                + ["weights", "download<!-- not-measured: hub repo size -->", peak])
         print("| " + " | ".join(cols) + " |")
         print("|" + "---|" * len(cols))
 

@@ -109,13 +109,17 @@ def _md_unsourced(page: Path) -> list[str]:
     for kind, *rest in md_blocks(text):
         if kind == "table":
             block, after = rest
-            # Sourced by a footnote on its header row (the style for pages read through
-            # since 2026-11-12), or by a legacy `Source:` line under it.
-            header_refs = set(FOOTREF.findall(block[0][1]))
-            if any(measured(ln) for _, ln in block) and not header_refs & defs \
-                    and not SOURCE_LINE.match(after) and not NOT_MEASURED.search(after):
-                bad.append(f"table at line {block[0][0]} has no source footnote on its "
-                           f"header and no Source: line under it")
+            if SOURCE_LINE.match(after) or NOT_MEASURED.search(after):
+                continue                  # legacy `Source:` line, or a whole-table exemption
+            # Otherwise every column holding a measured number names its source in its
+            # header cell: a footnote that is a marker, or a not-measured reason.
+            cells = [ln.strip().strip("|").split("|") for _, ln in block]
+            for col, head in enumerate(cells[0]):
+                if any(col < len(r) and measured(r[col]) for r in cells[2:]) \
+                        and not set(FOOTREF.findall(head)) & defs \
+                        and not NOT_MEASURED.search(head):
+                    bad.append(f"table at line {block[0][0]}, column {head.strip()!r}: "
+                               f"measured, with no source footnote in its header")
         else:
             lineno, line = rest
             if SOURCE_LINE.match(line) or FOOTDEF.match(line) or not measured(line) \
