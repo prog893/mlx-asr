@@ -12,22 +12,24 @@ Down and to the right is better: lower error, more speed. Highlighted points are
 Each engine at the precision the M2 Ultra 128GB (Mac14,14) loads by default, over 20
 recordings, 8.01h[^r1] of Japanese and English. Rows without English cover the 17 Japanese files,
 since those engines are Japanese-only. Whisper samples, so its rows are means of 6 runs; the
-greedy engines' reruns score identically.
+greedy engines' reruns score identically. The M4 16GB (Mac16,1) column is the speed of what
+that Mac loads by default (its precision in brackets where it differs), a mean of 3 runs. The
+error columns are the M2 Ultra's; on the M4 every engine scores within 0.6 points[^m4] of them.
 
-| engine | precision | JP coverage CER | EN coverage WER | x realtime | runs |
-|---|---|---|---|---|---|
-| voxtral (default) | fp16 | 15.20% | 21.21% | 23.9x | 3 |
-| whisper large-v3 | fp16 | 14.71% | 18.51% | 11.3x | 6 |
-| whisper turbo | fp16 | 14.26% | 18.77% | 21.9x | 6 |
-| qwen3-asr 1.7B | 8bit | 18.62% | 24.72% | 24.6x | 3 |
-| qwen3-asr 0.6B | bf16 | 22.31% | 22.91% | 30.4x | 1 |
-| voxtral-v1 24B | bf16 | 26.75% | 16.86% | 2.4x | 1 |
-| voxtral-v1 3B | bf16 | 36.76% | 17.77% | 10.5x | 1 |
-| kotoba | fp16 | 25.34% | n/a | 50.0x | 3 |
-| parakeet | fp32 | 25.68% | n/a | 261.8x | 3 |
-| reazon | fp32, CPU | 30.06% | n/a | 52.9x | 3 |
+| engine | precision | JP coverage CER | EN coverage WER | x realtime, M2 Ultra | x realtime, M4 16GB | runs, M2 Ultra |
+|---|---|---|---|---|---|---|
+| voxtral (default) | fp16 (M4: 8bit) | 15.20% | 21.21% | 23.9x | 6.7x | 3 |
+| whisper large-v3 | fp16 | 14.71% | 18.51% | 11.3x | 3.6x | 6 |
+| whisper turbo | fp16 | 14.26% | 18.77% | 21.9x | 7.9x | 6 |
+| qwen3-asr 1.7B | 8bit | 18.62% | 24.72% | 24.6x | 7.4x | 3 |
+| qwen3-asr 0.6B | bf16 | 22.31% | 22.91% | 30.4x | not run | 1 |
+| voxtral-v1 24B | bf16 | 26.75% | 16.86% | 2.4x | does not fit | 1 |
+| voxtral-v1 3B | bf16 (M4: 8bit) | 36.76% | 17.77% | 10.5x | 3.3x | 1 |
+| kotoba | fp16 | 25.34% | n/a | 50.0x | 12.5x | 3 |
+| parakeet | fp32 | 25.68% | n/a | 261.8x | 74.4x | 3 |
+| reazon | fp32, CPU | 30.06% | n/a | 52.9x | 82.0x | 3 |
 
-Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`, `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_1.7B_8bit_c15_s1`, `pk_qwen3_1.7B_8bit_c15_s2`, `pk_qwen3_1.7B_8bit_c15_s3`, `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-qwen3-precision-c15.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_bf16_c15`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_large-v3_nocond_r4`, `whisper_turbo_nocond_r6`, `24b_bf16_c30`, `3b_bf16_c30`; [m2-ultra-kotoba-engines.json](../../benchmarks/results/2026-10/m2-ultra-kotoba-engines.json) runs `k20_mlx_c15_r1`, `k20_mlx_c15_r2`, `k20_mlx_c15_r3`
+Source: [m2-ultra-voxtral-precision-default.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision-default.json) runs `vox_wfp16_c30b128_kv8`, `vox_wfp16_c30b128_kv8_r2`, `vox_wfp16_c30b128_kv8_r3`; [m2-ultra-whisper-sizes.json](../../benchmarks/results/2026-10/m2-ultra-whisper-sizes.json) runs `whisper_large-v3_nocond`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_large-v3_nocond_r5`, `whisper_large-v3_nocond_r6`, `whisper_turbo_nocond`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `whisper_turbo_nocond_r4`, `whisper_turbo_nocond_r5`; [m2-ultra-picker-speed.json](../../benchmarks/results/2026-10/m2-ultra-picker-speed.json) runs `pk_qwen3_1.7B_8bit_c15_s1`, `pk_qwen3_1.7B_8bit_c15_s2`, `pk_qwen3_1.7B_8bit_c15_s3`, `pk_parakeet_default_s1`, `pk_parakeet_default_s2`, `pk_parakeet_default_s3`, `pk_reazon_fp32_default_s1`, `pk_reazon_fp32_default_s2`, `pk_reazon_fp32_default_s3`; [m2-ultra-qwen3-precision-c15.json](../../benchmarks/results/2026-10/m2-ultra-qwen3-precision-c15.json) runs `qwen3_0.6B_bf16_c15`; [m2-ultra-headline-remeasure.json](../../benchmarks/results/2026-11/m2-ultra-headline-remeasure.json) runs `whisper_large-v3_nocond_r4`, `whisper_turbo_nocond_r6`, `24b_bf16_c30`, `3b_bf16_c30`; [m2-ultra-kotoba-engines.json](../../benchmarks/results/2026-10/m2-ultra-kotoba-engines.json) runs `k20_mlx_c15_r1`, `k20_mlx_c15_r2`, `k20_mlx_c15_r3`; [m4-engines.json](../../benchmarks/results/2026-11/m4-engines.json) runs `whisper_large-v3_nocond_r1`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_turbo_nocond_r1`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `qwen3_1.7B_8bit_c15_r1`, `qwen3_1.7B_8bit_c15_r2`, `qwen3_1.7B_8bit_c15_r3`, `3b_8bit_c30_r1`, `3b_8bit_c30_r2`, `3b_8bit_c30_r3`, `kotoba_mlx_c15_r1`, `kotoba_mlx_c15_r2`, `kotoba_mlx_c15_r3`, `parakeet_default_r1`, `parakeet_default_r2`, `parakeet_default_r3`, `reazon_fp32_r1`, `reazon_fp32_r2`, `reazon_fp32_r3`; [m4-voxtral-8bit.json](../../benchmarks/results/2026-10/m4-voxtral-8bit.json) runs `m4_c30b32_w8bit_r1`, `m4_c30b32_w8bit_r2`, `m4_c30b32_w8bit_r3`
 
 ## The levers
 
@@ -285,3 +287,4 @@ result, which is why they are kept: check
 [^r1]: [corpus.json](../../benchmarks/results/corpus.json), durations of the 20 files the headline runs score
 [^r8]: [m4-voxtral-chunking.json](../../benchmarks/results/2026-10/m4-voxtral-chunking.json) runs `c30b32`; [m2-ultra-voxtral-headline.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-headline.json) runs `vox_default_c30b32_kv8`
 [^r12]: [m2-ultra-voxtral-precision.json](../../benchmarks/results/2026-10/m2-ultra-voxtral-precision.json) runs `vox_w4bit_c60b16_kv8`, `vox_wnvfp4_c60b16_kv8`, `vox_wmxfp8_c60b16_kv8`, `vox_w8bit_c60b16_kv8`, `vox_wfp16_c60b16_kv8`
+[^m4]: [m4-engines.json](../../benchmarks/results/2026-11/m4-engines.json) runs `whisper_large-v3_nocond_r1`, `whisper_large-v3_nocond_r2`, `whisper_large-v3_nocond_r3`, `whisper_turbo_nocond_r1`, `whisper_turbo_nocond_r2`, `whisper_turbo_nocond_r3`, `qwen3_1.7B_8bit_c15_r1`, `qwen3_1.7B_8bit_c15_r2`, `qwen3_1.7B_8bit_c15_r3`, `3b_8bit_c30_r1`, `3b_8bit_c30_r2`, `3b_8bit_c30_r3`, `kotoba_mlx_c15_r1`, `kotoba_mlx_c15_r2`, `kotoba_mlx_c15_r3`, `parakeet_default_r1`, `parakeet_default_r2`, `parakeet_default_r3`, `reazon_fp32_r1`, `reazon_fp32_r2`, `reazon_fp32_r3`; [m4-voxtral-8bit.json](../../benchmarks/results/2026-10/m4-voxtral-8bit.json) runs `m4_c30b32_w8bit_r1`, `m4_c30b32_w8bit_r2`, `m4_c30b32_w8bit_r3` (largest gap: whisper turbo's English WER, 19.37% against 18.77%)
