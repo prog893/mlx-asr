@@ -14,7 +14,8 @@ recordings, 8.01h[^r1] of Japanese and English. Rows without English cover the 1
 since those engines are Japanese-only. Whisper samples, so its rows are means of 6 runs; the
 greedy engines' reruns score identically. The M4 16GB (Mac16,1) column is the speed of what
 that Mac loads by default (its precision in brackets where it differs), a mean of 3 runs. The
-error columns are the M2 Ultra's; on the M4 every engine scores within 0.6 points[^m4] of them.
+error columns are the M2 Ultra's; every engine run on the M4 scores within 0.6 points[^m4] of
+them there.
 
 | engine | precision | JP coverage CER[^hl] | EN coverage WER[^hl] | x realtime, M2 Ultra[^hl] | x realtime, M4 16GB[^m4] | runs, M2 Ultra |
 |---|---|---|---|---|---|---|
