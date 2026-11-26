@@ -111,7 +111,8 @@ KOTOBA_FIRST_USE_PEAK = "3.03GB"
 # source: m2-ultra-picker-speed.json#pk_parakeet_default_s1,pk_parakeet_default_s2,pk_parakeet_default_s3
 PEAK_NOTE = {
     ("parakeet", None): "4.77GB (17-file corpus)",
-    ("reazon-k2", None): "n/a, CPU",
+    ("reazon-k2", "fp32"): "n/a, CPU",
+    ("reazon-k2", "int8"): "n/a, CPU",
 }
 
 # The heading of each family's section in docs/MODELS.md.
@@ -221,6 +222,8 @@ def main():
         for m in entries:
             quants = (sorted(m.quant_repos, key=_quant_sort_key)
                       if m.quant_repos else [None])
+            # By precision, not repo: reazon's two precisions share one repo.
+            default_q = next((k for k, r in m.quant_repos.items() if r == m.repo), None)
             for q in quants:
                 repo = m.quant_repos[q] if q else m.repo
                 # `source:precision` is quantized on first use from `source`, so the
@@ -240,7 +243,7 @@ def main():
                     cells.append(f"`{m.size}`{mark}")
                 if multi_quant:
                     cells.append((f"`{q}`" + (" **default**" if not rank
-                                              and repo == m.repo else "")) if q else "-")
+                                              and q == default_q else "")) if q else "-")
                 # The repo id is the link, so there is no separate link column.
                 if source != repo:
                     cells.append(f"[{source}]({HF}/{source}), quantized on first use")

@@ -70,8 +70,10 @@ def _build(family: str, size: str, quant: str) -> Model:
     if not quant or quant == _default_quant(m):
         return m
     repo = m.repo_for(quant)
+    key = m._quant_key(quant)
     return replace(m, repo=repo, weights_gb=m.weights_gb_for(quant),
-                   label=f"{m.label.rsplit(' (', 1)[0]} ({quant})")
+                   opts={**m.opts, **m.quant_opts.get(key, {})},
+                   label=f"{m.label.rsplit(' (', 1)[0]} ({key})")
 
 
 def _name(size: str, quant: str) -> str:

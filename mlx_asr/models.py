@@ -216,6 +216,10 @@ class Model:
     # conversions, and the only published 8bit/6bit repos crash on load. Without this
     # the doc shows an 8bit result with no route to it.
     quant_hint: str = ""
+    # Precision -> backend options, for a family whose precisions are files inside one
+    # repo rather than separate repos (reazon: fp32 and int8 ONNX side by side). The
+    # options are merged over `opts` when that precision is picked.
+    quant_opts: dict = field(default_factory=dict)
 
     # Spellings of "no quantization". The published unquantized build is named bf16
     # for Qwen3-ASR and fp16 for Voxtral, so both are accepted for either and the
@@ -228,7 +232,7 @@ class Model:
         if key not in self._FULL_PRECISION_ALIASES:
             return key
         # Whichever name this alias publishes its unquantized build under.
-        for candidate in ("bf16", "fp16"):
+        for candidate in ("bf16", "fp16") + (("fp32",) if key in ("none", "full") else ()):
             if candidate in self.quant_repos:
                 return candidate
         return key
@@ -655,6 +659,10 @@ REGISTRY: dict[str, Model] = {
             # windows at the same length the Voxtral rows use, so the comparison
             # holds the front end constant across engines. Not swept yet.
             opts={"chunk_length_s": 30.0, "precision": "fp32"},
+            # Both precisions are files in the one repo; quant_opts picks the files.
+            quant_repos={"fp32": "reazon-research/reazonspeech-k2-v2",
+                         "int8": "reazon-research/reazonspeech-k2-v2"},
+            quant_opts={"int8": {"precision": "int8"}},
             # not-measured: TEDxJP-10K 9.09 vs 10.42 are the authors' published figures
             notes="Japanese only. The k2 build, not NeMo: more accurate on its "
                   "authors' benchmarks (TEDxJP-10K 9.09 vs 10.42 CER) and ONNX "

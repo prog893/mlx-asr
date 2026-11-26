@@ -270,9 +270,10 @@ Zipformer RNN-T trained on the ReazonSpeech v2.0 corpus. Japanese only. Runs the
 ONNX build on CPU through sherpa-onnx (`uv sync --extra reazon`), so it is not an MLX
 engine and its throughput is not comparable to the GPU rows.
 
-| weights | download<!-- not-measured: hub repo size --> | peak GPU memory |
-|---|---|---|
-| [reazon-research/reazonspeech-k2-v2](https://huggingface.co/reazon-research/reazonspeech-k2-v2) | 0.78GB | n/a, CPU |
+| `--quantization` | weights | download<!-- not-measured: hub repo size --> | peak GPU memory |
+|---|---|---|---|
+| `fp32` **default** | [reazon-research/reazonspeech-k2-v2](https://huggingface.co/reazon-research/reazonspeech-k2-v2) | 0.78GB | n/a, CPU |
+| `int8` | [reazon-research/reazonspeech-k2-v2](https://huggingface.co/reazon-research/reazonspeech-k2-v2) | 0.78GB | n/a, CPU |
 
 <!-- not-measured: hub repo sizes only; reazon decodes on CPU and has no GPU peak -->
 
@@ -286,6 +287,7 @@ Compatible flags for `--model reazon`:
 
 | flag | values | default | effect |
 |---|---|---|---|
+| `--quantization` | `fp32` `int8` | `fp32` | which of the repo's two ONNX builds to load. `int8` is faster and less accurate ([reazon.md](benchmarks/engines/reazon.md)) |
 | `--chunk-seconds` | float | `30` | independent window length |
 | `--language` | | forced `ja` | Japanese-only weights; any other value is an error |
 
@@ -331,7 +333,7 @@ default --model voxtral.
 | flag | `voxtral` | `voxtral-v1` | `whisper` | `kotoba` | `qwen3-asr` | `parakeet` | `reazon` |
 |---|---|---|---|---|---|---|---|
 | `--size` | - | `3B` `24B` | `tiny` `base` `small` `medium` `large-v2` `large-v3` `turbo` | - | `0.6B` `1.7B` | - | - |
-| `--quantization` | `4bit` `8bit` `fp16` | `4bit` `8bit` `bf16` | - | - | `4bit` `5bit` `6bit` `8bit` `bf16` | - | - |
+| `--quantization` | `4bit` `8bit` `fp16` | `4bit` `8bit` `bf16` | - | - | `4bit` `5bit` `6bit` `8bit` `bf16` | - | `fp32` `int8` |
 | `--language` | - | yes | yes | forced `ja` | yes | forced `ja` | forced `ja` |
 | `--chunk-seconds` | yes | yes | - | yes | yes | yes | yes |
 | `-f srt` / `vtt` / `all` | yes | - | yes | yes | - | yes | yes |

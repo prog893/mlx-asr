@@ -1006,3 +1006,21 @@ def test_language_guard_and_label_follow_declared_languages_not_backend_name():
     assert _language_source(ja) == "single_language_model"
     with pytest.raises(SystemExit):
         _refuse_non_japanese("en", ja)
+
+
+def test_reazon_quantization_flag_picks_the_onnx_files():
+    """`--quantization` on reazon selects fp32 or int8 files in the one repo: fp32 by
+    default (more accurate), int8 when asked (faster). Any other spelling is refused
+    rather than mapped onto fp32 files."""
+    import pytest
+
+    from mlx_asr.models import UnknownQuantization
+    from mlx_asr.variants import select
+
+    assert select("reazon").model.opts["precision"] == "fp32"
+    assert select("reazon", quant="int8").model.opts["precision"] == "int8"
+    assert select("reazon", quant="fp32").model.opts["precision"] == "fp32"
+    assert select("reazon", quant="none").model.opts["precision"] == "fp32"
+    for bad in ("fp16", "bf16", "8bit"):
+        with pytest.raises(UnknownQuantization):
+            select("reazon", quant=bad)

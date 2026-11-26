@@ -614,12 +614,12 @@ def reazon_k2_load(repo: str, precision: str = "fp32") -> str:
     """Download (or reuse) the authors' ONNX files; return the directory.
 
     The repo ships fp32 and int8 builds side by side in one repo, so unlike every
-    other alias here precision selects FILES rather than repos, and there is
-    nothing to expose as `--quantization` over a single-repo lookup. fp32 is
+    other alias here precision selects FILES rather than repos; `--quantization`
+    reaches this through the registry's `quant_opts`. fp32 is
     the default and that is measured here, not inherited: on this corpus's
     material int8 drops whole phrases mid-file (296 against 376 characters on
     one 112s file), which contradicts the near-parity the authors' table shows
-    on read-speech benchmarks. Pass precision="int8" explicitly to trade that
+    on read-speech benchmarks. `--quantization int8` trades that
     accuracy away for a 4x-smaller download and ~1.5x the speed.
     (source: m2-ultra-engines-jp-only.json#jp_reazon_int8_c30_r1,jp_reazon_int8_c30_r2,jp_reazon_int8_c30_r3,jp_reazon_fp32_c30_rss;
     the 4x download ratio is the hub file sizes, not a run)

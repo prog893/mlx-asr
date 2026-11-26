@@ -67,7 +67,7 @@ and most on `voxtral-v1 3B`.[^ladders]
 | `qwen3-asr` | `--quantization` on `0.6B` | `bf16`, else `8bit` | `bf16` ties `8bit`, and is chosen as the higher precision; `4bit` and `5bit` are less accurate | [qwen3-asr.md](benchmarks/engines/qwen3-asr.md) |
 | `voxtral-v1` | `--quantization` on `3B` | `bf16`, else `8bit` | `bf16` ties `8bit` on both languages, and is chosen as the higher precision; a 16GB Mac runs `8bit`. `4bit` is less accurate on Japanese, on 15 of 16 files | [voxtral-v1.md](benchmarks/engines/voxtral-v1.md) |
 | `voxtral-v1` | `--quantization` on `24B` | `bf16`, else `8bit` | `bf16` ties `8bit` on both languages, and is chosen as the higher precision. `4bit` is less accurate on English | [voxtral-v1.md](benchmarks/engines/voxtral-v1.md) |
-| `reazon` | weight precision (not a flag) | fp32 | int8 drops whole phrases mid-file on conversational audio, although the publisher reports it near parity on read speech | [reazon.md](benchmarks/engines/reazon.md) |
+| `reazon` | `--quantization` | `fp32` | more accurate than `int8`, which drops whole phrases mid-file on conversational audio, although the publisher reports it near parity on read speech. `int8` is faster | [reazon.md](benchmarks/engines/reazon.md) |
 | `voxtral` | `--kv-bits` | `8` | ties an unquantized KV cache, and is faster | [quantization.md](benchmarks/quantization.md) |
 
 ## Chunking and windows
