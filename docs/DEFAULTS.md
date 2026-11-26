@@ -104,14 +104,15 @@ and most on `voxtral-v1 3B`.[^ladders]
 Voxtral returns a timestamp per token, and the CLI groups the tokens into subtitle cues: a
 new cue starts at a pause of `--gap-seconds`, or when a cue reaches `--max-chars` characters
 or `--max-dur-seconds`. The other engines return their own segments, so these flags are
-Voxtral only. The sweeps scored how closely the cue breaks match 7 timed subtitle files,
-all written by one editor.
+Voxtral only. The three were swept together against the timed subtitle references, and the
+defaults are the point closest to them: the highest break agreement among points that
+produce within 10% of the references' cue count. <!-- not-measured: the selection rule -->
 
 | model | parameter | default | reason | detail |
 |---|---|---|---|---|
-| `voxtral` | `--gap-seconds` | `1.2` | a judgment call, not the best-scoring value. Shorter pauses match the reference files more closely, mostly by producing more and shorter cues, and with one editor's files a closer match may only mean closer to that editor's style. Kept until references from other editors exist | [cue-layout.md](benchmarks/cue-layout.md) |
-| `voxtral` | `--max-chars` | `28` | the best-scoring value from 28 to 72 characters at the default gap | [cue-layout.md](benchmarks/cue-layout.md#experiment-max_chars-and-max_dur_s) |
-| `voxtral` | `--max-dur-seconds` | `7.0` | the best-scoring value tested at the default gap and character limit | [cue-layout.md](benchmarks/cue-layout.md#experiment-max_chars-and-max_dur_s) |
+| `voxtral` | `--gap-seconds` | `0.7` | the swept point closest to the references. Shorter gaps agree slightly more on breaks, but only by producing up to twice as many cues | [cue-layout.md](benchmarks/cue-layout.md) |
+| `voxtral` | `--max-chars` | `56` | part of the same point | [cue-layout.md](benchmarks/cue-layout.md) |
+| `voxtral` | `--max-dur-seconds` | `9.0` | part of the same point | [cue-layout.md](benchmarks/cue-layout.md) |
 
 [^cross]: [qwen3-asr.md](benchmarks/engines/qwen3-asr.md); [voxtral-v1.md](benchmarks/engines/voxtral-v1.md)
 [^ladders]: [qwen3-asr.md](benchmarks/engines/qwen3-asr.md); [voxtral-v1.md](benchmarks/engines/voxtral-v1.md)

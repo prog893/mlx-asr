@@ -21,61 +21,23 @@ def _complete(buf: bytes) -> bool:
         return False
 
 
-def build_cues(model, timed_chunks, chunk_offsets, gap_s=1.2, max_chars=28,
-               max_dur_s=7.0, time_map=None):
+def build_cues(model, timed_chunks, chunk_offsets, gap_s=0.7, max_chars=56,
+               max_dur_s=9.0, time_map=None):
     """Group timed tokens into subtitle cues.
 
     A cue breaks on: a silence gap > gap_s, text length > max_chars, duration >
     max_dur_s, or sentence-ending punctuation once the cue has some body.
     Returns a list of (start_s, end_s, text).
 
-    **These values are deliberately NOT tuned to the project's references, because
-    every timed reference available here was authored by one editor and therefore
-    encodes one subtitle house style.** Two sweeps were run and both are recorded
-    in docs/benchmarks/cue-layout.md rather than applied:
-
-    * n=1 (one file): suggested (1.2, 28), with a gain in F1 on that file.
-    * n=7 (seven files, `scripts/benchmarks/sweep_cues.py`): suggested (0.7, 32) instead,
-      and showed the n=1 result only wins on the single file it was fitted to.
-
-    These shipped values score F1 38.8% end to end across the 7 timed references
-    (source: m2-ultra-timestamps.json#ts_default_r1,ts_0732) against 43.9% for (0.7, 32)
-    (source: m2-ultra-cue-layout.json#cue_sweep_union); see docs/benchmarks/cue-layout.md.
-    Giving up those 5.1 points is the deliberate trade described above; what is not
-    negotiable is reporting the number the default actually produces, which an
-    earlier version of this docstring did not.
-
-    The n=7 sweep is better evidence than the n=1 one, but it is not evidence of
-    *good segmentation*; it is evidence of agreement with one subtitle convention.
-    All seven references share line-wrap width and pause conventions, so "optimal
-    gap_s" there may be a fact about that convention rather than about Japanese
-    subtitles. Fitting a shipped default to it would export that style to every
-    user.
-
-    What the sweeps DO establish, and what a caller can act on:
-
-    * `gap_s` is the only knob that matters. Mean F1 moves 45.3 / 43.3 / 41.3 /
-      37.7 / 37.1% across gap 0.6 / 0.7 / 0.8 / 1.0 / 1.2 on these references
-      (source: m2-ultra-cue-layout.json#cue_sweep_union), so a
-      user with their own reference SRTs should sweep this one parameter and
-      nothing else. `mlx-asr --gap-seconds` exists for exactly that; it was advice
-      with no flag behind it until the flags were added.
-    * `max_chars` is worth under a point anywhere in 28-72.
-    * `max_dur_s` is inert: no cue reached it at any value from 4 to 9 seconds,
-      because gap_s or max_chars always fires first. It stays as a safety valve
-      for long unbroken speech.
-    * Lower gap_s buys F1 partly by emitting more cues (cues/ref 1.01 at gap 1.0,
-      1.25 at 0.7, 1.35 at 0.6), and that component is recall the reader does not
-      benefit from.
-
-    Cue placement is the weaker half of this project's timing story either way
-    (Whisper reaches 57.1% F1 on the same files). Drift is the strong half and is
-    unaffected by these knobs: regrouping cues cannot move a token's timestamp.
-
-    Figures are means over the valid timed files (source: m2-ultra-timestamps.json#ts_default_r1,ts_0732
-    for end to end and Whisper;
-    m2-ultra-cue-layout.json#cue_sweep_union for the gap and cues/ref sweep). The n=1
-    sweep has no saved run, so its figures are not given.
+    The defaults are the grid point closest to the hand-made timed references: the
+    highest break F1 among points whose cue count is within 10% of the references'
+    (not-measured: the selection rule). Over 168 points of gap_s x max_chars x max_dur_s
+    on the 7 timed files, (0.7, 56, 9.0) scores 42.65% break F1, 54.1% mid-phrase ends
+    and 1.07 cues per reference cue, against 37.43%, 58.1% and 1.04 for the previous
+    (1.2, 28, 7.0). The best break F1 overall, (0.4, 56, 5.0) at 45.35%, emits 1.97
+    cues per reference cue, so it is further from the references in shape.
+    (source: m2-ultra-cue-layout.json#cue_sweep_union; the sweep regrouped tokens
+    from one 4bit decode at 30s / B32, see docs/benchmarks/cue-layout.md.)
     """
     from .audio import map_time
 

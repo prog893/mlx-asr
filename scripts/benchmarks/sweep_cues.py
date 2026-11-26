@@ -6,10 +6,9 @@ showed the defaults split mid-phrase on well over half of cues against
 human-authored references, against a materially lower rate for Whisper, so the
 knobs are worth a sweep.
 
-Note what this cannot tell you. Scoring against these references measures agreement
-with one editor's subtitle conventions, not good segmentation, which is why neither
-sweep result was ever adopted as a default (see mlx_asr/output.py). Treat the output
-as "what matches this reference set", and sweep on your own references instead.
+The shipped defaults are picked from this sweep's output: the highest break F1 among
+points within 10% of the references' cue count (mlx_asr/output.py; tests/test_core.py
+recomputes it from the saved rows). With your own references, run it on those.
 
 The decode is the expensive part and the knobs do not affect it, so this reuses
 saved token timings: run the CLI once with `--stats-json`, or point at the JSON

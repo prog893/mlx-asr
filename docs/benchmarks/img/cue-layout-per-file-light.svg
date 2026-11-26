@@ -227,7 +227,7 @@ z
     </g>
    </g>
    <g id="text_15">
-    <text style="font-weight: 700; font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="44.347219" y="18.3" transform="rotate(-0 44.347219 18.3)">Break F1 per file: default pair 1.2/28 against 0.7/32</text>
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #0b0b0b" x="44.347219" y="18.3" transform="rotate(-0 44.347219 18.3)">Break F1 per file: 1.2/28 against 0.7/32</text>
    </g>
    <g id="legend_1">
     <g id="line2d_27">
@@ -236,21 +236,21 @@ z
      </g>
     </g>
     <g id="text_16">
-     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #52514e" x="69.847219" y="32.50425" transform="rotate(-0 69.847219 32.50425)">1.2/28 (default)</text>
+     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #52514e" x="69.847219" y="32.50425" transform="rotate(-0 69.847219 32.50425)">1.2/28 (previous default)</text>
     </g>
     <g id="line2d_28">
      <g>
-      <use xlink:href="#m1132983ee9" x="144.867688" y="29.52925" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
+      <use xlink:href="#m1132983ee9" x="179.355109" y="29.52925" style="fill: #eb6834; stroke: #fcfcfb; stroke-linejoin: miter"/>
      </g>
     </g>
     <g id="text_17">
-     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #52514e" x="159.317688" y="32.50425" transform="rotate(-0 159.317688 32.50425)">0.7/32 (earlier published)</text>
+     <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #52514e" x="193.805109" y="32.50425" transform="rotate(-0 193.805109 32.50425)">0.7/32 (earlier published)</text>
     </g>
    </g>
   </g>
   <g id="text_18">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 270.885587)">7 timed reference files, all by one editor; cached Voxtral tokens regrouped. The default pair wins only on</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 279.394386)">632a295d981d, the file it was fitted to, and loses on all six held-out files. Source: cue-layout.md.</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 270.885587)">7 timed reference files; cached Voxtral tokens regrouped. 1.2/28, the previous default, wins only on 632a295d981d,</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 279.394386)">the file it was fitted to, and loses on all six held-out files. Source: cue-layout.md.</text>
   </g>
  </g>
  <defs>

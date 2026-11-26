@@ -4,15 +4,15 @@ Voxtral and Whisper fail in different directions, and the split is actionable. *
 holds timing** (worst drift slope 33.0 ms/min against Whisper's 87.8,[^t1] lower p95 error on
 6 of 7 files) and **Whisper places cues better** (break F1 56.9% against 37.7%,[^t1] better on 6
 of 7 files). Voxtral is better where errors are hard to fix, since timestamps come from the
-model, and worse where they are easy, since cue grouping is our own heuristic and
-deliberately not fitted to these references. That is why Voxtral is the default for
+model, and worse where they are easy, since cue grouping is our own heuristic. These
+figures are at the cue config shipped when they were measured, `1.2/28`; the default is
+now `0.7/56/9.0` ([cue-layout.md](cue-layout.md)), not yet measured end to end. That is why Voxtral is the default for
 subtitle output, with the cue knobs exposed so you can fit them to your own references.
 
 | setting | default | why |
 |---|---|---|
 | `--model` | `voxtral` | lower p95 error on 6 of 7 files and the smallest worst drift slope; drift is the failure that makes a subtitle file unusable |
-| `--gap-seconds` | `1.2` | not the sweep optimum; costs 5.4 break-F1 points, see [cue-layout.md](cue-layout.md) |
-| `--max-chars` | `28` | paired with `--gap-seconds 1.2`, see [cue-layout.md](cue-layout.md) |
+| `--gap-seconds` / `--max-chars` / `--max-dur-seconds` | `0.7` / `56` / `9.0` | the swept point closest to the timed references, see [cue-layout.md](cue-layout.md) |
 
 Source: [m2-ultra-timestamps.json](../../benchmarks/results/2026-10/m2-ultra-timestamps.json) runs `ts_0732#engine voxtral`, `ts_default_r1#engine voxtral`, `ts_default_r2#engine voxtral`, `ts_default_r3#engine voxtral`, `ts_default_r1#engine whisper-turbo-nocond`, `ts_default_r2#engine whisper-turbo-nocond`, `ts_default_r3#engine whisper-turbo-nocond`
 
@@ -22,12 +22,12 @@ metrics reported separately by `eval_timing` ([metrics.md](reference/metrics.md)
 smallest sample in the project, because no other recording here has an authored subtitle
 track.
 
-## Experiment: Voxtral against Whisper at the default cue config
+## Experiment: Voxtral against Whisper at the previous default cue config
 
-**Basis:** the 7 [timed references](reference/corpus.md#timed-references), on a machine not recorded with this table, SRT output at the default cue config (`gap_s=1.2, max_chars=28`), Voxtral through the CLI at 30s / B32 with the 4-bit weights it shipped then. <!-- not-measured: config: chunk length and batch --> The Whisper column is turbo-nocond, measured before large-v3 became the Whisper default.
+**Basis:** the 7 [timed references](reference/corpus.md#timed-references), on a machine not recorded with this table, SRT output at the cue config shipped then (`gap_s=1.2, max_chars=28`), Voxtral through the CLI at 30s / B32 with the 4-bit weights it shipped then. <!-- not-measured: config: chunk length and batch --> The Whisper column is turbo-nocond, measured before large-v3 became the Whisper default.
 
 Both engines are asked for SRT output on the same audio and scored by `eval_timing`
-(`scripts/benchmarks/run_timing_sweep.py`), at the cue grouping the CLI defaults to
+(`scripts/benchmarks/run_timing_sweep.py`), at the cue grouping the CLI defaulted to then
 (`gap_s=1.2, max_chars=28`) and with Whisper's language taken per file from its reference.
 Both of those were bugs once; see [Superseded](#superseded).
 
@@ -39,7 +39,7 @@ excluded.
   <img alt="Voxtral has lower median p95 error (865 against 1994 ms) and worst drift slope (33.0 against 87.8 ms/min); Whisper turbo-nocond has higher break F1 (56.9% against 37.7%) and fewer mid-phrase splits." src="img/timestamps-engines-light.svg">
 </picture>
 
-**Table:** timing and cue-break metrics for Voxtral and Whisper turbo-nocond at the default cue config, n=7; the Whisper column is the mean of 3 runs.
+**Table:** timing and cue-break metrics for Voxtral and Whisper turbo-nocond at the previous default cue config `1.2/28`, n=7; the Whisper column is the mean of 3 runs.
 
 | | Voxtral | whisper turbo-nocond |
 |---|---|---|
@@ -103,7 +103,7 @@ the row should be dropped rather than averaged in.
 **Why the engines split.** Voxtral's timestamps come from the model: one token per decoder
 position, each covering 80ms of audio, <!-- not-measured: model design constant --> so a timestamp is a position count rather than an
 estimate. That is why drift is small. The cue knobs still move the measured slope: at
-`gap_s=0.7, max_chars=32` Voxtral's worst slope is 16.9 ms/min against 33.0 at the default.[^t2]
+`gap_s=0.7, max_chars=32` Voxtral's worst slope is 16.9 ms/min against 33.0 at `1.2/28`.[^t2]
 Whisper emits segment-level timestamps from a model that was not trained to be precise
 about them, but its segments are chosen with more linguistic context than our gap-based
 heuristic uses, so its boundaries match a human editor better.

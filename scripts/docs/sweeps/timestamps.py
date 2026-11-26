@@ -11,7 +11,7 @@ SWEEPS = {
     "timestamps-engines": {
         "doc": "docs/benchmarks/timestamps.md",
         "title": "Timing drift and cue breaks, Voxtral against Whisper",
-        "basis": ("7 timed references, SRT at the default cue config (gap_s 1.2, "
+        "basis": ("7 timed references, SRT at the cue config shipped then (gap_s 1.2, "
                   "max_chars 28); the Whisper column is turbo-nocond, measured before "
                   "large-v3 became the Whisper default.\nVoxtral is the default because "
                   "drift (p95, slope) is the failure a user cannot fix, while cue "

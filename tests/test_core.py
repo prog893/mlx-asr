@@ -248,21 +248,23 @@ def test_build_cues_times_are_ordered_and_nonnegative():
     assert all(b[0] >= a[0] for a, b in zip(cues, cues[1:]))
 
 
-def test_build_cues_defaults_are_not_fitted_to_our_references():
-    """Pin the shipped defaults, which are deliberately NOT the sweep optimum.
-
-    Every timed reference in this project was authored by one editor, so the sweep
-    optimum (0.7, 32) encodes that subtitle convention rather than good
-    segmentation in general. Shipping it would export that house style to every
-    user, so the conservative pair stays and both sweeps are documented in
-    docs/benchmarks/cue-layout.md instead. A failure here means someone applied a sweep result; read
-    the build_cues docstring before changing it.
-    """
+def test_build_cues_defaults_are_the_point_closest_to_the_references():
+    """The shipped cue defaults follow one rule applied to the saved sweep: the highest
+    break F1 among grid points whose cue count is within 10% of the references'.
+    Recomputed from the saved rows, so a new sweep or a hand edit to the defaults that
+    breaks the rule fails here."""
     import inspect
+    import json
+    from pathlib import Path
 
+    group = Path(__file__).resolve().parents[1] / \
+        "benchmarks/results/2026-10/m2-ultra-cue-layout.json"
+    rows = json.loads(group.read_text())["runs"][0]["rows"]
+    best = max((r for r in rows if 0.9 <= r["cue_ratio"] <= 1.1), key=lambda r: r["break_f1"])
     sig = inspect.signature(build_cues)
-    assert sig.parameters["gap_s"].default == 1.2
-    assert sig.parameters["max_chars"].default == 28
+    assert (sig.parameters["gap_s"].default, sig.parameters["max_chars"].default,
+            sig.parameters["max_dur_s"].default) == \
+        (best["gap_s"], best["max_chars"], best["max_dur_s"])
 
 
 def test_build_cues_gap_controls_boundary_count():

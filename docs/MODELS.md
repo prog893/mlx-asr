@@ -66,9 +66,9 @@ Compatible flags for `--model voxtral`:
 | `--peak-dbfs` / `--rms-dbfs` | float | `-1.0` / `-23.0` | targets for `--gain peak` / `--gain rms` |
 | `--vad` | flag | off | place chunk boundaries with Silero VAD instead of energy minima |
 | `--compact-silence` | flag | off | drop long pauses before decode, remap timestamps back |
-| `--gap-seconds` | float | `1.2` | split a cue at a pause this long. The one cue knob worth sweeping |
-| `--max-chars` | int | `28` | split a cue at this many characters |
-| `--max-dur-seconds` | float | `7.0` | hard cap on cue duration |
+| `--gap-seconds` | float | `0.7` | split a cue at a pause this long. The one cue knob worth sweeping |
+| `--max-chars` | int | `56` | split a cue at this many characters |
+| `--max-dur-seconds` | float | `9.0` | hard cap on cue duration |
 
 `--language` is refused: the model has no language token to set. Its tokenizer carries a
 thousand special tokens and none of them names a language.

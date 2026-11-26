@@ -173,24 +173,7 @@ z
     </g>
    </g>
    <g id="text_11">
-    <text style="font-weight: 700; font-size: 9px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="112.558705" y="194.654056" transform="rotate(-0 112.558705 194.654056)">default</text>
-   </g>
-   <g id="text_12">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="43.771219" y="44.001" transform="rotate(-0 43.771219 44.001)">Break F1 and mid-phrase ends</text>
-   </g>
-   <g id="PathCollection_1">
-    <path d="M 112.558705 214.307078 
-C 114.182735 214.307078 115.740468 213.661843 116.888832 212.51348 
-C 118.037195 211.365117 118.682429 209.807384 118.682429 208.183353 
-C 118.682429 206.559323 118.037195 205.001589 116.888832 203.853226 
-C 115.740468 202.704863 114.182735 202.059629 112.558705 202.059629 
-C 110.934674 202.059629 109.376941 202.704863 108.228578 203.853226 
-C 107.080214 205.001589 106.43498 206.559323 106.43498 208.183353 
-C 106.43498 209.807384 107.080214 211.365117 108.228578 212.51348 
-C 109.376941 213.661843 110.934674 214.307078 112.558705 214.307078 
-L 112.558705 214.307078 
-z
-" clip-path="url(#pfb99f99b1f)" style="fill: none; stroke: #ffffff; stroke-width: 1.5"/>
    </g>
    <g id="legend_1">
     <g id="line2d_19">
@@ -198,7 +181,7 @@ z
       <use xlink:href="#m3d7b4c0e3e" x="54.821219" y="55.641166" style="fill: #3987e5; stroke: #1a1a19; stroke-width: 2"/>
      </g>
     </g>
-    <g id="text_13">
+    <g id="text_12">
      <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #c3c2b7" x="69.271219" y="58.616166" transform="rotate(-0 69.271219 58.616166)">break F1</text>
     </g>
     <g id="line2d_20">
@@ -206,7 +189,7 @@ z
       <use xlink:href="#m81e0faa51b" x="120.661687" y="55.641166" style="fill: #d95926; stroke: #1a1a19; stroke-linejoin: miter"/>
      </g>
     </g>
-    <g id="text_14">
+    <g id="text_13">
      <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #c3c2b7" x="135.111687" y="58.616166" transform="rotate(-0 135.111687 58.616166)">mid-phrase</text>
     </g>
    </g>
@@ -228,7 +211,7 @@ L 415.318705 67.001
 " clip-path="url(#pfb8b1221d2)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_22"/>
-     <g id="text_15">
+     <g id="text_14">
       <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #c3c2b7" x="415.318705" y="238.656781" transform="rotate(-0 415.318705 238.656781)">1.2/28</text>
      </g>
     </g>
@@ -239,11 +222,11 @@ L 529.964514 67.001
 " clip-path="url(#pfb8b1221d2)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_24"/>
-     <g id="text_16">
+     <g id="text_15">
       <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #c3c2b7" x="529.964514" y="238.656781" transform="rotate(-0 529.964514 238.656781)">0.7/32</text>
      </g>
     </g>
-    <g id="text_17">
+    <g id="text_16">
      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #c3c2b7" x="472.641609" y="251.856" transform="rotate(-0 472.641609 251.856)">gap_s / max_chars</text>
     </g>
    </g>
@@ -255,7 +238,7 @@ L 598.752 227.656781
 " clip-path="url(#pfb8b1221d2)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_26"/>
-     <g id="text_18">
+     <g id="text_17">
       <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="343.031219" y="231.406781" transform="rotate(-0 343.031219 231.406781)">0</text>
      </g>
     </g>
@@ -266,7 +249,7 @@ L 598.752 198.202436
 " clip-path="url(#pfb8b1221d2)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_28"/>
-     <g id="text_19">
+     <g id="text_18">
       <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="343.031219" y="201.952436" transform="rotate(-0 343.031219 201.952436)">200</text>
      </g>
     </g>
@@ -277,7 +260,7 @@ L 598.752 168.748091
 " clip-path="url(#pfb8b1221d2)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_30"/>
-     <g id="text_20">
+     <g id="text_19">
       <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="343.031219" y="172.498091" transform="rotate(-0 343.031219 172.498091)">400</text>
      </g>
     </g>
@@ -288,7 +271,7 @@ L 598.752 139.293745
 " clip-path="url(#pfb8b1221d2)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_32"/>
-     <g id="text_21">
+     <g id="text_20">
       <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="343.031219" y="143.043745" transform="rotate(-0 343.031219 143.043745)">600</text>
      </g>
     </g>
@@ -299,7 +282,7 @@ L 598.752 109.8394
 " clip-path="url(#pfb8b1221d2)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_34"/>
-     <g id="text_22">
+     <g id="text_21">
       <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="343.031219" y="113.5894" transform="rotate(-0 343.031219 113.5894)">800</text>
      </g>
     </g>
@@ -310,11 +293,11 @@ L 598.752 80.385055
 " clip-path="url(#pfb8b1221d2)" style="fill: none; stroke: #2c2c2a; stroke-linecap: round"/>
      </g>
      <g id="line2d_36"/>
-     <g id="text_23">
+     <g id="text_22">
       <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end; fill: #c3c2b7" x="343.031219" y="84.135055" transform="rotate(-0 343.031219 84.135055)">1000</text>
      </g>
     </g>
-    <g id="text_24">
+    <g id="text_23">
      <text style="font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle; fill: #c3c2b7" x="315.08825" y="147.328891" transform="rotate(-90 315.08825 147.328891)">ms</text>
     </g>
    </g>
@@ -355,7 +338,7 @@ z
      <use xlink:href="#m4003d0889e" x="529.964514" y="83.919576" style="fill: #c98500; stroke: #1a1a19; stroke-linejoin: miter"/>
     </g>
    </g>
-   <g id="text_25">
+   <g id="text_24">
     <text style="font-weight: 700; font-size: 9.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="346.531219" y="44.001" transform="rotate(-0 346.531219 44.001)">Timestamp drift</text>
    </g>
    <g id="legend_2">
@@ -364,7 +347,7 @@ z
       <use xlink:href="#m14c831bd54" x="357.581219" y="55.641166" style="fill: #199e70; stroke: #1a1a19; stroke-linejoin: miter"/>
      </g>
     </g>
-    <g id="text_26">
+    <g id="text_25">
      <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #c3c2b7" x="372.031219" y="58.616166" transform="rotate(-0 372.031219 58.616166)">median drift</text>
     </g>
     <g id="line2d_40">
@@ -372,17 +355,17 @@ z
       <use xlink:href="#m4003d0889e" x="434.287078" y="55.641166" style="fill: #c98500; stroke: #1a1a19; stroke-linejoin: miter"/>
      </g>
     </g>
-    <g id="text_27">
+    <g id="text_26">
      <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #c3c2b7" x="448.737078" y="58.616166" transform="rotate(-0 448.737078 58.616166)">p95 drift</text>
     </g>
    </g>
   </g>
-  <g id="text_28">
-   <text style="font-weight: 700; font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="10.8" y="18.3" transform="rotate(-0 10.8 18.3)">Default pair against 0.7/32, end to end</text>
+  <g id="text_27">
+   <text style="font-weight: 700; font-size: 10px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start; fill: #ffffff" x="10.8" y="18.3" transform="rotate(-0 10.8 18.3)">1.2/28 against 0.7/32, end to end</text>
   </g>
-  <g id="text_29">
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 276.501587)">Voxtral end to end on the 7 timed files, written SRTs scored by eval_timing. The default 1.2/28 is kept at a cost of 5.4 break</text>
-   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 285.010386)">points because lower gap_s fits one editor's convention, and the default is slightly better on p95 drift. Source: cue-layout.md.</text>
+  <g id="text_28">
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 276.501587)">Voxtral end to end on the 7 timed files, written SRTs scored by eval_timing. 1.2/28, the previous default, scores 5.4 break points</text>
+   <text style="font-size: 8.5px; font-family: 'Helvetica', 'Arial', 'DejaVu Sans'; fill: #898781" transform="translate(10.8 285.010386)">lower and is slightly better on p95 drift. Source: cue-layout.md.</text>
   </g>
  </g>
  <defs>

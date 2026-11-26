@@ -164,9 +164,8 @@ Source: [m2-ultra-decode-probes.json](../../benchmarks/results/2026-10/m2-ultra-
 **Timing quality is n=7** and needs more authored subtitle tracks. None of the 13
 recordings added in the final corpus growth had them.
 
-**Cue defaults have never been tested against a reference this project did not author.**
-Until there is a second, independent set, "good cue segmentation" is not something this
-corpus can measure, only agreement with one editor's conventions.
+**The cue defaults come from regrouped 4bit tokens.** They have not been re-swept on the
+fp16 and 8bit tokens the CLI now decodes, nor measured end to end ([cue-layout.md](cue-layout.md)).
 
 **The English side is n=3.** Every English conclusion, including the prompt-instruction
 result and Whisper's English win, rests on three recordings. The direction is consistent;

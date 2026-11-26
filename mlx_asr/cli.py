@@ -443,19 +443,18 @@ def build_parser():
                    help="drop long pauses before decode (fewer steps; timestamps remapped)")
     # Cue layout. Defaults are None so build_cues() stays the single source of
     # truth for what ships; passing nothing must behave exactly as before.
-    # gap_s is the only one of the three that measurably moves anything, and it
-    # is exposed because the right value depends on the subtitle conventions you
-    # are matching, which this project cannot know (see mlx_asr/output.py).
+    # gap_s moves cue agreement the most; all three are exposed so a user can fit
+    # them to their own reference subtitles (see mlx_asr/output.py).
     p.add_argument("--gap-seconds", type=float, default=None, metavar="SEC",
                    help="split a cue when speech pauses longer than this "
-                        "(default 1.2). The one cue knob worth sweeping: lower "
+                        "(default 0.7). The one cue knob worth sweeping: lower "
                         "means more, shorter cues")
     p.add_argument("--max-chars", type=int, default=None,
                    help="split a cue once it reaches this many characters "
-                        "(default 28); barely affects accuracy anywhere in its useful "
+                        "(default 56); barely affects accuracy anywhere in its useful "
                         "range")
     p.add_argument("--max-dur-seconds", type=float, default=None, metavar="SEC",
-                   help="hard cap on cue duration (default 7.0); a safety valve "
+                   help="hard cap on cue duration (default 9.0); a safety valve "
                         "that the other two rules normally pre-empt")
     p.add_argument("--quiet", action="store_true")
     p.add_argument("--stats-json", help="write timing stats here")
