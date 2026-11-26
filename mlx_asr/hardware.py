@@ -42,11 +42,15 @@ cut so that all 32 rows pad to an 89.4s last chunk peaked at 8.31GB on the M4, u
 9.36 predicted from the nominal length (source: m4-voxtral-worstcase.json#worst32_c60b32;
 the 25 x 84.1s and 89.4s row lengths have no saved record). Overlap is not in the fit, so it is added.
 
-The budget is a fraction of the GPU working set, fitted to the one machine where
-memory binds: on the M4 (12.7GB working set) B=32 completed the corpus seven times with
+The budget is 80% of the GPU working set, a round rule rather than a fitted value; batch
+sizing and variant selection both use it. The measurements only bound it: on the M4 (12.7GB
+working set), the one machine where memory binds, B=32 completed the corpus seven times with
 no errors at 8.08GB (source: m4-synthetic-decode.json#synth_nvfp4_r1,synth_nvfp4_r2,synth_nvfp4_r3;
-m4-voxtral-batch.json#c60b32,c60b32_r1,c60b32_r4). 0.78 (a 9.9GB budget) admits it with 0.55GB to spare
-and excludes B=48 (11.1GB predicted) at 60s. B=48 and B=64 did complete the corpus at
+m4-voxtral-batch.json#c60b32,c60b32_r1,c60b32_r4), so the budget must admit its 9.36GB
+prediction at 60s, and should exclude B=48 (11.1GB predicted). Any fraction from 74% to 87%
+does both (not-measured: those two predictions divided by the working set); 80% (a 10.2GB budget)
+is inside that range, and gives the same batch and variant on the M4 and the M2 Ultra as
+the 78% it replaced. B=48 and B=64 did complete the corpus at
 60s, four times each, but B=64 on a worst-case padded file peaked at 11.87GB, 93% of the
 working set (source: m4-voxtral-batch.json#c60b48,c60b48_r1,c60b48_r2,c60b48_r3,c60b64,c60b64_r1,c60b64_r2,c60b64_r3;
 m4-voxtral-worstcase.json#worst64_c60b64), which is too close to the limit to call
@@ -107,14 +111,15 @@ GB_PER_ROW_SECOND = 0.0018
 # m4-voxtral-batch.json#c60b16,c60b24,c60b32
 FIXED_OVERHEAD_GB = 3.4
 
-# Fraction of the GPU working set a decode may plan to use. Fitted on the M4, the
+# Fraction of the GPU working set a decode or a variant may plan to use: a round rule,
+# not a fitted value. It sits inside the range the M4 allows, the
 # source: m4-synthetic-decode.json#synth_nvfp4_r1 (working set); m4-voxtral-batch.json#c60b32
 # only machine where memory binds: on a 12.7GB working set it admits B=32 (8.08GB
 # measured, 9.36 predicted) and excludes B=48 (11.1 predicted). B=64 completed the
 # corpus but peaked at 93% of the working set on a worst-case padded file, too close
 # to call reliable. See the module docstring.
 # source: m4-voxtral-worstcase.json#worst64_c60b64
-USABLE_FRACTION = 0.78
+USABLE_FRACTION = 0.80
 
 
 def _sh(cmd: str) -> str:

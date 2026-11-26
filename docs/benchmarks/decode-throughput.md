@@ -13,7 +13,7 @@ around.
 
 | setting | default | why |
 |---|---|---|
-| `--max-batch` | the largest of 1, 12, 16, 24, 32, 64, 96, 128 whose predicted peak fits 78% of the GPU working set, then capped by the machine profile's `max_batch` where it sets one: 32 on the M4 16GB, 128 on the M2 Ultra 128GB. With 4-bit weights the formula reaches B64 from 12.0GB of working set, B96 from 14.2GB and B128 from 16.4GB at 30s chunks (16.4GB, 20.9GB and 25.3GB at 60s) <!-- not-measured: the working-set thresholds are computed from the sizing constants in mlx_asr/hardware.py --> | batch is memory-bound: speed rises with batch while accuracy shifts by about 0.1 point, unresolved ([chunking.md](chunking.md#experiment-batch-size-end-to-end)); see [How the default is chosen](#how-the-default-is-chosen). The M4 cap is the largest batch measured reliable there: at its 30s chunks the formula admits B64, which has not run on the M4, and at 60s B48 and B64 completed the corpus at 5.82x and 6.07x mean against B32's 5.80x, but B64 on a worst-case padded file peaked at 11.87GB, 93% of the 12.7GB working set[^b48] |
+| `--max-batch` | the largest of 1, 12, 16, 24, 32, 64, 96, 128 whose predicted peak fits 80% of the GPU working set, then capped by the machine profile's `max_batch` where it sets one: 32 on the M4 16GB, 128 on the M2 Ultra 128GB. With 4-bit weights the formula reaches B64 from 12.0GB of working set, B96 from 14.2GB and B128 from 16.4GB at 30s chunks (16.4GB, 20.9GB and 25.3GB at 60s) <!-- not-measured: the working-set thresholds are computed from the sizing constants in mlx_asr/hardware.py --> | batch is memory-bound: speed rises with batch while accuracy shifts by about 0.1 point, unresolved ([chunking.md](chunking.md#experiment-batch-size-end-to-end)); see [How the default is chosen](#how-the-default-is-chosen). The M4 cap is the largest batch measured reliable there: at its 30s chunks the formula admits B64, which has not run on the M4, and at 60s B48 and B64 completed the corpus at 5.82x and 6.07x mean against B32's 5.80x, but B64 on a worst-case padded file peaked at 11.87GB, 93% of the 12.7GB working set[^b48] |
 | `--max-batch` given explicitly | used as given; a warning if its predicted peak exceeds the budget | an explicit value is respected, but a batch the machine cannot hold should not fail silently on long audio |
 | `--kv-bits` | 8 | halves KV cache reads; no less accurate on both machines, and faster on the M4 clip but not on the M2 Ultra ([quantization.md](quantization.md)) |
 | encoder | one chunk at a time | a batched encoder measured 0.86-0.90x |
@@ -370,14 +370,14 @@ set. The list leaves out 48, where synthetic x realtime drops on both machines (
   The constants cover every peak measured on the 20-file corpus
   ([chunking.md](chunking.md#experiment-batch-size-end-to-end)); the tightest is the M2
   Ultra at 30s/B64, 9.36GB predicted against 9.17GB measured.[^b64]
-- **budget**: 78% of the GPU working set. <!-- not-measured: a design constant --> That is fitted on the M4, the one machine
-  where memory binds: at 60s chunks it admits B32 (8.08GB measured)[^b32] and excludes B48. That
+- **budget**: 80% of the GPU working set, <!-- not-measured: a round rule, hardware.py USABLE_FRACTION --> a round rule rather than a fitted value; variant selection uses
+  the same budget. The M4, the one machine where memory binds, only bounds it: at 60s chunks it must admit B32 (8.08GB measured)[^b32] and should exclude B48; any fraction from 74% to 87% <!-- not-measured: the two predicted peaks divided by the working set --> does both. That
   exclusion is a prediction: B48 and B64 both completed the corpus on the M4,
   peaking at 9.0 to 9.24GB and 10.72GB, and B64's worst-case file peaked at 11.87GB, 93%[^b48] of
   the 12.7GB working set.[^b48] At 30s chunks with 4-bit weights the same budget admits B64 on the M4 (9.36GB
-  predicted against 9.91GB), <!-- not-measured: outputs of the batch formula --> which has not
+  predicted against 10.16GB), <!-- not-measured: outputs of the batch formula --> which has not
   been run there, so the M4 profile caps the batch at the measured 32 (`max_batch`). Two
-  machines is a thin fit, and a third RAM size would test it.
+  machines bound the rule loosely, and a third RAM size would test it.
 
 Anything landing in the 2-11 range falls back to 1 (2-8 measured slower per step than 1;
 9-11 were not measured), because the real choice there is

@@ -4,7 +4,7 @@
     "chunk_seconds": "audio per row; shorter = fewer decode steps per row but more chunk seams. 30s vs 60s is not resolvable on the 20-file corpus (+0.10, CI [-1.92, +2.06]), so this is a throughput choice, not an accuracy one",
     "max_batch": "optional cap on the memory-derived batch: the largest batch measured reliable on this machine, where the formula admits a larger one",
     "measured_x_realtime": "end-to-end decode over the 20-file corpus at the batch this machine resolves to",
-    "peak_gb": "GPU peak at the batch this machine resolves to, on the 20-file corpus; the batch budget is 78% of gpu_working_set_gb (hardware.py: USABLE_FRACTION)",
+    "peak_gb": "GPU peak at the batch this machine resolves to, on the 20-file corpus; the batch budget is 80% of gpu_working_set_gb (hardware.py: USABLE_FRACTION)",
     "source": "who measured it and on what",
     "ram_gb": "nameplate GiB, i.e. the number on the spec sheet (a 16GB Mac reports 16, not 17)",
     "model_id": "e.g. Mac16,1: the enclosure, and therefore the cooling class. Chip and RAM do not determine sustained throughput; a fanless Air, a MacBook Pro and a Mac Studio with the same chip hold different clocks over a minutes-long decode. Recorded for provenance, not matched on, until two profiles disagree at equal chip+RAM"

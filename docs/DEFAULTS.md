@@ -22,7 +22,8 @@ in [MODELS.md](MODELS.md).
 
 When `--size` and `--quantization` are not passed, the CLI tries the family's variants in
 the priority order listed in [MODELS.md](MODELS.md#the-models) and loads the first whose
-peak memory fits within 78% of the GPU working set. <!-- not-measured: 78% is the memory-budget constant of hardware.py -->
+peak memory fits within 80% of the GPU working set, <!-- not-measured: a round rule, hardware.py USABLE_FRACTION --> the same budget that sizes Voxtral's batch
+([decode-throughput.md](benchmarks/decode-throughput.md)).
 The order is by accuracy on the corpus, with the larger variant first where two tie, since
 the corpus cannot rule out a loss on audio it does not contain. Passing `--size` or
 `--quantization` keeps only the matching variants; passing both names one variant, used as

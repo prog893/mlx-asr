@@ -50,7 +50,7 @@ def test_batch_follows_memory_on_the_benchmarked_machines():
 
 def test_m4_profile_caps_the_batch_the_formula_would_raise():
     """At the M4's 30s chunks the formula admits B64 (9.36GB predicted, under the
-    9.9GB budget), which has never run there; the profile's max_batch keeps it at the
+    10.2GB budget), which has never run there; the profile's max_batch keeps it at the
     measured 32. The cap only lowers: a longer chunk still shrinks the batch."""
     assert derive_batch(12.7, 2.5, 30) == 64
     assert resolve_profile(M4)["batch"] == 32
@@ -78,7 +78,7 @@ def test_memory_model_is_at_or_above_every_measured_peak(batch, chunk, measured)
 def test_overlap_counts_toward_the_decoded_chunk_length():
     """Each chunk after the first decodes its warm-up overlap as well, so 60s chunks
     with 30s of overlap must be sized as 90s rows (B32 there is predicted at 11.1GB,
-    over the M4's 9.9GB budget)."""
+    over the M4's 10.2GB budget)."""
     assert resolve_profile(M4, chunk_seconds=60)["batch"] == 32
     assert resolve_profile(M4, chunk_seconds=60, overlap_seconds=30)["batch"] == 24
     assert resolve_profile(UNTESTED, overlap_seconds=30)["batch"] <= \
@@ -104,7 +104,7 @@ def test_b96_is_a_measured_good_batch():
     """The M2 Ultra synthetic sweep shows no dip at 96 (99.7x between 95.9x at 64 and
     103.9x at 128), so a machine whose budget falls between 64 and 128 gets 96."""
     assert 96 in FAST_BATCHES
-    assert derive_batch(25.0, 2.5, 60) == 96
+    assert derive_batch(23.0, 2.5, 60) == 96
 
 
 def test_unprofiled_machines_default_to_30s_chunks():
@@ -206,3 +206,17 @@ def test_model_id_is_captured_for_provenance():
     assert "model_id" in info
     if info["model_id"] is not None:
         assert re.match(r"^[A-Za-z]+\d+,\d+$", info["model_id"]), info["model_id"]
+
+
+def test_every_page_states_the_budget_the_code_uses():
+    """The memory budget is one rule (hardware.USABLE_FRACTION); every page and the
+    profiles file that states it as a percentage must state the same one."""
+    import re
+    from pathlib import Path
+    from mlx_asr.hardware import USABLE_FRACTION
+    root = Path(__file__).resolve().parent.parent
+    pat = re.compile(r"(\d+)% of (?:the )?(?:GPU working set|gpu_working_set_gb)")
+    pages = [*root.glob("docs/**/*.md"), root / "README.md", root / "mlx_asr/profiles.json"]
+    found = {p.name: m.group(1) for p in pages for m in pat.finditer(p.read_text())}
+    assert found, "no page states the budget"
+    assert set(found.values()) == {str(round(USABLE_FRACTION * 100))}, found
