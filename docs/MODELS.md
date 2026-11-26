@@ -3,6 +3,12 @@
 The models `mlx-asr` runs, the variants of each, where their weights come from, and the
 flags each family takes.
 
+Without `--model`, `voxtral` runs: on the M2 Ultra it is the fastest multilingual model
+measured that writes subtitles, and it ties `whisper turbo` on Japanese. It is not first on
+every measure: `voxtral-v1 24B` is more accurate on English, and on the M4 16GB
+`whisper turbo` is faster ([benchmarks/README.md](benchmarks/README.md); the reasons for
+every default are in [DEFAULTS.md](DEFAULTS.md#model-and-size)).
+
 `--model` picks a family; `--size` and `--quantization` pick the variant inside it. In the
 tables:
 
