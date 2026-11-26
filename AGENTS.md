@@ -66,6 +66,19 @@ copied from an older page.
   `<!-- not-measured: reason -->` or `# not-measured: reason`. No placeholder sources.
 - `tests/test_sources.py` resolves every marker and fails for a page in its `DONE` list
   that has an unsourced number. A number with no saved data is rerun or removed.
+- An index page (docs/DEFAULTS.md) prints no measured numbers and no run-id footnotes: each
+  row links the page that holds the measurements, and that page cites the runs. A sentence
+  outside a table that states a finding carries a footnote linking that page.
+
+## Writing register for docs
+
+- Write as a methods-and-results report: what was measured, on what, and what it showed.
+  Plain words, precise claims, one claim per sentence where possible.
+- No dramatic or promotional wording ("surprise", "has bitten", "outright reversed",
+  "by far", "the largest artifact in this project's history"), and no rhetorical framing.
+- No narrated history of how a finding was reached on a reference or index page; state the
+  current result. Superseded results go in a page's `Superseded` section or JOURNAL.md.
+- Define a category before using it, and use it the same way everywhere on the page.
 
 ## Privacy (the repo is public)
 
